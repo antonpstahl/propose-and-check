@@ -79,7 +79,7 @@ class Frame:
             empty = self.counts[f] == 0
             curve = np.divide(curve, self.counts[f], out=np.zeros_like(curve), where=~empty)
             if empty.any() and lookup[f]:
-                curve[empty] = model.term(lookup[f], {f: _representative(self.reference.steps[f].cuts)[empty]})
+                curve[empty] = model.term(lookup[f], {f: _representative(self.reference.steps[f].cuts[0])[empty]})
             out["curves"][f] = curve
             out["net_change"][f] = float(np.diff(self._main(model, lookup, f, {f: np.array(self.low_high[f])}))[0])
         for pair in self.reference.pairs:

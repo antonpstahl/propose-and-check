@@ -1,1 +1,29 @@
-# Lexicon thresholds. v0 is calibrated once on the discovery seed, then frozen.
+# Lexicon thresholds (plan §5.3). v0: the values of the plan, not yet calibrated. They are calibrated once on
+# the discovery seed, on the oracle's verdicts and the null terms only (D16), then frozen; a sensitivity
+# analysis varies each by +-50%. Shares are of the total importance (mean |score|), effects in logits.
+version: v0
+level: 0.95  # every band (stored in the Facts or derived from the refit draws)
+
+strength:  # lower edge of each class; below the first: negligible
+  weak: 0.02
+  moderate: 0.05
+  strong: 0.15
+
+# An effect is detectable if its simultaneous band excludes 0 on more than this share of the data mass, or
+# its net change (5th to 95th percentile) is significant. For a pair: its interaction contrast is significant.
+detectable_mass: 0.05
+
+share:  # "about v": |v - actual| <= max(absolute, relative * actual)
+  absolute: 0.02
+  relative: 0.10
+
+direction:
+  exception_mass: 0.10  # "mostly": movement against the direction on at most this share of the data mass
+
+location:  # threshold and peak
+  window: 0.02  # fraction of the 5th-95th percentile range: tolerance, and the width of a jump
+  search: [0.01, 0.99]  # quantiles: where peaks and jumps are searched (the EBM's edge bins spike)
+  jump_fraction: 0.5  # a threshold's jump is at least this fraction of the term's range in the search region
+
+interaction:
+  pair_share: 0.02  # "amplifies" needs a pair share band at or above this

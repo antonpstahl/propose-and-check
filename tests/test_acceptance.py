@@ -116,3 +116,22 @@ def test_oracle_reproduces_the_planted_coefficients_on_a_large_sample():
     for term in ("utilization", "n_delinquencies", "income", dgp.AMPLIFICATION, dgp.SIGN_FLIP):
         assert oracle.coef[term] == pytest.approx(planted[term], rel=0.1)
     np.testing.assert_allclose(oracle.logit(X).mean(), truth.logit(X).mean(), atol=0.05)
+
+
+def test_xgb2_gets_every_check_through_its_decomposition():
+    """D26: the same checks as the EBM, on XGB2's exact terms; its pair effects agree with the partial-dependence
+    cross-check up to the averaging of its other pairs over the rows (purified on the data, so close to zero)."""
+    from verifier_gate.facts.xgb2 import purify_xgb2
+    from verifier_gate.models.fit_xgb2 import fit_xgb2
+
+    data = dgp.generate(dgp.Scenario("dominant", 5_000, 1))
+    model = fit_xgb2(data.X, data.y, seed=1)
+    by_terms = acceptance.check_terms(purify_xgb2(model, data.X), data)
+    assert {"strength", "noise", "rank", "direction", "peak", "step", "amplification", "sign_flip", "auc"} <= {c.claim for c in by_terms}
+    margin = lambda Z: model.predict(Z, output_margin=True)  # noqa: E731
+    by_margin = {c.claim: c for c in acceptance.check_margin(margin, data)}
+    for check in by_terms:
+        if check.claim in ("amplification", "sign_flip"):
+            np.testing.assert_allclose(check.fitted, by_margin[check.claim].fitted, atol=0.05)
+        if check.claim == "auc":
+            assert check.fitted == pytest.approx(by_margin["auc"].fitted, abs=1e-4)

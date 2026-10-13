@@ -1,12 +1,16 @@
-"""Facts with bootstrap bands for all 36 synthetic models: 18 datasets x {EBM, XGB2} (week 2).
+"""Facts with bootstrap bands for all 18 synthetic datasets: the 36 models (EBM, XGB2; week 2) and the two
+references E1 needs (D12; week 3): the oracle, with bands like a model, and T, without bands (it has no
+sampling error).
 
-For each dataset and model: fit M, purify and centre it, read REFITS Poisson refits through M's frame, build
-the Facts and save cache/facts/<scenario>/<model>.json, with the draws in <model>.npz. Models already in the
+For each dataset and kind: fit M, purify and centre it (references: read on a fine grid and centre,
+facts/reference.py), read REFITS Poisson refits through M's frame, build the Facts and save
+cache/facts/<scenario>/<kind>.json, with the draws in <kind>.npz. Models already in the
 cache are skipped, so an interrupted run resumes where it stopped. Small datasets run first, so problems show
 early. Progress goes to the terminal and to cache/facts/build.log.
 
-Run: `uv run python -m verifier_gate.experiments.build_facts` (about 3-4 hours at 100 refits: an EBM refit
-takes 4-6 s at n = 50,000). Options: --refits N, --models EBM,XGB2, --scenarios <substring>.
+Run: `uv run python -m verifier_gate.experiments.build_facts` (about 3-4 hours at 100 refits from an empty
+cache: an EBM refit takes 4-6 s at n = 50,000; the oracle and T take minutes in all). Options: --refits N,
+--models EBM,XGB2,oracle,T, --scenarios <substring>.
 Then: `uv run python -m verifier_gate.experiments.null_check`.
 """
 
@@ -17,9 +21,11 @@ from pathlib import Path
 from verifier_gate.data import dgp
 from verifier_gate.facts import bootstrap
 from verifier_gate.facts.build import Frame, build_facts
+from verifier_gate.facts.reference import GRID_POINTS, reference_steps
 from verifier_gate.facts.schema import Facts
 
 CACHE = Path(__file__).parents[3] / "cache" / "facts"
+KINDS = ("EBM", "XGB2", "oracle", "T")
 
 
 def path(scenario: dgp.Scenario, kind: str) -> Path:
@@ -30,8 +36,16 @@ def load(scenario: dgp.Scenario, kind: str, draws: bool = True) -> Facts:
     return Facts.load(path(scenario, kind), draws=draws)
 
 
+def refits_of(kind: str, refits: int) -> int:
+    return 0 if kind == "T" else refits
+
+
 def build(scenario: dgp.Scenario, kind: str, refits: int, log=print) -> Facts:
     data = dgp.generate(scenario)
+    if kind == "T":
+        model = {"kind": kind, "scenario": scenario.id, "interaction": scenario.interaction, "seed": scenario.seed,
+                 "parameters": {"grid_points": GRID_POINTS}}  # fmt: skip
+        return build_facts(reference_steps(data.truth, data.X), data.X, None, model)
     reference = bootstrap.fit_steps(kind, data.X, data.y, seed=scenario.seed)
     frame = Frame.of(reference, data.X)
     draws = bootstrap.refit_draws(kind, data.X, data.y, scenario.seed, frame, refits=refits, log=log)
@@ -50,7 +64,7 @@ def build(scenario: dgp.Scenario, kind: str, refits: int, log=print) -> Facts:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--refits", type=int, default=bootstrap.REFITS)
-    parser.add_argument("--models", default="EBM,XGB2")
+    parser.add_argument("--models", default=",".join(KINDS))
     parser.add_argument("--scenarios", default="", help="only scenarios whose id contains this")
     args = parser.parse_args()
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -69,7 +83,7 @@ def main() -> None:
     for i, (scenario, kind) in enumerate(jobs, 1):
         if path(scenario, kind).with_suffix(".json").exists():
             cached = load(scenario, kind, draws=False).bands["refits"]
-            if cached != args.refits:
+            if cached != refits_of(kind, args.refits):
                 raise SystemExit(f"{path(scenario, kind)} has {cached} refits, not {args.refits}: delete it first")
             log(f"[{i}/{len(jobs)}] {scenario.id} {kind}: cached, skipped")
             continue

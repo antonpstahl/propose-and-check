@@ -1,8 +1,8 @@
 """Acceptance check (§4.1): does a fitted model recover every planted claim at n = 50,000?
 
-Each claim is measured the same way on T and on the model, then compared. The criteria are stand-ins
-until the lexicon (week 3) and the bootstrap bands (week 2) exist; the check runs again with real
-verdicts then.
+Each claim is measured the same way on T and on the model, then compared. The criteria are stand-ins:
+point values against tolerances. These runs are diagnostics; the binding run uses the lexicon's three-valued
+verdicts on the frozen lexicon (§14.4 D24, §14.5).
 
 | claim         | stand-in                                                                        |
 |---------------|---------------------------------------------------------------------------------|
@@ -19,8 +19,9 @@ verdicts then.
 |               | pairs at level "none")                                                          |
 | auc           | holdout AUC at most 0.01 below the planted logit's                              |
 
-Models with exact terms (T, the oracle, the purified EBM) get every check. XGB2 has no decomposition yet
-(week 2), so it gets AUC and the two pair checks, on partial dependence of its margin.
+Every model gets every check on its exact terms: T, the oracle, the purified EBM and, through its exact
+decomposition, XGB2 (D26). XGB2's two pair checks on partial dependence of its margin, the only XGB2 checks
+before D26, are kept as a cross-check under the model name "XGB2 (PD)"; they are not part of its verdict.
 
 The oracle is a logistic regression on the planted unit shapes, so only the coefficients are estimated:
 the best any model can do on the sample. The acceptance rule is relative to it (§14.2 D10): a model has to
@@ -39,15 +40,20 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.special import expit
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 
 from verifier_gate.data import dgp
 from verifier_gate.facts.ebm import purify_ebm
+from verifier_gate.facts.xgb2 import purify_xgb2
+from verifier_gate.models import fit_oracle as oracle_model
 from verifier_gate.models.fit_ebm import fit_ebm
 from verifier_gate.models.fit_xgb2 import fit_xgb2
 
+Oracle = oracle_model.Oracle
+
 SCENARIOS = tuple(s for s in dgp.SCENARIOS if s.n == max(dgp.SAMPLE_SIZES))
+MODELS = ("T", "oracle", "EBM", "XGB2")
+CROSS_CHECK = "XGB2 (PD)"  # XGB2's pair checks on partial dependence of its margin, as before D26
 RESULTS = Path(__file__).parents[3] / "results" / "acceptance"
 
 STRENGTH = (("strong", 0.15), ("moderate", 0.05), ("weak", 0.02))  # lexicon v0, below 2%: negligible
@@ -79,27 +85,8 @@ class Check:
     passed: bool
 
 
-@dataclass(frozen=True)
-class Oracle(dgp.Truth):
-    """Logistic regression on the planted unit shapes, centred on the sample like T."""
-
-    coef: Mapping[str, float]
-
-    def term(self, name: str, X: Mapping) -> np.ndarray:
-        return self.coef[name] * dgp.unit_term(name, X) - self.offsets[name]
-
-
 def fit_oracle(data: dgp.Dataset) -> Oracle:
-    ref = dgp._reference().iloc[:1_000]
-    names = [t for t in dgp.TERMS if np.ptp(dgp.unit_term(t, ref)) > 0]  # noise shapes are zero
-    Z = np.column_stack([dgp.unit_term(t, data.X) for t in names])
-    scale = Z.std(axis=0)
-    fit = LogisticRegression(C=np.inf, max_iter=10_000).fit(Z / scale, data.y)
-    coef = dict.fromkeys(dgp.TERMS, 0.0) | dict(zip(names, fit.coef_[0] / scale))
-    interaction = data.scenario.interaction
-    uncentred = Oracle(interaction, 0.0, dict.fromkeys(dgp.TERMS, 0.0), coef)
-    offsets = {t: float(uncentred.term(t, data.X).mean()) for t in dgp.TERMS}
-    return Oracle(interaction, float(fit.intercept_[0]) + sum(offsets.values()), offsets, coef)
+    return oracle_model.fit_oracle(data.X, data.y, interaction=data.scenario.interaction)
 
 
 def strength(share: float) -> str:
@@ -177,7 +164,7 @@ def _auc_check(margin: Callable, data: dgp.Dataset) -> Check:
 
 
 def check_terms(model, data: dgp.Dataset) -> list[Check]:
-    """Every check, on a model with exact terms (T, the oracle or a purified EBM)."""
+    """Every check, on a model with exact terms (T, the oracle, a purified EBM or XGB2)."""
     X, truth, interaction = data.X, data.truth, data.scenario.interaction
     planted, fitted = truth.shares(X), model.shares(X)
     checks = []
@@ -207,7 +194,7 @@ def check_terms(model, data: dgp.Dataset) -> list[Check]:
 
 
 def check_margin(margin: Callable, data: dgp.Dataset) -> list[Check]:
-    """AUC and pair checks, on a model known only through its margin (XGB2 until week 2)."""
+    """AUC and pair checks on partial dependence of a margin: XGB2's cross-check (D26)."""
     rows = data.X.sample(PD_ROWS, random_state=0)
     effect = lambda *args: margin_effect(margin, rows, *args)  # noqa: E731
     return _pair_checks(effect, data.truth, data.scenario.interaction) + [_auc_check(margin, data)]
@@ -218,16 +205,18 @@ def frame(checks: list[Check], **labels) -> pd.DataFrame:
 
 
 def run(scenarios=SCENARIOS, **ebm_overrides) -> pd.DataFrame:
-    """T, oracle, EBM and XGB2 on each scenario. T must pass everything (scorer test)."""
+    """T, oracle, EBM and XGB2 on each scenario, plus XGB2's partial-dependence cross-check. T must pass
+    everything (scorer test)."""
     parts = []
     for scenario in scenarios:
         data = dgp.generate(scenario)
         ebm = purify_ebm(fit_ebm(data.X, data.y, seed=scenario.seed, **ebm_overrides), data.X)
         xgb2 = fit_xgb2(data.X, data.y, seed=scenario.seed)
-        for name, model in (("T", data.truth), ("oracle", fit_oracle(data)), ("EBM", ebm)):
+        models = (("T", data.truth), ("oracle", fit_oracle(data)), ("EBM", ebm), ("XGB2", purify_xgb2(xgb2, data.X)))
+        for name, model in models:
             parts.append(frame(check_terms(model, data), scenario=scenario.id, model=name))
         margin = lambda Z: xgb2.predict(Z, output_margin=True)  # noqa: E731
-        parts.append(frame(check_margin(margin, data), scenario=scenario.id, model="XGB2"))
+        parts.append(frame(check_margin(margin, data), scenario=scenario.id, model=CROSS_CHECK))
         print(f"{scenario.id} done", flush=True)
     checks = pd.concat(parts, ignore_index=True)
     return checks.assign(miss=attribute(checks, checks[checks.model == "oracle"]))
@@ -250,7 +239,8 @@ def attribute(checks: pd.DataFrame, oracle: pd.DataFrame) -> pd.Series:
 
 
 def verdicts(checks: pd.DataFrame) -> pd.DataFrame:
-    """Per model: checks, passed, model misses, data misses, and the acceptance verdict (no model misses)."""
+    """Per model: checks, passed, model misses, data misses, and the acceptance verdict (no model misses).
+    The partial-dependence cross-check is not a model and gets no verdict."""
     table = checks.groupby("model", sort=False).agg(
         checks=("passed", "size"),
         passed=("passed", "sum"),
@@ -258,7 +248,7 @@ def verdicts(checks: pd.DataFrame) -> pd.DataFrame:
         data_misses=("miss", lambda m: int((m == "data").sum())),
     )
     table["accepted"] = table.model_misses == 0
-    return table.loc[[m for m in ("T", "oracle", "EBM", "XGB2") if m in table.index]]
+    return table.loc[[m for m in MODELS if m in table.index]]
 
 
 def summary(checks: pd.DataFrame) -> pd.DataFrame:
@@ -266,7 +256,7 @@ def summary(checks: pd.DataFrame) -> pd.DataFrame:
     checks = checks.assign(term=checks.term.where(checks.term.isin(dgp.TERMS + ("",)), "(spurious pairs)"))
     grouped = checks.groupby(["claim", "term", "model"], sort=False).passed
     table = (grouped.sum().astype(str) + "/" + grouped.size().astype(str)).unstack("model")
-    return table[[m for m in ("T", "oracle", "EBM", "XGB2") if m in table.columns]].fillna("")
+    return table[[m for m in (*MODELS, CROSS_CHECK) if m in table.columns]].fillna("")
 
 
 def failures(checks: pd.DataFrame) -> pd.DataFrame:

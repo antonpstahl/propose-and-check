@@ -1,7 +1,9 @@
 """Bootstrap refits behind the bands (§5.1, §14.2 D17): Poisson counts as weights, one code path for both models.
 
 Refit b draws a Poisson(1) count for every training row, from a generator seeded by the dataset's seed and b,
-so the EBM and the XGB2 refit b see the same bootstrap sample (paired comparisons). The model is fitted on the
+so the EBM, the XGB2 and the oracle refit b see the same bootstrap sample (paired comparisons). The oracle's
+coefficients are refitted the same way, and facts/reference.py reads each refit on M's grid and centres it on
+the bootstrap sample (the references are not purified, see there). The model is fitted on the
 rows drawn at least once, with the counts as sample weights (interpret rejects zero weights, and resampled
 duplicates would leak into the internal validation split and break early stopping), then purified and
 centred on the bootstrap sample. Each refit is read through M's frame (facts/build.py): a term M has and the
@@ -16,17 +18,21 @@ import pandas as pd
 
 from verifier_gate.facts.build import Frame
 from verifier_gate.facts.ebm import purify_ebm
+from verifier_gate.facts.reference import GRID_POINTS, reference_steps
 from verifier_gate.facts.schema import Draws
 from verifier_gate.facts.steps import StepModel
 from verifier_gate.facts.xgb2 import purify_xgb2
 from verifier_gate.models.fit_ebm import EBM_PARAMS, fit_ebm
+from verifier_gate.models.fit_oracle import fit_oracle
 from verifier_gate.models.fit_xgb2 import XGB2_PARAMS, fit_xgb2
 
 REFITS = 100
 STREAM = 17  # separates the bootstrap generator from the DGP's, which is seeded by the dataset seed alone
+ORACLE_PARAMS = {"shapes": "planted unit shapes", "fit": "unpenalised logistic regression", "grid_points": GRID_POINTS}
 MODELS: dict[str, tuple[Callable, Callable, dict]] = {
     "EBM": (fit_ebm, purify_ebm, EBM_PARAMS),
     "XGB2": (fit_xgb2, purify_xgb2, XGB2_PARAMS),
+    "oracle": (fit_oracle, reference_steps, ORACLE_PARAMS),
 }
 
 
