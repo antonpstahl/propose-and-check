@@ -2,6 +2,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 
 import numpy as np
+import pandas as pd
 import pytest
 from scipy.special import expit
 
@@ -57,6 +58,44 @@ def test_each_check_fails_when_its_claim_is_broken(dominant, claim):
     model = Edited(truth.interaction, truth.intercept, truth.offsets, {term: replacement})
     failed = {(c.claim, c.term) for c in acceptance.check_terms(model, dominant) if not c.passed}
     assert (claim, "" if claim == "auc" else term) in failed
+
+
+def test_failures_are_labelled_data_or_model_misses_against_the_oracle(dominant):
+    """D10: the oracle misses the peak (data miss); the model misses the peak and the step (step: model miss)."""
+    truth = dominant.truth
+
+    def edited(*claims):
+        return Edited(truth.interaction, truth.intercept, truth.offsets, {BROKEN[c][0]: BROKEN[c][1] for c in claims})
+
+    models = {"T": truth, "oracle": edited("peak"), "EBM": edited("peak", "step")}
+    checks = pd.concat(
+        [acceptance.frame(acceptance.check_terms(m, dominant), scenario="s", model=k) for k, m in models.items()],
+        ignore_index=True,
+    )
+    checks["miss"] = acceptance.attribute(checks, checks[checks.model == "oracle"])
+    miss = checks.set_index(["model", "claim", "term"]).miss
+    assert miss["EBM", "peak", "history_months"] == "data"
+    assert miss["EBM", "step", "dti"] == "model"
+    assert miss["oracle", "peak", "history_months"] == "data"
+    assert (checks.miss[checks.passed] == "").all() and (checks.miss[~checks.passed] != "").all()
+    verdicts = acceptance.verdicts(checks)
+    assert verdicts.accepted.to_dict() == {"T": True, "oracle": True, "EBM": False}
+    assert verdicts.loc["EBM", "data_misses"] >= 1 and verdicts.loc["EBM", "model_misses"] >= 1
+
+
+def test_a_spurious_pair_the_oracle_lacks_is_a_model_miss():
+    row = {"scenario": "s", "planted": 0.0}
+    checks = pd.DataFrame(
+        [
+            {**row, "model": "oracle", "claim": "auc", "term": "", "fitted": 0.76, "passed": True},
+            {**row, "model": "EBM", "claim": "auc", "term": None, "fitted": 0.76, "passed": True},  # "" read from CSV
+            {**row, "model": "EBM", "claim": "noise", "term": "income & dti", "fitted": 0.03, "passed": False},
+        ]
+    )
+    assert acceptance.attribute(checks, checks[checks.model == "oracle"]).tolist() == ["", "", "model"]
+    unmatched = checks.assign(claim="strength")
+    with pytest.raises(ValueError, match="no oracle check"):
+        acceptance.attribute(unmatched, checks[checks.model == "oracle"])
 
 
 def test_margin_checks_agree_with_term_checks_on_truth(dominant):

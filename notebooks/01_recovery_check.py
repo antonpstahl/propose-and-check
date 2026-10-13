@@ -74,8 +74,11 @@ for pair in dgp.PAIR_FACTORS:
     print(f"  planted pair {pair}: found={pair in ebm_imp}, rank among EBM pairs={rank}")
 
 # %% Impurity of EBM pair terms: share of mean |score| that is a main-effect part (moved out by purify)
-for idx, pure in purified.pure_pairs.items():
-    name, scores, weights = ebm.term_names_[idx], ebm.term_scores_[idx], ebm.bin_weights_[idx]
+for idx, name in enumerate(ebm.term_names_):
+    if name not in purified.pairs:
+        continue
+    scores, weights = ebm.term_scores_[idx][1:-1, 1:-1], ebm.bin_weights_[idx][1:-1, 1:-1]  # no missing/unknown bins
+    pure = purified.steps[name].scores
     impure = np.average(np.abs(scores - pure), weights=weights) / np.average(np.abs(scores), weights=weights)
     if name in dgp.PAIR_FACTORS or impure > 0.25:
         print(f"  {name}: impure part {impure:.0%} of mean |score|")

@@ -26,6 +26,9 @@ EBM_PARAMS = {
 }
 
 
-def fit_ebm(X: pd.DataFrame, y: np.ndarray, seed: int, **overrides) -> ExplainableBoostingClassifier:
+def fit_ebm(
+    X: pd.DataFrame, y: np.ndarray, seed: int, sample_weight: np.ndarray | None = None, **overrides
+) -> ExplainableBoostingClassifier:
+    """sample_weight: Poisson counts of a bootstrap refit (positive; interpret rejects zero weights)."""
     params = {**EBM_PARAMS, **overrides, "random_state": seed}
-    return ExplainableBoostingClassifier(**params).fit(X, y)
+    return ExplainableBoostingClassifier(**params).fit(X, y, sample_weight=sample_weight)

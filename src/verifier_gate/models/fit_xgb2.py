@@ -18,10 +18,18 @@ XGB2_PARAMS = {
 }
 
 
-def fit_xgb2(X: pd.DataFrame, y: np.ndarray, seed: int, **overrides) -> XGBClassifier:
-    X_fit, X_val, y_fit, y_val = train_test_split(
-        X, y, test_size=VALIDATION_SIZE, stratify=y, random_state=seed
+def fit_xgb2(
+    X: pd.DataFrame, y: np.ndarray, seed: int, sample_weight: np.ndarray | None = None, **overrides
+) -> XGBClassifier:
+    """sample_weight: Poisson counts of a bootstrap refit. They weight the validation loss too, so early
+    stopping sees the bootstrap sample (resampled rows would leak duplicates into the validation split, D17)."""
+    w = np.ones(len(y)) if sample_weight is None else np.asarray(sample_weight, dtype=np.float64)
+    X_fit, X_val, y_fit, y_val, w_fit, w_val = train_test_split(
+        X, y, w, test_size=VALIDATION_SIZE, stratify=y, random_state=seed
     )
     model = XGBClassifier(**{**XGB2_PARAMS, **overrides, "random_state": seed})
-    model.fit(X_fit, y_fit, eval_set=[(X_val, y_val)], verbose=False)
+    if sample_weight is None:
+        model.fit(X_fit, y_fit, eval_set=[(X_val, y_val)], verbose=False)
+    else:
+        model.fit(X_fit, y_fit, sample_weight=w_fit, eval_set=[(X_val, y_val)], sample_weight_eval_set=[w_val], verbose=False)
     return model

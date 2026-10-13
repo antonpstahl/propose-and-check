@@ -69,8 +69,8 @@ def summarise(checks: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def run(settings=SETTINGS) -> tuple[pd.DataFrame, pd.DataFrame]:
-    datasets = [dgp.generate(s) for s in dgp.SCENARIOS]
+def run(settings=SETTINGS, scenarios=dgp.SCENARIOS) -> tuple[pd.DataFrame, pd.DataFrame]:
+    datasets = [dgp.generate(s) for s in scenarios]
     checks, ranks = [], []
     for setting in settings:
         start = time.perf_counter()

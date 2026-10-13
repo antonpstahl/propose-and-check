@@ -23,8 +23,11 @@ Models with exact terms (T, the oracle, the purified EBM) get every check. XGB2 
 (week 2), so it gets AUC and the two pair checks, on partial dependence of its margin.
 
 The oracle is a logistic regression on the planted unit shapes, so only the coefficients are estimated:
-the best any model can do on the sample. A claim the oracle misses is not supported by the data, so the
-DGP has to change, not the model.
+the best any model can do on the sample. The acceptance rule is relative to it (§14.2 D10): a model has to
+recover every claim the oracle recovers on the same dataset. Each failed check is labelled
+- "model" (a model miss) if the oracle passes the same claim on the same dataset,
+- "data" (a data miss) if the oracle fails it too: the sample does not support the claim. Reported, not fixed.
+The oracle knows which terms are zero, so it passes every noise check; a noise failure is always a model miss.
 
 Run: `uv run python -m verifier_gate.experiments.acceptance` (about 1 minute).
 """
@@ -226,7 +229,36 @@ def run(scenarios=SCENARIOS, **ebm_overrides) -> pd.DataFrame:
         margin = lambda Z: xgb2.predict(Z, output_margin=True)  # noqa: E731
         parts.append(frame(check_margin(margin, data), scenario=scenario.id, model="XGB2"))
         print(f"{scenario.id} done", flush=True)
-    return pd.concat(parts, ignore_index=True)
+    checks = pd.concat(parts, ignore_index=True)
+    return checks.assign(miss=attribute(checks, checks[checks.model == "oracle"]))
+
+
+def attribute(checks: pd.DataFrame, oracle: pd.DataFrame) -> pd.Series:
+    """Label each check (D10): "" if passed, else "data" if the oracle fails the same claim on the same
+    dataset, else "model". Matches on (scenario, claim, term); the oracle's own failures come out as "data".
+
+    The oracle has no term for a model's spurious pairs. It is zero there, so it passes their noise check."""
+    key = ["scenario", "claim", "term"]
+    checks, oracle = (frame.assign(term=frame.term.fillna("")) for frame in (checks, oracle))  # "" reads as NaN
+    oracle_passed = oracle.set_index(key).passed.reindex(pd.MultiIndex.from_frame(checks[key])).to_numpy()
+    unmatched = pd.isna(oracle_passed)
+    if not (checks.claim[unmatched] == "noise").all():
+        raise ValueError(f"no oracle check for {checks[unmatched & (checks.claim != 'noise')][key].values.tolist()}")
+    oracle_passed = np.where(unmatched, True, oracle_passed).astype(bool)
+    labels = np.where(checks.passed, "", np.where(oracle_passed, "model", "data"))
+    return pd.Series(labels, index=checks.index, name="miss")
+
+
+def verdicts(checks: pd.DataFrame) -> pd.DataFrame:
+    """Per model: checks, passed, model misses, data misses, and the acceptance verdict (no model misses)."""
+    table = checks.groupby("model", sort=False).agg(
+        checks=("passed", "size"),
+        passed=("passed", "sum"),
+        model_misses=("miss", lambda m: int((m == "model").sum())),
+        data_misses=("miss", lambda m: int((m == "data").sum())),
+    )
+    table["accepted"] = table.model_misses == 0
+    return table.loc[[m for m in ("T", "oracle", "EBM", "XGB2") if m in table.index]]
 
 
 def summary(checks: pd.DataFrame) -> pd.DataFrame:
@@ -252,6 +284,8 @@ def main() -> None:
     pd.set_option("display.width", 200)
     print(summary(checks).to_string())
     print(failures(checks).to_string(index=False) if not checks.passed.all() else "every check passed")
+    print("\nAcceptance relative to the oracle (D10): a model is accepted if it has no model misses")
+    print(verdicts(checks).to_string())
 
 
 if __name__ == "__main__":
