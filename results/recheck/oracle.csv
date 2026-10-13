@@ -1,0 +1,247 @@
+scenario,model,claim,term,planted,fitted,passed
+syn-none-n50000-s4,oracle,strength,utilization,0.3992564457973004,0.3973303892762378,True
+syn-none-n50000-s4,oracle,strength,n_delinquencies,0.2406650088567144,0.23187023728453598,True
+syn-none-n50000-s4,oracle,strength,income,0.13004677213682508,0.12556777479771034,True
+syn-none-n50000-s4,oracle,strength,history_months,0.09999490415865797,0.10140989826966536,True
+syn-none-n50000-s4,oracle,strength,dti,0.07997842066748258,0.08065523373533794,True
+syn-none-n50000-s4,oracle,strength,n_inquiries,0.040071913477208995,0.04546881056022835,True
+syn-none-n50000-s4,oracle,strength,age,0.009986534905810595,0.011908364208449063,True
+syn-none-n50000-s4,oracle,noise,noise_1,0.0,0.0,True
+syn-none-n50000-s4,oracle,noise,noise_2,0.0,0.0,True
+syn-none-n50000-s4,oracle,noise,utilization & n_delinquencies,0.0,0.005567370434413642,True
+syn-none-n50000-s4,oracle,noise,history_months & n_inquiries,0.0,0.0002219214334215693,True
+syn-none-n50000-s4,oracle,rank,utilization,1.0,1.0,True
+syn-none-n50000-s4,oracle,rank,n_delinquencies,2.0,2.0,True
+syn-none-n50000-s4,oracle,rank,income,3.0,3.0,True
+syn-none-n50000-s4,oracle,rank,history_months,4.0,4.0,True
+syn-none-n50000-s4,oracle,rank,dti,5.0,5.0,True
+syn-none-n50000-s4,oracle,rank,n_inquiries,6.0,6.0,True
+syn-none-n50000-s4,oracle,direction,utilization,3.195985515286232,3.2339207307244324,True
+syn-none-n50000-s4,oracle,direction,n_delinquencies,0.9754226937072435,0.9555416730753326,True
+syn-none-n50000-s4,oracle,direction,income,-0.858696862444785,-0.8430303668100296,True
+syn-none-n50000-s4,oracle,direction,history_months,-0.6131513632362995,-0.6322588227295407,True
+syn-none-n50000-s4,oracle,direction,dti,0.3152353664851627,0.32323574946108774,True
+syn-none-n50000-s4,oracle,direction,n_inquiries,0.2548897419473351,0.2940699120618873,True
+syn-none-n50000-s4,oracle,peak,history_months,35.70075976369159,35.70075976369159,True
+syn-none-n50000-s4,oracle,step,dti,0.4299888080784466,0.4299888080784466,True
+syn-none-n50000-s4,oracle,auc,,0.7660497069903772,0.7660831199572892,True
+syn-none-n50000-s5,oracle,strength,utilization,0.40131515179022703,0.4041315069983597,True
+syn-none-n50000-s5,oracle,strength,n_delinquencies,0.23988903325629105,0.22849627223004454,True
+syn-none-n50000-s5,oracle,strength,income,0.1294061940661804,0.11919946828001834,True
+syn-none-n50000-s5,oracle,strength,history_months,0.09962588143114362,0.10859288117711184,True
+syn-none-n50000-s5,oracle,strength,dti,0.07983663882670285,0.08674132341596678,True
+syn-none-n50000-s5,oracle,strength,n_inquiries,0.039949728822605265,0.037614412881312696,True
+syn-none-n50000-s5,oracle,strength,age,0.009977371806849746,0.010612849413015315,True
+syn-none-n50000-s5,oracle,noise,noise_1,0.0,0.0,True
+syn-none-n50000-s5,oracle,noise,noise_2,0.0,0.0,True
+syn-none-n50000-s5,oracle,noise,utilization & n_delinquencies,0.0,0.00413787196292696,True
+syn-none-n50000-s5,oracle,noise,history_months & n_inquiries,0.0,0.00047341364124380106,True
+syn-none-n50000-s5,oracle,rank,utilization,1.0,1.0,True
+syn-none-n50000-s5,oracle,rank,n_delinquencies,2.0,2.0,True
+syn-none-n50000-s5,oracle,rank,income,3.0,3.0,True
+syn-none-n50000-s5,oracle,rank,history_months,4.0,4.0,True
+syn-none-n50000-s5,oracle,rank,dti,5.0,5.0,True
+syn-none-n50000-s5,oracle,rank,n_inquiries,6.0,6.0,True
+syn-none-n50000-s5,oracle,direction,utilization,3.1748902816895876,3.190430496023095,True
+syn-none-n50000-s5,oracle,direction,n_delinquencies,0.9754226937072437,0.9271393063040516,True
+syn-none-n50000-s5,oracle,direction,income,-0.8525926156275194,-0.7836898708887817,True
+syn-none-n50000-s5,oracle,direction,history_months,-0.6207385325561692,-0.6751826866929638,True
+syn-none-n50000-s5,oracle,direction,dti,0.3152353664851627,0.34177646043615906,True
+syn-none-n50000-s5,oracle,direction,n_inquiries,0.2548897419473351,0.23948384503769,True
+syn-none-n50000-s5,oracle,peak,history_months,35.63638129448146,35.63638129448146,True
+syn-none-n50000-s5,oracle,step,dti,0.4299224258518256,0.4299224258518256,True
+syn-none-n50000-s5,oracle,auc,,0.7674071867601346,0.7674513357411348,True
+syn-none-n50000-s6,oracle,strength,utilization,0.40222768188272845,0.40146939586339847,True
+syn-none-n50000-s6,oracle,strength,n_delinquencies,0.23844949356835332,0.2504280989992487,True
+syn-none-n50000-s6,oracle,strength,income,0.13011140602334392,0.11738830669569965,True
+syn-none-n50000-s6,oracle,strength,history_months,0.09966126910778839,0.08947205351256882,True
+syn-none-n50000-s6,oracle,strength,dti,0.07975964648998224,0.08875824296689169,True
+syn-none-n50000-s6,oracle,strength,n_inquiries,0.039859577946352365,0.04093994809167169,True
+syn-none-n50000-s6,oracle,strength,age,0.009930924981451306,0.0022729980440818736,True
+syn-none-n50000-s6,oracle,noise,noise_1,0.0,0.0,True
+syn-none-n50000-s6,oracle,noise,noise_2,0.0,0.0,True
+syn-none-n50000-s6,oracle,noise,utilization & n_delinquencies,0.0,0.0025630327688930185,True
+syn-none-n50000-s6,oracle,noise,history_months & n_inquiries,0.0,0.00670792305754602,True
+syn-none-n50000-s6,oracle,rank,utilization,1.0,1.0,True
+syn-none-n50000-s6,oracle,rank,n_delinquencies,2.0,2.0,True
+syn-none-n50000-s6,oracle,rank,income,3.0,3.0,True
+syn-none-n50000-s6,oracle,rank,history_months,4.0,4.0,True
+syn-none-n50000-s6,oracle,rank,dti,5.0,5.0,True
+syn-none-n50000-s6,oracle,rank,n_inquiries,6.0,6.0,True
+syn-none-n50000-s6,oracle,direction,utilization,3.202928052029291,3.197957145891791,True
+syn-none-n50000-s6,oracle,direction,n_delinquencies,0.9754226937072435,1.0247654529946715,True
+syn-none-n50000-s6,oracle,direction,income,-0.8598589297596262,-0.7760355953521223,True
+syn-none-n50000-s6,oracle,direction,history_months,-0.6191332652269521,-0.5560195971402495,True
+syn-none-n50000-s6,oracle,direction,dti,0.3152353664851627,0.3509177851095385,True
+syn-none-n50000-s6,oracle,direction,n_inquiries,0.2548897419473351,0.26188578003000895,True
+syn-none-n50000-s6,oracle,peak,history_months,35.71900132933797,35.71900132933797,True
+syn-none-n50000-s6,oracle,step,dti,0.4300058145935208,0.4300058145935208,True
+syn-none-n50000-s6,oracle,auc,,0.7648157420146284,0.764153288028336,True
+syn-weak-n50000-s4,oracle,strength,utilization,0.3632391199364558,0.3633351422581561,True
+syn-weak-n50000-s4,oracle,strength,n_delinquencies,0.21895437615801014,0.21940244085049287,True
+syn-weak-n50000-s4,oracle,strength,income,0.11831512191925782,0.11397162337329257,True
+syn-weak-n50000-s4,oracle,strength,history_months,0.09097426320115472,0.09349957355487439,True
+syn-weak-n50000-s4,oracle,strength,dti,0.07276348683400631,0.07207164442773371,True
+syn-weak-n50000-s4,oracle,strength,n_inquiries,0.03645698582665091,0.04087703743563792,True
+syn-weak-n50000-s4,oracle,strength,age,0.00908563953966317,0.011949408985016044,True
+syn-weak-n50000-s4,oracle,noise,noise_1,0.0,0.0,True
+syn-weak-n50000-s4,oracle,noise,noise_2,0.0,0.0,True
+syn-weak-n50000-s4,oracle,strength,utilization & n_delinquencies,0.029945088408441144,0.024239370305084287,True
+syn-weak-n50000-s4,oracle,strength,history_months & n_inquiries,0.060265918176360005,0.06065375880971209,True
+syn-weak-n50000-s4,oracle,rank,utilization,1,1,True
+syn-weak-n50000-s4,oracle,rank,n_delinquencies,2,2,True
+syn-weak-n50000-s4,oracle,rank,income,3,3,True
+syn-weak-n50000-s4,oracle,rank,history_months,4,4,True
+syn-weak-n50000-s4,oracle,rank,dti,5,5,True
+syn-weak-n50000-s4,oracle,rank,n_inquiries,6,6,True
+syn-weak-n50000-s4,oracle,direction,utilization,3.195985515286232,3.243089183853476,True
+syn-weak-n50000-s4,oracle,direction,n_delinquencies,0.9754226937072435,0.9915622387083027,True
+syn-weak-n50000-s4,oracle,direction,income,-0.858696862444785,-0.8391423766865499,True
+syn-weak-n50000-s4,oracle,direction,history_months,-0.6131513632362995,-0.6392902488099859,True
+syn-weak-n50000-s4,oracle,direction,dti,0.3152353664851627,0.31675622833034817,True
+syn-weak-n50000-s4,oracle,direction,n_inquiries,0.2548897419473351,0.2899281001902197,True
+syn-weak-n50000-s4,oracle,peak,history_months,35.70075976369159,35.70075976369159,True
+syn-weak-n50000-s4,oracle,step,dti,0.4299888080784466,0.4299888080784466,True
+syn-weak-n50000-s4,oracle,amplification,utilization & n_delinquencies,"(2.1493384659874804, 2.731104266877545)","(2.2229141213113466, 2.70064489766439)",True
+syn-weak-n50000-s4,oracle,sign_flip,history_months & n_inquiries,"(0.9802810940012698, -0.4897457141373161)","(1.030551816341772, -0.47034382351285653)",True
+syn-weak-n50000-s4,oracle,auc,,0.7676008839995793,0.7675371787543418,True
+syn-weak-n50000-s5,oracle,strength,utilization,0.36530247206821936,0.3665972146884583,True
+syn-weak-n50000-s5,oracle,strength,n_delinquencies,0.21836219360186254,0.20832342695270123,True
+syn-weak-n50000-s5,oracle,strength,income,0.11779371494556819,0.1094438917752135,True
+syn-weak-n50000-s5,oracle,strength,history_months,0.0906857879809021,0.10064559527333967,True
+syn-weak-n50000-s5,oracle,strength,dti,0.07267236583246882,0.08056010870345405,True
+syn-weak-n50000-s5,oracle,strength,n_inquiries,0.03636477375013501,0.038598840233850885,True
+syn-weak-n50000-s5,oracle,strength,age,0.009082035825278617,0.009292119683755968,True
+syn-weak-n50000-s5,oracle,noise,noise_1,0.0,0.0,True
+syn-weak-n50000-s5,oracle,noise,noise_2,0.0,0.0,True
+syn-weak-n50000-s5,oracle,strength,utilization & n_delinquencies,0.030177992541777575,0.03082161993765007,True
+syn-weak-n50000-s5,oracle,strength,history_months & n_inquiries,0.05955866345378783,0.055717182751576354,True
+syn-weak-n50000-s5,oracle,rank,utilization,1,1,True
+syn-weak-n50000-s5,oracle,rank,n_delinquencies,2,2,True
+syn-weak-n50000-s5,oracle,rank,income,3,3,True
+syn-weak-n50000-s5,oracle,rank,history_months,4,4,True
+syn-weak-n50000-s5,oracle,rank,dti,5,5,True
+syn-weak-n50000-s5,oracle,rank,n_inquiries,6,6,True
+syn-weak-n50000-s5,oracle,direction,utilization,3.1748902816895876,3.194669201997349,True
+syn-weak-n50000-s5,oracle,direction,n_delinquencies,0.9754226937072437,0.9330698187099686,True
+syn-weak-n50000-s5,oracle,direction,income,-0.8525926156275194,-0.7942762923621274,True
+syn-weak-n50000-s5,oracle,direction,history_months,-0.6207385325561692,-0.6907563257771707,True
+syn-weak-n50000-s5,oracle,direction,dti,0.3152353664851627,0.3503856439158658,True
+syn-weak-n50000-s5,oracle,direction,n_inquiries,0.2548897419473351,0.27127286067285006,True
+syn-weak-n50000-s5,oracle,peak,history_months,35.63638129448146,35.63638129448146,True
+syn-weak-n50000-s5,oracle,step,dti,0.4299224258518256,0.4299224258518256,True
+syn-weak-n50000-s5,oracle,amplification,utilization & n_delinquencies,"(2.1493384659874804, 2.731104266877545)","(2.1588688151322515, 2.7546323605196683)",True
+syn-weak-n50000-s5,oracle,sign_flip,history_months & n_inquiries,"(0.9802810940012697, -0.4897457141373161)","(0.9516930682105673, -0.42719839919873054)",True
+syn-weak-n50000-s5,oracle,auc,,0.7680311973740516,0.768057351711825,True
+syn-weak-n50000-s6,oracle,strength,utilization,0.36605827751834874,0.3680346151769042,True
+syn-weak-n50000-s6,oracle,strength,n_delinquencies,0.21700746821349504,0.22880525100528698,True
+syn-weak-n50000-s6,oracle,strength,income,0.11841143541254844,0.10981739625203285,True
+syn-weak-n50000-s6,oracle,strength,history_months,0.09069945741707082,0.08840239534700843,True
+syn-weak-n50000-s6,oracle,strength,dti,0.072587442696467,0.08097568914267539,True
+syn-weak-n50000-s6,oracle,strength,n_inquiries,0.036275296561772113,0.037305044527498415,True
+syn-weak-n50000-s6,oracle,strength,age,0.009037909265364522,0.0028652089576511382,True
+syn-weak-n50000-s6,oracle,noise,noise_1,0.0,0.0,True
+syn-weak-n50000-s6,oracle,noise,noise_2,0.0,0.0,True
+syn-weak-n50000-s6,oracle,strength,utilization & n_delinquencies,0.030192624729622013,0.028888828745720616,True
+syn-weak-n50000-s6,oracle,strength,history_months & n_inquiries,0.05973008818531133,0.0549055708452219,True
+syn-weak-n50000-s6,oracle,rank,utilization,1,1,True
+syn-weak-n50000-s6,oracle,rank,n_delinquencies,2,2,True
+syn-weak-n50000-s6,oracle,rank,income,3,3,True
+syn-weak-n50000-s6,oracle,rank,history_months,4,4,True
+syn-weak-n50000-s6,oracle,rank,dti,5,5,True
+syn-weak-n50000-s6,oracle,rank,n_inquiries,6,6,True
+syn-weak-n50000-s6,oracle,direction,utilization,3.202928052029291,3.1751268818837834,True
+syn-weak-n50000-s6,oracle,direction,n_delinquencies,0.9754226937072435,1.0140506044373903,True
+syn-weak-n50000-s6,oracle,direction,income,-0.8598589297596262,-0.7862853216062513,True
+syn-weak-n50000-s6,oracle,direction,history_months,-0.6191332652269521,-0.595002716180712,True
+syn-weak-n50000-s6,oracle,direction,dti,0.3152353664851627,0.34673969092174833,True
+syn-weak-n50000-s6,oracle,direction,n_inquiries,0.2548897419473351,0.25845468826118817,True
+syn-weak-n50000-s6,oracle,peak,history_months,35.71900132933797,35.71900132933797,True
+syn-weak-n50000-s6,oracle,step,dti,0.4300058145935208,0.4300058145935208,True
+syn-weak-n50000-s6,oracle,amplification,utilization & n_delinquencies,"(2.1493384659874804, 2.7311042668775456)","(2.1410507996466652, 2.6898995993021115)",True
+syn-weak-n50000-s6,oracle,sign_flip,history_months & n_inquiries,"(0.9802810940012698, -0.4897457141373161)","(0.9159173517119426, -0.41644998060627486)",True
+syn-weak-n50000-s6,oracle,auc,,0.7665687418287198,0.7660990395892113,True
+syn-dominant-n50000-s4,oracle,strength,utilization,0.29147348993057587,0.29207426472899817,True
+syn-dominant-n50000-s4,oracle,strength,n_delinquencies,0.17569527248472494,0.17962300179667626,True
+syn-dominant-n50000-s4,oracle,strength,income,0.09493944788601101,0.09168553590123946,True
+syn-dominant-n50000-s4,oracle,strength,history_months,0.07300035853446094,0.07551040781478745,True
+syn-dominant-n50000-s4,oracle,strength,dti,0.05838750917229266,0.05675228530200822,True
+syn-dominant-n50000-s4,oracle,strength,n_inquiries,0.029254131254096233,0.03166726378332824,True
+syn-dominant-n50000-s4,oracle,strength,age,0.007290577802688567,0.004405770528245248,True
+syn-dominant-n50000-s4,oracle,noise,noise_1,0.0,0.0,True
+syn-dominant-n50000-s4,oracle,noise,noise_2,0.0,0.0,True
+syn-dominant-n50000-s4,oracle,strength,utilization & n_delinquencies,0.20967594933580486,0.20683646380910473,True
+syn-dominant-n50000-s4,oracle,strength,history_months & n_inquiries,0.060283263599344904,0.06144500633561222,True
+syn-dominant-n50000-s4,oracle,rank,utilization,1,1,True
+syn-dominant-n50000-s4,oracle,rank,n_delinquencies,2,2,True
+syn-dominant-n50000-s4,oracle,rank,income,3,3,True
+syn-dominant-n50000-s4,oracle,rank,history_months,4,4,True
+syn-dominant-n50000-s4,oracle,rank,dti,5,5,True
+syn-dominant-n50000-s4,oracle,rank,n_inquiries,6,6,True
+syn-dominant-n50000-s4,oracle,direction,utilization,3.195985515286232,3.17411458376217,True
+syn-dominant-n50000-s4,oracle,direction,n_delinquencies,0.9754226937072435,0.9883671364011412,True
+syn-dominant-n50000-s4,oracle,direction,income,-0.858696862444785,-0.8218973290297273,True
+syn-dominant-n50000-s4,oracle,direction,history_months,-0.6131513632362995,-0.6285981346194447,True
+syn-dominant-n50000-s4,oracle,direction,dti,0.3152353664851627,0.30368399800943,True
+syn-dominant-n50000-s4,oracle,direction,n_inquiries,0.2548897419473351,0.2734634312412287,True
+syn-dominant-n50000-s4,oracle,peak,history_months,35.70075976369159,35.70075976369159,True
+syn-dominant-n50000-s4,oracle,step,dti,0.4299888080784466,0.4299888080784466,True
+syn-dominant-n50000-s4,oracle,amplification,utilization & n_delinquencies,"(0.4770079361252203, 5.553512253480993)","(0.5029532667902681, 5.466210830764215)",True
+syn-dominant-n50000-s4,oracle,sign_flip,history_months & n_inquiries,"(1.1591447150556646, -0.6733544567335314)","(1.1869545099148242, -0.66426190015588)",True
+syn-dominant-n50000-s4,oracle,auc,,0.7557739476785819,0.7556938736369115,True
+syn-dominant-n50000-s5,oracle,strength,utilization,0.29274744827731447,0.29259262805052777,True
+syn-dominant-n50000-s5,oracle,strength,n_delinquencies,0.17499190360048905,0.1709548572849601,True
+syn-dominant-n50000-s5,oracle,strength,income,0.09439796363321812,0.09262747457686603,True
+syn-dominant-n50000-s5,oracle,strength,history_months,0.07267411270479678,0.07633062224361804,True
+syn-dominant-n50000-s5,oracle,strength,dti,0.058238449735313454,0.06439461075571651,True
+syn-dominant-n50000-s5,oracle,strength,n_inquiries,0.029142137096038693,0.026625864000488955,True
+syn-dominant-n50000-s5,oracle,strength,age,0.007278195512777574,0.01043809925304933,True
+syn-dominant-n50000-s5,oracle,noise,noise_1,0.0,0.0,True
+syn-dominant-n50000-s5,oracle,noise,noise_2,0.0,0.0,True
+syn-dominant-n50000-s5,oracle,strength,utilization & n_delinquencies,0.21103156816037863,0.2094650144445164,True
+syn-dominant-n50000-s5,oracle,strength,history_months & n_inquiries,0.05949822127967325,0.05657082939025686,True
+syn-dominant-n50000-s5,oracle,rank,utilization,1,1,True
+syn-dominant-n50000-s5,oracle,rank,n_delinquencies,2,2,True
+syn-dominant-n50000-s5,oracle,rank,income,3,3,True
+syn-dominant-n50000-s5,oracle,rank,history_months,4,4,True
+syn-dominant-n50000-s5,oracle,rank,dti,5,5,True
+syn-dominant-n50000-s5,oracle,rank,n_inquiries,6,6,True
+syn-dominant-n50000-s5,oracle,direction,utilization,3.1748902816895876,3.166392813622438,True
+syn-dominant-n50000-s5,oracle,direction,n_delinquencies,0.9754226937072437,0.95087220547542,True
+syn-dominant-n50000-s5,oracle,direction,income,-0.8525926156275194,-0.8348040989567103,True
+syn-dominant-n50000-s5,oracle,direction,history_months,-0.6207385325561692,-0.6505693191200016,True
+syn-dominant-n50000-s5,oracle,direction,dti,0.3152353664851627,0.3478087151786148,True
+syn-dominant-n50000-s5,oracle,direction,n_inquiries,0.2548897419473351,0.23238092615587913,True
+syn-dominant-n50000-s5,oracle,peak,history_months,35.63638129448146,35.63638129448146,True
+syn-dominant-n50000-s5,oracle,step,dti,0.4299224258518256,0.4299224258518256,True
+syn-dominant-n50000-s5,oracle,amplification,utilization & n_delinquencies,"(0.4770079361252204, 5.553512253480992)","(0.48872541615632004, 5.516718109982454)",True
+syn-dominant-n50000-s5,oracle,sign_flip,history_months & n_inquiries,"(1.1591447150556644, -0.6733544567335314)","(1.090297933986559, -0.6482959947915854)",True
+syn-dominant-n50000-s5,oracle,auc,,0.7602524233229608,0.760380785152948,True
+syn-dominant-n50000-s6,oracle,strength,utilization,0.29331662957692867,0.29586297677839013,True
+syn-dominant-n50000-s6,oracle,strength,n_delinquencies,0.1738846054811977,0.1844360416443397,True
+syn-dominant-n50000-s6,oracle,strength,income,0.09488118496878939,0.08827610164507968,True
+syn-dominant-n50000-s6,oracle,strength,history_months,0.0726760212455457,0.07060289294310577,True
+syn-dominant-n50000-s6,oracle,strength,dti,0.058163154199590325,0.06703692030064755,True
+syn-dominant-n50000-s6,oracle,strength,n_inquiries,0.029066813613767294,0.023710592770004146,True
+syn-dominant-n50000-s6,oracle,strength,age,0.007241931809630876,0.00024921713677746894,True
+syn-dominant-n50000-s6,oracle,noise,noise_1,0.0,0.0,True
+syn-dominant-n50000-s6,oracle,noise,noise_2,0.0,0.0,True
+syn-dominant-n50000-s6,oracle,strength,utilization & n_delinquencies,0.2111076131452423,0.2120947816969907,True
+syn-dominant-n50000-s6,oracle,strength,history_months & n_inquiries,0.05966204595930787,0.05773047508466477,True
+syn-dominant-n50000-s6,oracle,rank,utilization,1,1,True
+syn-dominant-n50000-s6,oracle,rank,n_delinquencies,2,2,True
+syn-dominant-n50000-s6,oracle,rank,income,3,3,True
+syn-dominant-n50000-s6,oracle,rank,history_months,4,4,True
+syn-dominant-n50000-s6,oracle,rank,dti,5,5,True
+syn-dominant-n50000-s6,oracle,rank,n_inquiries,6,6,True
+syn-dominant-n50000-s6,oracle,direction,utilization,3.202928052029291,3.167933901447726,True
+syn-dominant-n50000-s6,oracle,direction,n_delinquencies,0.9754226937072435,1.0145010615748857,True
+syn-dominant-n50000-s6,oracle,direction,income,-0.8598589297596262,-0.7844499574681956,True
+syn-dominant-n50000-s6,oracle,direction,history_months,-0.6191332652269521,-0.5897806013315187,True
+syn-dominant-n50000-s6,oracle,direction,dti,0.3152353664851627,0.35626735646314434,True
+syn-dominant-n50000-s6,oracle,direction,n_inquiries,0.2548897419473351,0.2038789251104897,True
+syn-dominant-n50000-s6,oracle,peak,history_months,35.71900132933797,35.71900132933797,True
+syn-dominant-n50000-s6,oracle,step,dti,0.4300058145935208,0.4300058145935208,True
+syn-dominant-n50000-s6,oracle,amplification,utilization & n_delinquencies,"(0.47700793612522063, 5.553512253480993)","(0.4792139998753382, 5.480317466389244)",True
+syn-dominant-n50000-s6,oracle,sign_flip,history_months & n_inquiries,"(1.1591447150556646, -0.6733544567335314)","(1.06185047485893, -0.6768539847120728)",True
+syn-dominant-n50000-s6,oracle,auc,,0.7580613842642557,0.7576136536117457,True

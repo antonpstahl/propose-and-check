@@ -1,0 +1,6 @@
+smoothing_rounds,interaction_smoothing_rounds,max_bins,checks,passed,model_misses,data_misses,model misses by claim,noise feat. mean 5k
+0,1000,1024,278,264,14,0,"strength 6, peak 5, rank 2, sign_flip 1",0.022254860152400514
+75,1000,1024,278,261,17,0,"peak 7, strength 6, rank 2, step 1, sign_flip 1",0.022357649166618296
+75,500,1024,278,261,17,0,"peak 7, strength 7, rank 2, step 1",0.022137984856152704
+0,500,1024,278,263,15,0,"strength 7, peak 5, rank 2, sign_flip 1",0.021999116865069536
+1000,1000,1024,279,267,12,0,"strength 5, peak 4, step 2, sign_flip 1",0.027108536927308163

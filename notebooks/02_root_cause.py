@@ -14,7 +14,9 @@
 # Sections 2, 4 and 5 are the scratch diagnostics behind §14.2, with the seeds used there, so their numbers
 # reproduce. Section 1's 40-seed loop, and the knobs, constraints and 10% sign flip in section 3, were
 # re-implemented from the description in §14.1/§14.2 with fixed seeds here; their numbers can differ from the
-# plan in the last digit.
+# plan in the last digit. Section 4 purifies and centres each refit on its bootstrap weights, as
+# facts/bootstrap.py does; the scratch run centred on the unweighted sample, so its band edges can differ from
+# §14.2 in the fourth decimal.
 #
 # Run: `uv run python notebooks/02_root_cause.py [sections] [--quick]`, e.g. `... 2 4` (default: all; about
 # 1.5 hours, most of it in sections 3 and 4). `--quick` shrinks every loop to check that the code runs (about a
@@ -284,7 +286,7 @@ if 4 in SECTIONS:
                 t0 = time.perf_counter()
                 drawn = w > 0  # interpret rejects zero weights; rows drawn at least once, weighted by count
                 e = ExplainableBoostingClassifier(**EBM_PARAMS, random_state=b).fit(data.X[drawn], data.y[drawn], sample_weight=w[drawn])
-                fits["EBM"].append(weighted_shares(purify_ebm(e, data.X), data.X, w))
+                fits["EBM"].append(weighted_shares(purify_ebm(e, data.X, w), data.X, w))  # as facts/bootstrap.py
                 if b == 0:
                     print(f"{data.scenario.id}: one weighted EBM refit takes {time.perf_counter() - t0:.0f}s", flush=True)
         full = {"oracle": acc.fit_oracle(data).shares(data.X), "EBM": purify_ebm(fit_ebm(data.X, data.y, seed=seed), data.X).shares(data.X)}
