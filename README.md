@@ -21,7 +21,8 @@ src/verifier_gate/
                  null_check.py (bands on the noise features), fig2.py, e1_lexicon.py, e2_mutation.py,
                  e3_end_to_end.py
 tests/           DGP, acceptance scorer, decision rules, both fact providers, Facts and bands, SymPy export
-notebooks/       01 recovery check, 02 root causes of the week-1 failures (plan §14.2)
+notebooks/       01 recovery check, 02 root causes of the week-1 failures (plan §14.2),
+                 03 what the bootstrap bands can decide (plan §14.4)
 data/            raw/, synthetic/, plasmode/ (not tracked, regenerated from seeds)
 cache/           llm/ (every LLM call), facts/ (Facts and bootstrap draws, not tracked)
 results/         acceptance/, smoothing/, recheck/, facts/, e1/, e2/, e3/ raw results
@@ -39,4 +40,5 @@ uv run python -m verifier_gate.experiments.build_facts         # about 3-4 hours
 uv run python -m verifier_gate.experiments.null_check          # seconds, after build_facts
 uv run python -m verifier_gate.experiments.fig2                # seconds, after build_facts
 uv run python notebooks/02_root_cause.py                       # about 1.5 hours (--quick: 2 minutes)
+uv run python notebooks/03_bands.py                            # seconds, after build_facts
 ```
