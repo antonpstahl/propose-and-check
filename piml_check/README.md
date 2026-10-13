@@ -46,8 +46,11 @@ Our own XGB2 on the same data: 1.2%, largest pair.
 
 - **Question 1: passed.** The decompositions agree under either purification convention.
 - **Question 2: by the rule fixed in advance, PiML does not show the pair** (not in its top 3 by its own importance).
-  The fitted boosters do contain it, at the size of ours. What hides it is PiML's default purification with uniform
-  weights over grid cells:
+  The fitted boosters do contain it, at the size of ours, and PiML lists it; its default view only ranks it low.
+  The reason is PiML's default purification with uniform weights over grid cells. The pair keeps roughly its size
+  (fit (b): 1.13% data-weighted, 1.08% uniform); the other, spurious pairs grow under uniform weights, because they
+  keep main-effect parts relative to the data, so the pair slips down the ranking. With `true_to_data=True`, PiML's
+  own importance ranks it 2nd, so this is a default setting, not PiML ignoring the pair:
 
 | Purification | Measure | Pair rank, fit (a) | Pair rank, fit (b) |
 |---|---|---|---|
