@@ -1,0 +1,62 @@
+{
+ "scenario": "syn-none-n5000-s1",
+ "piml": "0.6.0.post2",
+ "xgboost": "1.7.6",
+ "python": "3.10.20",
+ "fits": {
+  "defaults": {
+   "uniform_margin_gap": 8.353604902033851e-06,
+   "data_margin_gap": 8.353604901145673e-06,
+   "params": {
+    "max_depth": 2,
+    "n_estimators": 100,
+    "eta": 0.3,
+    "gamma": 0,
+    "tree_method": "auto",
+    "max_bin": 256,
+    "reg_lambda": 0,
+    "reg_alpha": 0,
+    "monotone_constraints": "(0, 0, 0, 0, 0, 0, 0, 0, 0)",
+    "random_state": 0
+   },
+   "trees": 100,
+   "evaluator_vs_piml_raw_output": 0.0
+  },
+  "ours_exact": {
+   "uniform_margin_gap": 9.98120888606735e-07,
+   "data_margin_gap": 9.98120888606735e-07,
+   "params": {
+    "max_depth": 2,
+    "n_estimators": 89,
+    "eta": 0.05,
+    "gamma": 0,
+    "tree_method": "exact",
+    "max_bin": 256,
+    "reg_lambda": 1.0,
+    "reg_alpha": 0,
+    "monotone_constraints": "(0, 0, 0, 0, 0, 0, 0, 0, 0)",
+    "random_state": 1
+   },
+   "trees": 89,
+   "evaluator_vs_piml_raw_output": 0.0
+  },
+  "ours_hist": {
+   "uniform_margin_gap": 0.30699441605126654,
+   "data_margin_gap": 0.3069944160512663,
+   "params": {
+    "max_depth": 2,
+    "n_estimators": 89,
+    "eta": 0.05,
+    "gamma": 0,
+    "tree_method": "hist",
+    "max_bin": 256,
+    "reg_lambda": 1.0,
+    "reg_alpha": 0,
+    "monotone_constraints": "(0, 0, 0, 0, 0, 0, 0, 0, 0)",
+    "random_state": 1
+   },
+   "trees": 89,
+   "evaluator_vs_piml_raw_output": 0.6645770359666916
+  }
+ }
+}

@@ -1,0 +1,128 @@
+{
+ "scenario": "syn-none-n50000-s1",
+ "piml_environment": {
+  "piml": "0.6.0.post2",
+  "xgboost": "1.7.6",
+  "python": "3.10.20"
+ },
+ "fits": {
+  "defaults": {
+   "trees": 100,
+   "ours vs own leaves (max)": 3.1086244689504383e-15,
+   "ours vs PiML's margin (max, float32)": 5.0303069834001235e-06,
+   "PiML's own effects vs its margin (max)": 5.072640496983638e-06,
+   "pairs (ours)": 33,
+   "pair share (ours)": 0.016058084749807747,
+   "pair rank among pairs (ours)": 1,
+   "Q1 leaves to 1e-9": true,
+   "Q1 primary passes": true,
+   "Q1 primary worst": [
+    {
+     "term": "noise_1",
+     "sd (ours)": 0.027631,
+     "corr": 0.999993,
+     "max diff": 0.000775
+    },
+    {
+     "term": "age",
+     "sd (ours)": 0.040262,
+     "corr": 0.999994,
+     "max diff": 0.001091
+    },
+    {
+     "term": "noise_2",
+     "sd (ours)": 0.057702,
+     "corr": 0.999997,
+     "max diff": 0.000845
+    }
+   ],
+   "Q1 primary largest difference": 0.001090701445748854,
+   "Q1 secondary (uniform) passes": true,
+   "Q1 secondary worst": [
+    {
+     "term": "income & history_months",
+     "corr": 1.0,
+     "max diff": 0.0
+    },
+    {
+     "term": "utilization & n_delinquencies",
+     "corr": 1.0,
+     "max diff": 0.0
+    },
+    {
+     "term": "utilization & history_months",
+     "corr": 1.0,
+     "max diff": 0.0
+    }
+   ],
+   "pair rank, PiML default importance": 16,
+   "pair variance share, PiML default": 0.001645119414375055,
+   "pairs, PiML default": 33,
+   "Q2 PiML shows the pair": false
+  },
+  "ours_exact": {
+   "trees": 380,
+   "ours vs own leaves (max)": 2.6645352591003757e-15,
+   "ours vs PiML's margin (max, float32)": 4.788472014016776e-06,
+   "PiML's own effects vs its margin (max)": 4.175760297098208e-06,
+   "pairs (ours)": 36,
+   "pair share (ours)": 0.011256114063365494,
+   "pair rank among pairs (ours)": 1,
+   "Q1 leaves to 1e-9": true,
+   "Q1 primary passes": true,
+   "Q1 primary worst": [
+    {
+     "term": "age",
+     "sd (ours)": 0.012052,
+     "corr": 0.999976,
+     "max diff": 0.000793
+    },
+    {
+     "term": "noise_1",
+     "sd (ours)": 0.009494,
+     "corr": 0.999987,
+     "max diff": 0.001065
+    },
+    {
+     "term": "noise_2",
+     "sd (ours)": 0.030039,
+     "corr": 1.0,
+     "max diff": 0.00068
+    }
+   ],
+   "Q1 primary largest difference": 0.0010646754313398954,
+   "Q1 secondary (uniform) passes": true,
+   "Q1 secondary worst": [
+    {
+     "term": "age",
+     "corr": 1.0,
+     "max diff": 0.0
+    },
+    {
+     "term": "utilization & history_months",
+     "corr": 1.0,
+     "max diff": 0.0
+    },
+    {
+     "term": "income & history_months",
+     "corr": 1.0,
+     "max diff": 0.0
+    }
+   ],
+   "pair rank, PiML default importance": 6,
+   "pair variance share, PiML default": 0.0007873431745091054,
+   "pairs, PiML default": 36,
+   "Q2 PiML shows the pair": false
+  },
+  "ours_hist": {
+   "trees": 380,
+   "ours vs own leaves (max)": 2.6645352591003757e-15,
+   "ours vs PiML's margin (max, float32)": 3.5419559818450352e-06,
+   "PiML's own effects vs its margin (max)": 0.4593028028126285,
+   "pairs (ours)": 34,
+   "pair share (ours)": 0.010737289624542928,
+   "pair rank among pairs (ours)": 1
+  }
+ },
+ "our_fit_xgb2_pair_share": 0.011898929200739459
+}

@@ -23,6 +23,7 @@ src/verifier_gate/
 tests/           DGP, acceptance scorer, decision rules, both fact providers, Facts and bands, SymPy export
 notebooks/       01 recovery check, 02 root causes of the week-1 failures (plan §14.2),
                  03 what the bootstrap bands can decide (plan §14.4)
+piml_check/      our XGB2 decomposition vs PiML's (plan §14.4, D27); own Python 3.10 environment, see its README
 data/            raw/, synthetic/, plasmode/ (not tracked, regenerated from seeds)
 cache/           llm/ (every LLM call), facts/ (Facts and bootstrap draws, not tracked)
 results/         acceptance/, smoothing/, recheck/, facts/, e1/, e2/, e3/ raw results
