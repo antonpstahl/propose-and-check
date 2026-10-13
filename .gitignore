@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv
+.venv.nosync/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Secrets
+.env
+
+# OS
+.DS_Store
+
+# Data and fitted models are regenerated from fixed seeds; keep only the folder skeleton
+data/**
+!data/**/
+!data/**/.gitkeep
+
+# Notebook outputs
+notebooks/out/

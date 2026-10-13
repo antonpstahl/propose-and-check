@@ -1,0 +1,33 @@
+[project]
+name = "verifier-gate"
+version = "0.1.0"
+description = "Propose and prove: a symbolic gate for LLM explanations of glass-box credit models"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Anton P. Stahl" }]
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic",
+    "interpret-core",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "pyyaml",
+    "scikit-learn",
+    "scipy",
+    "sympy",
+    "xgboost",
+]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/verifier_gate"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
