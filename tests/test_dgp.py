@@ -4,6 +4,7 @@ import pytest
 from scipy.special import expit
 
 from verifier_gate.data import dgp
+from verifier_gate.experiments.acceptance import STRENGTH
 
 
 @pytest.fixture(scope="module")
@@ -78,6 +79,15 @@ def test_strength_classes_and_ranks_hold_at_every_level(big, interaction):
         assert shares[higher] > 1.2 * shares[lower]
 
 
+@pytest.mark.parametrize("interaction", dgp.INTERACTION_LEVELS)
+def test_every_share_sits_inside_its_strength_band(big, interaction):
+    # unambiguous truth: about one point or more from the nearest band edge, at every level
+    edges = [lower for _, lower in STRENGTH]
+    for term, share in dgp.make_truth(big, interaction).shares(big).items():
+        if share > 0:
+            assert min(abs(share - edge) for edge in edges) > 0.008, (term, share)
+
+
 @pytest.mark.parametrize("pair", list(dgp.PAIR_FACTORS))
 def test_pairs_are_pure_in_the_population(pair):
     ref = dgp._reference()
@@ -101,8 +111,9 @@ def test_main_shapes():
     h = np.arange(6.0, 361.0)
     history = truth.term("history_months", {"history_months": h})
     assert abs(h[np.argmax(history)] - 36.0) <= 2.0
+    assert history.max() - history[0] > 0.25  # the bump clearly beats the left edge (was 0.04 logits)
     rising = np.mean(np.diff(history) > 0)  # history is uniform, so share of months = share of data mass
-    assert 0.0 < rising < 0.10
+    assert 0.0 < rising < 0.08  # "mostly decreasing" (threshold 10%) with a margin
 
     dti = np.linspace(0.0, 0.6, 601)
     jumps = np.flatnonzero(np.abs(np.diff(truth.term("dti", {"dti": dti}))) > 1e-12)
@@ -130,4 +141,4 @@ def test_sign_flip(interaction):
     if interaction == "none":
         assert long == pytest.approx(thin)
     else:
-        assert long < 0
+        assert long < -0.45  # about -0.5 logits; a planted -0.15 was not recovered

@@ -40,21 +40,23 @@ SEEDS = (1, 2, 3)
 DISCOVERY_SEED = 1
 
 BASE_RATE = 0.22  # default rate, matches the plasmode tier (TaiwanCredit)
-# Sum of main-term importances in logits. 1.6 gives the planted model an AUC of about 0.77 (0.755 at
+# Sum of main-term importances in logits. 1.6 gives the planted model an AUC of about 0.765 (0.758 at
 # "dominant"), close to what good models reach on TaiwanCredit.
 TOTAL_MAIN_IMPORTANCE = 1.6
 REFERENCE_N = 1_000_000
 REFERENCE_SEED = 0
 
 # Target importance shares of the main terms at interaction level "none". Pairs, when present, take
-# their share from the total, and the main terms keep their coefficients (so their shares shrink).
+# their share from the total, and the main terms keep their coefficients (so their shares shrink, by 27%
+# at "dominant"). Every share sits about one point or more inside its lexicon strength band at every
+# level: n_inquiries 4.0% / 2.9% (weak band 2-5%), dti 8.0% / 5.8% (moderate band 5-15%).
 MAIN_SHARES = {
-    "utilization": 0.41,
+    "utilization": 0.40,
     "n_delinquencies": 0.24,
     "income": 0.13,
     "history_months": 0.10,
-    "dti": 0.075,
-    "n_inquiries": 0.035,
+    "dti": 0.08,
+    "n_inquiries": 0.04,
     "age": 0.01,
     "noise_1": 0.0,
     "noise_2": 0.0,
@@ -63,10 +65,13 @@ MAIN_SHARES = {
 AMPLIFICATION = "utilization & n_delinquencies"
 SIGN_FLIP = "history_months & n_inquiries"
 
+# The sign flip takes 6%, not 5%: 5% would sit on the weak/moderate boundary. It moves the effect of
+# 0 -> 4 inquiries at 340 months of history to -0.49 logits at "weak" and -0.67 at "dominant" (a planted
+# -0.15 at 2.5% was not recovered by either model).
 PAIR_SHARES = {
     "none": {AMPLIFICATION: 0.0, SIGN_FLIP: 0.0},
-    "weak": {AMPLIFICATION: 0.03, SIGN_FLIP: 0.025},
-    "dominant": {AMPLIFICATION: 0.21, SIGN_FLIP: 0.025},
+    "weak": {AMPLIFICATION: 0.03, SIGN_FLIP: 0.06},
+    "dominant": {AMPLIFICATION: 0.21, SIGN_FLIP: 0.06},
 }
 
 PAIR_PATTERNS = {AMPLIFICATION: "amplification", SIGN_FLIP: "sign_flip"}
@@ -97,7 +102,10 @@ def _income(x):
 
 
 def _history(h):
-    return -(h - 6.0) / 354.0 + 0.15 * np.exp(-(((h - 36.0) / 8.0) ** 2))
+    # Bump of 0.33 logits above the trend and 0.29 above the value at 6 months, so the maximum at 36 is
+    # clear (an 8-month bump of 0.09 logits was smoothed away). Rising on 7% of the data mass, so the term
+    # stays "mostly decreasing" (threshold 10%).
+    return -(h - 6.0) / 354.0 + 0.6 * np.exp(-(((h - 36.0) / 12.0) ** 2))
 
 
 def _dti(x):
@@ -198,15 +206,19 @@ def coefficients(interaction: str) -> dict[str, float]:
     return coef
 
 
-def _population_term(name: str, X: Mapping, interaction: str) -> np.ndarray:
-    """Planted term centred on the population (not yet on the sample)."""
+def unit_term(name: str, X: Mapping) -> np.ndarray:
+    """Unit shape of a term centred on the population (coefficient 1)."""
     means, _ = _population()
-    coef = coefficients(interaction)[name]
     if name in MAIN_SHAPES:
-        return coef * (MAIN_SHAPES[name](_column(X, name)) - means[name])
+        return MAIN_SHAPES[name](_column(X, name)) - means[name]
     (a, b), (fa, fb) = PAIR_FACTORS[name]
     ma, mb = means[name]
-    return coef * (fa(_column(X, a)) - ma) * (fb(_column(X, b)) - mb)
+    return (fa(_column(X, a)) - ma) * (fb(_column(X, b)) - mb)
+
+
+def _population_term(name: str, X: Mapping, interaction: str) -> np.ndarray:
+    """Planted term centred on the population (not yet on the sample)."""
+    return coefficients(interaction)[name] * unit_term(name, X)
 
 
 @cache
@@ -227,6 +239,10 @@ class Truth:
     interaction: str
     intercept: float
     offsets: Mapping[str, float]
+
+    @property
+    def term_names(self) -> tuple[str, ...]:
+        return TERMS
 
     def term(self, name: str, X: Mapping) -> np.ndarray:
         return _population_term(name, X, self.interaction) - self.offsets[name]

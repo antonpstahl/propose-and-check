@@ -14,8 +14,9 @@ src/verifier_gate/
   verifier/      verify.py (verdict + evidence per claim)
   llm/           client.py (cache, stub mode, retries), propose.py, extract.py, prompts/
   gate/          roundtrip.py, template.py, gate.py (repair loop, stop rules, exit states)
-  experiments/   e1_lexicon.py, e2_mutation.py, e3_end_to_end.py
-tests/           predicates on toy shapes, parser, scorers
+  experiments/   acceptance.py (models vs planted claims), smoothing.py (EBM setting),
+                 e1_lexicon.py, e2_mutation.py, e3_end_to_end.py
+tests/           DGP, purified EBM terms, acceptance scorer; later predicates, parser
 notebooks/       exploration
 data/            raw/, synthetic/, plasmode/ (not tracked, regenerated from seeds)
 cache/llm/       every LLM call, cached to disk
@@ -28,4 +29,5 @@ paper/           working paper, figures/, tables/
 ```
 uv sync
 uv run pytest
+uv run python -m verifier_gate.experiments.acceptance   # about 1 minute
 ```
