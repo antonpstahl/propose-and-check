@@ -1,0 +1,53 @@
+{
+ "label": "xgboost-2.0.3",
+ "piml": "0.6.0.post2",
+ "xgboost": "2.0.3",
+ "python": "3.10.20",
+ "fits": {
+  "defaults": {
+   "tree_method": "auto",
+   "rows away from splits": 1751,
+   "train": 0.9880764796777701,
+   "away from splits": 0.001233758299332699,
+   "fresh": 0.0012402977870635823,
+   "mean train": 0.014961142377168118,
+   "evaluator vs PiML raw output": 1.3318204767,
+   "split_calibration=False, train": 1.330593866174004,
+   "split_calibration=True, train": 0.0011012688202010068
+  },
+  "exact": {
+   "tree_method": "exact",
+   "rows away from splits": 1878,
+   "train": 8.201808388008658e-06,
+   "away from splits": 8.201808388008658e-06,
+   "fresh": 8.621803957886698e-06,
+   "mean train": 1.824373374540514e-07,
+   "evaluator vs PiML raw output": 0.0,
+   "split_calibration=False, train": 8.201808388008658e-06,
+   "split_calibration=True, train": 8.201808388008658e-06
+  },
+  "hist": {
+   "tree_method": "hist",
+   "rows away from splits": 1751,
+   "train": 0.9880764796777701,
+   "away from splits": 0.001233758299332699,
+   "fresh": 0.0012402977870635823,
+   "mean train": 0.014961142377168118,
+   "evaluator vs PiML raw output": 1.3318204767,
+   "split_calibration=False, train": 1.330593866174004,
+   "split_calibration=True, train": 0.0011012688202010068
+  },
+  "approx": {
+   "tree_method": "approx",
+   "rows away from splits": 1663,
+   "train": 0.752213414357517,
+   "away from splits": 0.0013660227322693785,
+   "fresh": 0.001373708563289,
+   "mean train": 0.014206398005990427,
+   "evaluator vs PiML raw output": 0.753577083,
+   "split_calibration=False, train": 0.6187695135280735,
+   "split_calibration=True, train": 0.0013722664445667832
+  }
+ },
+ "outcome": "not reproduced"
+}

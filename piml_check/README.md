@@ -62,15 +62,56 @@ Our own XGB2 on the same data: 1.2%, largest pair.
 ## Side findings (for Agus, as a constructive note with a minimal reproduction)
 
 - PiML's XGB2 decomposition reproduces the model's margin only for `tree_method="exact"`. For `hist` and `approx` it
-  is off by up to 1.2–1.4 logits, about 0.3 logits even away from split values, on xgboost 1.7.6, 2.0.3 and 3.2.0
-  (exploration dataset). Since xgboost 2.0, `tree_method="auto"` means `hist`, so PiML's defaults give wrong effects
-  on any current xgboost, without a warning. PiML's requirement (`xgboost>=1.4.2`) allows these versions.
+  misroutes training rows that sit on a split value (narrowed by the toy check below; the 13 Oct reading, "about
+  0.3 logits even away from split values", did not reproduce on toy data). Since xgboost 2.0, `tree_method="auto"`
+  means `hist`, so PiML's defaults are affected on any current xgboost, without a warning. PiML's requirement
+  (`xgboost>=1.4.2`) allows these versions.
 - PiML's default view purifies pairs with uniform weights over the grid cells; `true_to_data=True` uses the data's
   weights. The two conventions rank interactions differently (table above).
 - Effect importance in PiML is each effect's variance share on the data.
 
+## Toy check of the hist/approx finding (14 Oct 2026, D28)
+
+Before the finding goes to Agus, it was reproduced on a toy dataset outside our benchmark, with PiML's own API for the
+outcome (`toy_hist.py`; rule fixed in the script before the run). Toy: 3 features uniform on [0, 1], n = 2,000,
+logit 2 x1 − 1.5 x2 + 4 (x1 − 0.5)(x3 − 0.5). The margin is rebuilt from `parse_model()` (intercept + main effects +
+interactions, PiML's raw outputs) and compared with `decision_function`.
+
+| xgboost | tree_method | Largest gap, training rows | Rows away from split values | Fresh rows | `split_calibration=True` |
+|---|---|---|---|---|---|
+| 1.7.6 | exact (= defaults) | 1e-5 | 1e-5 | 1e-5 | 1e-5 |
+| 1.7.6 | hist | 0.96 | 0.002 | 0.002 | 0.002 |
+| 1.7.6 | approx | 1.33 | 3e-5 | 3e-5 | 7e-5 |
+| 2.0.3 | defaults (auto → hist) | 0.99 | 0.001 | 0.001 | 0.001 |
+| 2.0.3 | exact | 8e-6 | 8e-6 | 9e-6 | 8e-6 |
+| 2.0.3 | approx | 0.75 | 0.001 | 0.001 | 0.001 |
+
+**Outcome by the rule: not reproduced as written.** Exact trees are right, and hist/approx trees are wrong by up to
+1–1.3 logits, but only on rows that sit on a split value: away from the splits and on fresh rows the gap is 0.001–0.002
+logits (below the rule's 0.05). The 13 Oct statement ("about 0.3 logits even away from split values") is withdrawn.
+
+**Characterisation, formed after the result** (`toy_hist_followup.py`, both xgboost versions):
+
+- Continuous features: 3.5–5.5% of training rows are off by more than 0.05 logits, all of them on a split value.
+- With one count feature (Poisson, clipped at 6), as credit data have (delinquencies, inquiries): 82–88% of training
+  rows are off by more than 0.05 logits, median 0.2, largest 1.8–2.3. hist and approx put splits on the integer
+  values, so most rows sit on a split; three quarters of the off rows are on one, the rest is not explained here.
+- PiML's `XGBInterpreter` has an undocumented option, `split_calibration` (default False). Read with our evaluator, it
+  repairs the continuous toy (largest gap 0.001–0.002); on the count toy it removes the misrouting but leaves a
+  constant offset of 0.32 logits on every row that we have not explained. `parse_model()`, what users get, does not
+  expose it.
+
+**What the note to Agus can say** (constructive, with `toy_hist.py` as the reproduction): on hist and approx trees,
+PiML's XGB2 effects misroute training rows that lie on split values, by up to about 1 logit (continuous features) and
+2 logits (count features, where most rows are affected); exact trees are right; the default `auto` means hist from
+xgboost 2.0 on; `split_calibration` looks like the intended fix and could be the default. What it should not say: that
+the effects are wrong away from split values, or anything about the 0.32 offset before it is understood.
+
+Run (seconds): `piml_check/.venv.nosync/bin/python piml_check/toy_hist.py` and `toy_hist_followup.py`; for xgboost
+2.0.3, the same in an environment with `PiML==0.6.0.post2` and `xgboost==2.0.3`. Results: `results/toy_hist/`.
+
 ## Files
 
-`export_data.py`, `fit_piml.py`, `compare.py`; `data/` (not tracked); `results/<scenario>/`: boosters
+`export_data.py`, `fit_piml.py`, `compare.py`, `toy_hist.py`, `toy_hist_followup.py`; `data/` (not tracked); `results/<scenario>/`: boosters
 (`*_booster.json`), PiML's effects per row (`*.npz`), agreement tables (`*_agreement_*.csv`), `piml_meta.json`,
 `comparison.json`.

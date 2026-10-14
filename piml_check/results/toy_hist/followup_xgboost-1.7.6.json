@@ -1,0 +1,48 @@
+{
+ "label": "xgboost-1.7.6",
+ "xgboost": "1.7.6",
+ "rows": {
+  "continuous, exact": {
+   "rows off": 0.0,
+   "median gap": 1.1042696912433314e-07,
+   "largest gap": 1.059792963520323e-05,
+   "rows on a split value": 0.0,
+   "off rows on a split value": null
+  },
+  "continuous, hist": {
+   "rows off": 0.0365,
+   "median gap": 0.0022122369960637933,
+   "largest gap": 0.9580639534226416,
+   "rows on a split value": 0.0855,
+   "off rows on a split value": 1.0
+  },
+  "continuous, approx": {
+   "rows off": 0.0545,
+   "median gap": 2.6541391525053415e-05,
+   "largest gap": 1.3342693021365046,
+   "rows on a split value": 0.1255,
+   "off rows on a split value": 1.0
+  },
+  "one count feature, exact": {
+   "rows off": 0.0,
+   "median gap": 1.576833515287701e-07,
+   "largest gap": 7.579564085702373e-06,
+   "rows on a split value": 0.0,
+   "off rows on a split value": null
+  },
+  "one count feature, hist": {
+   "rows off": 0.8785,
+   "median gap": 0.1991681224511126,
+   "largest gap": 2.2989275117522876,
+   "rows on a split value": 0.7855,
+   "off rows on a split value": 0.7558338076266363
+  },
+  "one count feature, approx": {
+   "rows off": 0.836,
+   "median gap": 0.23863726848597439,
+   "largest gap": 2.2106377413975586,
+   "rows on a split value": 0.7965,
+   "off rows on a split value": 0.756578947368421
+  }
+ }
+}
