@@ -19,7 +19,8 @@ Modes, in the order they are used:
   names change the writer's behaviour and E3 runs both namings, reported apart; otherwise the plausible names stay.
   Add --dry for a no-network rehearsal.
 
-Writes results/pilot/<mode>/<run id>.json (the full run, with every version and verdict) and summary.csv.
+Writes results/pilot/<prompt version>/<mode>/<run id>.json (the full run, with every version and verdict),
+summary.csv and traces.md (the runs as Markdown, for reading).
 Run: `uv run python -m verifier_gate.experiments.pilot [--smoke | --live | --naming] [--sonnet]`.
 """
 
@@ -171,10 +172,10 @@ def main() -> None:
     if dry:
         scratch = Path(tempfile.mkdtemp(prefix="pilot_dry_"))
         client = Client("stub", stub_writer(contexts), cache_dir=scratch / "cache")
-        out = RESULTS / f"{name}_dry" if args.keep else scratch / "results"
+        out = RESULTS / prompts.VERSION / f"{name}_dry" if args.keep else scratch / "results"
     else:
         client = Client("sync")
-        out = RESULTS / name
+        out = RESULTS / prompts.VERSION / name
     rows = []
     for spec in specs:
         text = f"RUN: {spec.run_id}\n{handovers[spec.run_id]}" if dry else handovers[spec.run_id]
