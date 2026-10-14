@@ -69,6 +69,8 @@ def draft_from(response: Response, source: str, names: Mapping[str, str] = label
     data = response.data
     if not isinstance(data, dict) or not isinstance(data.get("sentences"), list) or not isinstance(data.get("claims"), list):
         raise ValueError("the answer is not a draft")
+    if not data["sentences"]:
+        raise ValueError("the answer is an empty draft")  # seen in the pilot: valid JSON with nothing in it
     sentences = [(int(s["id"]), str(s["text"]).strip()) for s in data["sentences"]]
     ids = {i for i, _ in sentences}
     claims, errors = [], []

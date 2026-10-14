@@ -123,6 +123,26 @@ def naming_verdict(table: pd.DataFrame) -> str:
     return f"Drafts with an uncertified claim about a noise feature: {counts} of {drafts} drafts. {decision}."
 
 
+def digest(folder: Path) -> str:
+    """The runs of a pilot folder as Markdown, for reading: per text version its sentences, each with its claims
+    and verdicts (a failing claim with its reason), then the exit state."""
+    out = [f"# Pilot traces: {folder.name}", ""]
+    for path in sorted(folder.glob("*.json")):
+        run = json.loads(path.read_text())
+        out += [f"## {run['run_id']}", "", f"**{run['exit']}**: {run['reason']} ({run['calls']} calls, {run['rounds']} repair rounds)", ""]
+        for k, version in enumerate(run["versions"]):
+            failing = sum(1 for c in version["claims"] if c[2] != "true")
+            out.append(f"### Version {k}: {version['source']} ({len(version['claims'])} claims, {failing} failing"
+                       f"{', missing: ' + ', '.join(version['missing']) if version['missing'] else ''})")  # fmt: skip
+            for sid, text in version["sentences"]:
+                out.append(f"{sid}. {text}")
+                for c in (c for c in version["claims"] if c[0] == sid):
+                    mark = "ok" if c[2] == "true" else f"**{c[2]}**" + (f" ({c[4]})" if c[4] else "")
+                    out.append(f"    - `{c[1]}`: {mark}")
+            out += [f"    - format error: {e}" for e in version["format_errors"]] + [""]
+    return "\n".join(out)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     mode = parser.add_mutually_exclusive_group()
@@ -167,6 +187,7 @@ def main() -> None:
     table = pd.DataFrame(rows)
     out.mkdir(parents=True, exist_ok=True)
     table.to_csv(out / "summary.csv", index=False)
+    (out / "traces.md").write_text(digest(out))
     pd.set_option("display.width", 240)
     print(f"Pilot ({name}{', no network' if dry else ''}): {len(table)} runs; prompts {json.dumps({k: v[:12] for k, v in prompts.hashes().items()})}")
     print(table.drop(columns=["reason"]).to_string(index=False))

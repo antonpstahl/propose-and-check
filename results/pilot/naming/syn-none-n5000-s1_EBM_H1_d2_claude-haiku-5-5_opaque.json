@@ -1,0 +1,423 @@
+{
+ "run_id": "syn-none-n5000-s1_EBM_H1_d2_claude-haiku-5-5_opaque",
+ "budget": 1,
+ "calls": 1,
+ "rounds": 0,
+ "format_retry_used": false,
+ "pending": null,
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [
+    [
+     1,
+     "Revolving credit utilization is by far the most important driver of default risk, accounting for about 38% of the model's importance, and risk rises steeply as utilization increases."
+    ],
+    [
+     2,
+     "The steepest rise occurs once utilization passes about 0.74, where the added risk is largest."
+    ],
+    [
+     3,
+     "The number of past delinquencies is the next strongest driver: having any delinquency raises risk relative to none, and the effect is strong in importance but modest in size."
+    ],
+    [
+     4,
+     "Income has a moderate effect, with risk falling as income rises, though most of that fall happens between the lower and middle income ranges."
+    ],
+    [
+     5,
+     "Length of credit history has a moderate effect, with longer histories associated with lower risk."
+    ],
+    [
+     6,
+     "The data show no meaningful interaction between utilization and credit history length."
+    ],
+    [
+     7,
+     "Debt-to-income ratio, feature_b, and feature_a each matter little, and the data do not settle whether feature_a has any effect at all."
+    ],
+    [
+     8,
+     "Recent credit inquiries and applicant age hardly matter, and the data do not settle whether applicant age has any effect."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"utilization\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "strength(\"utilization\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.376; share band 0.301 to 0.417; detectable True; mass where the curve band excludes 0 0.74; net change 3.93"
+    ],
+    [
+     1,
+     "direction(\"utilization\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 3.93; net change band 3.23 to 4.39; exception mass 0"
+    ],
+    [
+     2,
+     "threshold(\"utilization\", at=0.735)",
+     "false",
+     "",
+     "",
+     "largest jump at 0.731; location band 0.67 to 0.819; tolerance 0.0131; jump 0.815; jump significant False"
+    ],
+    [
+     3,
+     "rank(\"n_delinquencies\") in (2, 3)",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 3; claimed 2 to 3"
+    ],
+    [
+     3,
+     "strength(\"n_delinquencies\") == \"strong\"",
+     "undecidable",
+     "insufficient_evidence",
+     "share band straddles a class edge",
+     "share 0.231; share band 0.145 to 0.28; detectable True; mass where the curve band excludes 0 0.991; net change 0.813"
+    ],
+    [
+     3,
+     "direction(\"n_delinquencies\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 0.813; net change band 0.542 to 1.07; exception mass 0"
+    ],
+    [
+     4,
+     "rank(\"income\") in (2, 3)",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 2 to 3; claimed 2 to 3"
+    ],
+    [
+     4,
+     "strength(\"income\") == \"moderate\"",
+     "undecidable",
+     "insufficient_evidence",
+     "share band straddles a class edge",
+     "share 0.163; share band 0.109 to 0.188; detectable True; mass where the curve band excludes 0 0.688; net change -0.916"
+    ],
+    [
+     4,
+     "direction(\"income\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.916; net change band -1.23 to -0.529; exception mass 0"
+    ],
+    [
+     5,
+     "strength(\"history_months\") == \"moderate\"",
+     "undecidable",
+     "insufficient_evidence",
+     "share band straddles a class edge",
+     "share 0.0749; share band 0.038 to 0.106; detectable True; mass where the curve band excludes 0 0.0228; net change -0.493"
+    ],
+    [
+     5,
+     "direction(\"history_months\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.493; net change band -0.74 to -0.195; exception mass 0"
+    ],
+    [
+     6,
+     "interaction(\"utilization\", \"history_months\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.0148; share band 0 to 0.0392; detectable False; interaction contrast 0.356; interaction contrast band 0 to 1.09"
+    ],
+    [
+     7,
+     "negligible(\"dti\")",
+     "undecidable",
+     "insufficient_evidence",
+     "neither a detectable non-negligible effect nor a negligible one is shown",
+     "share 0.0417; share band 0.0099 to 0.0741; detectable False; mass where the curve band excludes 0 0; net change 0.182"
+    ],
+    [
+     7,
+     "unsettled(negligible(\"noise_1\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0129; share band 0.00326 to 0.0523; detectable False"
+    ],
+    [
+     8,
+     "negligible(\"n_inquiries\")",
+     "true",
+     "",
+     "no detectable effect, share below the weak class, a moderate effect ruled out",
+     "share 0.000778; share band 0 to 0.0255; detectable False; mass where the curve band excludes 0 0; net change 0.00255"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"age\"))",
+     "false",
+     "",
+     "the claim is settled: it is true",
+     "claim verdict true; claim code ; share 0.0092; share band 0.00407 to 0.0416; detectable False"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"rank(\\\"utilization\\\") == 1\", \"sentence_id\": 1}, {\"dsl\": \"strength(\\\"utilization\\\") == \\\"strong\\\"\", \"sentence_id\": 1}, {\"dsl\": \"direction(\\\"utilization\\\") == \\\"increasing\\\"\", \"sentence_id\": 1}, {\"dsl\": \"threshold(\\\"utilization\\\", at=0.735)\", \"sentence_id\": 2}, {\"dsl\": \"rank(\\\"n_delinquencies\\\") in (2, 3)\", \"sentence_id\": 3}, {\"dsl\": \"strength(\\\"n_delinquencies\\\") == \\\"strong\\\"\", \"sentence_id\": 3}, {\"dsl\": \"direction(\\\"n_delinquencies\\\") == \\\"increasing\\\"\", \"sentence_id\": 3}, {\"dsl\": \"rank(\\\"income\\\") in (2, 3)\", \"sentence_id\": 4}, {\"dsl\": \"strength(\\\"income\\\") == \\\"moderate\\\"\", \"sentence_id\": 4}, {\"dsl\": \"direction(\\\"income\\\") == \\\"decreasing\\\"\", \"sentence_id\": 4}, {\"dsl\": \"strength(\\\"history_months\\\") == \\\"moderate\\\"\", \"sentence_id\": 5}, {\"dsl\": \"direction(\\\"history_months\\\") == \\\"decreasing\\\"\", \"sentence_id\": 5}, {\"dsl\": \"interaction(\\\"utilization\\\", \\\"history_months\\\", pattern=\\\"none\\\")\", \"sentence_id\": 6}, {\"dsl\": \"negligible(\\\"dti\\\")\", \"sentence_id\": 7}, {\"dsl\": \"unsettled(negligible(\\\"feature_a\\\"))\", \"sentence_id\": 7}, {\"dsl\": \"negligible(\\\"n_inquiries\\\")\", \"sentence_id\": 8}, {\"dsl\": \"unsettled(negligible(\\\"age\\\"))\", \"sentence_id\": 8}], \"sentences\": [{\"id\": 1, \"text\": \"Revolving credit utilization is by far the most important driver of default risk, accounting for about 38% of the model's importance, and risk rises steeply as utilization increases.\"}, {\"id\": 2, \"text\": \"The steepest rise occurs once utilization passes about 0.74, where the added risk is largest.\"}, {\"id\": 3, \"text\": \"The number of past delinquencies is the next strongest driver: having any delinquency raises risk relative to none, and the effect is strong in importance but modest in size.\"}, {\"id\": 4, \"text\": \"Income has a moderate effect, with risk falling as income rises, though most of that fall happens between the lower and middle income ranges.\"}, {\"id\": 5, \"text\": \"Length of credit history has a moderate effect, with longer histories associated with lower risk.\"}, {\"id\": 6, \"text\": \"The data show no meaningful interaction between utilization and credit history length.\"}, {\"id\": 7, \"text\": \"Debt-to-income ratio, feature_b, and feature_a each matter little, and the data do not settle whether feature_a has any effect at all.\"}, {\"id\": 8, \"text\": \"Recent credit inquiries and applicant age hardly matter, and the data do not settle whether applicant age has any effect.\"}]}"
+  },
+  {
+   "source": "reduced",
+   "sentences": [
+    [
+     1,
+     "Revolving credit utilization is by far the most important driver of default risk, accounting for about 38% of the model's importance, and risk rises steeply as utilization increases."
+    ],
+    [
+     6,
+     "The data show no meaningful interaction between utilization and credit history length."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"utilization\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "strength(\"utilization\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.376; share band 0.301 to 0.417; detectable True; mass where the curve band excludes 0 0.74; net change 3.93"
+    ],
+    [
+     1,
+     "direction(\"utilization\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 3.93; net change band 3.23 to 4.39; exception mass 0"
+    ],
+    [
+     6,
+     "interaction(\"utilization\", \"history_months\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.0148; share band 0 to 0.0392; detectable False; interaction contrast 0.356; interaction contrast band 0 to 1.09"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [
+    "n_delinquencies",
+    "income"
+   ],
+   "flagged": [],
+   "answer": ""
+  },
+  {
+   "source": "template",
+   "sentences": [
+    [
+     1,
+     "Credit utilization has a strong effect on default risk; default risk increases with credit utilization."
+    ],
+    [
+     2,
+     "The number of past delinquencies has a moderate to strong effect on default risk; default risk increases with the number of past delinquencies."
+    ],
+    [
+     3,
+     "Default risk jumps at the number of past delinquencies = 0.5."
+    ],
+    [
+     4,
+     "Income has a moderate to strong effect on default risk; default risk decreases with income."
+    ],
+    [
+     5,
+     "The length of credit history has a weak to moderate effect on default risk; default risk decreases with the length of credit history."
+    ],
+    [
+     6,
+     "The debt-to-income ratio has at most a moderate effect on default risk."
+    ],
+    [
+     7,
+     "Feature b has at most a moderate effect on default risk."
+    ],
+    [
+     8,
+     "Feature a has at most a moderate effect on default risk."
+    ],
+    [
+     9,
+     "Age hardly matters for default risk."
+    ],
+    [
+     10,
+     "The number of recent inquiries hardly matters for default risk."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "strength(\"utilization\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.376; share band 0.301 to 0.417; detectable True; mass where the curve band excludes 0 0.74; net change 3.93"
+    ],
+    [
+     1,
+     "direction(\"utilization\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 3.93; net change band 3.23 to 4.39; exception mass 0"
+    ],
+    [
+     2,
+     "strength(\"n_delinquencies\") in (\"moderate\", \"strong\")",
+     "true",
+     "",
+     "share band inside [5%, inf%) and the effect is detectable",
+     "share 0.231; share band 0.145 to 0.28; detectable True; mass where the curve band excludes 0 0.991; net change 0.813"
+    ],
+    [
+     2,
+     "direction(\"n_delinquencies\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 0.813; net change band 0.542 to 1.07; exception mass 0"
+    ],
+    [
+     3,
+     "threshold(\"n_delinquencies\", at=0.5)",
+     "true",
+     "",
+     "",
+     "largest jump at 0.5; location band 0.5 to 0.5; tolerance 0.04; jump 0.701; jump significant True"
+    ],
+    [
+     4,
+     "strength(\"income\") in (\"moderate\", \"strong\")",
+     "true",
+     "",
+     "share band inside [5%, inf%) and the effect is detectable",
+     "share 0.163; share band 0.109 to 0.188; detectable True; mass where the curve band excludes 0 0.688; net change -0.916"
+    ],
+    [
+     4,
+     "direction(\"income\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.916; net change band -1.23 to -0.529; exception mass 0"
+    ],
+    [
+     5,
+     "strength(\"history_months\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0749; share band 0.038 to 0.106; detectable True; mass where the curve band excludes 0 0.0228; net change -0.493"
+    ],
+    [
+     5,
+     "direction(\"history_months\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.493; net change band -0.74 to -0.195; exception mass 0"
+    ],
+    [
+     6,
+     "strength(\"dti\") in (\"negligible\", \"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [0%, 15%)",
+     "share 0.0417; share band 0.0099 to 0.0741; detectable False; mass where the curve band excludes 0 0; net change 0.182"
+    ],
+    [
+     7,
+     "strength(\"noise_2\") in (\"negligible\", \"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [0%, 15%)",
+     "share 0.0392; share band 0.016 to 0.0687; detectable False; mass where the curve band excludes 0 0; net change -0.0345"
+    ],
+    [
+     8,
+     "strength(\"noise_1\") in (\"negligible\", \"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [0%, 15%)",
+     "share 0.0129; share band 0.00326 to 0.0523; detectable False; mass where the curve band excludes 0 0; net change 0.0659"
+    ],
+    [
+     9,
+     "negligible(\"age\")",
+     "true",
+     "",
+     "no detectable effect, share below the weak class, a moderate effect ruled out",
+     "share 0.0092; share band 0.00407 to 0.0416; detectable False; mass where the curve band excludes 0 0; net change -0.0838"
+    ],
+    [
+     10,
+     "negligible(\"n_inquiries\")",
+     "true",
+     "",
+     "no detectable effect, share below the weak class, a moderate effect ruled out",
+     "share 0.000778; share band 0 to 0.0255; detectable False; mass where the curve band excludes 0 0; net change 0.00255"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": ""
+  }
+ ],
+ "failed_before": [],
+ "exit": "TEMPLATE",
+ "reason": "template text from the certified facts",
+ "flagged": false,
+ "roundtrip": "not run (week 6)",
+ "cost": 0.0007871,
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 2040,
+  "input_tokens": 2457,
+  "output_tokens": 1042
+ },
+ "events": [
+  "stop repairing: call budget used",
+  "TEMPLATE: template text from the certified facts"
+ ]
+}

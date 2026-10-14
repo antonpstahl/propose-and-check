@@ -1,0 +1,175 @@
+{
+ "run_id": "syn-dominant-n50000-s1_EBM_H2_d0_claude-haiku-5-5_plausible",
+ "budget": 16,
+ "calls": 2,
+ "rounds": 1,
+ "format_retry_used": false,
+ "pending": null,
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [],
+   "claims": [],
+   "format_errors": [],
+   "missing": [
+    "utilization",
+    "n_delinquencies & utilization",
+    "n_delinquencies"
+   ],
+   "flagged": [],
+   "answer": "{\"claims\":[],\"sentences\":[]}"
+  },
+  {
+   "source": "repair 1",
+   "sentences": [
+    [
+     1,
+     "Credit utilization, the share of the credit limit in use, is the most important driver of default risk, accounting for about 28% of the model's importance, and risk rises strongly as utilization increases."
+    ],
+    [
+     2,
+     "The number of past delinquencies is the second most important driver, accounting for about 17% of importance, and risk jumps when an applicant has at least one past delinquency."
+    ],
+    [
+     3,
+     "The effect of credit utilization grows with the number of past delinquencies, and the pair together accounts for about 20% of the model's importance."
+    ],
+    [
+     4,
+     "Income and the length of credit history have moderate effects, with risk falling as either rises."
+    ],
+    [
+     5,
+     "The debt-to-income ratio has a weak to moderate effect, with risk rising as it increases."
+    ],
+    [
+     6,
+     "Recent credit inquiries have at most a weak effect, while the number of dependents, months at the current address and age hardly matter."
+    ],
+    [
+     7,
+     "The data do not settle whether the length of credit history and credit utilization interact."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"utilization\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "direction(\"utilization\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 3.18; net change band 2.82 to 3.42; exception mass 0"
+    ],
+    [
+     1,
+     "strength(\"utilization\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.279; share band 0.263 to 0.286; detectable True; mass where the curve band excludes 0 0.789; net change 3.18"
+    ],
+    [
+     1,
+     "share(\"utilization\") == approx(0.279)",
+     "true",
+     "",
+     "",
+     "share 0.279; share band 0.263 to 0.286; detectable True; mass where the curve band excludes 0 0.789; net change 3.18"
+    ],
+    [
+     2,
+     "rank(\"n_delinquencies\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 2; claimed 2"
+    ],
+    [
+     2,
+     "direction(\"n_delinquencies\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 1; net change band 0.89 to 1.06; exception mass 0"
+    ],
+    [
+     2,
+     "strength(\"n_delinquencies\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.172; share band 0.159 to 0.182; detectable True; mass where the curve band excludes 0 0.999; net change 1"
+    ],
+    [
+     2,
+     "share(\"n_delinquencies\") == approx(0.172)",
+     "true",
+     "",
+     "",
+     "share 0.172; share band 0.159 to 0.182; detectable True; mass where the curve band excludes 0 0.999; net change 1"
+    ],
+    [
+     2,
+     "threshold(\"n_delinquencies\", at=0.5)",
+     "true",
+     "",
+     "",
+     "largest jump at 0.5; location band 0.5 to 0.5; tolerance 0.04; jump 0.693; jump significant True"
+    ],
+    [
+     3,
+     "interaction(\"utilization\", \"n_delinquencies\", pattern=\"amplification\")",
+     "true",
+     "",
+     "",
+     "share 0.197; share band 0.186 to 0.203; detectable True; interaction contrast 5.12; interaction contrast band 4.57 to 5.41"
+    ],
+    [
+     3,
+     "share(\"utilization & n_delinquencies\") == approx(0.197)",
+     "true",
+     "",
+     "",
+     "share 0.197; share band 0.186 to 0.203; detectable True; interaction contrast 5.12; interaction contrast band 4.57 to 5.41"
+    ],
+    [
+     3,
+     "effect(\"utilization\") > effect(\"n_delinquencies\")",
+     "true",
+     "",
+     "",
+     "difference 0.247; difference band 0.202 to 0.277"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\":[{\"dsl\":\"rank(\\\"utilization\\\") == 1\",\"sentence_id\":1},{\"dsl\":\"direction(\\\"utilization\\\") == \\\"increasing\\\"\",\"sentence_id\":1},{\"dsl\":\"strength(\\\"utilization\\\") == \\\"strong\\\"\",\"sentence_id\":1},{\"dsl\":\"share(\\\"utilization\\\") == approx(0.279)\",\"sentence_id\":1},{\"dsl\":\"rank(\\\"n_delinquencies\\\") == 2\",\"sentence_id\":2},{\"dsl\":\"direction(\\\"n_delinquencies\\\") == \\\"increasing\\\"\",\"sentence_id\":2},{\"dsl\":\"strength(\\\"n_delinquencies\\\") == \\\"strong\\\"\",\"sentence_id\":2},{\"dsl\":\"share(\\\"n_delinquencies\\\") == approx(0.172)\",\"sentence_id\":2},{\"dsl\":\"threshold(\\\"n_delinquencies\\\", at=0.5)\",\"sentence_id\":2},{\"dsl\":\"interaction(\\\"utilization\\\", \\\"n_delinquencies\\\", pattern=\\\"amplification\\\")\",\"sentence_id\":3},{\"dsl\":\"share(\\\"utilization & n_delinquencies\\\") == approx(0.197)\",\"sentence_id\":3},{\"dsl\":\"effect(\\\"utilization\\\") > effect(\\\"n_delinquencies\\\")\",\"sentence_id\":3}],\"sentences\":[{\"id\":1,\"text\":\"Credit utilization, the share of the credit limit in use, is the most important driver of default risk, accounting for about 28% of the model's importance, and risk rises strongly as utilization increases.\"},{\"id\":2,\"text\":\"The number of past delinquencies is the second most important driver, accounting for about 17% of importance, and risk jumps when an applicant has at least one past delinquency.\"},{\"id\":3,\"text\":\"The effect of credit utilization grows with the number of past delinquencies, and the pair together accounts for about 20% of the model's importance.\"},{\"id\":4,\"text\":\"Income and the length of credit history have moderate effects, with risk falling as either rises.\"},{\"id\":5,\"text\":\"The debt-to-income ratio has a weak to moderate effect, with risk rising as it increases.\"},{\"id\":6,\"text\":\"Recent credit inquiries have at most a weak effect, while the number of dependents, months at the current address and age hardly matter.\"},{\"id\":7,\"text\":\"The data do not settle whether the length of credit history and credit utilization interact.\"}]}"
+  }
+ ],
+ "failed_before": [],
+ "exit": "RELEASED",
+ "reason": "passed after 1 repair round(s)",
+ "flagged": false,
+ "roundtrip": "not run (week 6)",
+ "cost": 0.001346,
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 4080,
+  "input_tokens": 8932,
+  "output_tokens": 824
+ },
+ "events": [
+  "repair round 1: 0 problem(s)",
+  "RELEASED: passed after 1 repair round(s)"
+ ]
+}

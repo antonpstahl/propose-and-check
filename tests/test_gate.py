@@ -164,3 +164,10 @@ def test_a_term_covered_only_by_a_hedge_is_released_with_the_flag(ctx, good, tmp
     monkeypatch.setattr(g, "coverage", lambda *a: flagged)
     result, _ = run(ctx, tmp_path, stub_message(answer(good)))
     assert result.exit == g.RELEASED and result.flagged
+
+
+def test_an_empty_draft_is_a_format_problem_not_a_repair_round(ctx, good, tmp_path):
+    """Seen in the pilot: {"claims": [], "sentences": []}, valid JSON with nothing in it."""
+    result, requests = run(ctx, tmp_path, stub_message({"claims": [], "sentences": []}), stub_message(answer(good)))
+    assert (result.exit, result.calls, result.rounds) == (g.RELEASED, 2, 0)
+    assert requests[1].attempt == 1 and any("format-only retry" in e for e in result.events)
