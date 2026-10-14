@@ -1,10 +1,11 @@
 """What the writer sees of each feature: its name in the handover and the DSL, and a short description.
 
-The planted noise features must not be called noise in front of the writer: a name like `noise_1` tells it the
-answer and makes the task easier than any real model's. So they get plausible credit-feature names (proposed D41,
-plan §14.14), which the writer may hold priors about, as with any real feature: whether it over-attributes them is
-part of what E3 measures (the seminar's main failure, §3.1 of the thesis plan). The verifier works on the Facts'
-names; `internal` maps the names the writer used back before verification.
+The planted noise features must not be called noise in front of the writer: `noise_1` is our label for what we
+planted, and it tells the writer the answer. D41 (plan §14.14): they are shown under plausible names of classic weak
+application-scorecard variables, fixed before any LLM run (SYNTHETIC_NAMES). Any name brings the writer's priors,
+whose direction we cannot control, so the pilot checks whether the names change the writer's behaviour against
+opaque names (OPAQUE_NAMES), with a rule fixed in advance. The verifier works on the Facts' names; `internal` maps
+the names the writer used back before verification.
 """
 
 from collections.abc import Mapping
@@ -12,7 +13,8 @@ from collections.abc import Mapping
 from verifier_gate.dsl.grammar import HEDGE, Claim
 from verifier_gate.facts.steps import PAIR_SEPARATOR
 
-SYNTHETIC_NAMES = {"noise_1": "months_at_address", "noise_2": "num_dependents"}  # proposed D41
+SYNTHETIC_NAMES = {"noise_1": "months_at_address", "noise_2": "num_dependents"}  # D41
+OPAQUE_NAMES = {"noise_1": "feature_a", "noise_2": "feature_b"}  # the pilot's naming check (D41)
 SYNTHETIC_DESCRIPTIONS = {
     "utilization": "revolving credit utilization: the share of the credit limit in use (0 to 1)",
     "n_delinquencies": "number of past delinquencies on the credit file (0 to 6)",
@@ -23,6 +25,8 @@ SYNTHETIC_DESCRIPTIONS = {
     "age": "age of the applicant in years",
     "months_at_address": "months at the current address (standardised)",
     "num_dependents": "number of dependents (standardised)",
+    "feature_a": "an application attribute (standardised)",
+    "feature_b": "an application attribute (standardised)",
 }
 SYNTHETIC_LABELS = {  # how a sentence refers to the feature
     "utilization": "credit utilization",
@@ -34,6 +38,8 @@ SYNTHETIC_LABELS = {  # how a sentence refers to the feature
     "age": "age",
     "months_at_address": "months at the current address",
     "num_dependents": "the number of dependents",
+    "feature_a": "feature a",
+    "feature_b": "feature b",
 }
 
 

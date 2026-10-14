@@ -1,9 +1,9 @@
-"""Pilot of the LLM loop (plan §14.14, step 7), and the checks before it.
+"""Pilot of the LLM loop (plan §14.14, step 7), and the checks before and beside it.
 
 Runs on 2 discovery-seed datasets: syn-dominant-n50000-s1 (the worked example) and syn-none-n5000-s1 (small n:
 sets and hedges). Traces: both models x H1 and H2 (8), plus 2 more draws of the worked example with XGB2 and H2 =
-10, with the writer of settings.WRITER. `--sonnet` adds the two H2 traces of the worked example's first draw with
-the Sonnet writer (D37), to check the prompts work for both.
+10, with the writer of settings.WRITER. `--sonnet` adds the two H2 traces of the first draw with the Sonnet
+writer (D37), to check the prompts work for both.
 
 Modes, in the order they are used:
 - dry run (default, no network, $0): a stub writer answers with the template text (one run starts with a wrong
@@ -12,14 +12,21 @@ Modes, in the order they are used:
 - --smoke: 2 live calls, the worked example's first draft with H1 and H2: the key, the JSON format, the DSL
   parse, caching and the log. Costs well under $0.01.
 - --live: the 10 traces, live and synchronous. Every call is cached (cache/llm/), so a rerun costs nothing.
+- --naming: the naming check of D41, live. First drafts only (the gate-off case, where priors show), H1, both
+  models, both datasets, 5 draws, once with the plausible names of the noise features and once with opaque names:
+  40 calls. Counted per naming: drafts with at least one claim about a noise feature that the verifier does not
+  certify. Rule, fixed before the run (14 Oct): if the two counts differ by NAMING_DIFFERENCE or more of 20, the
+  names change the writer's behaviour and E3 runs both namings, reported apart; otherwise the plausible names stay.
+  Add --dry for a no-network rehearsal.
 
 Writes results/pilot/<mode>/<run id>.json (the full run, with every version and verdict) and summary.csv.
-Run: `uv run python -m verifier_gate.experiments.pilot [--smoke | --live] [--sonnet]`.
+Run: `uv run python -m verifier_gate.experiments.pilot [--smoke | --live | --naming] [--sonnet]`.
 """
 
 import argparse
 import json
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
@@ -36,38 +43,59 @@ from verifier_gate.verifier.certified import certified_plan
 
 DATASETS = ("syn-dominant-n50000-s1", "syn-none-n5000-s1")
 WORKED = ("syn-dominant-n50000-s1", "XGB2", "H2")
+NAMINGS = {"plausible": labels.SYNTHETIC_NAMES, "opaque": labels.OPAQUE_NAMES}
+NAMING_DRAWS = 5
+NAMING_DIFFERENCE = 3  # of 20 drafts per naming (D41)
+NOISE = ("noise_1", "noise_2")
 RESULTS = Path(__file__).parents[3] / "results" / "pilot"
 CHARS_PER_TOKEN = 3.0  # rough, on the safe side (Claude Haiku 5.5's tokenizer counts more tokens than older ones)
 OUTPUT_TOKENS = 1_500  # assumed per call for the estimate
 
 
-def runs(sonnet: bool) -> list[tuple[str, str, str, int, str]]:
-    out = [(s, m, v, 0, settings.WRITER) for s in DATASETS for m in ("EBM", "XGB2") for v in ("H1", "H2")]
-    out += [(*WORKED, d, settings.WRITER) for d in (1, 2)]
+@dataclass(frozen=True)
+class Spec:
+    scenario: str
+    model: str
+    variant: str
+    draw: int
+    writer: str
+    naming: str = "plausible"
+    budget: int = g.CALL_BUDGET
+
+    @property
+    def run_id(self) -> str:
+        return f"{self.scenario}_{self.model}_{self.variant}_d{self.draw}_{self.writer}_{self.naming}"
+
+
+def plan(mode: str, sonnet: bool) -> list[Spec]:
+    if mode == "smoke":
+        return [Spec(WORKED[0], WORKED[1], v, 0, settings.WRITER, budget=1) for v in ("H1", "H2")]
+    if mode == "naming":
+        return [Spec(s, m, "H1", d, settings.WRITER, naming, budget=1)
+                for naming in NAMINGS for s in DATASETS for m in ("EBM", "XGB2") for d in range(NAMING_DRAWS)]  # fmt: skip
+    out = [Spec(s, m, v, 0, settings.WRITER) for s in DATASETS for m in ("EBM", "XGB2") for v in ("H1", "H2")]
+    out += [Spec(*WORKED, d, settings.WRITER) for d in (1, 2)]
     if sonnet:
-        out += [(s, "XGB2", "H2", 0, settings.WRITER_SUBSET) for s in DATASETS]
+        out += [Spec(s, "XGB2", "H2", 0, settings.WRITER_SUBSET) for s in DATASETS]
     return out
 
 
-def run_id(scenario: str, model: str, variant: str, draw: int, writer: str) -> str:
-    return f"{scenario}_{model}_{variant}_d{draw}_{writer}"
-
-
-def as_answer(draft) -> dict:
+def as_answer(draft, names) -> dict:
     """A draft as the writer's JSON answer, in the writer's names."""
     return {"sentences": [{"id": i, "text": t} for i, t in draft.sentences],
-            "claims": [{"sentence_id": c.sentence_id, "dsl": str(labels.external(Claim(c.kind, c.terms, c.value, c.relation, None, c.inner)))}
+            "claims": [{"sentence_id": c.sentence_id, "dsl": str(labels.external(Claim(c.kind, c.terms, c.value, c.relation, None, c.inner), names))}
                        for c in draft.claims]}  # fmt: skip
 
 
 def stub_writer(contexts: dict[str, g.Context]):
-    """Answers with the template of the run's model; the first run's first draft carries a wrong claim."""
+    """Answers with the template of the run's model; the first run's first draft carries a wrong claim. Dry runs
+    only: the run id travels in the handover text."""
     seen = set()
 
     def respond(request: Request) -> dict:
         run = request.messages[0][1].split("RUN:")[1].split("\n")[0].strip()
         ctx = contexts[run]
-        answer = as_answer(template(ctx.facts, ctx.certified))
+        answer = as_answer(template(ctx.facts, ctx.certified), ctx.names)
         if run not in seen and run == next(iter(contexts)):
             answer["sentences"].append({"id": 99, "text": "Income has a strong effect."})
             answer["claims"].append({"sentence_id": 99, "dsl": 'strength("income") == "strong"'})
@@ -78,56 +106,77 @@ def stub_writer(contexts: dict[str, g.Context]):
     return respond
 
 
+def uncertified_noise_claims(state: g.Run) -> int | None:
+    """In the run's first draft: claims about a noise feature that the verifier does not certify (None if the first
+    answer was not a draft)."""
+    if not state.versions:
+        return None
+    first = state.versions[0]
+    return sum(1 for _, line, value, *_ in first["claims"] if value != "true" and any(f'"{n}"' in line for n in NOISE))
+
+
+def naming_verdict(table: pd.DataFrame) -> str:
+    counts = {n: int((table[table.naming == n].noise_uncertified > 0).sum()) for n in NAMINGS}
+    drafts = {n: int(table[table.naming == n].noise_uncertified.notna().sum()) for n in NAMINGS}
+    differ = abs(counts["plausible"] - counts["opaque"]) >= NAMING_DIFFERENCE
+    decision = "the names change the writer's behaviour: E3 runs both namings, reported apart" if differ else "no difference by the rule: the plausible names stay"
+    return f"Drafts with an uncertified claim about a noise feature: {counts} of {drafts} drafts. {decision}."
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--smoke", action="store_true")
     mode.add_argument("--live", action="store_true")
+    mode.add_argument("--naming", action="store_true")
     parser.add_argument("--sonnet", action="store_true")
-    parser.add_argument("--keep", action="store_true", help="dry run: keep the results")
+    parser.add_argument("--dry", action="store_true", help="--naming without network")
+    parser.add_argument("--keep", action="store_true", help="dry runs: keep the results")
     args = parser.parse_args()
-    name = "smoke" if args.smoke else "live" if args.live else "dry_run"
-    plan = runs(args.sonnet)
-    if args.smoke:
-        plan = [(WORKED[0], WORKED[1], v, 0, settings.WRITER) for v in ("H1", "H2")]
+    name = "smoke" if args.smoke else "live" if args.live else "naming" if args.naming else "dry_run"
+    dry = name == "dry_run" or (args.naming and args.dry)
+    specs = plan(name, args.sonnet)
 
     contexts, handovers = {}, {}
-    for scenario_id, model, variant, draw, writer in plan:
-        scenario = next(s for s in dgp.SCENARIOS if s.id == scenario_id)
-        facts = load(scenario, model)
+    for spec in specs:
+        scenario = next(s for s in dgp.SCENARIOS if s.id == spec.scenario)
+        facts = load(scenario, spec.model)
         certified = certified_plan(facts)
-        h = handover(facts, dgp.generate(scenario).X, variant, certified)
+        names = NAMINGS[spec.naming]
+        h = handover(facts, dgp.generate(scenario).X, spec.variant, certified, names=names)
         if not h.passed:
-            raise SystemExit(f"{scenario_id} {model} {variant}: the readable form failed its check; fix it before any call")
-        rid = run_id(scenario_id, model, variant, draw, writer)
-        contexts[rid], handovers[rid] = g.Context(facts, certified), h.text
+            raise SystemExit(f"{spec.run_id}: the readable form failed its check; fix it before any call")
+        contexts[spec.run_id], handovers[spec.run_id] = g.Context(facts, certified, names), h.text
 
-    if name == "dry_run":
+    if dry:
         scratch = Path(tempfile.mkdtemp(prefix="pilot_dry_"))
-        # the stub needs to know which run a request belongs to; live requests never carry this tag
         client = Client("stub", stub_writer(contexts), cache_dir=scratch / "cache")
-        out = RESULTS / name if args.keep else scratch / "results"
+        out = RESULTS / f"{name}_dry" if args.keep else scratch / "results"
     else:
         client = Client("sync")
         out = RESULTS / name
     rows = []
-    for (scenario_id, model, variant, draw, writer), rid in zip(plan, contexts):
-        text = handovers[rid] if name != "dry_run" else f"RUN: {rid}\n{handovers[rid]}"
-        state = g.start(rid, text, writer, draw, budget=1 if args.smoke else g.CALL_BUDGET)  # smoke: one call per run
-        state = g.run_sync(state, client, contexts[rid], out / f"{rid}.json")
-        rows.append({"run": rid, "exit": state.exit, "reason": state.reason, "calls": state.calls, "rounds": state.rounds,
-                     "flagged": state.flagged, "cost": round(state.cost, 5), **{k: state.usage.get(k, 0) for k in ("input_tokens", "output_tokens", "cache_read_input_tokens")}})  # fmt: skip
+    for spec in specs:
+        text = f"RUN: {spec.run_id}\n{handovers[spec.run_id]}" if dry else handovers[spec.run_id]
+        state = g.start(spec.run_id, text, spec.writer, spec.draw, budget=spec.budget)
+        state = g.run_sync(state, client, contexts[spec.run_id], out / f"{spec.run_id}.json")
+        rows.append({"run": spec.run_id, "naming": spec.naming, "exit": state.exit, "reason": state.reason, "calls": state.calls,
+                     "rounds": state.rounds, "flagged": state.flagged, "noise_uncertified": uncertified_noise_claims(state),
+                     "cost": round(state.cost, 5),
+                     **{k: state.usage.get(k, 0) for k in ("input_tokens", "output_tokens", "cache_read_input_tokens")}})  # fmt: skip
     table = pd.DataFrame(rows)
     out.mkdir(parents=True, exist_ok=True)
     table.to_csv(out / "summary.csv", index=False)
-    pd.set_option("display.width", 220)
-    print(f"Pilot ({name}): {len(table)} runs; prompts {json.dumps({k: v[:12] for k, v in prompts.hashes().items()})}")
+    pd.set_option("display.width", 240)
+    print(f"Pilot ({name}{', no network' if dry else ''}): {len(table)} runs; prompts {json.dumps({k: v[:12] for k, v in prompts.hashes().items()})}")
     print(table.drop(columns=["reason"]).to_string(index=False))
     print("\nExit states:", table.exit.value_counts().to_dict())
-    if name == "dry_run":
+    if args.naming:
+        print(naming_verdict(table))
+    if dry:
         per_call = table.input_tokens.sum() / table.calls.sum()
         live = sum(table.calls) * (per_call * settings.PRICES[settings.WRITER][0] + OUTPUT_TOKENS * settings.PRICES[settings.WRITER][1]) / 1e6
-        print(f"\nDry run: about {per_call:,.0f} input tokens per call. A live pilot with these {sum(table.calls)} calls would cost "
+        print(f"\nNo network: about {per_call:,.0f} input tokens per call. Live, these {sum(table.calls)} calls would cost "
               f"about ${live:.2f} with {settings.WRITER} (no caching assumed); results in {out}")  # fmt: skip
     else:
         print(f"\nTotal cost: ${table.cost.sum():.4f}; results in {out}")
