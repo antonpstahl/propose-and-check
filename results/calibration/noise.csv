@@ -1,0 +1,361 @@
+scenario,n,interaction,model,feature,detectable,band only,test,claim,verdict
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,at most,"negligible(""noise_1"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,at most,"negligible(""noise_2"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-none-n5000-s1,5000,none,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,at most,"negligible(""noise_2"")",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-none-n5000-s1,5000,none,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",false
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",false
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",false
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",false
+syn-none-n5000-s1,5000,none,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",false
+syn-none-n5000-s1,5000,none,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",false
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-none-n50000-s1,50000,none,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",false
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",false
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-none-n50000-s1,50000,none,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-none-n50000-s1,50000,none,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",false
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",false
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",false
+syn-none-n50000-s1,50000,none,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",false
+syn-none-n50000-s1,50000,none,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",false
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,at most,"negligible(""noise_2"")",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-weak-n5000-s1,5000,weak,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,at most,"negligible(""noise_2"")",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-weak-n5000-s1,5000,weak,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",false
+syn-weak-n5000-s1,5000,weak,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",false
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,at most,"negligible(""noise_2"")",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-weak-n50000-s1,50000,weak,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-weak-n50000-s1,50000,weak,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",false
+syn-weak-n50000-s1,50000,weak,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",false
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,at most,"negligible(""noise_2"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",false
+syn-dominant-n5000-s1,5000,dominant,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",false
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,EBM,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,at most,"negligible(""noise_2"")",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,XGB2,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",undecidable
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""weak""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""moderate""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") == ""strong""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"")",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,effect,"strength(""noise_1"") in (""weak"", ""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,at most,"negligible(""noise_1"")",true
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,at most,"strength(""noise_1"") in (""negligible"", ""weak"")",true
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""increasing""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_1,False,False,direction (reported),"direction(""noise_1"") == ""decreasing""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""weak""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""moderate""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") == ""strong""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"")",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,effect,"strength(""noise_2"") in (""weak"", ""moderate"", ""strong"")",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,at most,"negligible(""noise_2"")",true
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,at most,"strength(""noise_2"") in (""negligible"", ""weak"")",true
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""increasing""",false
+syn-dominant-n50000-s1,50000,dominant,oracle,noise_2,False,False,direction (reported),"direction(""noise_2"") == ""decreasing""",false

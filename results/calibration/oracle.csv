@@ -1,0 +1,1015 @@
+scenario,n,interaction,claim,kind,set,frozen label,label,verdict,outcome,exception mass
+syn-none-n5000-s1,5000,none,"negligible(""utilization"")",negligible,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""utilization"") == ""strong""",strength,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""utilization"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"share(""utilization"") == approx(0.394)",share,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""utilization"") == approx(0.513)",share,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"negligible(""n_delinquencies"")",negligible,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""n_delinquencies"") == ""strong""",strength,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""n_delinquencies"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"share(""n_delinquencies"") == approx(0.242)",share,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""n_delinquencies"") == approx(0.315)",share,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"negligible(""income"")",negligible,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""income"") == ""moderate""",strength,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""income"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""income"") == ""strong""",strength,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""income"") == approx(0.13)",share,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""income"") == approx(0.18)",share,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"negligible(""history_months"")",negligible,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""history_months"") == ""moderate""",strength,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""history_months"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""history_months"") == ""strong""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"share(""history_months"") == approx(0.102)",share,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""history_months"") == approx(0.152)",share,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"negligible(""dti"")",negligible,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""dti"") == ""moderate""",strength,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""dti"") == ""weak""",strength,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""dti"") == ""strong""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"share(""dti"") == approx(0.082)",share,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""dti"") == approx(0.132)",share,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"negligible(""n_inquiries"")",negligible,False,false,false,true,released_wrong,
+syn-none-n5000-s1,5000,none,"strength(""n_inquiries"") == ""weak""",strength,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""n_inquiries"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"share(""n_inquiries"") == approx(0.039)",share,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""n_inquiries"") == approx(0.089)",share,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"negligible(""age"")",negligible,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""age"") == ""weak""",strength,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""age"") == approx(0.01)",share,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"share(""age"") == approx(0.06)",share,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"negligible(""noise_1"")",negligible,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""noise_1"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"share(""noise_1"") == approx(0.0)",share,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"share(""noise_1"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"negligible(""noise_2"")",negligible,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""noise_2"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"share(""noise_2"") == approx(0.0)",share,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"share(""noise_2"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""utilization"") == 1",rank,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"rank(""utilization"") == 2",rank,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""n_delinquencies"") == 2",rank,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"rank(""n_delinquencies"") == 3",rank,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""income"") == 3",rank,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""income"") == 4",rank,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""history_months"") == 4",rank,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""history_months"") == 5",rank,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""dti"") == 5",rank,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""dti"") == 6",rank,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""n_inquiries"") == 6",rank,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""n_inquiries"") == 7",rank,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""age"") == 7",rank,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""age"") == 6",rank,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"effect(""utilization"") > effect(""n_delinquencies"")",comparison,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"effect(""n_delinquencies"") > effect(""utilization"")",comparison,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"effect(""n_delinquencies"") > effect(""income"")",comparison,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"effect(""income"") > effect(""n_delinquencies"")",comparison,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"effect(""income"") > effect(""history_months"")",comparison,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"effect(""history_months"") > effect(""income"")",comparison,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"effect(""history_months"") > effect(""dti"")",comparison,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"effect(""dti"") > effect(""history_months"")",comparison,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"effect(""dti"") > effect(""n_inquiries"")",comparison,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"effect(""n_inquiries"") > effect(""dti"")",comparison,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"effect(""n_inquiries"") > effect(""age"")",comparison,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"effect(""age"") > effect(""n_inquiries"")",comparison,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"direction(""utilization"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""utilization"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""utilization"") == ""decreasing""",direction,False,false,false,false,refuted,0.8937999999999999
+syn-none-n5000-s1,5000,none,"direction(""utilization"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.8937999999999999
+syn-none-n5000-s1,5000,none,"direction(""n_delinquencies"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""n_delinquencies"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""n_delinquencies"") == ""decreasing""",direction,False,false,false,false,refuted,0.5404
+syn-none-n5000-s1,5000,none,"direction(""n_delinquencies"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.5404
+syn-none-n5000-s1,5000,none,"direction(""income"") == ""decreasing""",direction,False,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""income"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""income"") == ""increasing""",direction,False,false,false,false,refuted,0.8447999999999998
+syn-none-n5000-s1,5000,none,"direction(""income"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.8447999999999998
+syn-none-n5000-s1,5000,none,"direction(""history_months"") == ""mostly_decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""history_months"") == ""decreasing""",direction,False,false,false,true,released_wrong,0.0
+syn-none-n5000-s1,5000,none,"direction(""history_months"") == ""increasing""",direction,False,false,false,false,refuted,0.6643999999999995
+syn-none-n5000-s1,5000,none,"direction(""history_months"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.6643999999999995
+syn-none-n5000-s1,5000,none,"direction(""dti"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""dti"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""dti"") == ""decreasing""",direction,False,false,false,false,refuted,0.2894000000000022
+syn-none-n5000-s1,5000,none,"direction(""dti"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.2894000000000022
+syn-none-n5000-s1,5000,none,"direction(""n_inquiries"") == ""increasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""n_inquiries"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""n_inquiries"") == ""decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""n_inquiries"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""age"") == ""decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""age"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""age"") == ""increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""age"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_1"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_1"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_2"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_2"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n5000-s1,5000,none,"threshold(""dti"", at=0.43)",threshold,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"threshold(""dti"", at=0.25)",threshold,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"threshold(""income"", at=50532.79610216567)",threshold,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"peak(""history_months"", at=36.0)",peak,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"peak(""history_months"", at=200.0)",peak,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"peak(""income"", at=50532.79610216567)",peak,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",interaction,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"interaction(""utilization"", ""n_delinquencies"", pattern=""sign_flip"")",interaction,False,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",interaction,False,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"interaction(""n_inquiries"", ""history_months"", pattern=""sign_flip"")",interaction,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"interaction(""n_inquiries"", ""history_months"", pattern=""amplification"")",interaction,False,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",interaction,False,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""utilization"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""utilization"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""n_delinquencies"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""n_delinquencies"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""income"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""income"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""income"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""history_months"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""history_months"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""history_months"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""dti"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""dti"") in (""moderate"", ""strong"")",strength,True,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""dti"") in (""negligible"", ""weak"")",strength,True,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""n_inquiries"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""n_inquiries"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""n_inquiries"") in (""moderate"", ""strong"")",strength,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""age"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""age"") in (""weak"", ""moderate"")",strength,True,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"strength(""noise_1"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""noise_1"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"strength(""noise_2"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"strength(""noise_2"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""utilization"") in (1, 2)",rank,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"rank(""utilization"") in (2, 3)",rank,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""n_delinquencies"") in (2, 3)",rank,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"rank(""n_delinquencies"") in (3, 4)",rank,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""income"") in (3, 4)",rank,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"rank(""income"") in (4, 5)",rank,True,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""history_months"") in (4, 5)",rank,True,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""history_months"") in (5, 6)",rank,True,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""dti"") in (5, 6)",rank,True,true,true,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"rank(""dti"") in (6, 7)",rank,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""n_inquiries"") in (6, 7)",rank,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"rank(""n_inquiries"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-none-n5000-s1,5000,none,"rank(""age"") in (6, 7)",rank,True,true,true,true,certified,
+syn-none-n5000-s1,5000,none,"rank(""age"") in (5, 6)",rank,True,false,false,undecidable,abstained,
+syn-none-n5000-s1,5000,none,"direction(""utilization"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""utilization"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.8937999999999999
+syn-none-n5000-s1,5000,none,"direction(""n_delinquencies"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""n_delinquencies"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.5404
+syn-none-n5000-s1,5000,none,"direction(""income"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""income"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.8447999999999998
+syn-none-n5000-s1,5000,none,"direction(""history_months"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""history_months"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.6643999999999995
+syn-none-n5000-s1,5000,none,"direction(""dti"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n5000-s1,5000,none,"direction(""dti"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.2894000000000022
+syn-none-n5000-s1,5000,none,"direction(""n_inquiries"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""n_inquiries"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""age"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""age"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_1"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_1"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_2"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-none-n5000-s1,5000,none,"direction(""noise_2"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"negligible(""utilization"")",negligible,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""utilization"") == ""strong""",strength,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""utilization"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""utilization"") == approx(0.397)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""utilization"") == approx(0.516)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""n_delinquencies"")",negligible,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""n_delinquencies"") == ""strong""",strength,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""n_delinquencies"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""n_delinquencies"") == approx(0.241)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""n_delinquencies"") == approx(0.313)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""income"")",negligible,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""income"") == ""moderate""",strength,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""income"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""income"") == ""strong""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""income"") == approx(0.131)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""income"") == approx(0.181)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""history_months"")",negligible,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""history_months"") == ""moderate""",strength,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""history_months"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""history_months"") == ""strong""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""history_months"") == approx(0.101)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""history_months"") == approx(0.151)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""dti"")",negligible,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""dti"") == ""moderate""",strength,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""dti"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""dti"") == ""strong""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""dti"") == approx(0.081)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""dti"") == approx(0.131)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""n_inquiries"")",negligible,False,false,false,undecidable,abstained,
+syn-none-n50000-s1,50000,none,"strength(""n_inquiries"") == ""weak""",strength,False,true,true,undecidable,abstained,
+syn-none-n50000-s1,50000,none,"strength(""n_inquiries"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""n_inquiries"") == approx(0.04)",share,False,true,true,undecidable,abstained,
+syn-none-n50000-s1,50000,none,"share(""n_inquiries"") == approx(0.09)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""age"")",negligible,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""age"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""age"") == approx(0.01)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""age"") == approx(0.06)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""noise_1"")",negligible,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""noise_1"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""noise_1"") == approx(0.0)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""noise_1"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"negligible(""noise_2"")",negligible,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""noise_2"") == ""weak""",strength,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"share(""noise_2"") == approx(0.0)",share,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"share(""noise_2"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""utilization"") == 1",rank,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""utilization"") == 2",rank,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""n_delinquencies"") == 2",rank,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""n_delinquencies"") == 3",rank,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""income"") == 3",rank,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""income"") == 4",rank,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""history_months"") == 4",rank,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""history_months"") == 5",rank,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""dti"") == 5",rank,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""dti"") == 6",rank,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""n_inquiries"") == 6",rank,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""n_inquiries"") == 7",rank,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""age"") == 7",rank,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""age"") == 6",rank,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"effect(""utilization"") > effect(""n_delinquencies"")",comparison,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"effect(""n_delinquencies"") > effect(""utilization"")",comparison,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"effect(""n_delinquencies"") > effect(""income"")",comparison,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"effect(""income"") > effect(""n_delinquencies"")",comparison,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"effect(""income"") > effect(""history_months"")",comparison,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"effect(""history_months"") > effect(""income"")",comparison,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"effect(""history_months"") > effect(""dti"")",comparison,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"effect(""dti"") > effect(""history_months"")",comparison,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"effect(""dti"") > effect(""n_inquiries"")",comparison,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"effect(""n_inquiries"") > effect(""dti"")",comparison,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"effect(""n_inquiries"") > effect(""age"")",comparison,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"effect(""age"") > effect(""n_inquiries"")",comparison,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"direction(""utilization"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""utilization"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""utilization"") == ""decreasing""",direction,False,false,false,false,refuted,0.96142
+syn-none-n50000-s1,50000,none,"direction(""utilization"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.96142
+syn-none-n50000-s1,50000,none,"direction(""n_delinquencies"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""n_delinquencies"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""n_delinquencies"") == ""decreasing""",direction,False,false,false,false,refuted,0.5489999999999999
+syn-none-n50000-s1,50000,none,"direction(""n_delinquencies"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.5489999999999999
+syn-none-n50000-s1,50000,none,"direction(""income"") == ""decreasing""",direction,False,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""income"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""income"") == ""increasing""",direction,False,false,false,false,refuted,0.94304
+syn-none-n50000-s1,50000,none,"direction(""income"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.94304
+syn-none-n50000-s1,50000,none,"direction(""history_months"") == ""mostly_decreasing""",direction,False,true,true,true,certified,0.061420000000003916
+syn-none-n50000-s1,50000,none,"direction(""history_months"") == ""decreasing""",direction,False,false,false,false,refuted,0.061420000000003916
+syn-none-n50000-s1,50000,none,"direction(""history_months"") == ""increasing""",direction,False,false,false,false,refuted,0.88262
+syn-none-n50000-s1,50000,none,"direction(""history_months"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.88262
+syn-none-n50000-s1,50000,none,"direction(""dti"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""dti"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""dti"") == ""decreasing""",direction,False,false,false,false,refuted,0.283840000000003
+syn-none-n50000-s1,50000,none,"direction(""dti"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.283840000000003
+syn-none-n50000-s1,50000,none,"direction(""n_inquiries"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""n_inquiries"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""n_inquiries"") == ""decreasing""",direction,False,false,false,false,refuted,0.66316
+syn-none-n50000-s1,50000,none,"direction(""n_inquiries"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.66316
+syn-none-n50000-s1,50000,none,"direction(""age"") == ""decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""age"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""age"") == ""increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""age"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_1"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_1"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_2"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_2"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"threshold(""dti"", at=0.43)",threshold,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"threshold(""dti"", at=0.25)",threshold,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"threshold(""income"", at=50005.617403672724)",threshold,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"peak(""history_months"", at=36.0)",peak,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"peak(""history_months"", at=200.0)",peak,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"peak(""income"", at=50005.617403672724)",peak,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",interaction,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"interaction(""utilization"", ""n_delinquencies"", pattern=""sign_flip"")",interaction,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",interaction,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"interaction(""n_inquiries"", ""history_months"", pattern=""sign_flip"")",interaction,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"interaction(""n_inquiries"", ""history_months"", pattern=""amplification"")",interaction,False,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",interaction,False,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""utilization"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""utilization"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""n_delinquencies"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""n_delinquencies"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""income"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""income"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""income"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""history_months"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""history_months"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""history_months"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""dti"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""dti"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""dti"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""n_inquiries"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""n_inquiries"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-none-n50000-s1,50000,none,"strength(""n_inquiries"") in (""moderate"", ""strong"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""age"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""age"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""noise_1"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""noise_1"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"strength(""noise_2"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"strength(""noise_2"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""utilization"") in (1, 2)",rank,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""utilization"") in (2, 3)",rank,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""n_delinquencies"") in (2, 3)",rank,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""n_delinquencies"") in (3, 4)",rank,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""income"") in (3, 4)",rank,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""income"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""history_months"") in (4, 5)",rank,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""history_months"") in (5, 6)",rank,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""dti"") in (5, 6)",rank,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""dti"") in (6, 7)",rank,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""n_inquiries"") in (6, 7)",rank,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""n_inquiries"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"rank(""age"") in (6, 7)",rank,True,true,true,true,certified,
+syn-none-n50000-s1,50000,none,"rank(""age"") in (5, 6)",rank,True,false,false,false,refuted,
+syn-none-n50000-s1,50000,none,"direction(""utilization"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""utilization"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.96142
+syn-none-n50000-s1,50000,none,"direction(""n_delinquencies"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""n_delinquencies"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.5489999999999999
+syn-none-n50000-s1,50000,none,"direction(""income"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""income"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.94304
+syn-none-n50000-s1,50000,none,"direction(""history_months"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.061420000000003916
+syn-none-n50000-s1,50000,none,"direction(""history_months"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.88262
+syn-none-n50000-s1,50000,none,"direction(""dti"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""dti"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.283840000000003
+syn-none-n50000-s1,50000,none,"direction(""n_inquiries"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-none-n50000-s1,50000,none,"direction(""n_inquiries"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.66316
+syn-none-n50000-s1,50000,none,"direction(""age"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""age"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_1"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_1"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_2"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-none-n50000-s1,50000,none,"direction(""noise_2"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"negligible(""utilization"")",negligible,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""utilization"") == ""strong""",strength,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""utilization"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"share(""utilization"") == approx(0.359)",share,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""utilization"") == approx(0.467)",share,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"negligible(""n_delinquencies"")",negligible,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""n_delinquencies"") == ""strong""",strength,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""n_delinquencies"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"share(""n_delinquencies"") == approx(0.221)",share,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""n_delinquencies"") == approx(0.287)",share,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"negligible(""income"")",negligible,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""income"") == ""moderate""",strength,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""income"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""income"") == ""strong""",strength,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""income"") == approx(0.118)",share,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""income"") == approx(0.168)",share,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"negligible(""history_months"")",negligible,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""history_months"") == ""moderate""",strength,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""history_months"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""history_months"") == ""strong""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"share(""history_months"") == approx(0.093)",share,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""history_months"") == approx(0.143)",share,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"negligible(""dti"")",negligible,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""dti"") == ""moderate""",strength,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""dti"") == ""weak""",strength,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""dti"") == ""strong""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"share(""dti"") == approx(0.074)",share,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""dti"") == approx(0.124)",share,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"negligible(""n_inquiries"")",negligible,False,false,false,true,released_wrong,
+syn-weak-n5000-s1,5000,weak,"strength(""n_inquiries"") == ""weak""",strength,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""n_inquiries"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"share(""n_inquiries"") == approx(0.036)",share,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""n_inquiries"") == approx(0.086)",share,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"negligible(""age"")",negligible,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""age"") == ""weak""",strength,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""age"") == approx(0.009)",share,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"share(""age"") == approx(0.059)",share,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"negligible(""noise_1"")",negligible,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""noise_1"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"share(""noise_1"") == approx(0.0)",share,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"share(""noise_1"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"negligible(""noise_2"")",negligible,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""noise_2"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"share(""noise_2"") == approx(0.0)",share,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"share(""noise_2"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""utilization"") == 1",rank,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""utilization"") == 2",rank,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""n_delinquencies"") == 2",rank,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""n_delinquencies"") == 3",rank,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""income"") == 3",rank,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""income"") == 4",rank,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""history_months"") == 4",rank,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""history_months"") == 5",rank,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""dti"") == 5",rank,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""dti"") == 6",rank,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""n_inquiries"") == 6",rank,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""n_inquiries"") == 7",rank,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""age"") == 7",rank,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""age"") == 6",rank,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"effect(""utilization"") > effect(""n_delinquencies"")",comparison,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"effect(""n_delinquencies"") > effect(""utilization"")",comparison,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"effect(""n_delinquencies"") > effect(""income"")",comparison,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"effect(""income"") > effect(""n_delinquencies"")",comparison,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"effect(""income"") > effect(""history_months"")",comparison,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"effect(""history_months"") > effect(""income"")",comparison,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"effect(""history_months"") > effect(""dti"")",comparison,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"effect(""dti"") > effect(""history_months"")",comparison,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"effect(""dti"") > effect(""n_inquiries"")",comparison,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"effect(""n_inquiries"") > effect(""dti"")",comparison,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"effect(""n_inquiries"") > effect(""age"")",comparison,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"effect(""age"") > effect(""n_inquiries"")",comparison,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"direction(""utilization"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""utilization"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""utilization"") == ""decreasing""",direction,False,false,false,false,refuted,0.8919999999999999
+syn-weak-n5000-s1,5000,weak,"direction(""utilization"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.8919999999999999
+syn-weak-n5000-s1,5000,weak,"direction(""n_delinquencies"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""n_delinquencies"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""n_delinquencies"") == ""decreasing""",direction,False,false,false,false,refuted,0.5404
+syn-weak-n5000-s1,5000,weak,"direction(""n_delinquencies"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.5404
+syn-weak-n5000-s1,5000,weak,"direction(""income"") == ""decreasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""income"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""income"") == ""increasing""",direction,False,false,false,false,refuted,0.8421999999999996
+syn-weak-n5000-s1,5000,weak,"direction(""income"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.8421999999999996
+syn-weak-n5000-s1,5000,weak,"direction(""history_months"") == ""mostly_decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""history_months"") == ""decreasing""",direction,False,false,false,true,released_wrong,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""history_months"") == ""increasing""",direction,False,false,false,false,refuted,0.6593999999999995
+syn-weak-n5000-s1,5000,weak,"direction(""history_months"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.6593999999999995
+syn-weak-n5000-s1,5000,weak,"direction(""dti"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""dti"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""dti"") == ""decreasing""",direction,False,false,false,false,refuted,0.2894000000000022
+syn-weak-n5000-s1,5000,weak,"direction(""dti"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.2894000000000022
+syn-weak-n5000-s1,5000,weak,"direction(""n_inquiries"") == ""increasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""n_inquiries"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""n_inquiries"") == ""decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""n_inquiries"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""age"") == ""decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""age"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""age"") == ""increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""age"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_1"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_1"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_2"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_2"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"threshold(""dti"", at=0.43)",threshold,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"threshold(""dti"", at=0.25)",threshold,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"threshold(""income"", at=50532.79610216567)",threshold,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"peak(""history_months"", at=36.0)",peak,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"peak(""history_months"", at=200.0)",peak,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"peak(""income"", at=50532.79610216567)",peak,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",interaction,False,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"interaction(""utilization"", ""n_delinquencies"", pattern=""sign_flip"")",interaction,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",interaction,False,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"interaction(""n_inquiries"", ""history_months"", pattern=""sign_flip"")",interaction,False,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"interaction(""n_inquiries"", ""history_months"", pattern=""amplification"")",interaction,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",interaction,False,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""utilization"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""utilization"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""n_delinquencies"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""n_delinquencies"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""income"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""income"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""income"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""history_months"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""history_months"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""history_months"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""dti"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""dti"") in (""moderate"", ""strong"")",strength,True,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""dti"") in (""negligible"", ""weak"")",strength,True,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""n_inquiries"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""n_inquiries"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""n_inquiries"") in (""moderate"", ""strong"")",strength,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""age"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""age"") in (""weak"", ""moderate"")",strength,True,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"strength(""noise_1"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""noise_1"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"strength(""noise_2"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"strength(""noise_2"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""utilization"") in (1, 2)",rank,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""utilization"") in (2, 3)",rank,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""n_delinquencies"") in (2, 3)",rank,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""n_delinquencies"") in (3, 4)",rank,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""income"") in (3, 4)",rank,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""income"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""history_months"") in (4, 5)",rank,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""history_months"") in (5, 6)",rank,True,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""dti"") in (5, 6)",rank,True,true,true,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""dti"") in (6, 7)",rank,True,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"rank(""n_inquiries"") in (6, 7)",rank,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""n_inquiries"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-weak-n5000-s1,5000,weak,"rank(""age"") in (6, 7)",rank,True,true,true,true,certified,
+syn-weak-n5000-s1,5000,weak,"rank(""age"") in (5, 6)",rank,True,false,false,undecidable,abstained,
+syn-weak-n5000-s1,5000,weak,"direction(""utilization"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""utilization"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.8919999999999999
+syn-weak-n5000-s1,5000,weak,"direction(""n_delinquencies"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""n_delinquencies"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.5404
+syn-weak-n5000-s1,5000,weak,"direction(""income"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""income"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.8421999999999996
+syn-weak-n5000-s1,5000,weak,"direction(""history_months"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""history_months"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.6593999999999995
+syn-weak-n5000-s1,5000,weak,"direction(""dti"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""dti"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.2894000000000022
+syn-weak-n5000-s1,5000,weak,"direction(""n_inquiries"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""n_inquiries"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""age"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""age"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_1"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_1"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_2"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n5000-s1,5000,weak,"direction(""noise_2"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"negligible(""utilization"")",negligible,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""utilization"") == ""strong""",strength,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""utilization"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""utilization"") == approx(0.361)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""utilization"") == approx(0.469)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""n_delinquencies"")",negligible,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""n_delinquencies"") == ""strong""",strength,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""n_delinquencies"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""n_delinquencies"") == approx(0.219)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""n_delinquencies"") == approx(0.285)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""income"")",negligible,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""income"") == ""moderate""",strength,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""income"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""income"") == ""strong""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""income"") == approx(0.119)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""income"") == approx(0.169)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""history_months"")",negligible,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""history_months"") == ""moderate""",strength,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""history_months"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""history_months"") == ""strong""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""history_months"") == approx(0.092)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""history_months"") == approx(0.142)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""dti"")",negligible,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""dti"") == ""moderate""",strength,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""dti"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""dti"") == ""strong""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""dti"") == approx(0.073)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""dti"") == approx(0.123)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""n_inquiries"")",negligible,False,false,false,undecidable,abstained,
+syn-weak-n50000-s1,50000,weak,"strength(""n_inquiries"") == ""weak""",strength,False,true,true,undecidable,abstained,
+syn-weak-n50000-s1,50000,weak,"strength(""n_inquiries"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""n_inquiries"") == approx(0.037)",share,False,true,true,undecidable,abstained,
+syn-weak-n50000-s1,50000,weak,"share(""n_inquiries"") == approx(0.087)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""age"")",negligible,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""age"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""age"") == approx(0.009)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""age"") == approx(0.059)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""noise_1"")",negligible,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""noise_1"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""noise_1"") == approx(0.0)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""noise_1"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"negligible(""noise_2"")",negligible,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""noise_2"") == ""weak""",strength,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"share(""noise_2"") == approx(0.0)",share,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"share(""noise_2"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""utilization"") == 1",rank,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""utilization"") == 2",rank,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""n_delinquencies"") == 2",rank,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""n_delinquencies"") == 3",rank,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""income"") == 3",rank,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""income"") == 4",rank,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""history_months"") == 4",rank,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""history_months"") == 5",rank,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""dti"") == 5",rank,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""dti"") == 6",rank,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""n_inquiries"") == 6",rank,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""n_inquiries"") == 7",rank,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""age"") == 7",rank,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""age"") == 6",rank,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"effect(""utilization"") > effect(""n_delinquencies"")",comparison,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"effect(""n_delinquencies"") > effect(""utilization"")",comparison,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"effect(""n_delinquencies"") > effect(""income"")",comparison,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"effect(""income"") > effect(""n_delinquencies"")",comparison,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"effect(""income"") > effect(""history_months"")",comparison,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"effect(""history_months"") > effect(""income"")",comparison,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"effect(""history_months"") > effect(""dti"")",comparison,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"effect(""dti"") > effect(""history_months"")",comparison,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"effect(""dti"") > effect(""n_inquiries"")",comparison,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"effect(""n_inquiries"") > effect(""dti"")",comparison,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"effect(""n_inquiries"") > effect(""age"")",comparison,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"effect(""age"") > effect(""n_inquiries"")",comparison,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"direction(""utilization"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""utilization"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""utilization"") == ""decreasing""",direction,False,false,false,false,refuted,0.96166
+syn-weak-n50000-s1,50000,weak,"direction(""utilization"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.96166
+syn-weak-n50000-s1,50000,weak,"direction(""n_delinquencies"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""n_delinquencies"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""n_delinquencies"") == ""decreasing""",direction,False,false,false,false,refuted,0.5489999999999999
+syn-weak-n50000-s1,50000,weak,"direction(""n_delinquencies"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.5489999999999999
+syn-weak-n50000-s1,50000,weak,"direction(""income"") == ""decreasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""income"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""income"") == ""increasing""",direction,False,false,false,false,refuted,0.94138
+syn-weak-n50000-s1,50000,weak,"direction(""income"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.94138
+syn-weak-n50000-s1,50000,weak,"direction(""history_months"") == ""mostly_decreasing""",direction,False,true,true,true,certified,0.06092000000000397
+syn-weak-n50000-s1,50000,weak,"direction(""history_months"") == ""decreasing""",direction,False,false,false,false,refuted,0.06092000000000397
+syn-weak-n50000-s1,50000,weak,"direction(""history_months"") == ""increasing""",direction,False,false,false,false,refuted,0.88072
+syn-weak-n50000-s1,50000,weak,"direction(""history_months"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.88072
+syn-weak-n50000-s1,50000,weak,"direction(""dti"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""dti"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""dti"") == ""decreasing""",direction,False,false,false,false,refuted,0.283840000000003
+syn-weak-n50000-s1,50000,weak,"direction(""dti"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.283840000000003
+syn-weak-n50000-s1,50000,weak,"direction(""n_inquiries"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""n_inquiries"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""n_inquiries"") == ""decreasing""",direction,False,false,false,false,refuted,0.66316
+syn-weak-n50000-s1,50000,weak,"direction(""n_inquiries"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.66316
+syn-weak-n50000-s1,50000,weak,"direction(""age"") == ""decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""age"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""age"") == ""increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""age"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_1"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_1"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_2"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_2"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"threshold(""dti"", at=0.43)",threshold,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"threshold(""dti"", at=0.25)",threshold,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"threshold(""income"", at=50005.617403672724)",threshold,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"peak(""history_months"", at=36.0)",peak,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"peak(""history_months"", at=200.0)",peak,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"peak(""income"", at=50005.617403672724)",peak,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",interaction,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"interaction(""utilization"", ""n_delinquencies"", pattern=""sign_flip"")",interaction,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",interaction,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"interaction(""n_inquiries"", ""history_months"", pattern=""sign_flip"")",interaction,False,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"interaction(""n_inquiries"", ""history_months"", pattern=""amplification"")",interaction,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",interaction,False,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""utilization"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""utilization"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""n_delinquencies"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""n_delinquencies"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""income"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""income"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""income"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""history_months"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""history_months"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""history_months"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""dti"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""dti"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""dti"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""n_inquiries"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""n_inquiries"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-weak-n50000-s1,50000,weak,"strength(""n_inquiries"") in (""moderate"", ""strong"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""age"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""age"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""noise_1"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""noise_1"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"strength(""noise_2"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"strength(""noise_2"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""utilization"") in (1, 2)",rank,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""utilization"") in (2, 3)",rank,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""n_delinquencies"") in (2, 3)",rank,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""n_delinquencies"") in (3, 4)",rank,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""income"") in (3, 4)",rank,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""income"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""history_months"") in (4, 5)",rank,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""history_months"") in (5, 6)",rank,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""dti"") in (5, 6)",rank,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""dti"") in (6, 7)",rank,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""n_inquiries"") in (6, 7)",rank,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""n_inquiries"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"rank(""age"") in (6, 7)",rank,True,true,true,true,certified,
+syn-weak-n50000-s1,50000,weak,"rank(""age"") in (5, 6)",rank,True,false,false,false,refuted,
+syn-weak-n50000-s1,50000,weak,"direction(""utilization"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""utilization"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.96166
+syn-weak-n50000-s1,50000,weak,"direction(""n_delinquencies"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""n_delinquencies"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.5489999999999999
+syn-weak-n50000-s1,50000,weak,"direction(""income"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""income"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.94138
+syn-weak-n50000-s1,50000,weak,"direction(""history_months"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.06092000000000397
+syn-weak-n50000-s1,50000,weak,"direction(""history_months"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.88072
+syn-weak-n50000-s1,50000,weak,"direction(""dti"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""dti"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.283840000000003
+syn-weak-n50000-s1,50000,weak,"direction(""n_inquiries"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""n_inquiries"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.66316
+syn-weak-n50000-s1,50000,weak,"direction(""age"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""age"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_1"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_1"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_2"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-weak-n50000-s1,50000,weak,"direction(""noise_2"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"negligible(""utilization"")",negligible,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""utilization"") == ""strong""",strength,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""utilization"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"share(""utilization"") == approx(0.288)",share,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""utilization"") == approx(0.375)",share,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""n_delinquencies"")",negligible,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_delinquencies"") == ""strong""",strength,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_delinquencies"") == ""moderate""",strength,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""n_delinquencies"") == approx(0.177)",share,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""n_delinquencies"") == approx(0.23)",share,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""income"")",negligible,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""income"") == ""moderate""",strength,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""income"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""income"") == ""strong""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"share(""income"") == approx(0.095)",share,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""income"") == approx(0.145)",share,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""history_months"")",negligible,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""history_months"") == ""moderate""",strength,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""history_months"") == ""weak""",strength,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""history_months"") == ""strong""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"share(""history_months"") == approx(0.075)",share,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""history_months"") == approx(0.125)",share,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""dti"")",negligible,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""dti"") == ""moderate""",strength,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""dti"") == ""weak""",strength,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""dti"") == ""strong""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"share(""dti"") == approx(0.06)",share,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""dti"") == approx(0.11)",share,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""n_inquiries"")",negligible,False,false,false,true,released_wrong,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_inquiries"") == ""weak""",strength,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_inquiries"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"share(""n_inquiries"") == approx(0.029)",share,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""n_inquiries"") == approx(0.079)",share,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""age"")",negligible,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""age"") == ""weak""",strength,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""age"") == approx(0.007)",share,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"share(""age"") == approx(0.057)",share,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""noise_1"")",negligible,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""noise_1"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"share(""noise_1"") == approx(0.0)",share,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"share(""noise_1"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"negligible(""noise_2"")",negligible,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""noise_2"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"share(""noise_2"") == approx(0.0)",share,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"share(""noise_2"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""utilization"") == 1",rank,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""utilization"") == 2",rank,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_delinquencies"") == 2",rank,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_delinquencies"") == 3",rank,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""income"") == 3",rank,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""income"") == 4",rank,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""history_months"") == 4",rank,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""history_months"") == 5",rank,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""dti"") == 5",rank,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""dti"") == 6",rank,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_inquiries"") == 6",rank,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_inquiries"") == 7",rank,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""age"") == 7",rank,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""age"") == 6",rank,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"effect(""utilization"") > effect(""n_delinquencies"")",comparison,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"effect(""n_delinquencies"") > effect(""utilization"")",comparison,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"effect(""n_delinquencies"") > effect(""income"")",comparison,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"effect(""income"") > effect(""n_delinquencies"")",comparison,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"effect(""income"") > effect(""history_months"")",comparison,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"effect(""history_months"") > effect(""income"")",comparison,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"effect(""history_months"") > effect(""dti"")",comparison,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"effect(""dti"") > effect(""history_months"")",comparison,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"effect(""dti"") > effect(""n_inquiries"")",comparison,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"effect(""n_inquiries"") > effect(""dti"")",comparison,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"effect(""n_inquiries"") > effect(""age"")",comparison,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"effect(""age"") > effect(""n_inquiries"")",comparison,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"direction(""utilization"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""utilization"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""utilization"") == ""decreasing""",direction,False,false,false,false,refuted,0.8695999999999999
+syn-dominant-n5000-s1,5000,dominant,"direction(""utilization"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.8695999999999999
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_delinquencies"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_delinquencies"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_delinquencies"") == ""decreasing""",direction,False,false,false,false,refuted,0.5404
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_delinquencies"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.5404
+syn-dominant-n5000-s1,5000,dominant,"direction(""income"") == ""decreasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""income"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""income"") == ""increasing""",direction,False,false,false,false,refuted,0.8303999999999997
+syn-dominant-n5000-s1,5000,dominant,"direction(""income"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.8303999999999997
+syn-dominant-n5000-s1,5000,dominant,"direction(""history_months"") == ""mostly_decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""history_months"") == ""decreasing""",direction,False,false,false,true,released_wrong,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""history_months"") == ""increasing""",direction,False,false,false,false,refuted,0.6427999999999996
+syn-dominant-n5000-s1,5000,dominant,"direction(""history_months"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.6427999999999996
+syn-dominant-n5000-s1,5000,dominant,"direction(""dti"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""dti"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""dti"") == ""decreasing""",direction,False,false,false,false,refuted,0.2894000000000022
+syn-dominant-n5000-s1,5000,dominant,"direction(""dti"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.2894000000000022
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_inquiries"") == ""increasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_inquiries"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_inquiries"") == ""decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_inquiries"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""age"") == ""decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""age"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""age"") == ""increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""age"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_1"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_1"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_2"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_2"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"threshold(""dti"", at=0.43)",threshold,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"threshold(""dti"", at=0.25)",threshold,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"threshold(""income"", at=50532.79610216567)",threshold,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"peak(""history_months"", at=36.0)",peak,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"peak(""history_months"", at=200.0)",peak,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"peak(""income"", at=50532.79610216567)",peak,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",interaction,False,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"interaction(""utilization"", ""n_delinquencies"", pattern=""sign_flip"")",interaction,False,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",interaction,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"interaction(""n_inquiries"", ""history_months"", pattern=""sign_flip"")",interaction,False,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"interaction(""n_inquiries"", ""history_months"", pattern=""amplification"")",interaction,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",interaction,False,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""utilization"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""utilization"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_delinquencies"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_delinquencies"") in (""weak"", ""moderate"")",strength,True,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""income"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""income"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""income"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""history_months"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""history_months"") in (""moderate"", ""strong"")",strength,True,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""history_months"") in (""negligible"", ""weak"")",strength,True,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""dti"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""dti"") in (""moderate"", ""strong"")",strength,True,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""dti"") in (""negligible"", ""weak"")",strength,True,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_inquiries"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_inquiries"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""n_inquiries"") in (""moderate"", ""strong"")",strength,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""age"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""age"") in (""weak"", ""moderate"")",strength,True,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"strength(""noise_1"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""noise_1"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"strength(""noise_2"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"strength(""noise_2"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""utilization"") in (1, 2)",rank,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""utilization"") in (2, 3)",rank,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_delinquencies"") in (2, 3)",rank,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_delinquencies"") in (3, 4)",rank,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""income"") in (3, 4)",rank,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""income"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""history_months"") in (4, 5)",rank,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""history_months"") in (5, 6)",rank,True,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""dti"") in (5, 6)",rank,True,true,true,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"rank(""dti"") in (6, 7)",rank,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_inquiries"") in (6, 7)",rank,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""n_inquiries"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-dominant-n5000-s1,5000,dominant,"rank(""age"") in (6, 7)",rank,True,true,true,true,certified,
+syn-dominant-n5000-s1,5000,dominant,"rank(""age"") in (5, 6)",rank,True,false,false,undecidable,abstained,
+syn-dominant-n5000-s1,5000,dominant,"direction(""utilization"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""utilization"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.8695999999999999
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_delinquencies"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_delinquencies"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.5404
+syn-dominant-n5000-s1,5000,dominant,"direction(""income"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""income"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.8303999999999997
+syn-dominant-n5000-s1,5000,dominant,"direction(""history_months"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""history_months"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.6427999999999996
+syn-dominant-n5000-s1,5000,dominant,"direction(""dti"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""dti"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.2894000000000022
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_inquiries"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""n_inquiries"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""age"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""age"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_1"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_1"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_2"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n5000-s1,5000,dominant,"direction(""noise_2"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"negligible(""utilization"")",negligible,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""utilization"") == ""strong""",strength,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""utilization"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""utilization"") == approx(0.29)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""utilization"") == approx(0.377)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""n_delinquencies"")",negligible,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_delinquencies"") == ""strong""",strength,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_delinquencies"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""n_delinquencies"") == approx(0.176)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""n_delinquencies"") == approx(0.229)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""income"")",negligible,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""income"") == ""moderate""",strength,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""income"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""income"") == ""strong""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""income"") == approx(0.095)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""income"") == approx(0.145)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""history_months"")",negligible,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""history_months"") == ""moderate""",strength,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""history_months"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""history_months"") == ""strong""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""history_months"") == approx(0.073)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""history_months"") == approx(0.123)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""dti"")",negligible,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""dti"") == ""moderate""",strength,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""dti"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""dti"") == ""strong""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""dti"") == approx(0.059)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""dti"") == approx(0.109)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""n_inquiries"")",negligible,False,false,false,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_inquiries"") == ""weak""",strength,False,true,true,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_inquiries"") == ""moderate""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""n_inquiries"") == approx(0.029)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""n_inquiries"") == approx(0.079)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""age"")",negligible,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""age"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""age"") == approx(0.007)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""age"") == approx(0.057)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""noise_1"")",negligible,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""noise_1"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""noise_1"") == approx(0.0)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""noise_1"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"negligible(""noise_2"")",negligible,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""noise_2"") == ""weak""",strength,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"share(""noise_2"") == approx(0.0)",share,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"share(""noise_2"") == approx(0.05)",share,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""utilization"") == 1",rank,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""utilization"") == 2",rank,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_delinquencies"") == 2",rank,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_delinquencies"") == 3",rank,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""income"") == 3",rank,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""income"") == 4",rank,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""history_months"") == 4",rank,False,true,true,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"rank(""history_months"") == 5",rank,False,false,false,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"rank(""dti"") == 5",rank,False,true,true,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"rank(""dti"") == 6",rank,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_inquiries"") == 6",rank,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_inquiries"") == 7",rank,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""age"") == 7",rank,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""age"") == 6",rank,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"effect(""utilization"") > effect(""n_delinquencies"")",comparison,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"effect(""n_delinquencies"") > effect(""utilization"")",comparison,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"effect(""n_delinquencies"") > effect(""income"")",comparison,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"effect(""income"") > effect(""n_delinquencies"")",comparison,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"effect(""income"") > effect(""history_months"")",comparison,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"effect(""history_months"") > effect(""income"")",comparison,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"effect(""history_months"") > effect(""dti"")",comparison,False,true,true,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"effect(""dti"") > effect(""history_months"")",comparison,False,false,false,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"effect(""dti"") > effect(""n_inquiries"")",comparison,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"effect(""n_inquiries"") > effect(""dti"")",comparison,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"effect(""n_inquiries"") > effect(""age"")",comparison,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"effect(""age"") > effect(""n_inquiries"")",comparison,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"direction(""utilization"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""utilization"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""utilization"") == ""decreasing""",direction,False,false,false,false,refuted,0.95604
+syn-dominant-n50000-s1,50000,dominant,"direction(""utilization"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.95604
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_delinquencies"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_delinquencies"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_delinquencies"") == ""decreasing""",direction,False,false,false,false,refuted,0.5489999999999999
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_delinquencies"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.5489999999999999
+syn-dominant-n50000-s1,50000,dominant,"direction(""income"") == ""decreasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""income"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""income"") == ""increasing""",direction,False,false,false,false,refuted,0.9421
+syn-dominant-n50000-s1,50000,dominant,"direction(""income"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.9421
+syn-dominant-n50000-s1,50000,dominant,"direction(""history_months"") == ""mostly_decreasing""",direction,False,true,true,true,certified,0.060360000000003966
+syn-dominant-n50000-s1,50000,dominant,"direction(""history_months"") == ""decreasing""",direction,False,false,false,false,refuted,0.060360000000003966
+syn-dominant-n50000-s1,50000,dominant,"direction(""history_months"") == ""increasing""",direction,False,false,false,false,refuted,0.8744799999999999
+syn-dominant-n50000-s1,50000,dominant,"direction(""history_months"") == ""mostly_increasing""",direction,False,false,false,false,refuted,0.8744799999999999
+syn-dominant-n50000-s1,50000,dominant,"direction(""dti"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""dti"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""dti"") == ""decreasing""",direction,False,false,false,false,refuted,0.283840000000003
+syn-dominant-n50000-s1,50000,dominant,"direction(""dti"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.283840000000003
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_inquiries"") == ""increasing""",direction,False,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_inquiries"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_inquiries"") == ""decreasing""",direction,False,false,false,false,refuted,0.44201999999999997
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_inquiries"") == ""mostly_decreasing""",direction,False,false,false,false,refuted,0.44201999999999997
+syn-dominant-n50000-s1,50000,dominant,"direction(""age"") == ""decreasing""",direction,False,true,true,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""age"") == ""mostly_decreasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""age"") == ""increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""age"") == ""mostly_increasing""",direction,False,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_1"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_1"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_2"") == ""increasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_2"") == ""decreasing""",direction,False,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"threshold(""dti"", at=0.43)",threshold,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"threshold(""dti"", at=0.25)",threshold,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"threshold(""income"", at=50005.617403672724)",threshold,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"peak(""history_months"", at=36.0)",peak,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"peak(""history_months"", at=200.0)",peak,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"peak(""income"", at=50005.617403672724)",peak,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",interaction,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"interaction(""utilization"", ""n_delinquencies"", pattern=""sign_flip"")",interaction,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",interaction,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"interaction(""n_inquiries"", ""history_months"", pattern=""sign_flip"")",interaction,False,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"interaction(""n_inquiries"", ""history_months"", pattern=""amplification"")",interaction,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",interaction,False,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""utilization"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""utilization"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_delinquencies"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_delinquencies"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""income"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""income"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""income"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""history_months"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""history_months"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""history_months"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""dti"") in (""weak"", ""moderate"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""dti"") in (""moderate"", ""strong"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""dti"") in (""negligible"", ""weak"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_inquiries"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_inquiries"") in (""weak"", ""moderate"")",strength,True,true,true,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"strength(""n_inquiries"") in (""moderate"", ""strong"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""age"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""age"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""noise_1"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""noise_1"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"strength(""noise_2"") in (""negligible"", ""weak"")",strength,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"strength(""noise_2"") in (""weak"", ""moderate"")",strength,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""utilization"") in (1, 2)",rank,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""utilization"") in (2, 3)",rank,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_delinquencies"") in (2, 3)",rank,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_delinquencies"") in (3, 4)",rank,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""income"") in (3, 4)",rank,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""income"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""history_months"") in (4, 5)",rank,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""history_months"") in (5, 6)",rank,True,false,false,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"rank(""dti"") in (5, 6)",rank,True,true,true,undecidable,abstained,
+syn-dominant-n50000-s1,50000,dominant,"rank(""dti"") in (6, 7)",rank,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_inquiries"") in (6, 7)",rank,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""n_inquiries"") in (4, 5)",rank,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"rank(""age"") in (6, 7)",rank,True,true,true,true,certified,
+syn-dominant-n50000-s1,50000,dominant,"rank(""age"") in (5, 6)",rank,True,false,false,false,refuted,
+syn-dominant-n50000-s1,50000,dominant,"direction(""utilization"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""utilization"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.95604
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_delinquencies"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_delinquencies"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.5489999999999999
+syn-dominant-n50000-s1,50000,dominant,"direction(""income"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""income"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.9421
+syn-dominant-n50000-s1,50000,dominant,"direction(""history_months"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,true,certified,0.060360000000003966
+syn-dominant-n50000-s1,50000,dominant,"direction(""history_months"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.8744799999999999
+syn-dominant-n50000-s1,50000,dominant,"direction(""dti"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""dti"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.283840000000003
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_inquiries"") in (""increasing"", ""mostly_increasing"")",direction,True,true,true,true,certified,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""n_inquiries"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.44201999999999997
+syn-dominant-n50000-s1,50000,dominant,"direction(""age"") in (""decreasing"", ""mostly_decreasing"")",direction,True,true,true,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""age"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,undecidable,abstained,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_1"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_1"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_2"") in (""increasing"", ""mostly_increasing"")",direction,True,false,false,false,refuted,0.0
+syn-dominant-n50000-s1,50000,dominant,"direction(""noise_2"") in (""decreasing"", ""mostly_decreasing"")",direction,True,false,false,false,refuted,0.0
