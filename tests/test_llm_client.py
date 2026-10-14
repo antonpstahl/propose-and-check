@@ -99,3 +99,18 @@ def test_batch_prices_are_half():
     usage = {"input_tokens": 1_000_000, "output_tokens": 1_000_000}
     assert c.cost("claude-haiku-5-5", usage, batch=True) == pytest.approx(0.30)
     assert c.cost("claude-sonnet-5-5", usage) == pytest.approx(12.0)
+
+
+def test_the_dotenv_loader_reads_spaced_lines_and_never_overrides(tmp_path, monkeypatch):
+    env = tmp_path / ".env"
+    env.write_text("# the key\nANTHROPIC_API_KEY = sk-test-123\nEMPTY =\nQUOTED='x y'\n")
+    for key in ("ANTHROPIC_API_KEY", "QUOTED"):  # record the original state, so nothing leaks into later tests
+        monkeypatch.setenv(key, "placeholder")
+        monkeypatch.delenv(key)
+    monkeypatch.setenv("KEEP", "1")
+    assert sorted(c.load_dotenv(env)) == ["ANTHROPIC_API_KEY", "QUOTED"]
+    import os
+
+    assert os.environ["ANTHROPIC_API_KEY"] == "sk-test-123" and os.environ["QUOTED"] == "x y"
+    env.write_text("KEEP = 2\n")
+    assert c.load_dotenv(env) == [] and os.environ["KEEP"] == "1"

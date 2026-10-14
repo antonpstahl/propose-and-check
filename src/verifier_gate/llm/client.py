@@ -17,6 +17,7 @@ A rejected request (400, 401, 403, 404) is a bug in our code, not a run outcome,
 
 import hashlib
 import json
+import os
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
@@ -25,8 +26,27 @@ from pathlib import Path
 from verifier_gate.llm import settings
 
 CACHE = Path(__file__).parents[3] / "cache" / "llm"
+DOTENV = Path(__file__).parents[3] / ".env"  # git-ignored; .env.example is the template
 EFFORTS_WITHOUT_THINKING = ("low", "medium", "high")
 THINKING_OFF = {"claude-haiku-5-5": {"type": "disabled"}, "claude-sonnet-5-5": {"type": "between_tools"}}
+
+
+def load_dotenv(path: Path = DOTENV) -> list[str]:
+    """Put the `KEY = value` lines of a .env file into the environment, without overriding what is set and
+    without ever printing a value. Returns the keys it set."""
+    if not path.exists():
+        return []
+    added = []
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = (part.strip() for part in line.split("=", 1))
+        value = value.strip("'\"")
+        if key and value and key not in os.environ:
+            os.environ[key] = value
+            added.append(key)
+    return added
 
 
 def sha(text: str) -> str:
@@ -177,6 +197,7 @@ class Client:
         import anthropic
 
         if self._sdk is None:
+            load_dotenv()
             self._sdk = anthropic.Anthropic(max_retries=self.max_retries)
         try:
             message = self._sdk.messages.create(**request.params())

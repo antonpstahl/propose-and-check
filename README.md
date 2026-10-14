@@ -7,7 +7,8 @@ Pre-study for the working paper *Propose and Prove: A Symbolic Gate for LLM Expl
 ```
 src/verifier_gate/
   data/          dgp.py (synthetic tier), planted.py (planted claims with labels: E1, scorer test),
-                 labels.py (the names and descriptions the writer sees), plasmode.py (TaiwanCredit features, planted y)
+                 labels.py (the names and descriptions the writer sees), plasmode.py (TaiwanCredit features, planted y;
+                 plasmode_shapes.json: the planted shapes), tiers.py (both tiers behind one interface)
   models/        fit_ebm.py, fit_xgb2.py, fit_oracle.py (all take Poisson weights for bootstrap refits)
   facts/         steps.py (exact step terms, shared purification), ebm.py, xgb2.py (tree decomposition),
                  reference.py (T and the oracle on a fine grid), schema.py (Facts format, JSON + draws),
@@ -34,7 +35,8 @@ src/verifier_gate/
 tests/           DGP, acceptance scorer, decision rules, both fact providers, Facts and bands, SymPy export,
                  lexicon predicates on toy shapes, DSL parser, reference Facts, scorer test (lexicon on T),
                  metrics, calibration rule, E1 scorers and the binding rule, certified plans, coverage, mutation
-                 operators, readable form, LLM client (stub mode), prompts and handover, template, gate
+                 operators, readable form, LLM client (stub mode), prompts and handover, template, gate, plasmode
+                 tier (scorer test on T) and the frozen synthetic label set
 notebooks/       01 recovery check, 02 root causes of the week-1 failures (plan §14.2),
                  03 what the bootstrap bands can decide (plan §14.4)
 piml_check/      our XGB2 decomposition vs PiML's (plan §14.4, D27); own Python 3.10 environment, see its README
@@ -52,6 +54,8 @@ uv run pytest                                                  # about 20 second
 uv run python -m verifier_gate.experiments.acceptance          # about 1 minute
 uv run python -m verifier_gate.experiments.recheck             # about 15 minutes
 uv run python -m verifier_gate.experiments.build_facts         # about 3-4 hours, resumable (oracle and T: minutes)
+uv run python -m verifier_gate.data.plasmode                   # fetches TaiwanCredit (UCI 350), writes the 18 datasets
+uv run python -m verifier_gate.experiments.build_facts --tier plasmode  # about 2 hours, resumable
 uv run python -m verifier_gate.experiments.null_check          # seconds, after build_facts
 uv run python -m verifier_gate.experiments.fig2                # seconds, after build_facts
 uv run python -m verifier_gate.experiments.calibrate           # about 1.5 minutes, after build_facts

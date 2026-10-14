@@ -49,13 +49,13 @@ def _cuts(points: np.ndarray) -> np.ndarray:
 
 
 def reference_steps(model: dgp.Truth, X: pd.DataFrame, w: np.ndarray | None = None) -> StepModel:
-    """T or an oracle as centred step terms on the grid of X. X is the training sample, w the refit weights.
-
-    The grid depends on X only, so M and every refit share the same steps."""
-    points = {f: grid_points(np.asarray(X[f], dtype=np.float64)) for f in dgp.FEATURES}
+    """T or an oracle (of either tier) as centred step terms on the grid of X. X is the training sample, w the
+    refit weights. The grid depends on X only, so M and every refit share the same steps."""
+    tier_features = tuple(model.features)
+    points = {f: grid_points(np.asarray(X[f], dtype=np.float64)) for f in tier_features}
     raw: dict[str, StepTerm] = {}
     for name in model.term_names:
-        features = (name,) if name in dgp.FEATURES else dgp.PAIR_FACTORS[name][0]
+        features = model.term_features(name)
         mesh = np.meshgrid(*(points[f] for f in features), indexing="ij")
         scores = np.asarray(model.term(name, {f: m.ravel() for f, m in zip(features, mesh)})).reshape(mesh[0].shape)
         if not scores.any() and not np.any(model.term(name, X)):
@@ -63,13 +63,13 @@ def reference_steps(model: dgp.Truth, X: pd.DataFrame, w: np.ndarray | None = No
         raw[name] = StepTerm(features, tuple(_cuts(points[f]) for f in features), scores.astype(np.float64))
     intercept = model.intercept
     steps: dict[str, StepTerm] = {}
-    for name in [f for f in dgp.FEATURES if f in raw] + [p for p in raw if p not in dgp.FEATURES]:
+    for name in [f for f in tier_features if f in raw] + [p for p in raw if p not in tier_features]:
         offset = float(np.average(raw[name](X), weights=w))
         steps[name] = raw[name].shifted(offset)
         intercept += offset
-    for feature in dgp.FEATURES:
+    for feature in tier_features:
         steps.setdefault(feature, StepTerm((feature,), (np.empty(0),), np.zeros(1)))
-    order = list(dgp.FEATURES) + [p for p in steps if p not in dgp.FEATURES]
+    order = list(tier_features) + [p for p in steps if p not in tier_features]
     return StepModel(intercept, {n: steps[n] for n in order})
 
 

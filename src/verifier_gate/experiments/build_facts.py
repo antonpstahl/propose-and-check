@@ -10,7 +10,8 @@ early. Progress goes to the terminal and to cache/facts/build.log.
 
 Run: `uv run python -m verifier_gate.experiments.build_facts` (about 3-4 hours at 100 refits from an empty
 cache: an EBM refit takes 4-6 s at n = 50,000; the oracle and T take minutes in all). Options: --refits N,
---models EBM,XGB2,oracle,T, --scenarios <substring>.
+--models EBM,XGB2,oracle,T, --scenarios <substring>, --tier synthetic|plasmode (the plasmode tier, plan §4.4:
+18 more datasets on TaiwanCredit features, for E1 and E2 in week 7; about 2-3 hours).
 Then: `uv run python -m verifier_gate.experiments.null_check`.
 """
 
@@ -18,7 +19,7 @@ import argparse
 import time
 from pathlib import Path
 
-from verifier_gate.data import dgp
+from verifier_gate.data import dgp, tiers
 from verifier_gate.facts import bootstrap
 from verifier_gate.facts.build import Frame, build_facts
 from verifier_gate.facts.reference import GRID_POINTS, reference_steps
@@ -41,7 +42,7 @@ def refits_of(kind: str, refits: int) -> int:
 
 
 def build(scenario: dgp.Scenario, kind: str, refits: int, log=print) -> Facts:
-    data = dgp.generate(scenario)
+    data = tiers.generate(scenario)
     if kind == "T":
         model = {"kind": kind, "scenario": scenario.id, "interaction": scenario.interaction, "seed": scenario.seed,
                  "parameters": {"grid_points": GRID_POINTS}}  # fmt: skip
@@ -66,6 +67,7 @@ def main() -> None:
     parser.add_argument("--refits", type=int, default=bootstrap.REFITS)
     parser.add_argument("--models", default=",".join(KINDS))
     parser.add_argument("--scenarios", default="", help="only scenarios whose id contains this")
+    parser.add_argument("--tier", default="synthetic", choices=tuple(tiers.TIERS))
     args = parser.parse_args()
     CACHE.mkdir(parents=True, exist_ok=True)
     logfile = (CACHE / "build.log").open("a")
@@ -76,7 +78,8 @@ def main() -> None:
         logfile.write(stamped + "\n")
         logfile.flush()
 
-    scenarios = sorted((s for s in dgp.SCENARIOS if args.scenarios in s.id), key=lambda s: (s.n, s.seed, s.interaction))
+    tier_scenarios = tiers.module(args.tier).SCENARIOS
+    scenarios = sorted((s for s in tier_scenarios if args.scenarios in s.id), key=lambda s: (s.n, s.seed, s.interaction))
     jobs = [(s, k) for s in scenarios for k in args.models.split(",")]
     log(f"{len(jobs)} models, {args.refits} refits each")
     start = time.perf_counter()

@@ -151,6 +151,10 @@ PAIR_FACTORS: dict[str, tuple[tuple[str, str], tuple[Callable, Callable]]] = {
 TERMS = FEATURES + tuple(PAIR_FACTORS)
 
 
+def term_features(name: str) -> tuple[str, ...]:
+    return (name,) if name in FEATURES else PAIR_FACTORS[name][0]
+
+
 def sample_features(n: int, rng: np.random.Generator) -> pd.DataFrame:
     """Draw n rows of independent features."""
     return pd.DataFrame(
@@ -239,10 +243,14 @@ class Truth:
     interaction: str
     intercept: float
     offsets: Mapping[str, float]
+    features = FEATURES
 
     @property
     def term_names(self) -> tuple[str, ...]:
         return TERMS
+
+    def term_features(self, name: str) -> tuple[str, ...]:
+        return term_features(name)
 
     def term(self, name: str, X: Mapping) -> np.ndarray:
         return _population_term(name, X, self.interaction) - self.offsets[name]
@@ -272,6 +280,8 @@ class Scenario:
     @property
     def id(self) -> str:
         return f"syn-{self.interaction}-n{self.n}-s{self.seed}"
+
+    tier = "synthetic"
 
     @property
     def is_discovery(self) -> bool:
