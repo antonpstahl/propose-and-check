@@ -47,19 +47,38 @@ def toy_facts(X, terms, noise=0.01, refits=60, seed=1, perturb=None):
     return build_facts(reference, X, Draws.stack(reads))
 
 
+def exact_facts(X, terms):
+    """Facts without bands, like T's: the curves are exact."""
+    features = tuple(dict.fromkeys(f for t in terms for f in t.features))
+    return build_facts(purify(StepModel(0.0, {t.name: t for t in terms}), X, feature_order=features), X)
+
+
 def per_step(sd):
     return lambda scores, rng: scores + rng.normal(0, sd, scores.shape)
 
 
 BASE = [main("ramp", np.linspace(0, 2, 20))]  # a large term, so the toy shares are on a familiar scale
+UP, DOWN = ("increasing", "mostly_increasing"), ("decreasing", "mostly_decreasing")
 
 
 def test_ramp_increases(X):
     facts = toy_facts(X, BASE)
     assert verify('direction("ramp") == "increasing"', facts).value == p.TRUE
-    assert verify('direction("ramp") == "mostly_increasing"', facts).value == p.FALSE  # no exception
     assert verify('direction("ramp") == "decreasing"', facts).value == p.FALSE
     assert verify('strength("ramp") == "strong"', facts).value == p.TRUE
+    assert p.direction_in(facts, "ramp", UP).value == p.TRUE  # "generally increases" (D33)
+    assert p.direction_in(facts, "ramp", DOWN).value == p.FALSE
+
+
+def test_mostly_needs_a_detected_exception(X):
+    """D29: no exception detected on a curve with bands leaves "mostly" open, since the bands do not rule a
+    small one out; on an exact curve (T) no exception means none, and "mostly" is false."""
+    verdict = verify('direction("ramp") == "mostly_increasing"', toy_facts(X, BASE))
+    assert verdict.value == p.UNDECIDABLE and verdict.code == p.INSUFFICIENT_EVIDENCE
+    assert verdict.evidence["exception mass"] == 0
+    exact = exact_facts(X, BASE)
+    assert verify('direction("ramp") == "mostly_increasing"', exact).value == p.FALSE
+    assert verify('direction("ramp") == "increasing"', exact).value == p.TRUE
 
 
 def test_a_significant_dip_on_one_step_makes_it_mostly_increasing(X):
@@ -69,6 +88,7 @@ def test_a_significant_dip_on_one_step_makes_it_mostly_increasing(X):
     verdict = verify('direction("dip") == "mostly_increasing"', facts)
     assert verdict.value == p.TRUE and 0.04 < verdict.evidence["exception mass"] < 0.06
     assert verify('direction("dip") == "increasing"', facts).value == p.FALSE
+    assert p.direction_in(facts, "dip", UP).value == p.TRUE
 
 
 def test_the_same_dip_inside_wide_bands_is_not_an_exception(X):
@@ -113,15 +133,20 @@ def test_flat_noise_is_negligible_and_not_weak(X):
     assert verdict.value == p.TRUE and not verdict.evidence["detectable"]
     assert verify('strength("flat") == "weak"', facts).value == p.FALSE
     assert verify('direction("flat") == "increasing"', facts).value == p.UNDECIDABLE
+    assert p.direction_in(facts, "flat", UP).value == p.UNDECIDABLE
+
+
+def faint_toy(X):
+    """A 3-4% effect hidden in wide bands. Refits rescale the whole curve, as real refits move a fitted slope,
+    so the band spans both sides of M."""
+    rescale = lambda scores, rng: scores * (1 + rng.normal(0, 0.8))  # noqa: E731
+    return toy_facts(X, BASE + [main("faint", np.linspace(-0.04, 0.04, 20))], perturb={"faint": rescale})
 
 
 def test_an_undetected_weak_effect_is_not_certified_negligible(X):
-    """D25 as refined: a 3-4% effect hidden in wide bands is not 'hardly matters' (the proposed rule, lower end
-    of the share band below 2%, would have said true), and not 'weak' either: the evidence does not settle it.
-    Refits rescale the whole curve, as real refits move a fitted slope, so the band spans both sides of M."""
-    faint = np.linspace(-0.04, 0.04, 20)
-    rescale = lambda scores, rng: scores * (1 + rng.normal(0, 0.8))  # noqa: E731
-    facts = toy_facts(X, BASE + [main("faint", faint)], perturb={"faint": rescale})
+    """D25 as refined: the faint effect is not 'hardly matters' (the proposed rule, lower end of the share
+    band below 2%, would have said true), and not 'weak' either: the evidence does not settle it."""
+    facts = faint_toy(X)
     f = facts.feature("faint")
     assert 0.02 < f.share.value < 0.05 and f.share.band[0] < 0.02  # the proposed rule's case
     verdict = verify('negligible("faint")', facts)
@@ -156,10 +181,77 @@ def test_a_pair_the_model_lacks_is_none_and_nothing_else(X):
     assert verify('strength("b & a") == "weak"', facts).value == p.FALSE
 
 
-def test_unknown_terms_are_undecidable(X):
-    facts = toy_facts(X, BASE, refits=5)
-    for line in ('strength("income") == "weak"', 'rank("x & ramp") == 1', 'negligible("ramp & ramp")'):
-        assert verify(line, facts).value == p.UNDECIDABLE
+def test_unknown_terms_and_claims_that_do_not_apply_are_undecidable_with_their_code(X):
+    """D30: the code tells the gate whether the evidence is short (a hedge is possible) or the claim is wrong
+    in kind (a writer error)."""
+    facts = toy_facts(X, BASE + [main("a", MIDS)], refits=5)
+    unknown = ('strength("income") == "weak"', 'rank("x & ramp") == 1', 'negligible("ramp & ramp")',
+               'direction("income") in ("increasing", "mostly_increasing")')  # fmt: skip
+    for line in unknown:
+        verdict = verify(line, facts)
+        assert verdict.value == p.UNDECIDABLE and verdict.code == p.UNKNOWN_TERM, line
+    for line in ('rank("ramp & a") == 1', 'direction("a & ramp") == "increasing"', 'peak("ramp & a", at=0.5)'):
+        verdict = verify(line, facts)
+        assert verdict.value == p.UNDECIDABLE and verdict.code == p.NOT_APPLICABLE, line
+
+
+def test_undecidable_verdicts_carry_a_code_and_decided_ones_none():
+    assert p.Verdict(p.UNDECIDABLE).code == p.INSUFFICIENT_EVIDENCE
+    assert p.Verdict(p.TRUE).code == ""
+    with pytest.raises(ValueError):
+        p.Verdict(p.TRUE, code=p.UNKNOWN_TERM)
+    with pytest.raises(ValueError):
+        p.Verdict(p.UNDECIDABLE, code="tired")
+
+
+def test_unsettled_is_true_only_for_a_claim_the_evidence_does_not_settle(X):
+    """D30: a writer can hedge what the data leave open, but not a settled fact and not an invented term."""
+    facts = faint_toy(X)
+    assert verify('strength("faint") == "weak"', facts).code == p.INSUFFICIENT_EVIDENCE
+    assert verify('unsettled(strength("faint") == "weak")', facts).value == p.TRUE
+    assert verify('unsettled(strength("ramp") == "strong")', facts).value == p.FALSE  # settled: true
+    assert verify('unsettled(strength("ramp") == "weak")', facts).value == p.FALSE  # settled: false
+    assert verify('unsettled(strength("income") == "weak")', facts).value == p.FALSE  # not a term of the model
+
+
+def shell(values):
+    """Facts without bands for a feature x (detectable unless flat) next to a ramp y; tests set x's share or
+    rank."""
+    X = pd.DataFrame({"x": np.linspace(0, 1, 100), "y": np.linspace(0, 1, 100)})
+    return build_facts(StepModel(0.0, {"x": main("x", values), "y": main("y", MIDS)}), X)
+
+
+def test_strength_sets_judge_the_share_band_on_the_union_of_the_classes():
+    """D33: "weak to moderate" is certified where the band straddles 5% and neither class alone is; "at most
+    weak" needs no effect, but refuting it asserts one, so that needs a detectable effect (as for negligible)."""
+
+    def judge(classes, band, values=MIDS):
+        facts = shell(values)
+        object.__setattr__(facts.feature("x"), "share", Estimate(sum(band) / 2, band))
+        if len(classes) == 1:
+            return p.strength(facts, "x", classes[0]).value
+        return p.strength_in(facts, "x", classes).value
+
+    assert judge(("weak",), (0.03, 0.08)) == judge(("moderate",), (0.03, 0.08)) == p.UNDECIDABLE
+    assert judge(("weak", "moderate"), (0.03, 0.08)) == p.TRUE
+    assert judge(("weak", "moderate"), (0.01, 0.08)) == p.UNDECIDABLE
+    assert judge(("weak", "moderate"), (0.16, 0.20)) == p.FALSE
+    assert judge(("negligible", "weak"), (0.01, 0.045)) == p.TRUE
+    assert judge(("negligible", "weak"), (0.03, 0.06)) == p.UNDECIDABLE
+    assert judge(("negligible", "weak"), (0.05, 0.07)) == p.FALSE
+    flat = np.zeros(20)  # no detectable effect
+    assert judge(("weak", "moderate"), (0.03, 0.08), flat) == p.UNDECIDABLE
+    assert judge(("negligible", "weak"), (0.01, 0.045), flat) == p.TRUE
+    assert judge(("negligible", "weak"), (0.05, 0.07), flat) == p.UNDECIDABLE
+
+
+def test_rank_sets_judge_the_rounded_rank_band():
+    facts = shell(MIDS)
+    object.__setattr__(facts.feature("x"), "rank", Estimate(2.0, (1.6, 3.0)))  # rounded outward: 1 to 3
+    assert p.rank(facts, "x", 2).value == p.UNDECIDABLE
+    assert p.rank_in(facts, "x", (1, 2, 3)).value == p.TRUE  # "among the top three"
+    assert p.rank_in(facts, "x", (2, 3)).value == p.UNDECIDABLE
+    assert p.rank_in(facts, "x", (4, 5)).value == p.FALSE
 
 
 def test_comparison_uses_the_joint_draws(X):

@@ -1,12 +1,13 @@
 """Execute claims against Facts and return a verdict (true, false, undecidable) plus evidence (§5.6).
 
 Pure Python and deterministic: each claim type maps to one lexicon predicate (lexicon/predicates.py), which
-reads only the Facts of one model. No LLM.
+reads only the Facts of one model. No LLM. A set of values (D33) goes to the set form of its predicate; the
+hedge unsettled(<claim>) (D30) is judged on the verdict of its claim.
 """
 
 from collections.abc import Iterable
 
-from verifier_gate.dsl.grammar import Claim
+from verifier_gate.dsl.grammar import HEDGE, Claim
 from verifier_gate.dsl.parse import parse
 from verifier_gate.facts.schema import Facts
 from verifier_gate.lexicon import predicates as p
@@ -16,6 +17,18 @@ def verify(claim: Claim | str, facts: Facts, lex: p.Lexicon | None = None) -> p.
     claim = parse(claim) if isinstance(claim, str) else claim
     lex = lex or p.load()
     t = claim.terms
+    if claim.kind == HEDGE:
+        verdict = p.unsettled(verify(claim.inner, facts, lex))
+        return p.Verdict(verdict.value, {"claim": str(claim.inner)} | verdict.evidence, verdict.reason)
+    if isinstance(claim.value, tuple):
+        match claim.kind:
+            case "rank":
+                return p.rank_in(facts, t[0], claim.value, lex)
+            case "direction":
+                return p.direction_in(facts, t[0], claim.value, lex)
+            case "strength":
+                return p.strength_in(facts, t[0], claim.value, lex)
+        raise ValueError(f"{claim.kind} takes no set of values")
     match claim.kind:
         case "rank":
             return p.rank(facts, t[0], claim.value, lex)

@@ -18,6 +18,21 @@ VALID = {
     'interaction("utilization", "n_delinquencies", pattern="amplification")': Claim(
         "interaction", ("utilization", "n_delinquencies"), "amplification"
     ),
+    # sets of values (D33), stored in their canonical order
+    'strength("age") in ("negligible", "weak")': Claim("strength", ("age",), ("negligible", "weak")),
+    'strength("dti") in ("moderate", "weak")': Claim("strength", ("dti",), ("weak", "moderate")),
+    'rank("income") in (3, 2)': Claim("rank", ("income",), (2, 3)),
+    'rank("income") in (1, 2, 3)': Claim("rank", ("income",), (1, 2, 3)),
+    'direction("history_months") in ("mostly_decreasing", "decreasing")': Claim(
+        "direction", ("history_months",), ("decreasing", "mostly_decreasing")
+    ),
+    # the hedge (D30)
+    'unsettled(strength("n_inquiries") == "weak")': Claim(
+        "unsettled", ("n_inquiries",), inner=Claim("strength", ("n_inquiries",), "weak")
+    ),
+    'unsettled(interaction("a", "b", pattern="sign_flip"))': Claim(
+        "unsettled", ("a", "b"), inner=Claim("interaction", ("a", "b"), "sign_flip")
+    ),
 }
 
 
@@ -30,6 +45,8 @@ def test_valid_lines_parse_and_round_trip(line):
 
 def test_sentence_id_is_attached():
     assert parse('negligible("age")', sentence_id=3).sentence_id == 3
+    hedge = parse('unsettled(negligible("age"))', sentence_id=2)
+    assert hedge.sentence_id == 2 and hedge.inner.sentence_id is None
 
 
 REJECTED = [
@@ -60,6 +77,26 @@ REJECTED = [
     'print("x")',
     '[negligible("a")]',
     'negligible(**{"t": "a"})',
+    # sets of values (D33)
+    'strength("age") in ("weak",)',  # a set holds at least two values
+    'strength("age") in ("weak", "strong")',  # not neighbours
+    'strength("age") in ("negligible", "weak", "moderate", "strong")',  # every class: says nothing
+    'strength("age") in ("weak", "weak")',
+    'strength("age") in ("weak", "faint")',
+    'strength("age") in ["weak", "moderate"]',  # a set is a tuple
+    'strength("age") not in ("weak", "moderate")',
+    'rank("income") in (2, 4)',
+    'rank("income") in (0, 1)',
+    'rank("income") in (2.0, 3.0)',
+    'direction("income") in ("decreasing", "increasing")',
+    'direction("income") in ("decreasing", "mostly_increasing")',
+    'share("income") in (0.1, 0.2)',
+    # the hedge (D30)
+    'unsettled(unsettled(negligible("age")))',
+    'unsettled("age")',
+    'unsettled(negligible("age"), negligible("dti"))',
+    'unsettled(claim=negligible("age"))',
+    'unsettled()',
 ]
 
 

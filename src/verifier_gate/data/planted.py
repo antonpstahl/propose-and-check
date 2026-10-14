@@ -7,6 +7,11 @@ scorer test (lexicon applied to T must reproduce every label) covers every claim
 The false claims are near misses where a writer could plausibly go wrong: the neighbouring strength class,
 the next rank, the reversed comparison, the opposite direction and the "mostly" variant, a shifted location,
 the other interaction pattern.
+
+Sets of values (D33) get the same treatment: the sets around T's value ("weak to moderate", "second or
+third", "generally decreases") are true, and a neighbouring set that leaves T's value out is false. The hedge
+unsettled(<claim>) (D30) has no label here: it is a statement about the evidence in one sample, not about T,
+and E2 and E3 test it.
 """
 
 import numpy as np
@@ -14,7 +19,7 @@ import numpy as np
 from verifier_gate.data import dgp
 from verifier_gate.dsl.grammar import Claim
 from verifier_gate.lexicon import predicates
-from verifier_gate.lexicon.predicates import FALSE, STRENGTHS, TRUE
+from verifier_gate.lexicon.predicates import CLASSES, FALSE, STRENGTHS, TRUE
 
 DIRECTION = {  # the planted shapes (dgp.MAIN_SHAPES)
     "utilization": "increasing",
@@ -92,4 +97,23 @@ def planted_claims(data: dgp.Dataset, lex: predicates.Lexicon | None = None) -> 
         add(Claim("interaction", (a, b), pattern), TRUE if planted else FALSE)
         add(Claim("interaction", (a, b), other), FALSE)
         add(Claim("interaction", (a, b), "none"), FALSE if planted else TRUE)
+
+    # sets of values (D33): the sets around T's value, and a neighbouring set that leaves it out
+    for f in dgp.FEATURES:
+        i = CLASSES.index(_strength_label(shares[f], lex) or "negligible")
+        for j in (i - 1, i + 1):
+            if 0 <= j < len(CLASSES):
+                add(Claim("strength", (f,), CLASSES[min(i, j) : max(i, j) + 1]), TRUE)
+        miss = (i + 1, i + 2) if i + 2 < len(CLASSES) else (i - 2, i - 1)
+        add(Claim("strength", (f,), CLASSES[miss[0] : miss[1] + 1]), FALSE)
+    for k, f in enumerate(ranked, 1):
+        add(Claim("rank", (f,), (k, k + 1) if k < len(ranked) else (k - 1, k)), TRUE)
+        add(Claim("rank", (f,), (k + 1, k + 2) if k + 2 <= len(ranked) else (k - 2, k - 1)), FALSE)
+    for f, d in DIRECTION.items():
+        strict = d.removeprefix("mostly_")
+        add(Claim("direction", (f,), (strict, f"mostly_{strict}")), TRUE)
+        add(Claim("direction", (f,), (OPPOSITE[strict], f"mostly_{OPPOSITE[strict]}")), FALSE)
+    for f in (f for f in dgp.FEATURES if shares[f] == 0):  # flat: neither direction
+        for d in ("increasing", "decreasing"):
+            add(Claim("direction", (f,), (d, f"mostly_{d}")), FALSE)
     return out

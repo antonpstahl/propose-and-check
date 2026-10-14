@@ -6,8 +6,9 @@ whitelisted comparisons, and literals of the wrong type are all errors.
 """
 
 import ast
+from dataclasses import replace
 
-from verifier_gate.dsl.grammar import CALLS, COMPARED, PATTERNS, Claim
+from verifier_gate.dsl.grammar import CALLS, CLASSES, COMPARED, HEDGE, PATTERNS, SETS, Claim
 
 COMPARISONS = {ast.Gt: ">", ast.Lt: "<"}
 
@@ -50,6 +51,33 @@ def _keywords(call: ast.Call, allowed: tuple[str, ...]) -> dict[str, ast.AST]:
     return found
 
 
+def _consecutive(positions: list[int]) -> bool:
+    return all(b - a == 1 for a, b in zip(positions, positions[1:]))
+
+
+def _set(node: ast.AST, kind: str) -> tuple:
+    """The values of a set claim (D33), in their canonical order. Only neighbouring values form a set."""
+    if not isinstance(node, ast.Tuple) or len(node.elts) < 2:
+        raise DSLError(f"a set of {kind} values is a tuple of at least two")
+    if kind == "rank":
+        ranks = sorted(_number(e, "a rank") for e in node.elts)
+        if not all(isinstance(k, int) and k >= 1 for k in ranks) or not _consecutive(ranks):
+            raise DSLError("a set of ranks holds consecutive whole numbers >= 1")
+        return tuple(ranks)
+    labels = [_string(e, f"a {kind}") for e in node.elts]
+    if kind == "direction":
+        for word in ("increasing", "decreasing"):
+            if sorted(labels) == [word, f"mostly_{word}"]:
+                return word, f"mostly_{word}"
+        raise DSLError('a set of directions is a strict word and its "mostly" word, e.g. ("decreasing", "mostly_decreasing")')
+    if not set(labels) <= set(CLASSES):
+        raise DSLError(f"a set of strengths holds classes of {list(CLASSES)}")
+    positions = sorted(CLASSES.index(label) for label in labels)
+    if not _consecutive(positions) or len(positions) == len(CLASSES):
+        raise DSLError("a set of strengths holds neighbouring classes, and not all of them")
+    return tuple(CLASSES[i] for i in positions)
+
+
 def _compared(node: ast.Compare) -> Claim:
     left = _call(node.left, set(COMPARED) | {"effect"})
     kind = left.func.id
@@ -61,10 +89,14 @@ def _compared(node: ast.Compare) -> Claim:
         _keywords(left, ())
         _keywords(right, ())
         return Claim("comparison", _terms(left, 1) + _terms(right, 1), relation=COMPARISONS[op])
-    if op is not ast.Eq:
-        raise DSLError(f"{kind}() is compared with ==")
     _keywords(left, ())
     terms, right = _terms(left, 1), node.comparators[0]
+    if op is ast.In:
+        if kind not in SETS:
+            raise DSLError(f"{kind}() takes no set of values")
+        return Claim(kind, terms, _set(right, kind))
+    if op is not ast.Eq:
+        raise DSLError(f"{kind}() is compared with ==, or with `in` and a set of values")
     allowed = COMPARED[kind]
     if kind == "share":
         approx = _call(right, {"approx"})
@@ -85,30 +117,38 @@ def _compared(node: ast.Compare) -> Claim:
     return Claim(kind, terms, value)
 
 
+def _claim(node: ast.AST, hedge: bool = True) -> Claim:
+    if isinstance(node, ast.Compare):
+        if len(node.ops) != 1:
+            raise DSLError("one comparison per claim")
+        return _compared(node)
+    call = _call(node, set(CALLS) | {HEDGE})
+    kind = call.func.id
+    if kind == HEDGE:
+        if not hedge:
+            raise DSLError("unsettled() hedges a claim, not another hedge")
+        if len(call.args) != 1 or call.keywords:
+            raise DSLError("unsettled() takes exactly one claim")
+        inner = _claim(call.args[0], hedge=False)
+        return Claim(HEDGE, inner.terms, inner=inner)
+    count, keywords = CALLS[kind]
+    terms, found = _terms(call, count), _keywords(call, keywords)
+    if kind == "negligible":
+        value = None
+    elif kind == "interaction":
+        value = _string(found["pattern"], "the pattern")
+        if value not in PATTERNS:
+            raise DSLError(f"pattern is one of {list(PATTERNS)}")
+        if terms[0] == terms[1]:
+            raise DSLError("an interaction needs two different features")
+    else:
+        value = float(_number(found["at"], "a location"))
+    return Claim(kind, terms, value)
+
+
 def parse(line: str, sentence_id: int | None = None) -> Claim:
     try:
         tree = ast.parse(line.strip(), mode="eval")
     except SyntaxError as e:
         raise DSLError(f"not a DSL line: {e.msg}") from None
-    node = tree.body
-    if isinstance(node, ast.Compare):
-        if len(node.ops) != 1:
-            raise DSLError("one comparison per claim")
-        claim = _compared(node)
-    else:
-        call = _call(node, set(CALLS))
-        kind = call.func.id
-        count, keywords = CALLS[kind]
-        terms, found = _terms(call, count), _keywords(call, keywords)
-        if kind == "negligible":
-            value = None
-        elif kind == "interaction":
-            value = _string(found["pattern"], "the pattern")
-            if value not in PATTERNS:
-                raise DSLError(f"pattern is one of {list(PATTERNS)}")
-            if terms[0] == terms[1]:
-                raise DSLError("an interaction needs two different features")
-        else:
-            value = float(_number(found["at"], "a location"))
-        claim = Claim(kind, terms, value)
-    return Claim(claim.kind, claim.terms, claim.value, claim.relation, sentence_id)
+    return replace(_claim(tree.body), sentence_id=sentence_id)

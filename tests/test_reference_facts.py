@@ -74,3 +74,5 @@ def test_scorer_test_lexicon_on_t_reproduces_every_planted_label(scenario):
     kinds = {c.kind for c, _ in claims}
     assert kinds == {"rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction"}
     assert {label for _, label in claims} == {TRUE, FALSE}
+    sets = [(c.kind, label) for c, label in claims if isinstance(c.value, tuple)]  # D33
+    assert set(sets) == {(kind, label) for kind in ("rank", "direction", "strength") for label in (TRUE, FALSE)}

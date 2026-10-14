@@ -23,6 +23,21 @@ detectable, the model's own share is below the weak class and the share band rul
 false if an effect is detectable and the share band lies at or above the weak class. Requiring the band below
 2% alone is a valid equivalence test but almost never passes; requiring only a non-significant effect would
 certify "hardly matters" for a real 4% effect whose share is estimated at 3.5% (absence of evidence).
+
+"Mostly" (D29, §14.7) asserts an exception, so it needs a detected one: with bands, a curve without a detected
+exception leaves "mostly" undecidable, because the bands do not rule a small exception out. The strict word
+("increases") is certified when no exception is detected: true at the resolution the sample allows. Without
+bands (T) the curve is exact, and no exception means none.
+
+Reason codes (D30). An undecidable verdict says why: the evidence does not settle the claim
+(INSUFFICIENT_EVIDENCE), the claim names a term the model does not have (UNKNOWN_TERM), or the claim type does
+not apply to the term, e.g. the direction of a pair (NOT_APPLICABLE). Only the first can be hedged:
+`unsettled(<claim>)` is true exactly when its claim is undecidable for insufficient evidence.
+
+Sets of values (D33). A claim may name neighbouring values at once: "weak to moderate", "at most weak", "second
+or third", "generally decreases". It is judged by the same rule, true if the band lies inside the set, false if
+outside. So a set is confidently wrong only on a term where the claim of the term's true value is confidently
+wrong too: sets add no new failure cases, they turn abstentions into certified, coarser statements.
 """
 
 from collections.abc import Mapping
@@ -38,9 +53,12 @@ from verifier_gate.facts.schema import Draws, Estimate, Facts, FeatureFacts, Pai
 from verifier_gate.facts.steps import PAIR_SEPARATOR
 
 TRUE, FALSE, UNDECIDABLE = "true", "false", "undecidable"
+INSUFFICIENT_EVIDENCE, UNKNOWN_TERM, NOT_APPLICABLE = "insufficient_evidence", "unknown_term", "not_applicable"
+CODES = (INSUFFICIENT_EVIDENCE, UNKNOWN_TERM, NOT_APPLICABLE)  # why a verdict is undecidable (D30)
 LEXICON_PATH = Path(__file__).with_name("lexicon.yaml")
 DIRECTIONS = {"increasing": (1, False), "decreasing": (-1, False), "mostly_increasing": (1, True), "mostly_decreasing": (-1, True)}
 STRENGTHS = ("weak", "moderate", "strong")
+CLASSES = ("negligible", *STRENGTHS)  # the classes of a share, from below; a strength set spans neighbours (D33)
 PATTERNS = ("amplification", "sign_flip", "none")
 JUMP_GRID = 2_000  # locations at which a windowed jump is evaluated
 ZERO_MASS = 1e-9  # exception mass below this counts as none (float sums of step masses)
@@ -51,6 +69,13 @@ class Verdict:
     value: str  # TRUE, FALSE or UNDECIDABLE
     evidence: dict = field(default_factory=dict)
     reason: str = ""
+    code: str = ""  # undecidable verdicts only: one of CODES, INSUFFICIENT_EVIDENCE unless given
+
+    def __post_init__(self):
+        if self.value == UNDECIDABLE and not self.code:
+            object.__setattr__(self, "code", INSUFFICIENT_EVIDENCE)
+        if self.value not in (TRUE, FALSE, UNDECIDABLE) or (self.code not in CODES if self.value == UNDECIDABLE else self.code):
+            raise ValueError(f"a {self.value!r} verdict cannot have the code {self.code!r}")
 
 
 @dataclass(frozen=True)
@@ -168,7 +193,18 @@ def term(facts: Facts, name: str, lex: Lexicon) -> Term | None:
 
 
 def _unknown(name: str) -> Verdict:
-    return Verdict(UNDECIDABLE, {"term": name}, f"{name} is not a term of this model")
+    return Verdict(UNDECIDABLE, {"term": name}, f"{name} is not a term of this model", UNKNOWN_TERM)
+
+
+def _feature(facts: Facts, name: str, lex: Lexicon, what: str) -> FeatureFacts | Verdict:
+    """The feature `name`, or the verdict on a claim that needs a feature: an unknown name is not a term of the
+    model, and for a pair the claim type does not apply."""
+    features = {f.name: f for f in facts.features}
+    if name in features:
+        return features[name]
+    if term(facts, name, lex) is None:
+        return _unknown(name)
+    return Verdict(UNDECIDABLE, {"term": name}, f"{what} are defined for features, not for pairs", NOT_APPLICABLE)
 
 
 def _share_evidence(t: Term) -> dict:
@@ -195,6 +231,32 @@ def strength(facts: Facts, name: str, label: str, lex: Lexicon | None = None) ->
         UNDECIDABLE: "share band straddles a class edge" if not inside else "share band in the class, but no effect is detectable",
     }[value]
     return Verdict(value, _share_evidence(t) | {"class": [lo, hi]}, reason)
+
+
+def strength_in(facts: Facts, name: str, labels: tuple[str, ...], lex: Lexicon | None = None) -> Verdict:
+    """A run of neighbouring classes of CLASSES (D33), judged like one class on the union of their intervals.
+    "weak to moderate" asserts an effect: true if the share band lies inside and the effect is detectable, false
+    if the band lies outside. "at most weak" (a run from negligible) asserts at most the run's top class: true if
+    the band lies below its upper edge, false if the band lies above it and the effect is detectable, the
+    condition D25 sets for refuting "negligible"."""
+    lex = lex or load()
+    t = term(facts, name, lex)
+    if t is None:
+        return _unknown(name)
+    edges = [0.0, *(lex.strength[s] for s in STRENGTHS), np.inf]
+    lo, hi = edges[CLASSES.index(labels[0])], edges[CLASSES.index(labels[-1]) + 1]
+    band = interval(t.share)
+    if labels[0] == "negligible":
+        value = _judge(band[1] < hi, band[0] >= hi and t.detectable)
+    else:
+        value = _judge(lo <= band[0] and band[1] < hi and t.detectable, band[1] < lo or band[0] >= hi)
+    span = f"[{lo:.0%}, {hi:.0%})"
+    reason = {
+        TRUE: f"share band inside {span}" + ("" if labels[0] == "negligible" else " and the effect is detectable"),
+        FALSE: f"share band outside {span}" + (" and the effect is detectable" if labels[0] == "negligible" else ""),
+        UNDECIDABLE: f"share band not settled against {span}",
+    }[value]
+    return Verdict(value, _share_evidence(t) | {"classes": list(labels), "interval": [lo, hi]}, reason)
 
 
 def negligible(facts: Facts, name: str, lex: Lexicon | None = None) -> Verdict:
@@ -230,16 +292,33 @@ def share(facts: Facts, name: str, claimed: float, lex: Lexicon | None = None) -
     return Verdict(value, _share_evidence(t) | {"claimed": claimed, "shares the claim fits": [a_min, a_max]})
 
 
-def rank(facts: Facts, name: str, k: int, lex: Lexicon | None = None) -> Verdict:
-    """Rank among the features by importance. The rank band is rounded outward to whole ranks."""
-    features = {f.name: f for f in facts.features}
-    if name not in features:
-        return Verdict(UNDECIDABLE, {"term": name}, "ranks are defined among the features")
-    f = features[name]
+def _rank_band(f: FeatureFacts) -> tuple[float, float]:
+    """The refits' rank band, rounded outward to whole ranks (1.475 means "a few refits put it second")."""
     lo, hi = interval(f.rank)
-    lo, hi = float(np.floor(lo)), float(np.ceil(hi))
+    return float(np.floor(lo)), float(np.ceil(hi))
+
+
+def rank(facts: Facts, name: str, k: int, lex: Lexicon | None = None) -> Verdict:
+    """Rank among the features by importance: true if the rank band is {k}, false if it excludes k."""
+    lex = lex or load()
+    f = _feature(facts, name, lex, "ranks")
+    if isinstance(f, Verdict):
+        return f
+    lo, hi = _rank_band(f)
     value = _judge(lo == hi == k, k < lo or k > hi)
     return Verdict(value, {"term": name, "rank": f.rank.value, "rank band": (lo, hi), "claimed": k})
+
+
+def rank_in(facts: Facts, name: str, ks: tuple[int, ...], lex: Lexicon | None = None) -> Verdict:
+    """One of consecutive ranks (D33), "second or third", "among the top three": true if the rank band lies
+    inside them, false if it lies outside."""
+    lex = lex or load()
+    f = _feature(facts, name, lex, "ranks")
+    if isinstance(f, Verdict):
+        return f
+    lo, hi = _rank_band(f)
+    value = _judge(ks[0] <= lo and hi <= ks[-1], hi < ks[0] or lo > ks[-1])
+    return Verdict(value, {"term": name, "rank": f.rank.value, "rank band": (lo, hi), "claimed": list(ks)})
 
 
 def comparison(facts: Facts, a: str, b: str, relation: str, lex: Lexicon | None = None) -> Verdict:
@@ -291,28 +370,53 @@ def exception_mass(lower: np.ndarray, upper: np.ndarray, mass: np.ndarray, sign:
     return float(max(w.sum() - best.max(), 0.0))
 
 
-def direction(facts: Facts, name: str, label: str, lex: Lexicon | None = None) -> Verdict:
-    """"increases": the net change (5th to 95th percentile) is significantly positive and no significant
-    decrease remains anywhere (exception mass 0). "mostly increases": the net change is significantly positive
-    and a significant decrease exists, on at most `exception_mass` of the data. Mirrored for decreases."""
-    lex = lex or load()
-    features = {f.name: f for f in facts.features}
-    if name not in features:
-        return Verdict(UNDECIDABLE, {"term": name}, "directions are defined for features")
-    f = features[name]
-    sign, mostly = DIRECTIONS[label]
+def _movement(f: FeatureFacts, sign: int) -> tuple[float, bool, bool, dict]:
+    """Exception mass against `sign`, whether the net change is significantly with it or (at least weakly)
+    against it, and the evidence."""
     lower, upper = curve_band(f)
     exception = exception_mass(lower, upper, f.mass, sign)
     exception = 0.0 if exception < ZERO_MASS else exception
     net = interval(f.net_change)
     net_with = net[0] > 0 if sign > 0 else net[1] < 0
     net_against = net[1] <= 0 if sign > 0 else net[0] >= 0
+    evidence = {"term": f.name, "net change": f.net_change.value, "net change band": net, "exception mass": exception}
+    return exception, net_with, net_against, evidence
+
+
+def direction(facts: Facts, name: str, label: str, lex: Lexicon | None = None) -> Verdict:
+    """"increases": the net change (5th to 95th percentile) is significantly positive and no significant
+    decrease remains anywhere (exception mass 0). "mostly increases": the net change is significantly positive
+    and a significant decrease exists, on at most `exception_mass` of the data; with bands and no detected
+    decrease it is undecidable (D29). Mirrored for decreases."""
+    lex = lex or load()
+    f = _feature(facts, name, lex, "directions")
+    if isinstance(f, Verdict):
+        return f
+    sign, mostly = DIRECTIONS[label]
+    exception, net_with, net_against, evidence = _movement(f, sign)
+    reason = ""
     if mostly:
-        value = _judge(net_with and 0 < exception <= lex.exception_mass, net_against or exception == 0 or exception > lex.exception_mass)
+        exact = f.simultaneous is None  # T: without bands, no exception means none
+        true = net_with and 0 < exception <= lex.exception_mass
+        value = _judge(true, net_against or exception > lex.exception_mass or (exception == 0 and exact))
+        if value == UNDECIDABLE:  # with a significant net change, only D29's case is left open
+            reason = "no exception detected, and the bands do not rule a small one out (D29)" if net_with else "no significant net change"
     else:
         value = _judge(net_with and exception == 0, net_against or exception > 0)
-    evidence = {"term": name, "net change": f.net_change.value, "net change band": net, "exception mass": exception}
-    return Verdict(value, evidence)
+    return Verdict(value, evidence, reason)
+
+
+def direction_in(facts: Facts, name: str, labels: tuple[str, str], lex: Lexicon | None = None) -> Verdict:
+    """"generally increases": the strict or the "mostly" word of one direction, whichever holds (D33). True if
+    the net change is significantly in the direction and the exceptions cover at most `exception_mass` of the
+    data; false if the net change is not in the direction or the exceptions cover more."""
+    lex = lex or load()
+    f = _feature(facts, name, lex, "directions")
+    if isinstance(f, Verdict):
+        return f
+    exception, net_with, net_against, evidence = _movement(f, DIRECTIONS[labels[0]][0])
+    value = _judge(net_with and exception <= lex.exception_mass, net_against or exception > lex.exception_mass)
+    return Verdict(value, evidence | {"claimed": list(labels)})
 
 
 def _step_x(f: FeatureFacts) -> np.ndarray:
@@ -353,10 +457,9 @@ def threshold(facts: Facts, name: str, at: float, lex: Lexicon | None = None) ->
     is significant (sup-t band over all locations), lies within w of x across refits, and is at least
     `jump_fraction` of the term's range in the search region across refits."""
     lex = lex or load()
-    features = {f.name: f for f in facts.features}
-    if name not in features:
-        return Verdict(UNDECIDABLE, {"term": name}, "thresholds are defined for features")
-    f = features[name]
+    f = _feature(facts, name, lex, "thresholds")
+    if isinstance(f, Verdict):
+        return f
     w = _window(f, lex)
     search = _search(f, lex)
     x_steps = _step_x(f)
@@ -410,10 +513,9 @@ def peak(facts: Facts, name: str, at: float, lex: Lexicon | None = None) -> Verd
     band). On a step curve the maximum is an interval, so the claim is judged by its distance to that interval
     in each refit: near if the 97.5th percentile of the distance is at most w, far if the 2.5th exceeds w."""
     lex = lex or load()
-    features = {f.name: f for f in facts.features}
-    if name not in features:
-        return Verdict(UNDECIDABLE, {"term": name}, "peaks are defined for features")
-    f = features[name]
+    f = _feature(facts, name, lex, "peaks")
+    if isinstance(f, Verdict):
+        return f
     w = _window(f, lex)
     search = _search(f, lex)
     edge_lo, edge_hi = (e[search] for e in _step_edges(f))
@@ -483,3 +585,22 @@ def interaction(facts: Facts, a: str, b: str, pattern: str, lex: Lexicon | None 
         "effect at high band": high, "difference band": diff,
     }  # fmt: skip
     return Verdict(value, evidence)
+
+
+# --- the hedge ---------------------------------------------------------------------------------------------
+
+
+def unsettled(claim: Verdict) -> Verdict:
+    """"the data do not settle whether ..." (D30), given the verdict on the claim it hedges: true only if that
+    claim is undecidable for insufficient evidence. False if the claim is decided either way, so a settled fact
+    cannot be hedged and hedging everything does not pass the gate, and false if the claim names a term the
+    model does not have or does not apply to its term, so a hedge cannot cover an invented term."""
+    hedged = claim.value == UNDECIDABLE and claim.code == INSUFFICIENT_EVIDENCE
+    if hedged:
+        reason = "the evidence does not settle the claim"
+    elif claim.value == UNDECIDABLE:
+        reason = f"nothing to hedge: {claim.reason}"
+    else:
+        reason = f"the claim is settled: it is {claim.value}"
+    evidence = {"claim verdict": claim.value, "claim code": claim.code, "claim reason": claim.reason, **claim.evidence}
+    return Verdict(TRUE if hedged else FALSE, evidence, reason)
