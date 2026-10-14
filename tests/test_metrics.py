@@ -55,3 +55,20 @@ def test_cross_table_has_all_nine_cells():
     assert table.loc[TRUE, FALSE] == 1  # a model miss (D24): oracle true, model false
     with pytest.raises(ValueError):
         m.cross_table([TRUE], ["maybe"])
+
+
+def test_kappa_on_decided_claims_only():
+    labels = [TRUE, TRUE, FALSE, FALSE, TRUE]
+    assert m.kappa(labels, [TRUE, TRUE, FALSE, FALSE, UNDECIDABLE]) == pytest.approx(1.0)
+    assert m.kappa(labels[:4], [FALSE, FALSE, TRUE, TRUE]) == pytest.approx(-1.0)
+    assert m.kappa(labels[:4], [TRUE, FALSE, TRUE, FALSE]) == pytest.approx(0.0)
+    assert math.isnan(m.kappa([TRUE, TRUE], [TRUE, TRUE]))  # one class: chance agreement is total
+    assert math.isnan(m.kappa([TRUE], [UNDECIDABLE]))
+
+
+def test_clustered_interval_resamples_whole_datasets():
+    claims = pd.DataFrame({"scenario": ["a"] * 10 + ["b"] * 10, "x": [0.0] * 10 + [1.0] * 10})
+    lo, hi = m.clustered_interval(claims, lambda g: g.x.mean(), draws=500)
+    assert (lo, hi) == (0.0, 1.0)  # only whole datasets: all a, all b, or half and half
+    same = pd.DataFrame({"scenario": ["a", "a", "b", "b"], "x": [0.5] * 4})
+    assert m.clustered_interval(same, lambda g: g.x.mean(), draws=50) == (0.5, 0.5)

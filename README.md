@@ -18,15 +18,17 @@ src/verifier_gate/
   verifier/      verify.py (verdict + evidence per claim)
   llm/           client.py (cache, stub mode, retries), propose.py, extract.py, prompts/
   gate/          roundtrip.py, template.py, gate.py (repair loop, stop rules, exit states)
-  experiments/   acceptance.py (models vs planted claims, model vs data misses), smoothing.py (EBM setting),
+  experiments/   acceptance.py (stand-in checks: models vs planted claims, model vs data misses),
+                 acceptance_binding.py (the binding run on the frozen lexicon, D24), smoothing.py (EBM setting),
                  recheck.py (EBM setting on fresh seeds), build_facts.py (Facts for all 36 models, the oracle
                  and T),
                  null_check.py (bands on the noise features), fig2.py, metrics.py (outcomes and metrics for
                  three-valued verdicts, shared by E1 to E3), calibrate.py (lexicon calibration on the discovery
-                 seed, +-50% sensitivity; plan §14.9), e1_lexicon.py, e2_mutation.py, e3_end_to_end.py
+                 seed, +-50% sensitivity; plan §14.9), e1_lexicon.py (E1: three references, D31 metrics),
+                 e2_mutation.py, e3_end_to_end.py
 tests/           DGP, acceptance scorer, decision rules, both fact providers, Facts and bands, SymPy export,
                  lexicon predicates on toy shapes, DSL parser, reference Facts, scorer test (lexicon on T),
-                 metrics, calibration rule
+                 metrics, calibration rule, E1 scorers and the binding rule
 notebooks/       01 recovery check, 02 root causes of the week-1 failures (plan §14.2),
                  03 what the bootstrap bands can decide (plan §14.4)
 piml_check/      our XGB2 decomposition vs PiML's (plan §14.4, D27); own Python 3.10 environment, see its README
@@ -47,6 +49,8 @@ uv run python -m verifier_gate.experiments.build_facts         # about 3-4 hours
 uv run python -m verifier_gate.experiments.null_check          # seconds, after build_facts
 uv run python -m verifier_gate.experiments.fig2                # seconds, after build_facts
 uv run python -m verifier_gate.experiments.calibrate           # about 1.5 minutes, after build_facts
+uv run python -m verifier_gate.experiments.e1_lexicon          # seconds, after build_facts (--seeds 2,3: confirmation)
+uv run python -m verifier_gate.experiments.acceptance_binding  # seconds, after build_facts
 uv run python notebooks/02_root_cause.py                       # about 1.5 hours (--quick: 2 minutes)
 uv run python notebooks/03_bands.py                            # seconds, after build_facts
 ```

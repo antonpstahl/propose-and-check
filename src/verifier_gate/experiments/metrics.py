@@ -19,12 +19,14 @@ two sets of verdicts on the same claims, the oracle's and a model's (the model l
 table of verdicts; a model miss (D24) is its cell oracle true, model false.
 
 Claims within one dataset are not independent. The bounds here treat them as if they were, so they are
-optimistic; E1 adds bootstrap intervals clustered by dataset.
+optimistic; clustered_interval() resamples whole datasets instead. Cohen's kappa on the decided claims is a
+secondary number (D31): it ignores abstention.
 """
 
 import math
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
+import numpy as np
 import pandas as pd
 from scipy import stats
 
@@ -80,7 +82,21 @@ def summary(labels: Sequence[str], verdicts: Sequence[str]) -> dict[str, float]:
         "released wrong among false claims": _rate(count[RELEASED_WRONG], false_claims),
         "released wrong upper bound": upper_bound(count[RELEASED_WRONG], false_claims),
         "blocked among true claims": _rate(count[BLOCKED_CORRECT], true_claims),
+        "kappa among decided": kappa(labels, verdicts),
     }  # fmt: skip
+
+
+def kappa(labels: Sequence[str], verdicts: Sequence[str]) -> float:
+    """Cohen's kappa between labels and verdicts on the decided claims; nan without decided claims or when
+    chance agreement is total (one class only)."""
+    pairs = [(label, verdict) for label, verdict in zip(labels, verdicts, strict=True) if verdict != UNDECIDABLE]
+    if not pairs:
+        return math.nan
+    n = len(pairs)
+    observed = sum(label == verdict for label, verdict in pairs) / n
+    p_label, p_verdict = (sum(x[i] == TRUE for x in pairs) / n for i in (0, 1))
+    chance = p_label * p_verdict + (1 - p_label) * (1 - p_verdict)
+    return (observed - chance) / (1 - chance) if chance < 1 else math.nan
 
 
 def summarize(claims: pd.DataFrame, by: Sequence[str], label: str = "label", verdict: str = "verdict") -> pd.DataFrame:
@@ -90,6 +106,26 @@ def summarize(claims: pd.DataFrame, by: Sequence[str], label: str = "label", ver
         key = key if isinstance(key, tuple) else (key,)
         rows.append(dict(zip(by, key)) | summary(group[label].tolist(), group[verdict].tolist()))
     return pd.DataFrame(rows).set_index(list(by))
+
+
+def clustered_interval(
+    claims: pd.DataFrame, statistic: Callable[[pd.DataFrame], float], cluster: str = "scenario",
+    draws: int = 2_000, level: float = 0.95, seed: int = 0,
+) -> tuple[float, float]:
+    """Percentile interval of statistic(claims) over bootstrap resamples of whole clusters (datasets), since
+    claims within a dataset are correlated. With few clusters the interval is coarse."""  # fmt: skip
+    groups = [group for _, group in claims.groupby(cluster, sort=True)]
+    rng = np.random.default_rng(seed)
+    values = []
+    for _ in range(draws):
+        picked = rng.integers(len(groups), size=len(groups))
+        values.append(statistic(pd.concat([groups[i] for i in picked], ignore_index=True)))
+    values = np.asarray(values, dtype=float)
+    values = values[~np.isnan(values)]
+    if not len(values):
+        return math.nan, math.nan
+    alpha = (1 - level) / 2
+    return float(np.quantile(values, alpha)), float(np.quantile(values, 1 - alpha))
 
 
 def cross_table(reference: Sequence[str], model: Sequence[str]) -> pd.DataFrame:
