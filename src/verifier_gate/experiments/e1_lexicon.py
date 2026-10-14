@@ -15,7 +15,7 @@ treated as independent, optimistic) and a bootstrap interval clustered by datase
 per n of one seed).
 
 Run: `uv run python -m verifier_gate.experiments.e1_lexicon` (the discovery seed, about 30 s);
-`--seeds 2,3` for the confirmation (week 7). Writes results/e1/<discovery|confirmation>/.
+`--seeds 2,3` for the confirmation (week 7). Writes results/e1/<lexicon version>/<discovery|confirmation>/.
 """
 
 import argparse
@@ -132,11 +132,11 @@ def main() -> None:
     name = "discovery" if seeds == (dgp.DISCOVERY_SEED,) else "confirmation" if dgp.DISCOVERY_SEED not in seeds else "seeds-" + "-".join(map(str, seeds))
     scenarios = tuple(s for s in dgp.SCENARIOS if s.seed in seeds)
     lex = p.load()
-    assert lex.version == "v1", "E1 runs on the frozen lexicon (tag e1-frozen)"
+    assert lex.version != "v0", "E1 runs on the frozen lexicon (tag e1-frozen)"
 
     table = verdicts(scenarios, lex)
     long = layers(table)
-    out = RESULTS / name
+    out = RESULTS / lex.version / name
     out.mkdir(parents=True, exist_ok=True)
     table.to_csv(out / "verdicts.csv", index=False)
     head = headline(long)

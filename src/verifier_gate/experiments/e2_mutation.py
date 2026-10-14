@@ -11,7 +11,8 @@ pair with a share of at least 10%.
 | M3  | upgrade strength: every higher class; a strength set shifted up one class (D33)                    |
 | M4  | downgrade strength: every lower class; a strength set shifted down one class                       |
 | M5  | share x 0.8, 1.2, 0.5, 1.5, and M's share +- 1.5 times the tolerance (D32)                         |
-| M6  | location +- 0.5 w (control), +- 2 w, +- 5 w (D32)                                                  |
+| M6  | location +- 0.5 w (control), +- 2 w, +- 5 w (D32); on a count (D42): the same step named at its other  |
+|     | point (control), +- 2 and 5 steps                                                                 |
 | M7  | invent an interaction: amplification or sign flip for a pair the plan calls none, or one not in M |
 | M8  | swap the pattern (amplification <-> sign flip), deny it (none), or omit a pair with share >= 10%   |
 | M9  | the same claim about a term the model does not have                                               |
@@ -41,6 +42,7 @@ import itertools
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from verifier_gate.data import dgp
@@ -148,10 +150,21 @@ def mutants(plan: list[Claim], facts: Facts, lex: p.Lexicon) -> list[Mutant]:
                 if value > 0:
                     add(Mutant("M5", f"{sign * TOLERANCE_SHIFT:+} tolerance", c, Claim("share", c.terms, round(value, 3)), share_level=level))
         if c.kind in ("threshold", "peak"):
-            low, high = facts.feature(f).low_high
-            w = lex.window * (high - low)
-            for k, sign in itertools.product(LOCATION_SHIFTS, (-1, 1)):
-                add(Mutant("M6", f"{sign * k:+} w", c, Claim(c.kind, c.terms, round(c.value + sign * k * w, 4)), control=k < 1))
+            feature = facts.feature(f)
+            values = feature.values
+            if values is not None and len(values) > 1:  # D42: on a count, half a step names another step
+                unit = float(np.median(np.diff(values)))
+                if c.kind == "threshold":  # control: the same step named at its other point (0.5 <-> 1 for a count)
+                    lo, hi = p._gap(feature, c.value)
+                    other = hi if c.value < hi else (lo + hi) / 2
+                    add(Mutant("M6", "same step, other point", c, Claim(c.kind, c.terms, round(other, 4)), control=True))
+                for k, sign in itertools.product(LOCATION_SHIFTS[1:], (-1, 1)):
+                    add(Mutant("M6", f"{sign * k:+} steps", c, Claim(c.kind, c.terms, round(c.value + sign * k * unit, 4))))
+            else:
+                low, high = feature.low_high
+                w = lex.window * (high - low)
+                for k, sign in itertools.product(LOCATION_SHIFTS, (-1, 1)):
+                    add(Mutant("M6", f"{sign * k:+} w", c, Claim(c.kind, c.terms, round(c.value + sign * k * w, 4)), control=k < 1))
         if c.kind == "interaction" and c.value != "none":
             other = "sign_flip" if c.value == "amplification" else "amplification"
             add(Mutant("M8", "swap", c, Claim("interaction", c.terms, other)))
@@ -256,10 +269,10 @@ def main() -> None:
     name = "plan_discovery" if seeds == (dgp.DISCOVERY_SEED,) else "plan_seeds-" + "-".join(map(str, seeds))
     scenarios = tuple(s for s in dgp.SCENARIOS if s.seed in seeds)
     lex = p.load()
-    assert lex.version == "v1", "E2 runs on the frozen lexicon (tag e1-frozen)"
+    assert lex.version != "v0", "E2 runs on the frozen lexicon (tag e1-frozen)"
 
     table, plans = run(scenarios, lex)
-    out = RESULTS / name
+    out = RESULTS / lex.version / name
     out.mkdir(parents=True, exist_ok=True)
     table.to_csv(out / "mutants.csv", index=False)
     plans.to_csv(out / "plans.csv", index=False)

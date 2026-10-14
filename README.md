@@ -14,13 +14,15 @@ src/verifier_gate/
                  reference.py (T and the oracle on a fine grid), schema.py (Facts format, JSON + draws),
                  build.py (frame, bands), bootstrap.py (Poisson refits), symbolic.py (SymPy export),
                  readable.py (the readable form of a curve for the handover, and its check against M)
-  lexicon/       lexicon.yaml (thresholds, v1: frozen 14 Oct, tag e1-frozen), predicates.py (three-valued verdicts
-                 with reason codes, sets of values, the unsettled hedge)
+  lexicon/       lexicon.yaml (thresholds; v1 frozen 14 Oct, tag e1-frozen; v2: locations on count features judged
+                 on the data, D42), predicates.py (three-valued verdicts with reason codes, sets of values, the
+                 unsettled hedge)
   dsl/           grammar.py (whitelist, Claim; sets of values, unsettled), parse.py (ast-based)
   verifier/      verify.py (verdict + evidence per claim), certified.py (the most specific certified statement
                  per term: correct plans for E2, later H2 and the template)
   llm/           settings.py (models, thinking, prices), client.py (disk cache, call log, stub mode, retries),
-                 handover.py (H1, H2), prompts/ (system, propose, repair; frozen after the pilot), propose.py,
+                 batch.py (Batch API transport: waves, resumable),
+                 handover.py (H1, H2), prompts/ (system, propose, repair; v2 frozen, hash-tested), propose.py,
                  extract.py (week 6)
   gate/          draft.py, roundtrip.py (coverage built; extraction and emphasis in week 6), template.py (phrases
                  and the template text), gate.py (the state machine: repair loop, stop rules, exit states; resumable)
@@ -56,6 +58,7 @@ uv run python -m verifier_gate.experiments.recheck             # about 15 minute
 uv run python -m verifier_gate.experiments.build_facts         # about 3-4 hours, resumable (oracle and T: minutes)
 uv run python -m verifier_gate.data.plasmode                   # fetches TaiwanCredit (UCI 350), writes the 18 datasets
 uv run python -m verifier_gate.experiments.build_facts --tier plasmode  # about 2 hours, resumable
+uv run python -m verifier_gate.experiments.build_facts --tier plasmode --add-values  # seconds: observed values (D42)
 uv run python -m verifier_gate.experiments.null_check          # seconds, after build_facts
 uv run python -m verifier_gate.experiments.fig2                # seconds, after build_facts
 uv run python -m verifier_gate.experiments.calibrate           # about 1.5 minutes, after build_facts
@@ -65,6 +68,8 @@ uv run python -m verifier_gate.experiments.e2_mutation         # seconds, after 
 uv run python -m verifier_gate.experiments.pilot               # dry run, no network, $0
 uv run python -m verifier_gate.experiments.pilot --smoke       # 2 live calls (needs ANTHROPIC_API_KEY), < $0.01
 uv run python -m verifier_gate.experiments.pilot --live        # the 10 pilot traces, about $0.01-0.05
+uv run python -m verifier_gate.experiments.pilot --naming      # the naming check (D41), 40 first drafts, about $0.03
+uv run python -m verifier_gate.experiments.pilot --batch-smoke # Batch API test: 2 runs in waves, < $0.01 (--dry: $0)
 uv run python notebooks/02_root_cause.py                       # about 1.5 hours (--quick: 2 minutes)
 uv run python notebooks/03_bands.py                            # seconds, after build_facts
 ```

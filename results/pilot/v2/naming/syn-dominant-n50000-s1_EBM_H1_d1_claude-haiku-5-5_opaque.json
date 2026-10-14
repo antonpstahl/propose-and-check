@@ -1,0 +1,281 @@
+{
+ "run_id": "syn-dominant-n50000-s1_EBM_H1_d1_claude-haiku-5-5_opaque",
+ "budget": 1,
+ "calls": 1,
+ "rounds": 0,
+ "format_retry_used": false,
+ "pending": null,
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [
+    [
+     1,
+     "Revolving credit utilization is the most important driver of default risk, and risk rises as the share of the credit limit in use grows."
+    ],
+    [
+     2,
+     "The number of past delinquencies is the second most important driver, and risk rises from zero to two or more delinquencies."
+    ],
+    [
+     3,
+     "The two drive each other: utilization matters far more for applicants with two delinquencies than for those with none."
+    ],
+    [
+     4,
+     "Income is among the next most important features, and risk generally falls as income rises."
+    ],
+    [
+     5,
+     "Length of credit history is also among the next most important features, and risk generally falls as the history gets longer."
+    ],
+    [
+     6,
+     "Debt-to-income ratio has a weak effect, and risk increases with it."
+    ],
+    [
+     7,
+     "Applicant age has a negligible share of importance, and the data do not settle whether the two application attributes, feature_a and feature_b, matter."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"utilization\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "direction(\"utilization\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 3.18; net change band 2.82 to 3.42; exception mass 0"
+    ],
+    [
+     2,
+     "rank(\"n_delinquencies\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 2; claimed 2"
+    ],
+    [
+     2,
+     "direction(\"n_delinquencies\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 1; net change band 0.89 to 1.06; exception mass 0"
+    ],
+    [
+     3,
+     "interaction(\"utilization\", \"n_delinquencies\", pattern=\"amplification\")",
+     "true",
+     "",
+     "",
+     "share 0.197; share band 0.186 to 0.203; detectable True; interaction contrast 5.12; interaction contrast band 4.57 to 5.41"
+    ],
+    [
+     4,
+     "rank(\"income\") in (3, 4)",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 3 to 4; claimed 3 to 4"
+    ],
+    [
+     4,
+     "direction(\"income\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.85; net change band -0.934 to -0.58; exception mass 0"
+    ],
+    [
+     5,
+     "rank(\"history_months\") in (3, 4)",
+     "true",
+     "",
+     "",
+     "rank 4; rank band 3 to 4; claimed 3 to 4"
+    ],
+    [
+     5,
+     "direction(\"history_months\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.661; net change band -0.77 to -0.522; exception mass 0"
+    ],
+    [
+     6,
+     "strength(\"dti\") == \"weak\"",
+     "undecidable",
+     "insufficient_evidence",
+     "share band straddles a class edge",
+     "share 0.0503; share band 0.0415 to 0.0625; detectable True; mass where the curve band excludes 0 0.652; net change 0.319"
+    ],
+    [
+     6,
+     "direction(\"dti\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 0.319; net change band 0.201 to 0.392; exception mass 0"
+    ],
+    [
+     7,
+     "negligible(\"age\")",
+     "true",
+     "",
+     "share band below the weak class",
+     "share 0.00264; share band 0.00134 to 0.0138; detectable False; mass where the curve band excludes 0 0; net change 0.0107"
+    ],
+    [
+     7,
+     "unsettled(negligible(\"noise_1\"))",
+     "false",
+     "",
+     "the claim is settled: it is true",
+     "claim verdict true; claim code ; share 0.0117; share band 0.004 to 0.0225; detectable False"
+    ],
+    [
+     7,
+     "unsettled(negligible(\"noise_2\"))",
+     "false",
+     "",
+     "the claim is settled: it is true",
+     "claim verdict true; claim code ; share 0.0154; share band 0.00544 to 0.0292; detectable False"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"rank(\\\"utilization\\\") == 1\", \"sentence_id\": 1}, {\"dsl\": \"direction(\\\"utilization\\\") == \\\"increasing\\\"\", \"sentence_id\": 1}, {\"dsl\": \"rank(\\\"n_delinquencies\\\") == 2\", \"sentence_id\": 2}, {\"dsl\": \"direction(\\\"n_delinquencies\\\") == \\\"increasing\\\"\", \"sentence_id\": 2}, {\"dsl\": \"interaction(\\\"utilization\\\", \\\"n_delinquencies\\\", pattern=\\\"amplification\\\")\", \"sentence_id\": 3}, {\"dsl\": \"rank(\\\"income\\\") in (3, 4)\", \"sentence_id\": 4}, {\"dsl\": \"direction(\\\"income\\\") == \\\"decreasing\\\"\", \"sentence_id\": 4}, {\"dsl\": \"rank(\\\"history_months\\\") in (3, 4)\", \"sentence_id\": 5}, {\"dsl\": \"direction(\\\"history_months\\\") == \\\"decreasing\\\"\", \"sentence_id\": 5}, {\"dsl\": \"strength(\\\"dti\\\") == \\\"weak\\\"\", \"sentence_id\": 6}, {\"dsl\": \"direction(\\\"dti\\\") == \\\"increasing\\\"\", \"sentence_id\": 6}, {\"dsl\": \"negligible(\\\"age\\\")\", \"sentence_id\": 7}, {\"dsl\": \"unsettled(negligible(\\\"feature_a\\\"))\", \"sentence_id\": 7}, {\"dsl\": \"unsettled(negligible(\\\"feature_b\\\"))\", \"sentence_id\": 7}], \"sentences\": [{\"id\": 1, \"text\": \"Revolving credit utilization is the most important driver of default risk, and risk rises as the share of the credit limit in use grows.\"}, {\"id\": 2, \"text\": \"The number of past delinquencies is the second most important driver, and risk rises from zero to two or more delinquencies.\"}, {\"id\": 3, \"text\": \"The two drive each other: utilization matters far more for applicants with two delinquencies than for those with none.\"}, {\"id\": 4, \"text\": \"Income is among the next most important features, and risk generally falls as income rises.\"}, {\"id\": 5, \"text\": \"Length of credit history is also among the next most important features, and risk generally falls as the history gets longer.\"}, {\"id\": 6, \"text\": \"Debt-to-income ratio has a weak effect, and risk increases with it.\"}, {\"id\": 7, \"text\": \"Applicant age has a negligible share of importance, and the data do not settle whether the two application attributes, feature_a and feature_b, matter.\"}]}"
+  },
+  {
+   "source": "reduced",
+   "sentences": [
+    [
+     1,
+     "Revolving credit utilization is the most important driver of default risk, and risk rises as the share of the credit limit in use grows."
+    ],
+    [
+     2,
+     "The number of past delinquencies is the second most important driver, and risk rises from zero to two or more delinquencies."
+    ],
+    [
+     3,
+     "The two drive each other: utilization matters far more for applicants with two delinquencies than for those with none."
+    ],
+    [
+     4,
+     "Income is among the next most important features, and risk generally falls as income rises."
+    ],
+    [
+     5,
+     "Length of credit history is also among the next most important features, and risk generally falls as the history gets longer."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"utilization\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "direction(\"utilization\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 3.18; net change band 2.82 to 3.42; exception mass 0"
+    ],
+    [
+     2,
+     "rank(\"n_delinquencies\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 2; claimed 2"
+    ],
+    [
+     2,
+     "direction(\"n_delinquencies\") == \"increasing\"",
+     "true",
+     "",
+     "",
+     "net change 1; net change band 0.89 to 1.06; exception mass 0"
+    ],
+    [
+     3,
+     "interaction(\"utilization\", \"n_delinquencies\", pattern=\"amplification\")",
+     "true",
+     "",
+     "",
+     "share 0.197; share band 0.186 to 0.203; detectable True; interaction contrast 5.12; interaction contrast band 4.57 to 5.41"
+    ],
+    [
+     4,
+     "rank(\"income\") in (3, 4)",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 3 to 4; claimed 3 to 4"
+    ],
+    [
+     4,
+     "direction(\"income\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.85; net change band -0.934 to -0.58; exception mass 0"
+    ],
+    [
+     5,
+     "rank(\"history_months\") in (3, 4)",
+     "true",
+     "",
+     "",
+     "rank 4; rank band 3 to 4; claimed 3 to 4"
+    ],
+    [
+     5,
+     "direction(\"history_months\") == \"decreasing\"",
+     "true",
+     "",
+     "",
+     "net change -0.661; net change band -0.77 to -0.522; exception mass 0"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": ""
+  }
+ ],
+ "failed_before": [],
+ "exit": "RELEASED_REDUCED",
+ "reason": "failing sentences dropped after 0 repair round(s)",
+ "flagged": false,
+ "roundtrip": "not run (week 6)",
+ "cost": 0.00071424,
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 2934,
+  "input_tokens": 2619,
+  "output_tokens": 846
+ },
+ "events": [
+  "stop repairing: call budget used",
+  "RELEASED_REDUCED: failing sentences dropped after 0 repair round(s)"
+ ]
+}

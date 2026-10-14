@@ -1,0 +1,5 @@
+model,n,variant,undecidable
+EBM,5000,strict to mostly,13
+EBM,50000,strict to mostly,18
+XGB2,5000,strict to mostly,13
+XGB2,50000,strict to mostly,18

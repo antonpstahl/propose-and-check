@@ -171,3 +171,15 @@ def test_an_empty_draft_is_a_format_problem_not_a_repair_round(ctx, good, tmp_pa
     result, requests = run(ctx, tmp_path, stub_message({"claims": [], "sentences": []}), stub_message(answer(good)))
     assert (result.exit, result.calls, result.rounds) == (g.RELEASED, 2, 0)
     assert requests[1].attempt == 1 and any("format-only retry" in e for e in result.events)
+
+
+def test_the_naming_check_counts_only_the_writers_draft(ctx, good, tmp_path):
+    """Seen in the naming check under prompts v2: an empty answer with a budget of one call ends as TEMPLATE, and the
+    template text is not the writer's draft (it was counted as one with no uncertified claim)."""
+    from verifier_gate.experiments.pilot import uncertified_noise_claims
+
+    empty, _ = run(ctx, tmp_path / "empty", stub_message({"claims": [], "sentences": []}), budget=1)
+    assert empty.exit == g.TEMPLATE and uncertified_noise_claims(empty) is None
+    noisy = answer(good, extra=[(99, "Noise 1 is strong.", ['strength("months_at_address") == "strong"'])])
+    drafted, _ = run(ctx, tmp_path / "drafted", stub_message(noisy), budget=1)
+    assert uncertified_noise_claims(drafted) == 1

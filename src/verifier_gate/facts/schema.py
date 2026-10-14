@@ -59,6 +59,7 @@ class FeatureFacts:
     rank: Estimate  # among the features, 1 = largest importance
     low_high: tuple[float, float]  # 5th and 95th percentile of the feature on the training sample
     net_change: Estimate  # term(high) - term(low)
+    values: np.ndarray | None = None  # the distinct observed values, if few (facts/build.py MAX_DISTINCT); D42
 
     def to_json(self) -> dict:
         bands = {k: None if v is None else v.tolist() for k, v in (("pointwise", self.pointwise), ("simultaneous", self.simultaneous))}
@@ -72,6 +73,7 @@ class FeatureFacts:
             **{k: getattr(self, k).to_json() for k in ("importance", "share", "rank")},
             "low_high": list(self.low_high),
             "net_change": self.net_change.to_json(),
+            "values": None if self.values is None else self.values.tolist(),
         }
 
     @classmethod
@@ -80,7 +82,7 @@ class FeatureFacts:
         return cls(
             d["name"], array(d["cuts"]), array(d["scores"]), array(d["mass"]), array(d["pointwise"]),
             array(d["simultaneous"]), d["critical_value"], *(Estimate.from_json(d[k]) for k in ("importance", "share", "rank")),
-            tuple(d["low_high"]), Estimate.from_json(d["net_change"]),
+            tuple(d["low_high"]), Estimate.from_json(d["net_change"]), array(d.get("values")),
         )  # fmt: skip
 
 

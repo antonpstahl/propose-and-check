@@ -62,12 +62,38 @@ def build(scenario: dgp.Scenario, kind: str, refits: int, log=print) -> Facts:
     return build_facts(reference, data.X, draws, model)
 
 
+def add_values(scenarios, kinds) -> int:
+    """Add the observed values (D42) to cached Facts built before them: JSON only, the draws are untouched."""
+    import json
+
+    from verifier_gate.facts.build import observed_values
+
+    done = 0
+    for scenario in scenarios:
+        X = None
+        for kind in kinds:
+            target = path(scenario, kind).with_suffix(".json")
+            if not target.exists():
+                continue
+            d = json.loads(target.read_text())
+            if all("values" in f for f in d["features"]):
+                continue
+            X = tiers.generate(scenario).X if X is None else X
+            for f in d["features"]:
+                values = observed_values(X[f["name"]])
+                f["values"] = None if values is None else values.tolist()
+            target.write_text(json.dumps(d))
+            done += 1
+    return done
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--refits", type=int, default=bootstrap.REFITS)
     parser.add_argument("--models", default=",".join(KINDS))
     parser.add_argument("--scenarios", default="", help="only scenarios whose id contains this")
     parser.add_argument("--tier", default="synthetic", choices=tuple(tiers.TIERS))
+    parser.add_argument("--add-values", action="store_true", help="only add the observed values (D42) to cached Facts")
     args = parser.parse_args()
     CACHE.mkdir(parents=True, exist_ok=True)
     logfile = (CACHE / "build.log").open("a")
@@ -80,6 +106,9 @@ def main() -> None:
 
     tier_scenarios = tiers.module(args.tier).SCENARIOS
     scenarios = sorted((s for s in tier_scenarios if args.scenarios in s.id), key=lambda s: (s.n, s.seed, s.interaction))
+    if args.add_values:
+        print(f"observed values added to {add_values(scenarios, args.models.split(','))} cached Facts files")
+        return
     jobs = [(s, k) for s in scenarios for k in args.models.split(",")]
     log(f"{len(jobs)} models, {args.refits} refits each")
     start = time.perf_counter()

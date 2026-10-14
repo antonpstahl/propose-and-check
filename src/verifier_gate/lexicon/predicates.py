@@ -448,8 +448,22 @@ def _argmax_centre(x: np.ndarray, values: np.ndarray) -> float:
     return float(x[top[: gaps[0] + 1] if len(gaps) else top].mean())
 
 
-def _location_verdict(at: float, w: float, band: tuple[float, float]) -> tuple[bool, bool]:
-    return _inside(band, at - w, at + w), _outside(band, at - w, at + w)
+def _gap(f: FeatureFacts, y: float) -> tuple[float, float]:
+    """Where a location y lies on the data (D42, lexicon v2): between the largest observed value below y and the
+    smallest at or above it, since no row lies in between. Without observed values (a fine-grained feature), y."""
+    if f.values is None or len(f.values) < 2:
+        return y, y
+    i = int(np.searchsorted(f.values, y, side="left"))
+    return float(f.values[max(i - 1, 0)]), float(f.values[min(i, len(f.values) - 1)])
+
+
+def _location_verdict(at: float, w: float, band: tuple[float, float], f: FeatureFacts) -> tuple[bool, bool]:
+    """Near: every location in the band is within w of `at`, each location taken as its gap on the data; far:
+    none is. Without observed values this is the band inside / outside [at - w, at + w]."""
+    (low_lo, low_hi), (high_lo, high_hi) = _gap(f, band[0]), _gap(f, band[1])
+    near = high_lo - w <= at <= low_hi + w
+    far = at + w < low_lo or at - w > high_hi
+    return near, far
 
 
 def threshold(facts: Facts, name: str, at: float, lex: Lexicon | None = None) -> Verdict:
@@ -489,7 +503,7 @@ def threshold(facts: Facts, name: str, at: float, lex: Lexicon | None = None) ->
         location_band = build.percentile_band(np.array([_argmax_centre(x, np.abs(j)) for j in refit_jumps]))
         refit_spread = spread(draws.curves[name])
         ratio_band = build.percentile_band(np.abs(refit_jumps).max(axis=1) / np.where(refit_spread > 0, refit_spread, np.inf))
-    near, far = _location_verdict(at, w, location_band)
+    near, far = _location_verdict(at, w, location_band, f)
     large, small = ratio_band[0] >= lex.jump_fraction, ratio_band[1] < lex.jump_fraction
     value = _judge(significant and near and large, far or small or (draws is None and not significant))
     evidence = {
@@ -525,6 +539,9 @@ def peak(facts: Facts, name: str, at: float, lex: Lexicon | None = None) -> Verd
         gaps = np.flatnonzero(np.diff(top) > 1)
         run = top[: gaps[0] + 1] if len(gaps) else top
         span = (float(edge_lo[run[0]]), float(edge_hi[run[-1]]))
+        if f.values is not None:  # D42: on the data, the highest steps are the observed values they hold
+            held = f.values[(f.values >= span[0]) & (f.values < span[1])]
+            span = (float(held.min()), float(held.max())) if held.size else span
         return max(span[0] - at, at - span[1], 0.0), span
 
     d, span = distance(f.scores[search])

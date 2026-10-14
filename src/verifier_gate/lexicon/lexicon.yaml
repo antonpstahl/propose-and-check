@@ -4,7 +4,11 @@
 # every criterion and the guard rail, so no threshold moved and v1 has v0's values. The +-50% sensitivity
 # analysis is in results/calibration/sensitivity.csv. A change after the freeze is v2: logged, E1 rerun on all
 # seeds, both versions reported.
-version: v1
+# v2, 14 Oct 2026 (D42, plan §14.14; formed after the pilot): the thresholds are unchanged; a jump or peak location
+# is judged against the gap between neighbouring observed values (Facts keep them for features with few distinct
+# values), so a count step cut at 0.5 (EBM) or at 1.0 (XGB2) gets the same verdict. Fine-grained features are
+# judged as in v1.
+version: v2
 level: 0.95  # every band (stored in the Facts or derived from the refit draws)
 
 strength:  # lower edge of each class; below the first: negligible

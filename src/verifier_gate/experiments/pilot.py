@@ -18,10 +18,15 @@ Modes, in the order they are used:
   certify. Rule, fixed before the run (14 Oct): if the two counts differ by NAMING_DIFFERENCE or more of 20, the
   names change the writer's behaviour and E3 runs both namings, reported apart; otherwise the plausible names stay.
   Add --dry for a no-network rehearsal.
+- --batch-smoke: the Batch API transport (llm/batch.py), live. The worked example with H1 and H2 at draw
+  BATCH_SMOKE_DRAW (draws 0-4 are cached from the pilot and the naming check, so they would cost nothing and test
+  nothing), with the full call budget, in waves: a repair goes into the next wave. About 2-6 calls at the batch
+  price, well under $0.01. A wave usually ends within minutes, at most 24 hours; stopping the process is safe, a
+  rerun resumes the open wave. Add --dry for a no-network rehearsal with a stub batch.
 
 Writes results/pilot/<prompt version>/<mode>/<run id>.json (the full run, with every version and verdict),
 summary.csv and traces.md (the runs as Markdown, for reading).
-Run: `uv run python -m verifier_gate.experiments.pilot [--smoke | --live | --naming] [--sonnet]`.
+Run: `uv run python -m verifier_gate.experiments.pilot [--smoke | --live | --naming | --batch-smoke] [--sonnet]`.
 """
 
 import argparse
@@ -37,7 +42,7 @@ from verifier_gate.dsl.grammar import Claim
 from verifier_gate.experiments.build_facts import load
 from verifier_gate.gate import gate as g
 from verifier_gate.gate.template import template
-from verifier_gate.llm import prompts, settings
+from verifier_gate.llm import batch, prompts, settings
 from verifier_gate.llm.client import Client, Request, stub_message
 from verifier_gate.llm.handover import handover
 from verifier_gate.verifier.certified import certified_plan
@@ -47,6 +52,7 @@ WORKED = ("syn-dominant-n50000-s1", "XGB2", "H2")
 NAMINGS = {"plausible": labels.SYNTHETIC_NAMES, "opaque": labels.OPAQUE_NAMES}
 NAMING_DRAWS = 5
 NAMING_DIFFERENCE = 3  # of 20 drafts per naming (D41)
+BATCH_SMOKE_DRAW = 5  # the first draw of the worked example no earlier run has made
 NOISE = ("noise_1", "noise_2")
 RESULTS = Path(__file__).parents[3] / "results" / "pilot"
 CHARS_PER_TOKEN = 3.0  # rough, on the safe side (Claude Haiku 5.5's tokenizer counts more tokens than older ones)
@@ -71,6 +77,8 @@ class Spec:
 def plan(mode: str, sonnet: bool) -> list[Spec]:
     if mode == "smoke":
         return [Spec(WORKED[0], WORKED[1], v, 0, settings.WRITER, budget=1) for v in ("H1", "H2")]
+    if mode == "batch_smoke":
+        return [Spec(WORKED[0], WORKED[1], v, BATCH_SMOKE_DRAW, settings.WRITER) for v in ("H1", "H2")]
     if mode == "naming":
         return [Spec(s, m, "H1", d, settings.WRITER, naming, budget=1)
                 for naming in NAMINGS for s in DATASETS for m in ("EBM", "XGB2") for d in range(NAMING_DRAWS)]  # fmt: skip
@@ -108,11 +116,12 @@ def stub_writer(contexts: dict[str, g.Context]):
 
 
 def uncertified_noise_claims(state: g.Run) -> int | None:
-    """In the run's first draft: claims about a noise feature that the verifier does not certify (None if the first
-    answer was not a draft)."""
-    if not state.versions:
+    """In the writer's first draft: claims about a noise feature that the verifier does not certify (None if the
+    writer gave no draft, e.g. an empty answer with no call left for the format retry: the run's text is the
+    template, which is not the writer's)."""
+    first = next((v for v in state.versions if v["source"] in ("proposer", "format retry")), None)
+    if first is None:
         return None
-    first = state.versions[0]
     return sum(1 for _, line, value, *_ in first["claims"] if value != "true" and any(f'"{n}"' in line for n in NOISE))
 
 
@@ -150,12 +159,13 @@ def main() -> None:
     mode.add_argument("--smoke", action="store_true")
     mode.add_argument("--live", action="store_true")
     mode.add_argument("--naming", action="store_true")
+    mode.add_argument("--batch-smoke", action="store_true")
     parser.add_argument("--sonnet", action="store_true")
-    parser.add_argument("--dry", action="store_true", help="--naming without network")
+    parser.add_argument("--dry", action="store_true", help="--naming or --batch-smoke without network")
     parser.add_argument("--keep", action="store_true", help="dry runs: keep the results")
     args = parser.parse_args()
-    name = "smoke" if args.smoke else "live" if args.live else "naming" if args.naming else "dry_run"
-    dry = name == "dry_run" or (args.naming and args.dry)
+    name = "smoke" if args.smoke else "live" if args.live else "naming" if args.naming else "batch_smoke" if args.batch_smoke else "dry_run"
+    dry = name == "dry_run" or ((args.naming or args.batch_smoke) and args.dry)
     specs = plan(name, args.sonnet)
 
     contexts, handovers = {}, {}
@@ -169,18 +179,21 @@ def main() -> None:
             raise SystemExit(f"{spec.run_id}: the readable form failed its check; fix it before any call")
         contexts[spec.run_id], handovers[spec.run_id] = g.Context(facts, certified, names), h.text
 
-    if dry:
-        scratch = Path(tempfile.mkdtemp(prefix="pilot_dry_"))
-        client = Client("stub", stub_writer(contexts), cache_dir=scratch / "cache")
-        out = RESULTS / prompts.VERSION / f"{name}_dry" if args.keep else scratch / "results"
+    scratch = Path(tempfile.mkdtemp(prefix="pilot_dry_")) if dry else None
+    out = (RESULTS / prompts.VERSION / f"{name}_dry" if args.keep else scratch / "results") if dry else RESULTS / prompts.VERSION / name
+    starts = {spec.run_id: g.start(spec.run_id, f"RUN: {spec.run_id}\n{handovers[spec.run_id]}" if dry else handovers[spec.run_id],
+                                   spec.writer, spec.draw, budget=spec.budget) for spec in specs}  # fmt: skip
+    if args.batch_smoke:
+        client = Client("batch", cache_dir=scratch / "cache") if dry else Client("batch")
+        api = batch.StubBatchAPI(stub_writer(contexts)) if dry else batch.BatchAPI()
+        jobs = {run_id: batch.Job(run, contexts[run_id], out / f"{run_id}.json") for run_id, run in starts.items()}
+        states = batch.run_waves(jobs, client, api, poll=0 if dry else batch.POLL_SECONDS)
     else:
-        client = Client("sync")
-        out = RESULTS / prompts.VERSION / name
+        client = Client("stub", stub_writer(contexts), cache_dir=scratch / "cache") if dry else Client("sync")
+        states = {run_id: g.run_sync(run, client, contexts[run_id], out / f"{run_id}.json") for run_id, run in starts.items()}
     rows = []
     for spec in specs:
-        text = f"RUN: {spec.run_id}\n{handovers[spec.run_id]}" if dry else handovers[spec.run_id]
-        state = g.start(spec.run_id, text, spec.writer, spec.draw, budget=spec.budget)
-        state = g.run_sync(state, client, contexts[spec.run_id], out / f"{spec.run_id}.json")
+        state = states[spec.run_id]
         rows.append({"run": spec.run_id, "naming": spec.naming, "exit": state.exit, "reason": state.reason, "calls": state.calls,
                      "rounds": state.rounds, "flagged": state.flagged, "noise_uncertified": uncertified_noise_claims(state),
                      "cost": round(state.cost, 5),
@@ -198,8 +211,10 @@ def main() -> None:
     if dry:
         per_call = table.input_tokens.sum() / table.calls.sum()
         live = sum(table.calls) * (per_call * settings.PRICES[settings.WRITER][0] + OUTPUT_TOKENS * settings.PRICES[settings.WRITER][1]) / 1e6
+        live *= settings.BATCH_DISCOUNT if args.batch_smoke else 1.0
         print(f"\nNo network: about {per_call:,.0f} input tokens per call. Live, these {sum(table.calls)} calls would cost "
-              f"about ${live:.2f} with {settings.WRITER} (no caching assumed); results in {out}")  # fmt: skip
+              f"about ${live:.4f} with {settings.WRITER}{' (batch price)' if args.batch_smoke else ''}, no caching assumed; "
+              f"results in {out}")  # fmt: skip
     else:
         print(f"\nTotal cost: ${table.cost.sum():.4f}; results in {out}")
 

@@ -12,7 +12,7 @@ mirror of a miss, the oracle false and the model true (the model certifies what 
 data misses, claims true in T that the oracle refutes.
 
 Run: `uv run python -m verifier_gate.experiments.acceptance_binding` (about 15 s, after build_facts). Writes
-results/acceptance/binding.csv (one row per dataset and claim) and binding_summary.csv.
+results/acceptance/<lexicon version>/binding.csv (one row per dataset and claim) and binding_summary.csv.
 """
 
 from pathlib import Path
@@ -46,12 +46,14 @@ def summarise(table: pd.DataFrame) -> pd.DataFrame:
 
 def main() -> None:
     lex = p.load()
-    assert lex.version == "v1", "the binding run uses the frozen lexicon (D24 as refined)"
+    assert lex.version != "v0", "the binding run uses the frozen lexicon (D24 as refined)"
     table = verdicts(SCENARIOS, lex)
     RESULTS.mkdir(parents=True, exist_ok=True)
-    table.to_csv(RESULTS / "binding.csv", index=False)
+    out = RESULTS / lex.version
+    out.mkdir(parents=True, exist_ok=True)
+    table.to_csv(out / "binding.csv", index=False)
     summary = summarise(table)
-    summary.to_csv(RESULTS / "binding_summary.csv")
+    summary.to_csv(out / "binding_summary.csv")
 
     pd.set_option("display.width", 250)
     pd.set_option("display.max_rows", 200)

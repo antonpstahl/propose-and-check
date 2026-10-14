@@ -7,7 +7,8 @@ stored in cache/llm/<key>.json, and every call, cached or not, is appended to th
 thinking, prompt hashes, stop reason, token use, request id, latency and cost.
 
 Transports: "stub" (no network; a responder function scripts the response: tests and dry runs) and "sync" (the
-Messages API: the smoke test and the pilot). The Batch API transport follows before E3 (§14.14).
+Messages API: the smoke test and the pilot). The Batch API (E3, the Sonnet subset) is driven by llm/batch.py, which
+stores each result through `store`, so a batched answer sits in the same cache and log as a synchronous one.
 
 Outcomes, in `Response.error`: "" (parsed JSON in `data`), "truncated" (stop_reason max_tokens: never parsed, a
 format error for the gate), "refusal" (D39: no fallback; the gate escalates), "invalid_json", "no_text", "api" (the
@@ -166,8 +167,8 @@ def interpret(request: Request, raw: Mapping, latency: float, cached: bool) -> R
 class Client:
     def __init__(self, transport: str = "stub", responder: Callable[[Request], Mapping] | None = None,
                  cache_dir: Path = CACHE, log_path: Path | None = None, max_retries: int = 3):  # fmt: skip
-        if transport not in ("stub", "sync"):
-            raise ValueError(f"transport is 'stub' or 'sync', not {transport!r}")
+        if transport not in ("stub", "sync", "batch"):
+            raise ValueError(f"transport is 'stub', 'sync' or 'batch', not {transport!r}")
         if transport == "stub" and responder is None:
             raise ValueError("stub mode needs a responder")
         self.transport, self.responder, self.max_retries = transport, responder, max_retries
@@ -176,21 +177,41 @@ class Client:
         self._sdk = None
 
     def call(self, request: Request) -> Response:
+        response = self.lookup(request)
+        if response is not None:
+            return response
+        if self.transport == "batch":
+            raise RuntimeError("a batch client answers from the cache only; llm/batch.py submits the rest")
+        start = time.monotonic()
+        raw = self.responder(request) if self.transport == "stub" else self._send(request)
+        latency = time.monotonic() - start
+        if raw is None:  # the API failed after the retries: not cached
+            return self.failed(request, latency, self.transport)
+        return self.store(request, raw, latency, self.transport)
+
+    def lookup(self, request: Request) -> Response | None:
+        """The cached answer to a request (logged as a cache hit), or None."""
         path = self.cache_dir / f"{request.key}.json"
-        if path.exists():
-            stored = json.loads(path.read_text())
-            response = interpret(request, stored["raw"], stored["latency"], cached=True)
-        else:
-            start = time.monotonic()
-            raw = self.responder(request) if self.transport == "stub" else self._send(request)
-            latency = time.monotonic() - start
-            if raw is None:  # the API failed after the retries: not cached
-                response = Response(request.key, request.role, request.model, "", "api", latency=latency)
-            else:
-                response = interpret(request, raw, latency, cached=False)
-                self.cache_dir.mkdir(parents=True, exist_ok=True)
-                path.write_text(json.dumps({"request": {**asdict(request), "messages": list(request.messages)}, "raw": dict(raw), "latency": latency}))
-        self._log(request, response)
+        if not path.exists():
+            return None
+        stored = json.loads(path.read_text())
+        response = interpret(request, stored["raw"], stored["latency"], cached=True)
+        self._log(request, response, self.transport)
+        return response
+
+    def store(self, request: Request, raw: Mapping, latency: float, transport: str) -> Response:
+        """Cache and log a new answer; a batched one carries `_batch` in its raw message and costs the batch price."""
+        response = interpret(request, raw, latency, cached=False)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        record = {"request": {**asdict(request), "messages": list(request.messages)}, "raw": dict(raw), "latency": latency}
+        (self.cache_dir / f"{request.key}.json").write_text(json.dumps(record))
+        self._log(request, response, transport)
+        return response
+
+    def failed(self, request: Request, latency: float, transport: str) -> Response:
+        """Log a call the API did not answer (not cached, so a rerun tries again); the "api" outcome."""
+        response = Response(request.key, request.role, request.model, "", "api", latency=latency)
+        self._log(request, response, transport)
         return response
 
     def _send(self, request: Request) -> dict | None:
@@ -211,9 +232,9 @@ class Client:
         raw["_request_id"] = message._request_id
         return raw
 
-    def _log(self, request: Request, response: Response) -> None:
+    def _log(self, request: Request, response: Response, transport: str) -> None:
         record = {
-            "time": time.strftime("%Y-%m-%dT%H:%M:%S"), "transport": self.transport, "key": request.key,
+            "time": time.strftime("%Y-%m-%dT%H:%M:%S"), "transport": transport, "key": request.key,
             "role": request.role, "model": request.model, "effort": request.effort, "thinking": request.thinking,
             "draw": request.draw, "system_hash": sha(request.system)[:16],
             "messages_hash": sha(json.dumps(request.messages))[:16], "stop_reason": response.stop_reason,

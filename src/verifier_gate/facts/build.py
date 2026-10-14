@@ -28,6 +28,7 @@ from verifier_gate.facts.steps import StepModel
 LEVEL = 0.95
 QUANTILES = (0.05, 0.95)  # low and high value of a feature, as for direction in the acceptance check
 POINTWISE_Z = 1.959963984540054
+MAX_DISTINCT = 128  # a feature with at most this many distinct values keeps them in its Facts (D42)
 
 
 def _representative(cuts: np.ndarray) -> np.ndarray:
@@ -124,6 +125,13 @@ def _estimate(value: float, draws: np.ndarray | None) -> Estimate:
     return Estimate(float(value), None if draws is None else percentile_band(draws))
 
 
+def observed_values(column) -> np.ndarray | None:
+    """The distinct values of a feature on the training sample, if there are at most MAX_DISTINCT (counts, codes,
+    amounts set in steps). A location between two of them cannot be resolved more finely on the data (D42)."""
+    values = np.unique(np.asarray(column, dtype=np.float64))
+    return values if len(values) <= MAX_DISTINCT else None
+
+
 def build_facts(reference: StepModel, X: pd.DataFrame, draws: Draws | None = None, model: Mapping | None = None) -> Facts:
     """Facts of M (reference) on its training sample X, with bands if draws are given."""
     frame = Frame.of(reference, X)
@@ -140,7 +148,7 @@ def build_facts(reference: StepModel, X: pd.DataFrame, draws: Draws | None = Non
             FeatureFacts(
                 f, term.cuts[0], term.scores, frame.counts[f] / n, pointwise, simultaneous, critical,
                 *(_estimate(own[k][f], pick(k, f)) for k in ("importance", "share", "rank")),
-                frame.low_high[f], _estimate(own["net_change"][f], pick("net_change", f)),
+                frame.low_high[f], _estimate(own["net_change"][f], pick("net_change", f)), observed_values(X[f]),
             )  # fmt: skip
         )
     pairs = []
