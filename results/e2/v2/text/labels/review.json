@@ -1,0 +1,1792 @@
+{
+ "L001": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"history_months\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"history_months\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ],
+   [
+    "rank(\"history_months\") in (4, 5)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "direction(\"history_months\") == \"decreasing\"",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L002": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ],
+   [
+    "rank(\"n_delinquencies\") == 2",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "threshold(\"n_delinquencies\", at=1)",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L003": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"history_months\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"moderate\"",
+    "true",
+    "",
+    "share band inside [5%, 15%) and the effect is detectable"
+   ],
+   [
+    "strength(\"history_months\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ],
+   [
+    "direction(\"income\") == \"decreasing\"",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "direction(\"history_months\") == \"decreasing\"",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L004": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") in (\"negligible\", \"weak\") -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") in (\"negligible\", \"weak\")",
+    "false",
+    "",
+    "share band outside [0%, 5%) and the effect is detectable"
+   ],
+   [
+    "direction(\"income\") == \"decreasing\"",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L005": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "threshold(\"n_delinquencies\", at=2) -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "threshold(\"n_delinquencies\", at=2)",
+    "false",
+    "",
+    ""
+   ],
+   [
+    "threshold(\"n_delinquencies\", at=1)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "share(\"n_delinquencies\") == approx(0.21)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "true",
+    "",
+    "share band inside [15%, inf%) and the effect is detectable"
+   ],
+   [
+    "effect(\"n_delinquencies\") > effect(\"income\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L006": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"history_months\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"history_months\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L007": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "interaction(\"income\", \"feature_b\", pattern=\"amplification\") -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"income\", \"feature_b\", pattern=\"none\")",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "interaction(\"income\", \"feature_b\", pattern=\"amplification\")",
+    "false",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L008": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "interaction(\"utilization\", \"income\", pattern=\"amplification\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"utilization\", \"income\", pattern=\"amplification\")",
+    "undecidable",
+    "insufficient_evidence",
+    ""
+   ],
+   [
+    "interaction(\"utilization\", \"income\", pattern=\"none\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L009": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ]
+  ]
+ },
+ "L010": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "'rises moderately' is not a lexicon phrase; read as strength 'moderate' it is false (31.7-46.3%, strong)",
+  "judgement call": true,
+  "claims": [
+   [
+    "strength(\"utilization\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ],
+   [
+    "rank(\"utilization\") == 1",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L011": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ],
+   [
+    "rank(\"dti\") == 5",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L012": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ],
+   [
+    "share(\"n_delinquencies\") == approx(0.21)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "threshold(\"n_delinquencies\", at=1)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "effect(\"n_delinquencies\") > effect(\"income\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L013": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "share(\"n_delinquencies\") == approx(0.16)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "threshold(\"n_delinquencies\", at=1)",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L014": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ],
+   [
+    "rank(\"income\") in (3, 4, 5)",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L015": {
+  "label": "error",
+  "pass1": "error",
+  "why": "direction(\"history_months\") == \"increasing\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "direction(\"history_months\") == \"increasing\"",
+    "false",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L016": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ],
+   [
+    "effect(\"dti\") > effect(\"n_inquiries\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L017": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L018": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ],
+   [
+    "effect(\"utilization\") > effect(\"n_delinquencies\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L019": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "rank(\"n_delinquencies\") in (2, 3)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "threshold(\"n_delinquencies\", at=1)",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L020": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") in (\"moderate\", \"strong\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") in (\"moderate\", \"strong\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [5%, inf%)"
+   ],
+   [
+    "rank(\"dti\") == 5",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L021": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L022": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") in (\"negligible\", \"weak\") -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") in (\"negligible\", \"weak\")",
+    "false",
+    "",
+    "share band outside [0%, 5%) and the effect is detectable"
+   ],
+   [
+    "direction(\"income\") in (\"decreasing\", \"mostly_decreasing\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L023": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_inquiries\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_inquiries\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L024": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L025": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_inquiries\") in (\"weak\", \"moderate\") -> undecidable; direction(\"n_inquiries\") == \"increasing\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_inquiries\") in (\"weak\", \"moderate\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [2%, 15%)"
+   ],
+   [
+    "direction(\"n_inquiries\") == \"increasing\"",
+    "undecidable",
+    "insufficient_evidence",
+    ""
+   ]
+  ]
+ },
+ "L026": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L027": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") in (\"weak\", \"moderate\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") in (\"weak\", \"moderate\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [2%, 15%)"
+   ]
+  ]
+ },
+ "L028": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "strength(\"months_at_address\") in (\"negligible\", \"weak\") -> undecidable; strength(\"age\") in (\"negligible\", \"weak\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"months_at_address\") in (\"negligible\", \"weak\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [0%, 5%)"
+   ],
+   [
+    "strength(\"age\") in (\"negligible\", \"weak\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [0%, 5%)"
+   ],
+   [
+    "negligible(\"n_inquiries\")",
+    "true",
+    "",
+    "no detectable effect, share below the weak class, a moderate effect ruled out"
+   ],
+   [
+    "negligible(\"num_dependents\")",
+    "true",
+    "",
+    "no detectable effect, share below the weak class, a moderate effect ruled out"
+   ]
+  ]
+ },
+ "L029": {
+  "label": "ok",
+  "pass1": "unsure",
+  "why": "only change: a stray '5.' at the start; content unchanged and supported",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") in (\"negligible\", \"weak\", \"moderate\")",
+    "true",
+    "",
+    "share band inside [0%, 15%)"
+   ],
+   [
+    "strength(\"dti\") in (\"negligible\", \"weak\", \"moderate\")",
+    "true",
+    "",
+    "share band inside [0%, 15%)"
+   ],
+   [
+    "strength(\"history_months\") in (\"negligible\", \"weak\", \"moderate\")",
+    "true",
+    "",
+    "share band inside [0%, 15%)"
+   ],
+   [
+    "direction(\"income\") in (\"decreasing\", \"mostly_decreasing\")",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "direction(\"history_months\") in (\"decreasing\", \"mostly_decreasing\")",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "direction(\"dti\") in (\"increasing\", \"mostly_increasing\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L030": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ]
+  ]
+ },
+ "L031": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "strength(\"dti\") == \"moderate\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"moderate\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "direction(\"dti\") == \"increasing\"",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L032": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L033": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "strength(\"dti\") == \"moderate\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"moderate\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ]
+  ]
+ },
+ "L034": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L035": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L036": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L037": {
+  "label": "ok",
+  "pass1": "ok",
+  "why": "'strong to moderate' is the same set as 'moderate to strong'; band 9.5-19.9% lies inside 5% and up",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") in (\"moderate\", \"strong\")",
+    "true",
+    "",
+    "share band inside [5%, inf%) and the effect is detectable"
+   ],
+   [
+    "rank(\"n_delinquencies\") in (2, 3)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "direction(\"n_delinquencies\") == \"increasing\"",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L038": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ],
+   [
+    "effect(\"n_delinquencies\") > effect(\"dti\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L039": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L040": {
+  "label": "error",
+  "pass1": "ok",
+  "why": "strength(\"num_dependents\") == \"weak\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"num_dependents\") == \"weak\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "negligible(\"num_dependents\")",
+    "true",
+    "",
+    "no detectable effect, share below the weak class, a moderate effect ruled out"
+   ],
+   [
+    "strength(\"age\") in (\"negligible\", \"weak\", \"moderate\")",
+    "true",
+    "",
+    "share band inside [0%, 15%)"
+   ],
+   [
+    "strength(\"months_at_address\") in (\"negligible\", \"weak\", \"moderate\")",
+    "true",
+    "",
+    "share band inside [0%, 15%)"
+   ],
+   [
+    "strength(\"n_inquiries\") in (\"negligible\", \"weak\")",
+    "true",
+    "",
+    "share band inside [0%, 5%)"
+   ]
+  ]
+ },
+ "L041": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L042": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L043": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ]
+  ]
+ },
+ "L044": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ]
+  ]
+ },
+ "L045": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L046": {
+  "label": "error",
+  "pass1": "error",
+  "why": "interaction(\"utilization\", \"history_months\", pattern=\"amplification\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"utilization\", \"history_months\", pattern=\"amplification\")",
+    "undecidable",
+    "insufficient_evidence",
+    ""
+   ],
+   [
+    "interaction(\"utilization\", \"n_delinquencies\", pattern=\"none\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L047": {
+  "label": "error",
+  "pass1": "ok",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "threshold(\"n_delinquencies\", at=1)",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L048": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"utilization\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"utilization\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L049": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_inquiries\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_inquiries\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L050": {
+  "label": "error",
+  "pass1": "error",
+  "why": "'shrinks' contradicts the facts: the effect of history grows with inquiries (amplification true: -0.16 at 0, -1.53 at 4)",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L051": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L052": {
+  "label": "error",
+  "pass1": "ok",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ]
+  ]
+ },
+ "L053": {
+  "label": "ok",
+  "pass1": "error",
+  "why": "'moderate to strong' is a set: true if the band (6.3-14.2%) lies inside 5% and up; vaguer than needed, not false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") in (\"moderate\", \"strong\")",
+    "true",
+    "",
+    "share band inside [5%, inf%) and the effect is detectable"
+   ],
+   [
+    "direction(\"income\") in (\"decreasing\", \"mostly_decreasing\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L054": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L055": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") in (\"moderate\", \"strong\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") in (\"moderate\", \"strong\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [5%, inf%)"
+   ]
+  ]
+ },
+ "L056": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L057": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") in (\"weak\", \"moderate\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") in (\"weak\", \"moderate\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [2%, 15%)"
+   ]
+  ]
+ },
+ "L058": {
+  "label": "error",
+  "pass1": "ok",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "effect(\"utilization\") > effect(\"n_delinquencies\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L059": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_inquiries\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_inquiries\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ],
+   [
+    "effect(\"n_inquiries\") > effect(\"feature_b\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L060": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ],
+   [
+    "effect(\"history_months\") > effect(\"dti\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L061": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ],
+   [
+    "effect(\"dti\") > effect(\"n_inquiries\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L062": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "interaction(\"utilization\", \"income\", pattern=\"amplification\") -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"utilization\", \"income\", pattern=\"amplification\")",
+    "false",
+    "",
+    ""
+   ],
+   [
+    "interaction(\"utilization\", \"income\", pattern=\"none\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L063": {
+  "label": "error",
+  "pass1": "error",
+  "why": "direction(\"dti\") == \"decreasing\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "direction(\"dti\") == \"decreasing\"",
+    "false",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L064": {
+  "label": "error",
+  "pass1": "error",
+  "why": "rank(\"n_delinquencies\") == 1 -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "rank(\"n_delinquencies\") == 1",
+    "false",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L065": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L066": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") in (\"weak\", \"moderate\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") in (\"weak\", \"moderate\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [2%, 15%)"
+   ]
+  ]
+ },
+ "L067": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") in (\"weak\", \"moderate\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") in (\"weak\", \"moderate\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [2%, 15%)"
+   ]
+  ]
+ },
+ "L068": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ]
+  ]
+ },
+ "L069": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"history_months\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"history_months\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L070": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"utilization\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"utilization\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L071": {
+  "label": "error",
+  "pass1": "error",
+  "why": "rank(\"n_delinquencies\") == 1 -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "rank(\"n_delinquencies\") == 1",
+    "false",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L072": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ]
+  ]
+ },
+ "L073": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ]
+  ]
+ },
+ "L074": {
+  "label": "ok",
+  "pass1": "unsure",
+  "why": "rewording only; both pairs pass the 'no interaction' rule (no detectable interaction, share < 2%, band < 5%)",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"utilization\", \"income\", pattern=\"none\")",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "interaction(\"utilization\", \"history_months\", pattern=\"none\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L075": {
+  "label": "error",
+  "pass1": "ok",
+  "why": "strength(\"dti\") == \"moderate\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"moderate\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ]
+  ]
+ },
+ "L076": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L077": {
+  "label": "error",
+  "pass1": "ok",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ]
+  ]
+ },
+ "L078": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L079": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") == \"strong\" -> false; strength(\"history_months\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ],
+   [
+    "strength(\"history_months\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L080": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L081": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") in (\"moderate\", \"strong\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") in (\"moderate\", \"strong\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [5%, inf%)"
+   ]
+  ]
+ },
+ "L082": {
+  "label": "error",
+  "pass1": "error",
+  "why": "'interact' contradicts the facts: 'no interaction' is true (pair share 0.0-1.7%)",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"utilization\", \"income\", pattern=\"none\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L083": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"income\") in (\"moderate\", \"strong\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") in (\"moderate\", \"strong\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [5%, inf%)"
+   ],
+   [
+    "effect(\"n_delinquencies\") > effect(\"income\")",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "effect(\"utilization\") > effect(\"income\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L084": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L085": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L086": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"utilization\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"utilization\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L087": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"utilization\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"utilization\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L088": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"utilization\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"utilization\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L089": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L090": {
+  "label": "ok",
+  "pass1": "ok",
+  "why": "both 'moderate' claims and both directions supported",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"income\") == \"moderate\"",
+    "true",
+    "",
+    "share band inside [5%, 15%) and the effect is detectable"
+   ],
+   [
+    "strength(\"history_months\") == \"moderate\"",
+    "true",
+    "",
+    "share band inside [5%, 15%) and the effect is detectable"
+   ],
+   [
+    "direction(\"income\") == \"decreasing\"",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "direction(\"history_months\") == \"decreasing\"",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L091": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L092": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_delinquencies\") in (\"weak\", \"moderate\") -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") in (\"weak\", \"moderate\")",
+    "undecidable",
+    "insufficient_evidence",
+    "share band not settled against [2%, 15%)"
+   ],
+   [
+    "threshold(\"n_delinquencies\", at=1)",
+    "true",
+    "",
+    ""
+   ],
+   [
+    "effect(\"n_delinquencies\") > effect(\"income\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L093": {
+  "label": "error",
+  "pass1": "error",
+  "why": "rank(\"n_delinquencies\") == 1 -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "rank(\"n_delinquencies\") == 1",
+    "false",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L094": {
+  "label": "error",
+  "pass1": "error",
+  "why": "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\") -> undecidable; strength(\"history_months & n_inquiries\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\")",
+    "undecidable",
+    "insufficient_evidence",
+    ""
+   ],
+   [
+    "strength(\"history_months & n_inquiries\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L095": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"history_months\") == \"weak\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"history_months\") == \"weak\"",
+    "false",
+    "",
+    "share band outside [2%, 5%)"
+   ]
+  ]
+ },
+ "L096": {
+  "label": "error",
+  "pass1": "ok",
+  "why": "strength(\"n_delinquencies\") == \"strong\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_delinquencies\") == \"strong\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "effect(\"utilization\") > effect(\"n_delinquencies\")",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L097": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"utilization\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"utilization\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ },
+ "L098": {
+  "label": "error",
+  "pass1": "unsure",
+  "why": "strength(\"dti\") == \"moderate\" -> undecidable",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"moderate\"",
+    "undecidable",
+    "insufficient_evidence",
+    "share band straddles a class edge"
+   ],
+   [
+    "rank(\"dti\") in (3, 4, 5, 6, 7, 8, 9)",
+    "true",
+    "",
+    ""
+   ]
+  ]
+ },
+ "L099": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"dti\") == \"strong\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"dti\") == \"strong\"",
+    "false",
+    "",
+    "share band outside [15%, inf%)"
+   ]
+  ]
+ },
+ "L100": {
+  "label": "error",
+  "pass1": "error",
+  "why": "strength(\"n_inquiries\") == \"moderate\" -> false",
+  "judgement call": false,
+  "claims": [
+   [
+    "strength(\"n_inquiries\") == \"moderate\"",
+    "false",
+    "",
+    "share band outside [5%, 15%)"
+   ]
+  ]
+ }
+}

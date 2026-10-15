@@ -23,7 +23,9 @@ turns undecidable abstains, reported apart). The readings are replicas 0 to 2, a
 the gate; no text here was read before.
 
 Run: `uv run python -m verifier_gate.experiments.e2_text [--dry | --estimate] [--script | --llm]`. Batched; stopping
-is safe, the same command resumes. Writes results/e2/<lexicon version>/text/: script.csv, llm.csv, summary.csv.
+is safe, the same command resumes. Writes results/e2/<lexicon version>/text/<extractor version>/: script.csv,
+llm.csv, summary.csv. `--compare` puts the summaries of all extractor versions on disk side by side
+(text/by_extractor.csv), from the CSVs alone. The LLM mutants always start from E3 as run (E3_SOURCE).
 """
 
 import argparse
@@ -58,6 +60,7 @@ MUTATION_SCHEMA = json.dumps(
     {"type": "object", "properties": {"sentence_id": {"type": "integer"}, "sentence": {"type": "string"}, "claim": {"type": "string"}},
      "required": ["sentence_id", "sentence", "claim"], "additionalProperties": False}, sort_keys=True)  # fmt: skip
 RESULTS = Path(__file__).parents[3] / "results" / "e2"
+E3_SOURCE = "v3-x3"  # E3 as run: writer prompts v3, extractor x3 (plan §14.16)
 PILOT = ("syn-dominant-n50000-s1", "syn-none-n5000-s1")
 COST = {"extractor": 0.00038, "mutator": 0.00097}  # synchronous USD per call, measured in the pilot (§14.15)
 
@@ -148,7 +151,7 @@ def mutator_request(facts_text: str, sentences: list, draw: int = 0) -> Request:
 def released_texts(arm: str = "haiku") -> list[dict]:
     """E3's texts released by the writer (RELEASED and RELEASED_REDUCED), outside the pilot datasets."""
     out = []
-    for path in sorted((E3_RESULTS / f"{prompts.VERSION}-{prompts.EXTRACTOR_VERSION}" / arm / "runs").glob("*.json")):
+    for path in sorted((E3_RESULTS / E3_SOURCE / arm / "runs").glob("*.json")):
         run = json.loads(path.read_text())
         scenario, model, variant, draw, writer, naming = run["run_id"].split("_")
         if run["exit"] in (g.RELEASED, g.RELEASED_REDUCED) and scenario not in PILOT:
@@ -261,8 +264,10 @@ def summarise(table: pd.DataFrame) -> pd.DataFrame:
             rows.append({"source": "control texts", "group": "all", "texts": len(part), "false alarms": int(part.caught.sum()),
                          "false-alarm rate": round(float(part.caught.mean()), 3)})  # fmt: skip
             continue
-        keys = ["operator"] if source == "script" else ["writer"]
-        for key, sub in [("all", part)] + list(part.groupby(keys[0])):
+        groups = [("all", part)] + list(part.groupby("operator" if source == "script" else "writer"))
+        if source == "script":  # M9 by the kind of claim the invented feature takes over
+            groups += [(f"M9 {v}", sub) for v, sub in part[part.operator == "M9"].groupby("variant")]
+        for key, sub in groups:
             errors, controls = sub[sub.role == "error"], sub[sub.role == "control"]
             rows.append({"source": source, "group": key, "errors": len(errors),
                          "recall": round(float(errors.caught.mean()), 3) if len(errors) else float("nan"),
@@ -272,6 +277,17 @@ def summarise(table: pd.DataFrame) -> pd.DataFrame:
                          "controls abstained": int((controls.undecidable & ~controls.refuted).sum()) if len(controls) else 0,
                          "equivalent": int((sub.role == "equivalent").sum()), "other": int((~sub.role.isin(["error", "control", "equivalent"])).sum())})  # fmt: skip
     return pd.DataFrame(rows)
+
+
+def compare_versions(base: Path) -> pd.DataFrame:
+    """The script mutants' recall and the control texts' false alarms for every extractor version under `base`,
+    recomputed from each version's script.csv."""
+    rows = []
+    for path in sorted(base.glob("x*/script.csv")):
+        summary = summarise(pd.read_csv(path))
+        summary.insert(0, "extractor", path.parent.name)
+        rows.append(summary)
+    return pd.concat(rows, ignore_index=True)
 
 
 # --- running ----------------------------------------------------------------------------------------------
@@ -299,8 +315,15 @@ def main() -> None:
     parser.add_argument("--estimate", action="store_true", help="count the texts and estimate the cost, no network")
     parser.add_argument("--script", action="store_true", help="only the script mutants")
     parser.add_argument("--llm", action="store_true", help="only the LLM mutants")
+    parser.add_argument("--compare", action="store_true", help="the extractor versions on disk side by side, no network")
     args = parser.parse_args()
     lex = p.load()
+    if args.compare:
+        table = compare_versions(RESULTS / lex.version / "text")
+        table.to_csv(RESULTS / lex.version / "text" / "by_extractor.csv", index=False)
+        pd.set_option("display.width", 250)
+        print(table[table.source != "llm"].to_string(index=False))
+        return
     both = not (args.script or args.llm)
     scenarios = dgp.SCENARIOS[:2] if args.dry else dgp.SCENARIOS
     script = script_cases(scenarios, lex) if (both or args.script) else []
@@ -327,7 +350,7 @@ def main() -> None:
         out = scratch / "results"
     else:
         client, api, poll = Client("batch"), batch.BatchAPI(), batch.POLL_SECONDS
-        out = RESULTS / lex.version / "text"
+        out = RESULTS / lex.version / "text" / prompts.EXTRACTOR_VERSION
     cases = list(script)
     if texts:
         ctxs: dict = {}

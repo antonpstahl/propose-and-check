@@ -13,6 +13,9 @@ HISTORY keeps each earlier version's hashes; its text is in git history.
 The extractor's prompts (week 6, §5.7) are versioned and frozen apart from the writer's: extract_system.md (role,
 rules, the answer format), whose DSL section is the writer's table and DSL rules taken from system.md, so both read
 the words the same way; and extract.md (the features and the text). EXTRACTOR_VERSION; frozen_extractor.json.
+x3 (frozen 15 Oct) ran E3 and the first text-level E2; x4 (15 Oct, after text-level E2, plan §14.17) writes a
+statement about a feature the list does not have as a claim with the text's name, so that the verifier finds the
+term unknown, where x3 filed it as content without a DSL form (M9: 36% caught). EXTRACTOR_HISTORY keeps x3's hashes.
 """
 
 import hashlib
@@ -26,7 +29,13 @@ FROZEN = HERE / "frozen.json"
 VERSION = "v3"
 EXTRACTOR_NAMES = ("extract_system", "extract")
 FROZEN_EXTRACTOR = HERE / "frozen_extractor.json"
-EXTRACTOR_VERSION = "x3"  # x1, x2: the round-trip pilot runs in results/pilot/v3/live_x1/, live_x2/ (plan §14.15)
+EXTRACTOR_VERSION = "x4"  # x1, x2: the round-trip pilot runs in results/pilot/v3/live_x1/, live_x2/ (plan §14.15)
+EXTRACTOR_HISTORY = {
+    "x3": {
+        "extract_system": "55b93253eeba587e88bc1c1aebf4759e1a46b4c66baa3540bac6b1cb192cb127",
+        "extract": "1fb9d7d60625c4d412f19100c9dae3191f9713f30871292772bc81bdf3bac65a",
+    },
+}
 HISTORY = {
     "v2": {
         "system": "1d0ef6ad39ae0fa38faeded63764400b03f7a8202be677c5258d833fe3090363",

@@ -1,0 +1,502 @@
+{
+ "L001": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:10:03.522Z"
+ },
+ "L002": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:11:23.854Z"
+ },
+ "L003": {
+  "label": "error",
+  "note": "Income has a moderate effect, and credit history also has a moderate effect and the risk decrease is true but negligible",
+  "at": "2026-10-15T14:15:03.503Z"
+ },
+ "L004": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:15:47.605Z"
+ },
+ "L005": {
+  "label": "unsure",
+  "note": "I mean its true but saying more than one or >=2 would be more accurate right?",
+  "at": "2026-10-15T14:18:18.950Z"
+ },
+ "L006": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:19:04.168Z"
+ },
+ "L007": {
+  "label": "unsure",
+  "note": "What would you say about something like if feature interaction importance of feature y x feature x is less important than feature x or feature y alone so that one would consider only the features not their interaction? Other than that idk man",
+  "at": "2026-10-15T14:23:06.588Z"
+ },
+ "L008": {
+  "label": "unsure",
+  "note": "I mean its true but same thing here, due to the emphasis on the interaction of utilization and income which is at most weak and more negligible the importance of utilization which is rank 1 and income which is also important sound neglected",
+  "at": "2026-10-15T14:24:47.376Z"
+ },
+ "L009": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:25:07.669Z"
+ },
+ "L010": {
+  "label": "unsure",
+  "note": "i mean how is moderately defined but i feel like it rises pretty strong right?",
+  "at": "2026-10-15T14:27:05.701Z"
+ },
+ "L011": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:27:38.745Z"
+ },
+ "L012": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:33:46.533Z"
+ },
+ "L013": {
+  "label": "unsure",
+  "note": "more than one",
+  "at": "2026-10-15T14:34:42.318Z"
+ },
+ "L014": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:35:16.442Z"
+ },
+ "L015": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:35:35.525Z"
+ },
+ "L016": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:36:00.917Z"
+ },
+ "L017": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:36:32.621Z"
+ },
+ "L018": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:37:59.978Z"
+ },
+ "L019": {
+  "label": "unsure",
+  "note": "",
+  "at": "2026-10-15T14:38:23.880Z"
+ },
+ "L020": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:38:29.451Z"
+ },
+ "L021": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:38:37.975Z"
+ },
+ "L022": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:38:41.880Z"
+ },
+ "L023": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:38:48.971Z"
+ },
+ "L024": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:38:53.979Z"
+ },
+ "L025": {
+  "label": "error",
+  "note": "i dont understand, before it was about feature a and b this was negligible and now its about n_inquiries?",
+  "at": "2026-10-15T14:40:24.466Z"
+ },
+ "L026": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:40:28.454Z"
+ },
+ "L027": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:40:31.954Z"
+ },
+ "L028": {
+  "label": "unsure",
+  "note": "",
+  "at": "2026-10-15T14:41:38.542Z"
+ },
+ "L029": {
+  "label": "unsure",
+  "note": "",
+  "at": "2026-10-15T14:42:13.858Z"
+ },
+ "L030": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:42:23.972Z"
+ },
+ "L031": {
+  "label": "unsure",
+  "note": "",
+  "at": "2026-10-15T14:42:35.222Z"
+ },
+ "L032": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:42:59.175Z"
+ },
+ "L033": {
+  "label": "unsure",
+  "note": "i mean before was better",
+  "at": "2026-10-15T14:43:23.066Z"
+ },
+ "L034": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:43:42.477Z"
+ },
+ "L035": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:43:48.783Z"
+ },
+ "L036": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:44:08.866Z"
+ },
+ "L037": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T14:44:44.996Z"
+ },
+ "L038": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:45:01.361Z"
+ },
+ "L039": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:45:06.703Z"
+ },
+ "L040": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T14:45:43.143Z"
+ },
+ "L041": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:46:03.895Z"
+ },
+ "L042": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:46:25.585Z"
+ },
+ "L043": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:46:29.618Z"
+ },
+ "L044": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:46:33.753Z"
+ },
+ "L045": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:46:38.924Z"
+ },
+ "L046": {
+  "label": "error",
+  "note": "This doesnt make sense... There is no interaction but its effect grows? how can something grow that doesnt exist?",
+  "at": "2026-10-15T14:47:47.434Z"
+ },
+ "L047": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T14:48:23.394Z"
+ },
+ "L048": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:49:33.772Z"
+ },
+ "L049": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:49:49.882Z"
+ },
+ "L050": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:53:12.821Z"
+ },
+ "L051": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:54:30.883Z"
+ },
+ "L052": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T14:54:51.083Z"
+ },
+ "L053": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:55:08.533Z"
+ },
+ "L054": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:57:27.987Z"
+ },
+ "L055": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:57:35.134Z"
+ },
+ "L056": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:57:36.787Z"
+ },
+ "L057": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:57:40.911Z"
+ },
+ "L058": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T14:58:19.888Z"
+ },
+ "L059": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:58:28.296Z"
+ },
+ "L060": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:58:33.216Z"
+ },
+ "L061": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T14:58:36.169Z"
+ },
+ "L062": {
+  "label": "unsure",
+  "note": "I dont get it the interaction doesnt really matter",
+  "at": "2026-10-15T14:59:51.186Z"
+ },
+ "L063": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:01:28.564Z"
+ },
+ "L064": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:01:42.881Z"
+ },
+ "L065": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:01:48.714Z"
+ },
+ "L066": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:02:00.673Z"
+ },
+ "L067": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:02:06.731Z"
+ },
+ "L068": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:02:21.272Z"
+ },
+ "L069": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:02:27.897Z"
+ },
+ "L070": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:02:36.851Z"
+ },
+ "L071": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:02:43.474Z"
+ },
+ "L072": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:02:58.805Z"
+ },
+ "L073": {
+  "label": "unsure",
+  "note": "",
+  "at": "2026-10-15T15:03:13.422Z"
+ },
+ "L074": {
+  "label": "unsure",
+  "note": "",
+  "at": "2026-10-15T15:03:27.713Z"
+ },
+ "L075": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T15:03:48.413Z"
+ },
+ "L076": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:04:12.751Z"
+ },
+ "L077": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T15:04:42.505Z"
+ },
+ "L078": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:04:52.517Z"
+ },
+ "L079": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:05:03.659Z"
+ },
+ "L080": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:05:06.076Z"
+ },
+ "L081": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:05:08.410Z"
+ },
+ "L082": {
+  "label": "error",
+  "note": "this doesnt make any sense right?",
+  "at": "2026-10-15T15:05:51.110Z"
+ },
+ "L083": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:06:00.821Z"
+ },
+ "L084": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:06:06.213Z"
+ },
+ "L085": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:06:16.954Z"
+ },
+ "L086": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:06:50.762Z"
+ },
+ "L087": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:06:59.487Z"
+ },
+ "L088": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:07:02.429Z"
+ },
+ "L089": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:07:05.023Z"
+ },
+ "L090": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T15:07:28.745Z"
+ },
+ "L091": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:07:36.887Z"
+ },
+ "L092": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:07:45.745Z"
+ },
+ "L093": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:07:50.261Z"
+ },
+ "L094": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:08:05.474Z"
+ },
+ "L095": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:08:15.920Z"
+ },
+ "L096": {
+  "label": "ok",
+  "note": "",
+  "at": "2026-10-15T15:08:47.225Z"
+ },
+ "L097": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:08:54.020Z"
+ },
+ "L098": {
+  "label": "unsure",
+  "note": "I mean technically yes but saying something matters less than the first to implicates third when in reality it is 3rd to 6th which is very broad",
+  "at": "2026-10-15T15:10:04.411Z"
+ },
+ "L099": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:10:11.836Z"
+ },
+ "L100": {
+  "label": "error",
+  "note": "",
+  "at": "2026-10-15T15:10:15.820Z"
+ }
+}

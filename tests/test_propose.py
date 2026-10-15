@@ -95,3 +95,10 @@ def test_the_handover_shows_every_feature_under_its_writer_name_and_passes_its_c
     assert h2.text.startswith(h1.text)
     assert 'rank("utilization") == 1' in h2.text
     assert np.isclose(len(h1.text), len(handover(facts, X, "H1", plan).text))  # deterministic
+
+
+def test_each_extractor_version_in_the_history_differs_from_the_current_one():
+    current = prompts.hashes(prompts.EXTRACTOR_NAMES)
+    assert prompts.EXTRACTOR_VERSION not in prompts.EXTRACTOR_HISTORY
+    for version, hashes in prompts.EXTRACTOR_HISTORY.items():
+        assert hashes != current, version

@@ -1,0 +1,471 @@
+<title>E2 Mutant Labels</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout: a two-column reading desk. The sentence and the three labels on the left, the facts as a reference sheet on the right; one column on phones. */
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --ink: #17202c; --ink-2: #485366; --ink-3: #6f7a8c; --rule: #dbe0e8;
+  --accent: #2a5b89; --accent-soft: #e3ecf5; --mark: #ffe48a; --mark-ink: #17202c; --del: #8a93a3;
+  --err: #b3261e; --err-soft: #f9e3e1; --ok: #2c7a4d; --ok-soft: #e0f1e7; --unsure: #8f6200; --unsure-soft: #f6ecd6;
+  --zone-1: #eef1f5; --zone-2: #e5e9ef; --zone-3: #dbe0e8; --zone-4: #d0d7e1;
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-read: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --step--1: 0.8125rem; --step-0: 0.9375rem; --step-1: 1.125rem; --step-2: 1.375rem;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --ink-2: #aeb6c3; --ink-3: #848d9d; --rule: #2b3340;
+  --accent: #82b2df; --accent-soft: #1f2d3d; --mark: #5a4914; --mark-ink: #fff2c2; --del: #7c8596;
+  --err: #f0877e; --err-soft: #3a1f1d; --ok: #6cc394; --ok-soft: #17301f; --unsure: #e0b44f; --unsure-soft: #352a12;
+  --zone-1: #1e252f; --zone-2: #242c37; --zone-3: #2b3440; --zone-4: #333d4a; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --ink-2: #aeb6c3; --ink-3: #848d9d; --rule: #2b3340;
+  --accent: #82b2df; --accent-soft: #1f2d3d; --mark: #5a4914; --mark-ink: #fff2c2; --del: #7c8596;
+  --err: #f0877e; --err-soft: #3a1f1d; --ok: #6cc394; --ok-soft: #17301f; --unsure: #e0b44f; --unsure-soft: #352a12;
+  --zone-1: #1e252f; --zone-2: #242c37; --zone-3: #2b3440; --zone-4: #333d4a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 var(--step-0)/1.5 var(--font-ui); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 18px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font: 600 var(--step-2)/1.2 var(--font-ui); letter-spacing: -0.01em; }
+h2 { font: 600 var(--step--1)/1.3 var(--font-ui); text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); }
+.mono { font-family: var(--font-mono); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
+.sub { color: var(--ink-2); max-width: 68ch; margin: 4px 0 0; }
+.tally { display: flex; flex-wrap: wrap; gap: 6px 16px; font-variant-numeric: tabular-nums; color: var(--ink-2); font-size: var(--step--1); }
+.tally b { color: var(--ink); font-weight: 600; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
+
+.guide { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+.guide summary { padding: 10px 14px; font-weight: 600; cursor: pointer; }
+.guide .body { padding: 0 14px 14px; display: grid; gap: 8px; max-width: 80ch; color: var(--ink-2); }
+.guide p { margin: 0; }
+.guide dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; }
+.guide dt { font-weight: 600; color: var(--ink); }
+.guide dd { margin: 0; }
+kbd { font: 500 0.75rem/1 var(--font-mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 2px 5px; background: var(--bg); color: var(--ink-2); }
+
+.strip { display: flex; flex-wrap: wrap; gap: 3px; }
+.cell { width: 20px; height: 20px; border-radius: 3px; border: 1px solid var(--rule); background: var(--surface); padding: 0; }
+.cell[data-l="error"] { background: var(--err); border-color: var(--err); }
+.cell[data-l="ok"] { background: var(--ok); border-color: var(--ok); }
+.cell[data-l="unsure"] { background: var(--unsure); border-color: var(--unsure); }
+.cell[aria-current="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+
+main { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 920px) { main { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.item-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.item-id { font: 500 var(--step-1)/1 var(--font-mono); }
+.meta { color: var(--ink-3); font-size: var(--step--1); }
+
+.pair { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.tag { font: 600 0.6875rem/1.4 var(--font-ui); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+.sent { margin: 0; font: 400 var(--step-1)/1.55 var(--font-read); }
+.sent.before { color: var(--ink-2); }
+.sent del { color: var(--del); text-decoration-thickness: 1.5px; }
+.sent mark { background: var(--mark); color: var(--mark-ink); border-radius: 2px; padding: 0 1px; }
+
+.question { margin: 0; font-weight: 600; }
+.labels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.lab { border: 1.5px solid var(--rule); background: var(--surface); border-radius: 8px; padding: 10px 8px; display: grid; gap: 2px; justify-items: center; }
+.lab .name { font-weight: 600; }
+.lab .hint { font-size: 0.75rem; color: var(--ink-3); }
+.lab[data-v="error"][aria-pressed="true"] { border-color: var(--err); background: var(--err-soft); color: var(--err); }
+.lab[data-v="ok"][aria-pressed="true"] { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.lab[data-v="unsure"][aria-pressed="true"] { border-color: var(--unsure); background: var(--unsure-soft); color: var(--unsure); }
+.lab:hover { border-color: var(--ink-3); }
+label.note { display: grid; gap: 4px; font-size: var(--step--1); color: var(--ink-2); }
+textarea { font: 400 var(--step-0)/1.45 var(--font-ui); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; min-height: 3.2rem; resize: vertical; width: 100%; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 1px solid var(--rule); background: var(--surface); border-radius: 6px; padding: 6px 12px; font-size: var(--step--1); }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+details.more > summary { cursor: pointer; color: var(--accent); font-size: var(--step--1); font-weight: 500; }
+details.more[open] > summary { margin-bottom: 8px; }
+ol.text { margin: 0; padding-left: 1.6rem; display: grid; gap: 6px; font: 400 var(--step-0)/1.5 var(--font-read); color: var(--ink-2); }
+ol.text li.changed { color: var(--ink); }
+ol.text li.changed::marker { color: var(--accent); font-weight: 600; }
+
+.facts { display: grid; gap: 12px; }
+.block { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); min-width: 0; }
+.block:last-child { border-bottom: 0; padding-bottom: 0; }
+.fname { font: 500 var(--step-0)/1.35 var(--font-mono); }
+.fdesc { color: var(--ink-2); font-size: var(--step--1); }
+.fline { font-size: var(--step--1); color: var(--ink); font-variant-numeric: tabular-nums; }
+.curve { font: 400 0.75rem/1.5 var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.band { width: 100%; max-width: 360px; height: auto; display: block; }
+.band .z1 { fill: var(--zone-1); } .band .z2 { fill: var(--zone-2); } .band .z3 { fill: var(--zone-3); } .band .z4 { fill: var(--zone-4); }
+.band text { fill: var(--ink-3); font: 500 8.5px var(--font-ui); }
+.band .bar { fill: var(--accent); } .band .pt { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+.head-note { color: var(--ink-2); font-size: var(--step--1); margin: 0; }
+.key { overflow-x: auto; }
+.key table { border-collapse: collapse; font-size: 0.8125rem; min-width: 520px; }
+.key th, .key td { text-align: left; vertical-align: top; padding: 5px 8px; border-bottom: 1px solid var(--rule); }
+.key th { color: var(--ink-3); font-weight: 600; }
+.key td:first-child { font-family: var(--font-read); }
+.rules { margin: 8px 0 0; padding-left: 1.2rem; display: grid; gap: 4px; font-size: 0.8125rem; color: var(--ink-2); }
+
+footer.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; font-size: var(--step--1); color: var(--ink-2); }
+.status::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--ink-3); vertical-align: 1px; }
+.status[data-s="saved"]::before { background: var(--ok); }
+.status[data-s="saving"]::before { background: var(--accent); }
+.status[data-s="local"]::before, .status[data-s="failed"]::before { background: var(--unsure); }
+.status[data-s="readonly"]::before { background: var(--ink-3); }
+#copybox { width: 100%; min-height: 6rem; font: 400 0.75rem/1.4 var(--font-mono); }
+@media (prefers-reduced-motion: no-preference) { .lab, .cell, .btn { transition: background-color .12s, border-color .12s, color .12s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>E2 Mutant Labels</h1>
+      <p class="sub">100 sentences that Claude Haiku 5.5 rewrote in explanations the gate had released (E3, extractor x3). Label each one against the facts alone.</p>
+    </div>
+    <div class="tally" id="tally" aria-live="polite"></div>
+  </header>
+
+  <details class="guide" id="guide" open>
+    <summary>How to label</summary>
+    <div class="body">
+      <p>Judge the <b>new</b> sentence as a whole, against the facts on the right and the word meanings in the key. The facts are the ones the mutator saw (handover H1). The gate's verdict and the mutator's own label are not on this page.</p>
+      <dl>
+        <dt>Error</dt><dd>It says something false about the model, or more than the facts support: a class word the share band does not fit, a rank or a location the facts do not give, a hedge on something the bands settle.</dd>
+        <dt>No error</dt><dd>Everything it says is supported by the facts, even if it is vaguer than before or only reworded.</dd>
+        <dt>Unsure</dt><dd>You cannot tell from these facts. Add a note if you can say why.</dd>
+      </dl>
+      <p>Keys: <kbd>E</kbd> error, <kbd>N</kbd> no error, <kbd>U</kbd> unsure (each moves to the next item), <kbd>←</kbd> <kbd>→</kbd> previous and next. Labels save as you go.</p>
+    </div>
+  </details>
+
+  <nav class="strip" id="strip" aria-label="Items"></nav>
+
+  <main>
+    <section class="panel" aria-labelledby="item-id">
+      <div class="item-head">
+        <span class="item-id" id="item-id">L001</span>
+        <span class="meta" id="item-meta"></span>
+      </div>
+      <div class="pair">
+        <div class="row"><span class="tag">Before</span><p class="sent before" id="before"></p></div>
+        <div class="row"><span class="tag">After</span><p class="sent" id="after"></p></div>
+      </div>
+      <p class="question">Does the new sentence say something the facts do not support?</p>
+      <div class="labels" role="group" aria-label="Label">
+        <button class="lab" data-v="error" aria-pressed="false" id="lab-error"><span class="name">Error</span><span class="hint">key E</span></button>
+        <button class="lab" data-v="ok" aria-pressed="false" id="lab-ok"><span class="name">No error</span><span class="hint">key N</span></button>
+        <button class="lab" data-v="unsure" aria-pressed="false" id="lab-unsure"><span class="name">Unsure</span><span class="hint">key U</span></button>
+      </div>
+      <label class="note" for="note">Note (optional)
+        <textarea id="note" placeholder="Why, or what you would want checked"></textarea>
+      </label>
+      <div class="nav">
+        <button class="btn" id="prev">← Previous</button>
+        <button class="btn" id="next">Next →</button>
+        <button class="btn primary" id="next-open">Next unlabelled</button>
+      </div>
+      <details class="more" id="whole">
+        <summary>Whole text after the change</summary>
+        <ol class="text" id="text"></ol>
+      </details>
+    </section>
+
+    <section class="panel" aria-label="Facts">
+      <h2>Facts for the features named</h2>
+      <div class="facts" id="facts-named"></div>
+      <details class="more">
+        <summary>All other facts about this model</summary>
+        <div class="facts" id="facts-other"></div>
+      </details>
+      <details class="more">
+        <summary>About this model</summary>
+        <p class="head-note" id="head"></p>
+      </details>
+      <details class="more" id="keybox">
+        <summary>What the words mean</summary>
+        <div class="key">
+          <table>
+            <thead><tr><th>Words in the text</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>a strong / moderate / weak effect</td><td>share at least 15% / 5% to 15% / 2% to 5%, and an effect the data can detect</td></tr>
+              <tr><td>a weak to moderate, a moderate to strong effect</td><td>the share lies somewhere in the classes named</td></tr>
+              <tr><td>at most a weak effect, a small effect</td><td>share below 5%</td></tr>
+              <tr><td>hardly matters, negligible</td><td>share below 2%, or no detectable effect and a small share</td></tr>
+              <tr><td>the most important, the second most important</td><td>rank among the features by importance</td></tr>
+              <tr><td>second or third, among the three most important</td><td>one of consecutive ranks</td></tr>
+              <tr><td>about 30% of the importance</td><td>share within 2 points or 10%</td></tr>
+              <tr><td>matters more than</td><td>x's importance exceeds y's</td></tr>
+              <tr><td>risk increases / decreases with x</td><td>rises from the 5th to the 95th percentile, with no reversal the data can detect</td></tr>
+              <tr><td>risk mostly increases with x</td><td>rises overall, with a detected reversal on at most 10% of the data</td></tr>
+              <tr><td>risk generally increases with x</td><td>either of the two above</td></tr>
+              <tr><td>risk jumps at x = 0.43</td><td>one sharp step near that value, at least half of the curve's range</td></tr>
+              <tr><td>risk peaks at x = 36</td><td>the highest point of the curve lies near that value, lower on both sides</td></tr>
+              <tr><td>the effect of x grows with y</td><td>the effect of x is larger when y is high</td></tr>
+              <tr><td>the effect of x reverses with y</td><td>the effect of x has opposite signs at low and high y</td></tr>
+              <tr><td>x and y do not interact</td><td>no interaction of practical size: the pair's share band below 2%, or no detectable interaction with a share below 2% and a band below 5%</td></tr>
+              <tr><td>the data do not settle whether …</td><td>the facts leave that claim open at this sample size</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="rules">
+          <li>A word is right only if the whole 95% band supports it. A share band that crosses 2%, 5% or 15% takes a two-class phrase.</li>
+          <li>"Hardly matters" needs a band below 2%, or below 5% with no movement resolved.</li>
+          <li>A single rank only if the facts give one; "rank 3 to 4" is "third or fourth".</li>
+          <li>Increases or decreases needs a net-change band on one side of zero and no piece moving the other way.</li>
+          <li>A hedge on something a band settles is wrong: it should state the answer.</li>
+        </ul>
+      </details>
+    </section>
+  </main>
+
+  <footer class="bar">
+    <span class="status" id="status" data-s="connecting">Connecting to the label store…</span>
+    <span class="nav">
+      <button class="btn" id="copy">Copy labels as JSON</button>
+    </span>
+    <textarea id="copybox" hidden readonly aria-label="Labels as JSON"></textarea>
+  </footer>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const ITEMS = DATA.items;
+  const LOCAL_KEY = "e2-mutant-labels";
+  const $ = (id) => document.getElementById(id);
+  const state = { idx: 0, labels: {}, db: null, canWrite: true, queue: {}, noteTimer: null };
+
+  try { state.labels = JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}") || {}; } catch { state.labels = {}; }
+  try { if (localStorage.getItem("e2-guide-closed") === "1") $("guide").open = false; } catch {}
+  $("guide").addEventListener("toggle", () => { try { localStorage.setItem("e2-guide-closed", $("guide").open ? "0" : "1"); } catch {} });
+
+  const saveLocal = () => { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(state.labels)); } catch {} };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const labelOf = (id) => (state.labels[id] && state.labels[id].label) || null;
+
+  function setStatus(s, text) { const el = $("status"); el.dataset.s = s; el.textContent = text; }
+
+  // word diff (LCS on words): marks removed words in the old sentence, inserted words in the new one
+  function diff(a, b) {
+    const ta = a.split(/(\s+)/), tb = b.split(/(\s+)/);
+    const n = ta.length, m = tb.length, L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+      L[i][j] = ta[i] === tb[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    let i = 0, j = 0, outA = "", outB = "";
+    const wrap = (tok, tag) => /^\s+$/.test(tok) ? tok : `<${tag}>${esc(tok)}</${tag}>`;
+    while (i < n && j < m) {
+      if (ta[i] === tb[j]) { outA += esc(ta[i]); outB += esc(tb[j]); i++; j++; }
+      else if (L[i + 1][j] >= L[i][j + 1]) { outA += wrap(ta[i], "del"); i++; }
+      else { outB += wrap(tb[j], "mark"); j++; }
+    }
+    while (i < n) outA += wrap(ta[i++], "del");
+    while (j < m) outB += wrap(tb[j++], "mark");
+    return [outA.replace(/<\/del>(\s+)<del>/g, "$1"), outB.replace(/<\/mark>(\s+)<mark>/g, "$1")];
+  }
+
+  // a share band against the lexicon's class edges (2%, 5%, 15%); each class gets its own stretch of the axis
+  const EDGES = [[0, 0], [2, 60], [5, 120], [15, 200], [50, 300]];
+  function x(v) {
+    v = Math.max(0, Math.min(50, v));
+    for (let k = 1; k < EDGES.length; k++) {
+      const [v0, x0] = EDGES[k - 1], [v1, x1] = EDGES[k];
+      if (v <= v1) return x0 + (v - v0) / (v1 - v0) * (x1 - x0);
+    }
+    return 300;
+  }
+  function bandSvg(pt, lo, hi) {
+    const zones = [["z1", 0, 60, "negligible"], ["z2", 60, 120, "weak"], ["z3", 120, 200, "moderate"], ["z4", 200, 300, "strong"]];
+    const z = zones.map(([c, a, b, t]) => `<rect class="${c}" x="${a}" y="0" width="${b - a - 1}" height="30" rx="2"/><text x="${a + 4}" y="10">${t}</text>`).join("");
+    const ticks = [[2, 60], [5, 120], [15, 200]].map(([v, px]) => `<text x="${px}" y="40" text-anchor="middle">${v}%</text>`).join("");
+    const w = Math.max(3, x(hi) - x(lo));
+    return `<svg class="band" viewBox="0 0 300 42" role="img" aria-label="Share ${pt}%, 95% band ${lo}% to ${hi}%">` +
+      `<title>Share ${pt}% (95% band ${lo}% to ${hi}%)</title>${z}${ticks}` +
+      `<rect class="bar" x="${x(lo)}" y="17" width="${w}" height="6" rx="3"/><circle class="pt" cx="${x(pt)}" cy="20" r="4.5"/></svg>`;
+  }
+
+  const SHARE = /share of importance ([\d.]+)% \(95% band ([\d.]+)% to ([\d.]+)%\)/i;
+  function blockHtml(b) {
+    const [first, ...rest] = b.lines;
+    let html = "";
+    if (b.names.length) {
+      const m = first.match(/^`([^`]+)`:\s*(.*)$/);
+      html += `<div class="fname">${esc(m ? m[1] : first)}</div>`;
+      if (m && m[2]) {
+        const sm = m[2].match(SHARE);
+        if (sm) html += `<div class="fline">${esc(m[2].replace(/`/g, ""))}</div>${bandSvg(+sm[1], +sm[2], +sm[3])}`;
+        else html += `<div class="fdesc">${esc(m[2].replace(/`/g, ""))}</div>`;
+      }
+    } else {
+      html += `<div class="fdesc">${esc(first.replace(/`/g, ""))}</div>`;
+    }
+    for (const line of rest) {
+      const clean = line.replace(/`/g, "");
+      const sm = clean.match(SHARE);
+      if (/^Curve/.test(clean) || /^Effect of/.test(clean)) html += `<div class="curve">${esc(clean)}</div>`;
+      else html += `<div class="fline">${esc(clean)}</div>` + (sm ? bandSvg(+sm[1], +sm[2], +sm[3]) : "");
+    }
+    return `<div class="block">${html}</div>`;
+  }
+
+  function renderStrip() {
+    const strip = $("strip");
+    if (!strip.childElementCount) {
+      ITEMS.forEach((it, k) => {
+        const b = document.createElement("button");
+        b.className = "cell"; b.id = "cell-" + it.id; b.title = it.id;
+        b.addEventListener("click", () => go(k));
+        strip.appendChild(b);
+      });
+    }
+    ITEMS.forEach((it, k) => {
+      const b = strip.children[k], l = labelOf(it.id);
+      if (l) b.dataset.l = l; else delete b.dataset.l;
+      b.setAttribute("aria-current", k === state.idx ? "true" : "false");
+      b.setAttribute("aria-label", `${it.id}, ${l ? ({ error: "error", ok: "no error", unsure: "unsure" })[l] : "not labelled"}`);
+    });
+  }
+
+  function renderTally() {
+    const counts = { error: 0, ok: 0, unsure: 0 };
+    ITEMS.forEach((it) => { const l = labelOf(it.id); if (l) counts[l]++; });
+    const done = counts.error + counts.ok + counts.unsure;
+    $("tally").innerHTML = `<span><b>${done}</b> / ${ITEMS.length} labelled</span>` +
+      `<span><i class="dot" style="background:var(--err)"></i>${counts.error} error</span>` +
+      `<span><i class="dot" style="background:var(--ok)"></i>${counts.ok} no error</span>` +
+      `<span><i class="dot" style="background:var(--unsure)"></i>${counts.unsure} unsure</span>`;
+  }
+
+  function renderItem() {
+    const it = ITEMS[state.idx], f = DATA.facts[it.facts];
+    const n = (f.head.match(/\(([\d,]+) applicants\)/) || [])[1];
+    const model = it.facts.split("_")[1];
+    $("item-id").textContent = it.id;
+    $("item-meta").textContent = `${model} · ${n ? n + " applicants" : ""} · sentence ${it.sentences.findIndex((s) => s[0] === it.changed) + 1} of ${it.sentences.length} changed`;
+    const [a, b] = diff(it.before, it.after);
+    $("before").innerHTML = a; $("after").innerHTML = b;
+    $("text").innerHTML = it.sentences.map(([sid, s]) => `<li class="${sid === it.changed ? "changed" : ""}">${esc(s)}</li>`).join("");
+    const named = new Set(it.named);
+    const isNamed = (bl) => bl.names.length && (bl.names.length === 1 ? named.has(bl.names[0]) : bl.names.every((x) => named.has(x)));
+    const mine = f.blocks.filter(isNamed), other = f.blocks.filter((bl) => !isNamed(bl));
+    $("facts-named").innerHTML = mine.length ? mine.map(blockHtml).join("") : `<p class="head-note">No feature name was recognised in these sentences; see all facts below.</p>`;
+    $("facts-other").innerHTML = other.map(blockHtml).join("");
+    $("head").textContent = f.head;
+    const l = labelOf(it.id);
+    document.querySelectorAll(".lab").forEach((el) => { el.setAttribute("aria-pressed", el.dataset.v === l ? "true" : "false"); el.disabled = !state.canWrite; });
+    const note = $("note");
+    if (document.activeElement !== note) note.value = (state.labels[it.id] && state.labels[it.id].note) || "";
+    note.readOnly = !state.canWrite;
+    renderStrip(); renderTally();
+  }
+
+  function go(k) {
+    flushNote();
+    state.idx = (k + ITEMS.length) % ITEMS.length;
+    renderItem();
+    try { localStorage.setItem("e2-idx", String(state.idx)); } catch {}
+  }
+  const nextOpen = () => {
+    for (let s = 1; s <= ITEMS.length; s++) { const k = (state.idx + s) % ITEMS.length; if (!labelOf(ITEMS[k].id)) return go(k); }
+    go(state.idx + 1);
+  };
+
+  function write(id) {
+    const body = { label: (state.labels[id] && state.labels[id].label) || null, note: (state.labels[id] && state.labels[id].note) || "", at: new Date().toISOString() };
+    state.labels[id] = { ...state.labels[id], at: body.at };
+    saveLocal();
+    if (!state.db) return;
+    setStatus("saving", "Saving…");
+    const run = () => state.db.doc("labels/" + id).set(body).then(
+      () => setStatus("saved", `Saved to the label store (${id})`),
+      (e) => setStatus("failed", `Not saved to the store (${e && e.code ? e.code : "error"}); kept in this browser. Use Copy labels as JSON.`));
+    state.queue[id] = (state.queue[id] || Promise.resolve()).then(run, run);
+  }
+
+  function setLabel(v) {
+    if (!state.canWrite) return;
+    const id = ITEMS[state.idx].id;
+    state.labels[id] = { ...(state.labels[id] || {}), label: v, note: $("note").value.trim() };
+    write(id);
+    renderItem();
+    setTimeout(() => nextOpen(), 220);
+  }
+
+  function flushNote() {
+    if (!state.noteTimer) return;
+    clearTimeout(state.noteTimer); state.noteTimer = null;
+    const id = ITEMS[state.idx].id, text = $("note").value.trim();
+    if (((state.labels[id] && state.labels[id].note) || "") === text) return;
+    state.labels[id] = { ...(state.labels[id] || {}), note: text };
+    write(id);
+  }
+  $("note").addEventListener("input", () => { clearTimeout(state.noteTimer); state.noteTimer = setTimeout(flushNote, 900); });
+  $("note").addEventListener("blur", flushNote);
+
+  document.querySelectorAll(".lab").forEach((el) => el.addEventListener("click", () => setLabel(el.dataset.v)));
+  $("prev").addEventListener("click", () => go(state.idx - 1));
+  $("next").addEventListener("click", () => go(state.idx + 1));
+  $("next-open").addEventListener("click", nextOpen);
+  document.addEventListener("keydown", (e) => {
+    if (e.target.closest && e.target.closest("textarea, input")) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key.toLowerCase();
+    if (k === "e") setLabel("error");
+    else if (k === "n") setLabel("ok");
+    else if (k === "u") setLabel("unsure");
+    else if (k === "arrowright") go(state.idx + 1);
+    else if (k === "arrowleft") go(state.idx - 1);
+    else return;
+    e.preventDefault();
+  });
+
+  $("copy").addEventListener("click", () => {
+    const text = JSON.stringify(state.labels, null, 1);
+    const box = $("copybox");
+    const show = () => { box.hidden = false; box.value = text; box.select(); };
+    try { navigator.clipboard.writeText(text).then(() => setStatus($("status").dataset.s, "Labels copied as JSON"), show); } catch { show(); }
+  });
+
+  // start at the remembered item, else the first unlabelled one
+  let start = ITEMS.findIndex((it) => !labelOf(it.id));
+  try { const saved = parseInt(localStorage.getItem("e2-idx"), 10); if (saved >= 0 && saved < ITEMS.length) start = saved; } catch {}
+  state.idx = Math.max(0, start);
+  renderItem();
+
+  (async () => {
+    const use = window.claude && window.claude.use;
+    const db = use ? await window.claude.use("db") : null;
+    if (!db) { setStatus("local", "Label store unavailable here: labels are kept in this browser. Use Copy labels as JSON."); return; }
+    const user = await window.claude.use("user");
+    const owner = user ? await user.isOwner() : true;
+    if (!owner) {
+      state.canWrite = false;
+      setStatus("readonly", "Read only: only the page's owner labels.");
+    }
+    let first = true;
+    db.collection("labels").onSnapshot((snap) => {
+      const remote = {};
+      snap.docs.forEach((d) => { const v = d.data(); if (v) remote[d.id] = { label: v.label || null, note: v.note || "", at: v.at || "" }; });
+      const pending = first && state.canWrite ? Object.keys(state.labels).filter((id) => state.labels[id].label && (!remote[id] || (state.labels[id].at || "") > (remote[id].at || ""))) : [];
+      for (const id of Object.keys(remote)) if (!state.labels[id] || (remote[id].at || "") >= (state.labels[id].at || "")) state.labels[id] = remote[id];
+      saveLocal();
+      if (first) {
+        first = false; state.db = state.canWrite ? db : null;
+        if (state.canWrite) setStatus("saved", `Connected: ${Object.keys(remote).length} label(s) in the store`);
+        pending.forEach(write);
+      }
+      renderItem();
+    }, (e) => { state.db = null; setStatus("failed", `Label store stopped (${e.code}); labels are kept in this browser.`); });
+  })();
+})();
+</script>
