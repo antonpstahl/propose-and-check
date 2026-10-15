@@ -109,7 +109,8 @@ class Run:
     reason: str = ""
     flagged: bool = False
     roundtrip: str = "not run"
-    cost: float = 0.0
+    cost: float = 0.0  # the trace's cost: every call it used, at its price when made, also if served from the cache
+    spent: float = 0.0  # what this execution paid: the calls not served from the cache (§14.14 review item 5)
     usage: dict = field(default_factory=dict)
     events: list[str] = field(default_factory=list)
 
@@ -373,7 +374,8 @@ def advance(run: Run, response: Response | list[Response], ctx: Context) -> Run:
         raise ValueError(f"run {run.run_id}: the answers are not for the pending requests")
     for answer in responses:
         run.calls += 1
-        run.cost += answer.cost if not answer.cached else 0.0
+        run.cost += answer.cost
+        run.spent += 0.0 if answer.cached else answer.cost
         for k, v in answer.usage.items():
             if isinstance(v, (int, float)):
                 run.usage[k] = run.usage.get(k, 0) + v

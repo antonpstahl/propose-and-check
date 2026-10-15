@@ -220,7 +220,7 @@ def main() -> None:
         state = states[spec.run_id]
         rows.append({"run": spec.run_id, "naming": spec.naming, "exit": state.exit, "reason": state.reason, "calls": state.calls,
                      "rounds": state.rounds, "flagged": state.flagged, "noise_uncertified": uncertified_noise_claims(state),
-                     "cost": round(state.cost, 5),
+                     "cost": round(state.cost, 5), "spent": round(state.spent, 5),
                      **{k: state.usage.get(k, 0) for k in ("input_tokens", "output_tokens", "cache_read_input_tokens")}})  # fmt: skip
     table = pd.DataFrame(rows)
     out.mkdir(parents=True, exist_ok=True)
@@ -240,7 +240,7 @@ def main() -> None:
               f"about ${live:.4f} with {settings.WRITER}{' (batch price)' if args.batch_smoke else ''}, no caching assumed; "
               f"results in {out}")  # fmt: skip
     else:
-        print(f"\nTotal cost: ${table.cost.sum():.4f}; results in {out}")
+        print(f"\nPaid now: ${table.spent.sum():.4f} (the traces cost ${table.cost.sum():.4f} when made); results in {out}")
 
 
 if __name__ == "__main__":

@@ -107,7 +107,8 @@ def test_a_rerun_is_answered_from_the_cache(ctx, good, wrong, tmp_path):
     api = batch.StubBatchAPI(lambda r: pytest.fail("no request may be sent"))
     again = batch.run_waves(jobs(ctx), client, api, poll=0, log=lambda *_: None)
     assert not api.batches and {n: r.exit for n, r in again.items()} == {n: r.exit for n, r in first.items()}
-    assert all(r.cost == 0 for r in again.values())  # cached: nothing paid this time
+    assert all(r.spent == 0 for r in again.values())  # cached: nothing paid this time
+    assert all(first[n].cost > 0 and again[n].cost == pytest.approx(first[n].cost) for n in first)  # the traces cost the same
 
 
 def test_a_stopped_process_resumes_its_open_wave(ctx, good, tmp_path):
