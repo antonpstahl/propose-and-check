@@ -1,0 +1,13 @@
+run,naming,exit,reason,calls,rounds,flagged,noise_uncertified,cost,input_tokens,output_tokens,cache_read_input_tokens
+syn-dominant-n50000-s1_EBM_H1_d0_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 1 repair round(s),6,1,False,1,0.0,12701,4488,8412
+syn-dominant-n50000-s1_EBM_H2_d0_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 1 repair round(s),9,1,False,0,0.00039,14349,6675,22107
+syn-dominant-n50000-s1_XGB2_H1_d0_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 1 repair round(s),5,1,False,1,0.0,10129,3570,14085
+syn-dominant-n50000-s1_XGB2_H2_d0_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 0 repair round(s),4,0,False,0,0.0,7451,4649,11151
+syn-none-n5000-s1_EBM_H1_d0_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 2 repair round(s),9,2,False,0,0.0,13957,5273,25236
+syn-none-n5000-s1_EBM_H2_d0_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 0 repair round(s),4,0,False,0,0.0,5320,3393,11151
+syn-none-n5000-s1_XGB2_H1_d0_claude-haiku-5-5_plausible,plausible,TEMPLATE,template text from the certified facts,11,2,False,1,0.00065,18608,6775,30714
+syn-none-n5000-s1_XGB2_H2_d0_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 1 repair round(s),8,1,False,0,0.0,13247,6284,22302
+syn-dominant-n50000-s1_XGB2_H2_d1_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 2 repair round(s),9,2,False,0,0.0,25061,8452,25236
+syn-dominant-n50000-s1_XGB2_H2_d2_claude-haiku-5-5_plausible,plausible,RELEASED,passed after 0 repair round(s),5,0,False,0,0.0004,7805,3416,13890
+syn-dominant-n50000-s1_XGB2_H2_d0_claude-sonnet-5-5_plausible,plausible,RELEASED,passed after 0 repair round(s),5,0,False,0,0.00043,7729,3337,10956
+syn-none-n5000-s1_XGB2_H2_d0_claude-sonnet-5-5_plausible,plausible,RELEASED,passed after 0 repair round(s),4,0,False,0,0.0,5771,3033,11151

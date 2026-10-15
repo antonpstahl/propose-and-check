@@ -10,11 +10,13 @@ Plan check: every claim is verified on M. A claim fails if its verdict is not tr
 reason (D30: never released as stated). A DSL line that does not parse fails too. Coverage (§5.7) must pass; a
 top-3 term covered only by hedges raises the limited-evidence flag (released, marked for a reviewer).
 
-Round trip (week 6, §5.7, gate/roundtrip.py): a text whose plan passes is read by the extractor three times, in
-one step (three pending requests). A statement the text makes beyond its plan that the verifier does not certify,
-or an opening sentence that leads with a minor term, fails like a failing claim: a repair round, or the drop step.
+Round trip (week 6, §5.7, gate/roundtrip.py; D43-D45): a text whose plan passes is read by the extractor three
+times, in one step (three pending requests). A statement the text makes beyond its plan that the verifier does not
+certify, a number in content no DSL form expresses, a required term the text itself does not cover, or an opening sentence
+that leads with a minor term fails like a failing claim: a repair round, or the drop step.
 After dropping sentences the reduced text gets one round trip (emphasis not checked) and never a repair round;
-if it fails, the template. Fewer than two readable extractions is a round trip that could not run: the template.
+if it fails, the template. An extraction that is not a reading (no valid JSON, or a sentence left out) is retried
+once; fewer than two readings after that is a round trip that could not run: the template.
 The template is not round-tripped: its sentences are fixed phrases of its claims. `Context.roundtrip` False skips
 the round trip (the first-draft checks of the pilot, whose budget is one call).
 
@@ -98,6 +100,7 @@ class Run:
     extracting: list[dict] = field(default_factory=list)  # the extractor requests waiting for their answers
     checking: dict | None = None  # the version whose text is being extracted
     checking_mode: str = ""  # "draft" or "reduced"
+    readings: list[dict] = field(default_factory=list)  # the usable extractions of the text being checked, as JSON
     writer: dict | None = None  # the last writer request answered: a repair continues its conversation
     candidate: dict | None = None  # a version waiting for its format-only retry
     versions: list[dict] = field(default_factory=list)
@@ -205,6 +208,11 @@ def text_problems(trip: rt.RoundTrip, ctx: Context) -> str:
         why = f" ({reason})" if reason else ""
         lines.append(text["text_beyond_claims"].format(sentence=sentence_id, claim=_shown(line, ctx), value=value, why=why,
                                                        evidence=evidence, advice=_advice(line, ctx)))  # fmt: skip
+    for sentence_id, statements in trip.numbers:
+        lines.append(text["unexpressed"].format(sentence=sentence_id, statements="; ".join(f'"{s}"' for s in statements)))
+    for term in trip.missing:
+        names = " & ".join(f"`{labels.shown(t.strip(), ctx.names)}`" for t in term.split("&"))
+        lines.append(text["missing_in_text"].format(names=names))
     for sentence_id, minor, strong in trip.emphasis:
         listed = ", ".join(f"`{labels.shown(k, ctx.names)}` ({shares[k]:.1%})" for k in minor)
         named = ", ".join(f"`{labels.shown(k, ctx.names)}`" for k in strong)
@@ -223,7 +231,7 @@ def _end(run: Run, exit_state: str, reason: str, version: Version | None = None)
         if version.roundtrip is not None:
             run.roundtrip = "passed" if exit_state in (RELEASED, RELEASED_REDUCED) else "failed"
     run.events.append(f"{exit_state}: {reason}")
-    run.extracting, run.checking, run.checking_mode = [], None, ""
+    run.extracting, run.checking, run.checking_mode, run.readings = [], None, "", []
     return _pending(run, None)
 
 
@@ -238,6 +246,9 @@ def _template(run: Run, ctx: Context) -> Run:
 def _reduce(run: Run, version: Version, ctx: Context, why: str, drop: set[int] | None = None) -> Run:
     run.events.append(f"stop repairing: {why}")
     drop = version.failing_sentences() if drop is None else drop
+    if not drop:  # the failure is in no single sentence (a term the text does not cover): dropping cannot fix it
+        run.events.append("nothing to drop")
+        return _template(run, ctx)
     keep = [s for s in version.sentences if s[0] not in drop]
     if not keep:
         return _template(run, ctx)
@@ -266,7 +277,7 @@ def _roundtrip(run: Run, version: Version, ctx: Context, mode: str) -> Run:
         return _template(run, ctx)
     features = extract.features_text(ctx.facts, ctx.names, ctx.descriptions)
     draw = run.writer["draw"] if run.writer else 0
-    run.checking, run.checking_mode = asdict(version), mode
+    run.checking, run.checking_mode, run.readings = asdict(version), mode, []
     run.extracting = [asdict(extract.extractor_request(version.sentences, features, draw, k)) for k in range(extract.EXTRACTIONS)]
     run.events.append(f"round trip of the {'draft' if mode == 'draft' else 'reduced text'}: {extract.EXTRACTIONS} extractions")
     return _pending(run, None)
@@ -274,22 +285,27 @@ def _roundtrip(run: Run, version: Version, ctx: Context, mode: str) -> Run:
 
 def _round_trip_answered(run: Run, responses: list[Response], ctx: Context) -> Run:
     version, mode = Version(**run.checking), run.checking_mode
-    run.checking, run.checking_mode, run.extracting = None, "", []
     ids = {i for i, _ in version.sentences}
-    readings = []
-    for response in responses:
-        if response.error:
-            continue
+    retries = []
+    for request, response in zip(run.requests(), responses):
         try:
-            readings.append(extract.extraction_from(response, ids, ctx.names))
+            extract.extraction_from(response, ids, ctx.names)
+            run.readings.append(response.data)
         except (ValueError, KeyError, TypeError):
-            continue
+            if request.attempt == 0:
+                retries.append(Request(**{**asdict(request), "messages": request.messages, "attempt": 1}))
+    if retries and run.calls + len(retries) <= run.budget:
+        run.extracting = [asdict(r) for r in retries]
+        run.events.append(f"extraction retry: {len(retries)} answer(s) not a reading")
+        return run
+    readings = [extract.extraction_from(data, ids, ctx.names) for data in run.readings]
+    run.checking, run.checking_mode, run.extracting, run.readings = None, "", [], []
     if len(readings) < rt.EXTRACTED:
         run.versions.append(asdict(version))
         run.events.append(f"round trip could not run: {len(readings)} readable extraction(s)")
         return _template(run, ctx)
     plan = [parse(line, sentence_id=sid) for sid, line, *_ in version.claims]
-    trip = rt.compare(readings, plan, [i for i, _ in version.sentences], ctx.facts, check_emphasis=mode == "draft")
+    trip = rt.compare(readings, plan, [i for i, _ in version.sentences], ctx.facts, ctx.certified, check_emphasis=mode == "draft")
     version.roundtrip = asdict(trip)
     if trip.passed:
         return _release(run, version, mode)
@@ -298,7 +314,7 @@ def _round_trip_answered(run: Run, responses: list[Response], ctx: Context) -> R
         run.events.append("the reduced text failed its round trip")
         return _template(run, ctx)
     failing = problem_keys([line for _, line, value, *_ in trip.unplanned if value != TRUE], ctx)
-    failing |= {key for key in trip.failures() if key.startswith("emphasis:")}
+    failing |= {key for key in trip.failures() if key.split(":")[0] in ("emphasis", "unchecked number", "not covered by the text")}
     repeated = failing & set(run.failed_before)
     drop = trip.failing_sentences()
     if repeated:

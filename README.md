@@ -22,7 +22,7 @@ src/verifier_gate/
                  per term: correct plans for E2, later H2 and the template)
   llm/           settings.py (models, thinking, prices), client.py (disk cache, call log, stub mode, retries),
                  batch.py (Batch API transport: waves, resumable),
-                 handover.py (H1, H2), prompts/ (writer: system, propose, repair, advice, v3; extractor: extract_system, extract, x1; frozen after their pilot), propose.py,
+                 handover.py (H1, H2), prompts/ (writer: system, propose, repair, advice, v3; extractor: extract_system, extract, x3; both frozen and hash-tested), propose.py,
                  extract.py (the extractor: the text into DSL claims, three readings)
   gate/          draft.py, roundtrip.py (coverage; the comparison of text and plan; emphasis), advice.py (repair advice; the no-progress key), template.py (phrases
                  and the template text), gate.py (the state machine: repair loop, stop rules, exit states; resumable)
@@ -67,7 +67,7 @@ uv run python -m verifier_gate.experiments.acceptance_binding  # seconds, after 
 uv run python -m verifier_gate.experiments.e2_mutation         # seconds, after build_facts (plan level)
 uv run python -m verifier_gate.experiments.pilot               # dry run, no network, $0
 uv run python -m verifier_gate.experiments.pilot --smoke       # 2 live calls (needs ANTHROPIC_API_KEY), < $0.01
-uv run python -m verifier_gate.experiments.pilot --live        # the 10 pilot traces, about $0.01-0.05
+uv run python -m verifier_gate.experiments.pilot --live        # the 10 pilot traces with the round trip (--sonnet: +2), about $0.03-0.10 uncached
 uv run python -m verifier_gate.experiments.pilot --naming      # the naming check (D41), 40 first drafts, about $0.03
 uv run python -m verifier_gate.experiments.pilot --batch-smoke # Batch API test: 2 runs in waves, < $0.01 (--dry: $0)
 uv run python notebooks/02_root_cause.py                       # about 1.5 hours (--quick: 2 minutes)

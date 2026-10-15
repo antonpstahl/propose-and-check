@@ -82,13 +82,37 @@ def test_a_true_statement_beyond_the_plan_passes(ctx, draft):
     assert trip.passed
 
 
-def test_plan_claims_the_text_does_not_state_and_content_no_form_expresses_are_flagged(ctx, draft):
+def test_a_plan_claim_the_text_does_not_state_is_flagged(ctx, draft):
     lines = [(c.sentence_id, str(c)) for c in draft.claims]
-    dropped = lines[0]
-    gap = {draft.ids()[1]: ["risk rises steeply"]}
-    trip = rt.compare([reading(lines[1:], gap), reading(lines[1:], gap), reading(lines[1:])], draft.claims, draft.ids(), ctx.facts)
+    dropped = next(line for line in lines if parse(line[1]).kind == "negligible")  # not needed for coverage
+    rest = [line for line in lines if line != dropped]
+    trip = rt.compare([reading(rest)] * 3, draft.claims, draft.ids(), ctx.facts, ctx.certified)
     assert trip.passed and [dropped[0], rt.canonical(parse(dropped[1]))] in trip.plan_only
-    assert trip.gap == [[draft.ids()[1], ["risk rises steeply"]]]
+
+
+def test_content_no_dsl_form_expresses_is_flagged_and_fails_only_with_a_number(ctx, draft):
+    """D44 (b) as revised after the round-trip pilot: a number no claim can check is not released as stated; other
+    content without a DSL form (an intensity word, a paraphrase) is the expressivity gap, flagged and counted."""
+    lines = [(c.sentence_id, str(c)) for c in draft.claims]
+    sid = draft.ids()[1]
+    words = {sid: ["risk rises steeply"]}
+    flagged = rt.compare([reading(lines, words), reading(lines, words), reading(lines)], draft.claims, draft.ids(), ctx.facts, ctx.certified)
+    assert flagged.passed and flagged.gap == [[sid, ["risk rises steeply"]]] and not flagged.numbers
+    number = {sid: ["the largest drop above about $84,000"]}
+    blocked = rt.compare([reading(lines, number), reading(lines, number), reading(lines)], draft.claims, draft.ids(), ctx.facts, ctx.certified)
+    assert not blocked.passed and blocked.numbers == [[sid, ["the largest drop above about $84,000"]]] and blocked.failing_sentences() == {sid}
+    once = rt.compare([reading(lines, number), reading(lines), reading(lines)], draft.claims, draft.ids(), ctx.facts, ctx.certified)
+    assert once.passed
+
+
+def test_coverage_counts_only_what_the_text_states(ctx, draft):
+    """D44 (a): a top term covered only by plan claims the extractor does not find in the text is not covered."""
+    top = sorted(rt.required_terms(ctx.facts), key=len)[0]
+    lines = [(c.sentence_id, str(c)) for c in draft.claims]
+    unstated = [line for line in lines if top & set().union(*rt.claim_terms(parse(line[1])))]
+    rest = [line for line in lines if line not in unstated]
+    trip = rt.compare([reading(rest)] * 3, draft.claims, draft.ids(), ctx.facts, ctx.certified)
+    assert " & ".join(sorted(top)) in trip.missing and not trip.passed and not trip.failing_sentences()
 
 
 def test_an_opening_sentence_that_leads_with_a_minor_term_fails_emphasis(ctx):
@@ -96,9 +120,9 @@ def test_an_opening_sentence_that_leads_with_a_minor_term_fails_emphasis(ctx):
     lines = [(c.sentence_id, str(c)) for c in plan]
     trip = rt.compare([reading(lines)] * 3, plan, [1, 2], ctx.facts)
     assert trip.emphasis and trip.emphasis[0][0] == 1 and "noise_1" in trip.emphasis[0][1] and "utilization" in trip.emphasis[0][2]
-    assert rt.compare([reading(lines)] * 3, plan, [1, 2], ctx.facts, check_emphasis=False).passed
+    assert not rt.compare([reading(lines)] * 3, plan, [1, 2], ctx.facts, check_emphasis=False).emphasis
     both = [parse('rank("utilization") == 1', sentence_id=1), parse('negligible("noise_1")', sentence_id=1)]
-    assert rt.compare([reading([(1, str(c)) for c in both])] * 3, both, [1], ctx.facts).passed
+    assert not rt.compare([reading([(1, str(c)) for c in both])] * 3, both, [1], ctx.facts).emphasis
 
 
 # --- the gate's round trip --------------------------------------------------------------------------------
@@ -145,9 +169,48 @@ def test_a_sentence_that_says_more_than_its_claims_is_repaired(ctx, draft, tmp_p
 
 
 def test_the_repair_message_for_a_text_names_the_sentence_and_asks_to_change_it(ctx, draft):
-    trip = rt.RoundTrip(3, unplanned=[[99, 'strength("income") == "strong"', FALSE, "", "", "share 0.1"]])
+    trip = rt.RoundTrip(3, unplanned=[[99, 'strength("income") == "strong"', FALSE, "", "", "share 0.1"]],
+                        gap=[[4, ["above about $84,000"]], [5, ["risk rises steeply"]]], numbers=[[4, ["above about $84,000"]]],
+                        missing=["noise_1"])  # fmt: skip
     message = g.text_problems(trip, ctx)
     assert "Sentence 99 says more than its claims" in message and "Change the sentence itself" in message
+    assert 'Sentence 4 states a number that no claim form can check' in message and "steeply" not in message
+    assert "`months_at_address`" in message and "not in the sentences" in message  # in the writer's names
+
+
+def test_a_failure_in_no_single_sentence_ends_in_the_template_when_repairs_end(ctx, draft, tmp_path):
+    """A top term the text never states cannot be fixed by dropping sentences."""
+    top = sorted(rt.required_terms(ctx.facts), key=len)[0]
+    answers = []
+
+    def respond(request):
+        if request.role == "extractor":
+            data = faithful_reading(request, answers)
+            for sentence in data["sentences"]:
+                sentence["claims"] = [line for line in sentence["claims"] if not top & set().union(*rt.claim_terms(labels.internal(parse(line))))]
+            return stub_message(data)
+        answers.append(answer(draft))
+        return stub_message(answers[-1])
+
+    result = run(ctx, tmp_path, respond)
+    assert result.exit == g.TEMPLATE and any("no progress" in e for e in result.events) and any("nothing to drop" in e for e in result.events)
+
+
+def test_an_answer_that_leaves_out_sentences_is_retried_once(ctx, draft, tmp_path):
+    """Seen in the round-trip pilot: valid JSON with one empty entry, about 8% of the extractor's answers."""
+    answers = []
+
+    def respond(request):
+        if request.role == "extractor":
+            if request.replica == 0 and request.attempt == 0:
+                return stub_message({"sentences": [{"id": 1, "claims": [], "unexpressed": []}]})
+            return stub_message(faithful_reading(request, answers))
+        answers.append(answer(draft))
+        return stub_message(answers[-1])
+
+    result = run(ctx, tmp_path, respond)
+    assert result.exit == g.RELEASED and result.calls == 1 + EXTRACTIONS + 1
+    assert any("extraction retry: 1" in e for e in result.events) and result.versions[-1]["roundtrip"]["readings"] == EXTRACTIONS
 
 
 def test_too_few_readable_extractions_end_in_the_template(ctx, draft, tmp_path):

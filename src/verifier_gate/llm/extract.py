@@ -5,7 +5,9 @@ proposed), with the writer's table of what the words mean (llm/prompts, extract_
 JSON object: per sentence its DSL lines and the statements no DSL form expresses (`unexpressed`, the expressivity
 gap). The gate asks for EXTRACTIONS independent extractions of each text, as separate calls (`replica`); a claim
 counts if at least two of them find it (gate/roundtrip.py). Claims are mapped back to the Facts' names like the
-writer's. A DSL line that does not parse is kept as a format error of that extraction; there is no retry.
+writer's. A DSL line that does not parse is kept as a format error of that extraction. An answer that leaves out a
+sentence is not a reading: in the round-trip pilot 9 of 117 answers were valid JSON with one empty entry, and
+counting them would weaken the 2-of-3 rule; the gate retries such a reading once.
 """
 
 import json
@@ -67,11 +69,14 @@ def extractor_request(sentences: list[tuple[int, str]] | list[list], features: s
     return Request("extractor", model, prompts.extractor_system(), (("user", user),), EXTRACTION_SCHEMA, draw=draw, replica=replica)
 
 
-def extraction_from(response: Response, sentence_ids: set[int], names: Mapping[str, str] = labels.SYNTHETIC_NAMES) -> Extraction:
-    """The claims in a parsed answer. Raises ValueError if the answer is not an extraction at all."""
-    data = response.data
+def extraction_from(response: Response | Mapping, sentence_ids: set[int], names: Mapping[str, str] = labels.SYNTHETIC_NAMES) -> Extraction:
+    """The claims in a parsed answer (a response, or its JSON data). Raises ValueError if the answer is not an
+    extraction, or leaves out a sentence of the text."""
+    data = response.data if isinstance(response, Response) else response
     if not isinstance(data, dict) or not isinstance(data.get("sentences"), list):
         raise ValueError("the answer is not an extraction")
+    if not sentence_ids <= {int(item["id"]) for item in data["sentences"]}:
+        raise ValueError("the answer leaves out sentences of the text")
     out = Extraction([])
     for item in data["sentences"]:
         sentence_id = int(item["id"])

@@ -36,6 +36,14 @@ def test_prompt_hashes_are_frozen_after_the_pilot():
     assert prompts.hashes() == frozen
 
 
+def test_extractor_prompt_hashes_are_frozen_after_the_pilot():
+    """The assembled extractor prompt includes the writer's DSL table, so a change there shows here too."""
+    frozen = prompts.frozen(prompts.FROZEN_EXTRACTOR)
+    if frozen is None:
+        pytest.skip("extractor prompts not frozen yet (the round-trip pilot freezes them)")
+    assert prompts.hashes(prompts.EXTRACTOR_NAMES) == frozen
+
+
 def test_the_proposer_request_carries_the_handover_and_the_schema():
     request = propose.proposer_request("FACTS HERE", draw=2)
     assert request.role == "proposer" and request.draw == 2 and request.system == prompts.load("system")

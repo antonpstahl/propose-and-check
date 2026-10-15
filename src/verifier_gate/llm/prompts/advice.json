@@ -12,12 +12,14 @@
  "strength_undetected": " A word for an effect (weak, moderate, strong) also needs an effect the data detect, and they detect none.",
  "share": "Its share of the importance is {share} (95% band {low} to {high}). \"About {claimed}\" fits only if the whole band lies within {fit_low} to {fit_high}.",
  "rank": "Its rank is {rank} (95% band {low} to {high}). A single rank fits only if the band is that one rank; otherwise name the ranks the band spans.",
- "no_jump": "The curve has no single sharp step the data confirm: its largest step, near {at}, {why}. No location makes \"jumps at\" true, and hedging the location does not help; describe the rise with a direction, or drop the location.",
+ "no_jump": "The curve has no single sharp step the data confirm: its largest step, near {at}, {why}. No location makes \"jumps at\" true, and hedging the location does not help; describe the rise with a direction, and leave out the step and its location.",
  "no_jump_small": "is at most {ratio} of the curve's range, and a jump needs at least half",
  "no_jump_insignificant": "is not significant",
  "jump_elsewhere": "The largest jump lies near {at} (95% band {low} to {high}). Name a location in that band.",
- "no_peak": "The curve has no peak inside its range: its highest part is not clearly above both sides. No location makes \"peaks at\" true, and hedging the location does not help; describe the shape with a direction, or drop it.",
+ "no_peak": "The curve has no peak inside its range: its highest part is not clearly above both sides. No location makes \"peaks at\" true, and hedging the location does not help; describe the shape with a direction, and leave out the peak.",
  "peak_elsewhere": "The highest part of the curve lies at {low} to {high}. Name a location there.",
  "hedge_settled_true": "The data settle this: the claim inside the hedge is true. State it instead of hedging it.",
- "hedge_settled_false": "The data settle this: the claim inside the hedge is false. State what the facts show instead of hedging it."
+ "hedge_settled_false": "The data settle this: the claim inside the hedge is false. State what the facts show instead of hedging it.",
+ "unexpressed": "- Sentence {sentence} states a number that no claim form can check: {statements}. Say it in a form the DSL reference has, with its claim, or leave the number out.",
+ "missing_in_text": "- The text does not state anything about {names} that a reader can find, although it is one of the model's most important terms: your claims about it are not in the sentences. Say it in a sentence, with its claims."
 }

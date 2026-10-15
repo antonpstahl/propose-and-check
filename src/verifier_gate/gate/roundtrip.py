@@ -5,21 +5,26 @@ and every pair with a share of at least 10% must be mentioned. A set covers its 
 unsettled(<claim>) covers a term only if nothing about the term is certified, and then it raises the
 limited-evidence flag (D30): released, but marked for a reviewer.
 
-The comparison (§5.7, items 1, 2 and 4; D44 and D45 proposed) takes the extractor's EXTRACTIONS readings of a text
-(llm/extract.py) and the plan of that text, every claim of which the verifier has certified. Claims are compared
-by their canonical DSL line. A claim counts as extracted if at least EXTRACTED readings find it.
+The comparison (§5.7, items 1 to 4; D44 and D45, decided 15 Oct) takes the extractor's EXTRACTIONS readings of a
+text (llm/extract.py) and the plan of that text, every claim of which the verifier has certified. Claims are
+compared by their canonical DSL line. A claim counts as extracted if at least EXTRACTED readings find it.
 - Fails (repaired like a failing claim): an extracted claim that is not in the plan and that the verifier does
-  not certify, false or undecidable (D30: never released as stated), in the sentence most readings put it in; and
-  an opening sentence that leads with a minor term (emphasis).
+  not certify, false or undecidable (D30: never released as stated), in the sentence most readings put it in; a
+  sentence with content no DSL form expresses, in at least EXTRACTED readings: it cannot be checked, so it is
+  treated like an undecidable claim if it states a number (D44 b as revised after the round-trip pilot: a digit in
+  the statement; the rest is flagged, below); a required term the text does not cover, counted on what the text
+  states, the extracted claims that are planned or certified (D44 a: a plan claim the reader never sees covers
+  nothing); and an opening sentence that leads with a minor term (emphasis).
 - Flagged, logged and counted, not blocking: a plan claim the text does not state (fewer than EXTRACTED readings
-  find it), a claim only one reading finds (an ambiguous sentence), and a sentence with content no DSL form
-  expresses in at least EXTRACTED readings (the expressivity gap).
+  find it), a claim only one reading finds (an ambiguous sentence), and content no DSL form expresses that states
+  no number (the expressivity gap).
 Emphasis: the opening sentence (the first with a claim) must not mention a term with a share below the moderate
 edge (weak or negligible) unless it also mentions a strong term (share at the strong edge or above), when the
 model has one. Shares are M's point estimates: emphasis is about prominence, not certification. A stronger word
 for a weak term needs no rule of its own: its claim is false.
 """
 
+import re
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
@@ -34,6 +39,7 @@ from verifier_gate.verifier.verify import evidence_text, verify
 TOP_TERMS = 3
 PAIR_SHARE = 0.10
 EXTRACTED = 2  # of llm/extract.EXTRACTIONS readings
+NUMBER = re.compile(r"\d")  # a statement with a number: digits, a percentage, an amount (the extractor keeps them as written)
 
 
 @dataclass(frozen=True)
@@ -107,6 +113,8 @@ class RoundTrip:
     plan_only: list = field(default_factory=list)  # [sentence id, line]: planned, not extracted
     ambiguous: list = field(default_factory=list)  # [sentence id, line]: found by one reading only
     gap: list = field(default_factory=list)  # [sentence id, statements no DSL form expresses]
+    numbers: list = field(default_factory=list)  # [sentence id, such statements with a number]: these fail
+    missing: list = field(default_factory=list)  # required terms the text does not cover
     emphasis: list = field(default_factory=list)  # [sentence id, minor terms, strong terms]
     format_errors: int = 0  # DSL lines of the readings that did not parse
 
@@ -114,6 +122,7 @@ class RoundTrip:
         """What blocks the text: the failing lines (the same key space as the plan's, so a statement that failed as
         a claim and comes back in the text without one is no progress) and the emphasis problem."""
         keys = [line for _, line, value, *_ in self.unplanned if value != TRUE]
+        keys += [f"unchecked number: sentence {sid}" for sid, _ in self.numbers] + [f"not covered by the text: {term}" for term in self.missing]
         return keys + [f"emphasis: sentence {sid}" for sid, *_ in self.emphasis]
 
     @property
@@ -121,7 +130,9 @@ class RoundTrip:
         return not self.failures()
 
     def failing_sentences(self) -> set[int]:
-        return {sid for sid, _, value, *_ in self.unplanned if value != TRUE} | {sid for sid, *_ in self.emphasis}
+        """The sentences to drop if repairs end: a missing term is in no sentence."""
+        failing = {sid for sid, _, value, *_ in self.unplanned if value != TRUE} | {sid for sid, _ in self.numbers}
+        return failing | {sid for sid, *_ in self.emphasis}
 
 
 def _shares(facts: Facts) -> dict[frozenset, float]:
@@ -142,13 +153,14 @@ def emphasis(order: Sequence[int], mentions: dict[int, set[frozenset]], facts: F
     return [[opening, names(minor), names(strong)]]
 
 
-def compare(readings: Sequence, plan: Iterable[Claim], order: Sequence[int], facts: Facts, check_emphasis: bool = True,
-            lex: p.Lexicon | None = None) -> RoundTrip:  # fmt: skip
+def compare(readings: Sequence, plan: Iterable[Claim], order: Sequence[int], facts: Facts, certified: Iterable[Claim] = (),
+            check_emphasis: bool = True, lex: p.Lexicon | None = None) -> RoundTrip:  # fmt: skip
     """readings: the extractions that could be read (llm/extract.Extraction); plan: the text's certified claims,
-    each with its sentence id; order: the text's sentence ids in order."""
+    each with its sentence id; order: the text's sentence ids in order; certified: what the verifier certifies
+    about the model (for the hedge rule of coverage)."""
     lex = lex or p.load()
     found, where, claims = Counter(), defaultdict(Counter), {}
-    gap_votes, gap_words = Counter(), defaultdict(list)
+    gap_votes, gap_words, number_votes = Counter(), defaultdict(list), Counter()
     for reading in readings:
         keys = set()
         for c in reading.claims:
@@ -159,6 +171,7 @@ def compare(readings: Sequence, plan: Iterable[Claim], order: Sequence[int], fac
         found.update(keys)
         for sid, statements in reading.unexpressed.items():
             gap_votes[sid] += 1
+            number_votes[sid] += any(NUMBER.search(s) for s in statements)
             gap_words[sid] += [s for s in statements if s not in gap_words[sid]]
     planned = {}
     for c in plan:
@@ -175,6 +188,11 @@ def compare(readings: Sequence, plan: Iterable[Claim], order: Sequence[int], fac
             rt.unplanned.append([sentence[key], key, verdict.value, verdict.code, verdict.reason, evidence_text(verdict.evidence)])
     rt.plan_only = [[c.sentence_id, key] for key, c in planned.items() if found[key] < EXTRACTED]
     rt.gap = [[sid, gap_words[sid]] for sid in order if gap_votes[sid] >= EXTRACTED]
+    rt.numbers = [[sid, [w for w in gap_words[sid] if NUMBER.search(w)]] for sid in order if number_votes[sid] >= EXTRACTED]
+    true = {key for _, key, value, *_ in rt.unplanned if value == TRUE}
+    stated = [claims[key] for _, key, _ in rt.extracted if key in planned or key in true]
+    cover = coverage(stated, facts, certified)
+    rt.missing = [PAIR_SEPARATOR.join(sorted(k)) for k in cover.missing]
     if check_emphasis:
         mentions = defaultdict(set)
         for c in planned.values():

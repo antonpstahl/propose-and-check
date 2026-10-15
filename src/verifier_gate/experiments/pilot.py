@@ -168,6 +168,8 @@ def roundtrip_lines(trip: dict | None) -> list[str]:
         mark = "ok" if value == "true" else f"**{value}**" + (f" ({reason})" if reason else "")
         out.append(f"    - sentence {sid} also states `{line}`: {mark}")
     out += [f"    - **emphasis**: sentence {sid} opens with {', '.join(minor)}, none of {', '.join(strong)}" for sid, minor, strong in trip["emphasis"]]
+    out += [f"    - **unchecked number**: sentence {sid}: {'; '.join(words)}" for sid, words in trip.get("numbers", [])]
+    out += [f"    - **not covered by the text**: {term}" for term in trip.get("missing", [])]
     out += [f"    - flag, plan claim not in the text: sentence {sid} `{line}`" for sid, line in trip["plan_only"]]
     out += [f"    - flag, one reading only: sentence {sid} `{line}`" for sid, line in trip["ambiguous"]]
     out += [f"    - flag, no DSL form: sentence {sid}: {'; '.join(words)}" for sid, words in trip["gap"]]
@@ -182,11 +184,11 @@ def main() -> None:
     mode.add_argument("--naming", action="store_true")
     mode.add_argument("--batch-smoke", action="store_true")
     parser.add_argument("--sonnet", action="store_true")
-    parser.add_argument("--dry", action="store_true", help="--naming or --batch-smoke without network")
+    parser.add_argument("--dry", action="store_true", help="any mode without network (stub writer and extractor)")
     parser.add_argument("--keep", action="store_true", help="dry runs: keep the results")
     args = parser.parse_args()
     name = "smoke" if args.smoke else "live" if args.live else "naming" if args.naming else "batch_smoke" if args.batch_smoke else "dry_run"
-    dry = name == "dry_run" or ((args.naming or args.batch_smoke) and args.dry)
+    dry = name == "dry_run" or args.dry
     specs = plan(name, args.sonnet)
 
     contexts, handovers = {}, {}

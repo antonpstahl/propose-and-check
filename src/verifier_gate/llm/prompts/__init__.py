@@ -26,7 +26,7 @@ FROZEN = HERE / "frozen.json"
 VERSION = "v3"
 EXTRACTOR_NAMES = ("extract_system", "extract")
 FROZEN_EXTRACTOR = HERE / "frozen_extractor.json"
-EXTRACTOR_VERSION = "x1"
+EXTRACTOR_VERSION = "x3"  # x1, x2: the round-trip pilot runs in results/pilot/v3/live_x1/, live_x2/ (plan §14.15)
 HISTORY = {
     "v2": {
         "system": "1d0ef6ad39ae0fa38faeded63764400b03f7a8202be677c5258d833fe3090363",
