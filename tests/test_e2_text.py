@@ -1,0 +1,44 @@
+"""Text-level E2 (experiments/e2_text.py): the template text with one clause changed and its plan unchanged; the
+pipeline in stub mode catches every labelled error at the changed sentence and blocks no unchanged text."""
+
+import pytest
+
+from verifier_gate.data import dgp
+from verifier_gate.dsl.parse import parse
+from verifier_gate.experiments import e2_text
+from verifier_gate.experiments.build_facts import load
+from verifier_gate.gate.template import template
+from verifier_gate.verifier.certified import certified_plan
+
+
+@pytest.fixture(scope="module")
+def draft():
+    facts = load(dgp.SCENARIOS[0], "EBM")
+    return template(facts, certified_plan(facts))
+
+
+def test_a_clause_is_rewritten_in_the_templates_words_and_the_rest_kept(draft):
+    original = next(c for c in draft.claims if c.kind == "direction")
+    mutant = parse(f'direction("{original.terms[0]}") == "{"decreasing" if "increasing" in original.value else "increasing"}"')
+    sentences, changed = e2_text.render(draft, original, mutant, None)
+    before, after = dict(draft.sentences), dict((i, t) for i, t in sentences)
+    assert changed == original.sentence_id and before[changed] != after[changed]
+    assert all(before[i] == after[i] for i in before if i != changed)
+
+
+def test_an_invented_term_reads_as_a_feature_and_an_omission_drops_the_pair(draft):
+    original = draft.claims[0]
+    invented = parse(str(original).replace(f'"{original.terms[0]}"', '"savings_balance"'))
+    sentences, changed = e2_text.render(draft, original, invented, None)
+    assert "savings balance" in dict((i, t) for i, t in sentences)[changed].lower()
+    pair = next((c for c in draft.claims if c.kind == "interaction"), None)
+    if pair is not None:
+        kept, changed = e2_text.render(draft, None, None, frozenset(pair.terms))
+        assert changed is None and len(kept) <= len(draft.sentences)
+
+
+def test_the_script_mutants_of_one_dataset_are_labelled(draft):
+    cases = e2_text.script_cases(dgp.SCENARIOS[:1])
+    roles = {c.info["role"] for c in cases}
+    assert sum(c.source == "control" for c in cases) == 2 and "error" in roles
+    assert all(c.changed is not None or c.info.get("omitted") or c.source == "control" for c in cases)
