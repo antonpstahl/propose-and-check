@@ -16,6 +16,7 @@ from verifier_gate.gate import gate as g
 from verifier_gate.gate.template import template
 from verifier_gate.llm import batch
 from verifier_gate.llm.client import Client, stub_message
+from verifier_gate.llm.extract import faithful_reading
 from verifier_gate.verifier.certified import certified_plan
 
 MODEL = "claude-haiku-5-5"
@@ -45,10 +46,13 @@ def wrong(good):
 
 
 def writer(good, wrong, fail=None):
-    """Run "a" drafts well; run "b" drafts wrongly first and is right after the repair. `fail` maps a run to what
-    its requests get instead (an error type, or a list consumed one per submission)."""
+    """Run "a" drafts well; run "b" drafts wrongly first and is right after the repair; the extractor reads each
+    text faithfully. `fail` maps a run to what its writer requests get instead (an error type, or a list consumed
+    one per submission)."""
 
     def respond(request):
+        if request.role == "extractor":
+            return stub_message(faithful_reading(request, [good, wrong]))
         run = "b" if "facts of b" in request.messages[0][1] else "a"
         if fail and run in fail:
             planned = fail[run]
@@ -80,15 +84,19 @@ def test_waves_reach_the_exits_of_synchronous_calls_at_half_the_price(ctx, good,
         assert (run.exit, run.calls, run.rounds) == (alone.exit, alone.calls, alone.rounds)
         assert run.cost == pytest.approx(alone.cost / 2)
     assert runs["a"].exit == g.RELEASED and runs["b"].exit == g.RELEASED and runs["b"].rounds == 1
-    assert [len(b["requests"]) for b in api.batches.values()] == [2, 1]  # both first drafts, then b's repair
+    assert runs["a"].roundtrip == runs["b"].roundtrip == "passed"
+    # both first drafts; a's three extractions with b's repair. b's repaired text is a's text, so its extractions
+    # are the same requests: answered from the cache, never sent twice
+    assert [len(b["requests"]) for b in api.batches.values()] == [2, 4]
     assert json.loads((tmp_path / "runs" / "b.json").read_text())["exit"] == g.RELEASED
 
 
 def test_every_answer_is_cached_and_logged_as_batched(ctx, good, wrong, tmp_path):
     _, _, client = waves(ctx, tmp_path, writer(good, wrong))
     log = [json.loads(line) for line in client.log_path.read_text().splitlines()]
-    batched = [r for r in log if r["transport"] == "batch"]
-    assert len(batched) == 3 and all(r["request_id"].startswith("msgbatch_") and r["cost"] > 0 for r in batched)
+    batched = [r for r in log if r["transport"] == "batch" and not r["cached"]]
+    assert sum(r["cached"] for r in log) == 3  # b's extractions, answered from the cache
+    assert len(batched) == 6 and all(r["request_id"].startswith("msgbatch_") and r["cost"] > 0 for r in batched)
     waves_on_disk = [json.loads(p.read_text()) for p in (tmp_path / "cache" / "batches").glob("*.json")]
     assert all(w["collected"] and not w["failed"] for w in waves_on_disk)
     assert all(isinstance(role, str) for w in waves_on_disk for role in w["requests"].values())  # bodies dropped
@@ -103,17 +111,20 @@ def test_a_rerun_is_answered_from_the_cache(ctx, good, wrong, tmp_path):
 
 
 def test_a_stopped_process_resumes_its_open_wave(ctx, good, tmp_path):
-    client, api = Client("batch", cache_dir=tmp_path / "cache"), batch.StubBatchAPI(lambda r: stub_message(good), polls=3)
+    respond = lambda r: stub_message(faithful_reading(r, [good]) if r.role == "extractor" else good)  # noqa: E731
+    client, api = Client("batch", cache_dir=tmp_path / "cache"), batch.StubBatchAPI(respond, polls=3)
     started = jobs(ctx)
     batch.submit([j.run.request() for j in started.values()], tmp_path / "cache" / "batches", api, log=lambda *_: None)
     runs = batch.run_waves(jobs(ctx), client, api, poll=0, log=lambda *_: None)  # a new process, same runs
-    assert len(api.batches) == 1 and all(r.exit == g.RELEASED for r in runs.values())
+    assert all(r.exit == g.RELEASED for r in runs.values())
+    assert [len(b["requests"]) for b in api.batches.values()] == [2, 3]  # the open wave collected, not sent again;
+    # both texts are the same, so one set of extractions serves both runs
 
 
 def test_a_failed_request_goes_into_the_next_wave(ctx, good, wrong, tmp_path):
     runs, api, _ = waves(ctx, tmp_path, writer(good, wrong, fail={"a": ["api_error", "expired"]}))
-    assert runs["a"].exit == g.RELEASED and runs["a"].calls == 1  # answered on its third submission
-    assert len(api.batches) == 3
+    assert runs["a"].exit == g.RELEASED and runs["a"].calls == 1 + 3  # answered on its third submission; its round trip
+    assert sum(1 for b in api.batches.values() for r in b["requests"] if r.role == "proposer" and "facts of a" in r.messages[0][1]) == 3
 
 
 def test_a_request_never_answered_ends_its_run_as_escalate(ctx, good, wrong, tmp_path):

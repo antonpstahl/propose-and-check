@@ -81,6 +81,7 @@ class Request:
     max_tokens: int = settings.MAX_TOKENS
     draw: int = 0
     attempt: int = 0  # the format-only retry of the same request is a new call (§5.8)
+    replica: int = 0  # the independent extractions of one text (§5.7): 0, 1, 2
 
     def params(self) -> dict:
         return {
@@ -94,7 +95,9 @@ class Request:
 
     @property
     def key(self) -> str:
-        fields = {k: v for k, v in asdict(self).items() if k != "role"}
+        """Hash of everything that determines the call. `replica` enters only when it is not 0, so the keys of
+        the requests cached before it existed stay the same."""
+        fields = {k: v for k, v in asdict(self).items() if k != "role" and not (k == "replica" and v == 0)}
         return sha(json.dumps(fields, sort_keys=True))
 
 

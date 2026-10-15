@@ -44,6 +44,7 @@ from verifier_gate.gate import gate as g
 from verifier_gate.gate.template import template
 from verifier_gate.llm import batch, prompts, settings
 from verifier_gate.llm.client import Client, Request, stub_message
+from verifier_gate.llm.extract import faithful_reading
 from verifier_gate.llm.handover import handover
 from verifier_gate.verifier.certified import certified_plan
 
@@ -97,11 +98,14 @@ def as_answer(draft, names) -> dict:
 
 
 def stub_writer(contexts: dict[str, g.Context]):
-    """Answers with the template of the run's model; the first run's first draft carries a wrong claim. Dry runs
-    only: the run id travels in the handover text."""
-    seen = set()
+    """Answers with the template of the run's model; the first run's first draft carries a wrong claim. The
+    extractor reads each text as exactly the writer's claims. Dry runs only: the run id travels in the handover
+    text."""
+    seen, answers = set(), []
 
     def respond(request: Request) -> dict:
+        if request.role == "extractor":
+            return stub_message(faithful_reading(request, answers))
         run = request.messages[0][1].split("RUN:")[1].split("\n")[0].strip()
         ctx = contexts[run]
         answer = as_answer(template(ctx.facts, ctx.certified), ctx.names)
@@ -109,6 +113,7 @@ def stub_writer(contexts: dict[str, g.Context]):
             answer["sentences"].append({"id": 99, "text": "Income has a strong effect."})
             answer["claims"].append({"sentence_id": 99, "dsl": 'strength("income") == "strong"'})
         seen.add(run)
+        answers.append(answer)
         chars = len(request.system) + sum(len(m[1]) for m in request.messages)
         return stub_message(answer, usage={"input_tokens": int(chars / CHARS_PER_TOKEN), "output_tokens": OUTPUT_TOKENS})
 
@@ -149,8 +154,24 @@ def digest(folder: Path) -> str:
                 for c in (c for c in version["claims"] if c[0] == sid):
                     mark = "ok" if c[2] == "true" else f"**{c[2]}**" + (f" ({c[4]})" if c[4] else "")
                     out.append(f"    - `{c[1]}`: {mark}")
-            out += [f"    - format error: {e}" for e in version["format_errors"]] + [""]
+            out += [f"    - format error: {e}" for e in version["format_errors"]]
+            out += roundtrip_lines(version.get("roundtrip")) + [""]
     return "\n".join(out)
+
+
+def roundtrip_lines(trip: dict | None) -> list[str]:
+    """A version's round trip, for reading: what the text says beyond its plan, and the flags."""
+    if not trip:
+        return []
+    out = [f"Round trip ({trip['readings']} readings):"]
+    for sid, line, value, _, reason, _ in trip["unplanned"]:
+        mark = "ok" if value == "true" else f"**{value}**" + (f" ({reason})" if reason else "")
+        out.append(f"    - sentence {sid} also states `{line}`: {mark}")
+    out += [f"    - **emphasis**: sentence {sid} opens with {', '.join(minor)}, none of {', '.join(strong)}" for sid, minor, strong in trip["emphasis"]]
+    out += [f"    - flag, plan claim not in the text: sentence {sid} `{line}`" for sid, line in trip["plan_only"]]
+    out += [f"    - flag, one reading only: sentence {sid} `{line}`" for sid, line in trip["ambiguous"]]
+    out += [f"    - flag, no DSL form: sentence {sid}: {'; '.join(words)}" for sid, words in trip["gap"]]
+    return out if len(out) > 1 else [out[0] + " nothing beyond the plan, no flags"]
 
 
 def main() -> None:
@@ -177,7 +198,8 @@ def main() -> None:
         h = handover(facts, dgp.generate(scenario).X, spec.variant, certified, names=names)
         if not h.passed:
             raise SystemExit(f"{spec.run_id}: the readable form failed its check; fix it before any call")
-        contexts[spec.run_id], handovers[spec.run_id] = g.Context(facts, certified, names), h.text
+        contexts[spec.run_id] = g.Context(facts, certified, names, roundtrip=spec.budget > 1)  # first-draft checks: no round trip
+        handovers[spec.run_id] = h.text
 
     scratch = Path(tempfile.mkdtemp(prefix="pilot_dry_")) if dry else None
     out = (RESULTS / prompts.VERSION / f"{name}_dry" if args.keep else scratch / "results") if dry else RESULTS / prompts.VERSION / name

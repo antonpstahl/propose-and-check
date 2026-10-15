@@ -5,7 +5,7 @@ reads only the Facts of one model. No LLM. A set of values (D33) goes to the set
 hedge unsettled(<claim>) (D30) is judged on the verdict of its claim.
 """
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 
 from verifier_gate.dsl.grammar import HEDGE, Claim
 from verifier_gate.dsl.parse import parse
@@ -54,3 +54,17 @@ def verify(claim: Claim | str, facts: Facts, lex: p.Lexicon | None = None) -> p.
 def verify_all(claims: Iterable[Claim | str], facts: Facts, lex: p.Lexicon | None = None) -> list[tuple[Claim, p.Verdict]]:
     parsed = [parse(c) if isinstance(c, str) else c for c in claims]
     return [(c, verify(c, facts, lex)) for c in parsed]
+
+
+def evidence_text(evidence: Mapping) -> str:
+    """A verdict's evidence in one line, for the log and the repair message."""
+
+    def fmt(v):
+        if isinstance(v, float):
+            return f"{v:.3g}"
+        if isinstance(v, (tuple, list)) and all(isinstance(x, (int, float)) for x in v):
+            return " to ".join(f"{x:.3g}" for x in v)
+        return str(v)
+
+    items = [(k, v) for k, v in evidence.items() if k not in ("term", "claim", "claim reason") and not isinstance(v, dict)]
+    return "; ".join(f"{k} {fmt(v)}" for k, v in items[:5])

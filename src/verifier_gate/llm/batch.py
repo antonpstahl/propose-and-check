@@ -1,8 +1,8 @@
 """Batch API transport (plan §14.14, D37): the gate's runs advance in waves, at half price.
 
-A wave is one Message Batch holding the pending request of every run whose answer is not in the disk cache. Each
-request's custom_id is its cache key (a SHA-256 in hex, 64 characters, the API's limit), since results come back in
-any order. Before anything is waited for, the wave is saved in cache/llm/batches/<batch id>.json with its requests,
+A wave is one Message Batch holding every pending request of every run (a writer request, or the extractions of
+a text) whose answer is not in the disk cache. Each request's custom_id is its cache key (a SHA-256 in hex, 64
+characters, the API's limit), since results come back in any order. Before anything is waited for, the wave is saved in cache/llm/batches/<batch id>.json with its requests,
 so a stopped process resumes the wave instead of submitting it again. When the batch has ended, each answer is
 stored in the disk cache and the call log like a synchronous one (transport "batch", cost at the batch price), and
 its run advances; every run is saved after every step. The next wave holds the runs' next requests (repairs,
@@ -170,15 +170,16 @@ def _advance(jobs: Mapping[str, Job], client: Client, fresh: dict[str, Response]
     """Advance every run as far as the answers at hand allow; the requests still without an answer."""
     wave: dict[str, Request] = {}
     for job in jobs.values():
-        while job.run.pending is not None:
-            request = job.run.request()
-            response = fresh.pop(request.key, None) or client.lookup(request)
-            if response is None and submissions[request.key] >= MAX_SUBMISSIONS:
-                response = Response(request.key, request.role, request.model, "", "api")
-            if response is None:
-                wave.setdefault(request.key, request)
+        while requests := job.run.requests():
+            answers = [fresh.pop(r.key, None) or client.lookup(r) for r in requests]
+            answers = [Response(r.key, r.role, r.model, "", "api") if a is None and submissions[r.key] >= MAX_SUBMISSIONS else a
+                       for r, a in zip(requests, answers)]  # fmt: skip
+            if any(a is None for a in answers):
+                for r, a in zip(requests, answers):
+                    if a is None:
+                        wave.setdefault(r.key, r)
                 break
-            job.run = g.advance(job.run, response, job.ctx)
+            job.run = g.advance(job.run, answers, job.ctx)
             if job.path is not None:
                 job.run.save(job.path)
     return list(wave.values())

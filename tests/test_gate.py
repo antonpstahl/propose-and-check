@@ -21,7 +21,7 @@ from verifier_gate.verifier.certified import certified_plan
 def ctx():
     data = dgp.generate(dgp.Scenario("dominant", 5_000, 1))
     facts = build_facts(reference_steps(data.truth, data.X), data.X)
-    return g.Context(facts, certified_plan(facts))
+    return g.Context(facts, certified_plan(facts), roundtrip=False)  # the writer's loop alone; the round trip: test_roundtrip.py
 
 
 @pytest.fixture(scope="module")
@@ -65,7 +65,7 @@ WRONG = (99, "Income has a weak effect.", ['strength("income") == "weak"'])  # i
 def test_a_correct_draft_is_released_at_once(ctx, good, tmp_path):
     result, requests = run(ctx, tmp_path, stub_message(answer(good)))
     assert (result.exit, result.calls, result.rounds) == (g.RELEASED, 1, 0)
-    assert result.roundtrip == "not run (week 6)" and not result.flagged
+    assert result.roundtrip == "not run" and not result.flagged
 
 
 def test_a_false_claim_is_repaired(ctx, good, tmp_path):

@@ -22,9 +22,9 @@ src/verifier_gate/
                  per term: correct plans for E2, later H2 and the template)
   llm/           settings.py (models, thinking, prices), client.py (disk cache, call log, stub mode, retries),
                  batch.py (Batch API transport: waves, resumable),
-                 handover.py (H1, H2), prompts/ (system, propose, repair; v2 frozen, hash-tested), propose.py,
-                 extract.py (week 6)
-  gate/          draft.py, roundtrip.py (coverage built; extraction and emphasis in week 6), template.py (phrases
+                 handover.py (H1, H2), prompts/ (writer: system, propose, repair, advice, v3; extractor: extract_system, extract, x1; frozen after their pilot), propose.py,
+                 extract.py (the extractor: the text into DSL claims, three readings)
+  gate/          draft.py, roundtrip.py (coverage; the comparison of text and plan; emphasis), advice.py (repair advice; the no-progress key), template.py (phrases
                  and the template text), gate.py (the state machine: repair loop, stop rules, exit states; resumable)
   experiments/   acceptance.py (stand-in checks: models vs planted claims, model vs data misses),
                  acceptance_binding.py (the binding run on the frozen lexicon, D24), smoothing.py (EBM setting),
