@@ -19,8 +19,10 @@ between submitting a batch and saving its wave (a fraction of a second) leaves t
 requests are submitted again on the next start.
 """
 
+import fcntl
 import json
 import time
+from contextlib import contextmanager
 from collections import Counter
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import asdict, dataclass
@@ -185,10 +187,31 @@ def _advance(jobs: Mapping[str, Job], client: Client, fresh: dict[str, Response]
     return list(wave.values())
 
 
+@contextmanager
+def exclusive(folder: Path):
+    """One process at a time on a batches folder: a second one would collect the same waves and log their answers
+    twice (seen in E3, 15 Oct, when the Haiku and Sonnet runs ran at once; nothing was paid twice)."""
+    folder.mkdir(parents=True, exist_ok=True)
+    with (folder / ".lock").open("w") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise SystemExit(f"another process is using {folder}; run one batch experiment at a time") from None
+        try:
+            yield
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
 def run_waves(jobs: Mapping[str, Job], client: Client, api, folder: Path | None = None, poll: float = POLL_SECONDS,
               log: Callable = print) -> dict[str, g.Run]:  # fmt: skip
     """Drive the runs to their exits in waves. Open waves (from a stopped process) are collected first."""
     folder = folder or client.cache_dir / "batches"
+    with exclusive(folder):
+        return _run_waves(jobs, client, api, folder, poll, log)
+
+
+def _run_waves(jobs, client, api, folder, poll, log):
     for submitted in range(MAX_WAVES + 1):
         fresh = {}
         for path, wave in _waves(folder):
@@ -210,6 +233,11 @@ def resolve(requests: list[Request], client: Client, api, folder: Path | None = 
     from the cache, or in waves with the same resubmission rule as the runs (a request never answered gets the
     "api" outcome)."""
     folder = folder or client.cache_dir / "batches"
+    with exclusive(folder):
+        return _resolve(requests, client, api, folder, poll, log)
+
+
+def _resolve(requests, client, api, folder, poll, log):
     answers: dict[str, Response] = {}
     for submitted in range(MAX_SUBMISSIONS + 1):
         fresh = {}

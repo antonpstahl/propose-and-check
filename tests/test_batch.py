@@ -180,3 +180,15 @@ def test_the_number_of_waves_is_bounded(ctx, good, wrong, tmp_path, monkeypatch)
     with pytest.raises(RuntimeError, match="waves"):
         batch.run_waves(jobs(ctx), Client("batch", cache_dir=tmp_path), api, poll=0, log=lambda *_: None)
     assert len(api.batches) == 4
+
+
+def test_one_process_at_a_time_and_a_second_store_is_not_paid_twice(ctx, good, wrong, tmp_path):
+    folder = tmp_path / "cache" / "batches"
+    with batch.exclusive(folder), pytest.raises(SystemExit, match="another process"):
+        with batch.exclusive(folder):
+            pass
+    client = Client("batch", cache_dir=tmp_path / "cache")
+    request = jobs(ctx)["a"].run.request()
+    first = client.store(request, stub_message(good), 1.0, "batch")
+    again = client.store(request, stub_message(good), 1.0, "batch")
+    assert not first.cached and again.cached

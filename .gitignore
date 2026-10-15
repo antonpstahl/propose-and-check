@@ -29,3 +29,4 @@ cache/facts/
 # PiML check: its own Python 3.10 environment and exported data
 piml_check/data/
 piml_check/results/**/*.npz
+cache/llm/batches/.lock

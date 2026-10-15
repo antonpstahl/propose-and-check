@@ -203,11 +203,13 @@ class Client:
         return response
 
     def store(self, request: Request, raw: Mapping, latency: float, transport: str) -> Response:
-        """Cache and log a new answer; a batched one carries `_batch` in its raw message and costs the batch price."""
-        response = interpret(request, raw, latency, cached=False)
+        """Cache and log a new answer; a batched one carries `_batch` in its raw message and costs the batch price.
+        An answer already in the cache (a batch collected twice) is logged as cached, so it is not counted as paid."""
+        path = self.cache_dir / f"{request.key}.json"
+        response = interpret(request, raw, latency, cached=path.exists())
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         record = {"request": {**asdict(request), "messages": list(request.messages)}, "raw": dict(raw), "latency": latency}
-        (self.cache_dir / f"{request.key}.json").write_text(json.dumps(record))
+        path.write_text(json.dumps(record))
         self._log(request, response, transport)
         return response
 
