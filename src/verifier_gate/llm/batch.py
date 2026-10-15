@@ -202,3 +202,35 @@ def run_waves(jobs: Mapping[str, Job], client: Client, api, folder: Path | None 
             break
         submit(pending, folder, api, log)
     raise RuntimeError(f"more than {MAX_WAVES} waves: a bug in the transport, stopped before submitting more")
+
+
+def resolve(requests: list[Request], client: Client, api, folder: Path | None = None, poll: float = POLL_SECONDS,
+            log: Callable = print) -> dict[str, Response]:  # fmt: skip
+    """Answers to a set of independent requests (no gate run behind them, e.g. E3's scoring readings), by key:
+    from the cache, or in waves with the same resubmission rule as the runs (a request never answered gets the
+    "api" outcome)."""
+    folder = folder or client.cache_dir / "batches"
+    answers: dict[str, Response] = {}
+    for submitted in range(MAX_SUBMISSIONS + 1):
+        fresh = {}
+        for path, wave in _waves(folder):
+            if not wave["collected"]:
+                fresh |= collect(path, wave, client, api, poll, log)
+        submissions = Counter(k for _, wave in _waves(folder) for k in wave.get("failed", {}))
+        pending: dict[str, Request] = {}
+        for r in requests:
+            if r.key in answers:
+                continue
+            answer = fresh.pop(r.key, None) or client.lookup(r)
+            if answer is None and submissions[r.key] >= MAX_SUBMISSIONS:
+                answer = Response(r.key, r.role, r.model, "", "api")
+            if answer is None:
+                pending.setdefault(r.key, r)
+            else:
+                answers[r.key] = answer
+        if not pending:
+            return answers
+        if submitted == MAX_SUBMISSIONS:
+            break
+        submit(list(pending.values()), folder, api, log)
+    raise RuntimeError(f"requests still unanswered after {MAX_SUBMISSIONS} waves: a bug in the transport")

@@ -41,7 +41,7 @@ from verifier_gate.data import dgp, labels
 from verifier_gate.dsl.grammar import Claim
 from verifier_gate.experiments.build_facts import load
 from verifier_gate.gate import gate as g
-from verifier_gate.gate.template import template
+from verifier_gate.gate.template import synthetic_label, template
 from verifier_gate.llm import batch, prompts, settings
 from verifier_gate.llm.client import Client, Request, stub_message
 from verifier_gate.llm.extract import faithful_reading
@@ -108,7 +108,7 @@ def stub_writer(contexts: dict[str, g.Context]):
             return stub_message(faithful_reading(request, answers))
         run = request.messages[0][1].split("RUN:")[1].split("\n")[0].strip()
         ctx = contexts[run]
-        answer = as_answer(template(ctx.facts, ctx.certified), ctx.names)
+        answer = as_answer(template(ctx.facts, ctx.certified, ctx.label or synthetic_label(ctx.names)), ctx.names)
         if run not in seen and run == next(iter(contexts)):
             answer["sentences"].append({"id": 99, "text": "Income has a strong effect."})
             answer["claims"].append({"sentence_id": 99, "dsl": 'strength("income") == "strong"'})
