@@ -45,7 +45,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from verifier_gate.data import dgp
+from verifier_gate.data import dgp, tiers
 from verifier_gate.dsl.grammar import HEDGE, Claim
 from verifier_gate.experiments.build_facts import load
 from verifier_gate.facts.build import build_facts
@@ -216,7 +216,7 @@ def outcome(role: str, verdict: str) -> str:
 def run(scenarios, lex: p.Lexicon) -> tuple[pd.DataFrame, pd.DataFrame]:
     rows, plans = [], []
     for s in scenarios:
-        X = dgp.generate(s).X
+        X = tiers.generate(s).X
         for kind in MODELS:
             facts = load(s, kind)
             point = point_facts(facts, X)
@@ -263,11 +263,17 @@ def recall(table: pd.DataFrame, by: list[str]) -> pd.DataFrame:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--seeds", default=str(dgp.DISCOVERY_SEED), help="comma-separated, e.g. 1,2,3")
+    parser.add_argument("--seeds", default=None, help="comma-separated, e.g. 1,2,3 (default: the discovery seed; plasmode: all)")
+    parser.add_argument("--tier", default="synthetic", choices=tuple(tiers.TIERS), help="plasmode: the out-of-sample tier (plan §4.4)")
     args = parser.parse_args()
-    seeds = tuple(int(s) for s in args.seeds.split(","))
-    name = "plan_discovery" if seeds == (dgp.DISCOVERY_SEED,) else "plan_seeds-" + "-".join(map(str, seeds))
-    scenarios = tuple(s for s in dgp.SCENARIOS if s.seed in seeds)
+    tier = tiers.module(args.tier)
+    every = tuple(sorted({s.seed for s in tier.SCENARIOS}))
+    seeds = tuple(int(s) for s in args.seeds.split(",")) if args.seeds else every if tier is not dgp else (dgp.DISCOVERY_SEED,)
+    if tier is dgp:
+        name = "plan_discovery" if seeds == (dgp.DISCOVERY_SEED,) else "plan_seeds-" + "-".join(map(str, seeds))
+    else:
+        name = f"plan_{args.tier}" if seeds == every else f"plan_{args.tier}_seeds-" + "-".join(map(str, seeds))
+    scenarios = tuple(s for s in tier.SCENARIOS if s.seed in seeds)
     lex = p.load()
     assert lex.version != "v0", "E2 runs on the frozen lexicon (tag e1-frozen)"
 

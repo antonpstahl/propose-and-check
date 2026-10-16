@@ -24,7 +24,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from verifier_gate.data import dgp
+from verifier_gate.data import dgp, tiers
 from verifier_gate.data.planted import planted_claims
 from verifier_gate.dsl.grammar import Claim
 from verifier_gate.experiments import metrics
@@ -41,13 +41,13 @@ HEADLINE = ["claims", "decided rate", "accuracy among decided", "released_wrong"
             "confident-error rate", "confident-error upper bound", "certified among true claims", "kappa among decided"]  # fmt: skip
 
 
-def role(claim: Claim) -> str:
-    """The feature role of the claim's term (dgp.FEATURE_ROLES); pairs and comparisons are their own."""
+def role(claim: Claim, tier=dgp) -> str:
+    """The feature role of the claim's term (the tier's FEATURE_ROLES); pairs and comparisons are their own."""
     if claim.kind == "interaction":
         return "pair"
     if claim.kind == "comparison":
         return "comparison"
-    return dgp.FEATURE_ROLES[claim.terms[0]]
+    return tier.FEATURE_ROLES[claim.terms[0]]
 
 
 def verdicts(scenarios, lex: p.Lexicon | None = None) -> pd.DataFrame:
@@ -56,10 +56,10 @@ def verdicts(scenarios, lex: p.Lexicon | None = None) -> pd.DataFrame:
     rows = []
     for s in scenarios:
         facts = {kind: load(s, kind) for kind in REFERENCES}
-        for i, (claim, label) in enumerate(planted_claims(dgp.generate(s), lex)):
+        for i, (claim, label) in enumerate(planted_claims(tiers.generate(s), lex)):
             row = {
                 "scenario": s.id, "seed": s.seed, "n": s.n, "interaction": s.interaction, "claim id": i,
-                "claim": str(claim), "kind": claim.kind, "set": isinstance(claim.value, tuple), "role": role(claim),
+                "claim": str(claim), "kind": claim.kind, "set": isinstance(claim.value, tuple), "role": role(claim, tiers.module(s)),
                 "label": label,
             }  # fmt: skip
             for kind in REFERENCES:
@@ -126,11 +126,17 @@ def cross_tables(table: pd.DataFrame) -> pd.DataFrame:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--seeds", default=str(dgp.DISCOVERY_SEED), help="comma-separated, e.g. 2,3")
+    parser.add_argument("--seeds", default=None, help="comma-separated, e.g. 2,3 (default: the discovery seed; plasmode: all)")
+    parser.add_argument("--tier", default="synthetic", choices=tuple(tiers.TIERS), help="plasmode: the out-of-sample tier (plan §4.4)")
     args = parser.parse_args()
-    seeds = tuple(int(s) for s in args.seeds.split(","))
-    name = "discovery" if seeds == (dgp.DISCOVERY_SEED,) else "confirmation" if dgp.DISCOVERY_SEED not in seeds else "seeds-" + "-".join(map(str, seeds))
-    scenarios = tuple(s for s in dgp.SCENARIOS if s.seed in seeds)
+    tier = tiers.module(args.tier)
+    every = tuple(sorted({s.seed for s in tier.SCENARIOS}))
+    seeds = tuple(int(s) for s in args.seeds.split(",")) if args.seeds else every if tier is not dgp else (dgp.DISCOVERY_SEED,)
+    if tier is dgp:
+        name = "discovery" if seeds == (dgp.DISCOVERY_SEED,) else "confirmation" if dgp.DISCOVERY_SEED not in seeds else "seeds-" + "-".join(map(str, seeds))
+    else:
+        name = args.tier if seeds == every else f"{args.tier}_seeds-" + "-".join(map(str, seeds))
+    scenarios = tuple(s for s in tier.SCENARIOS if s.seed in seeds)
     lex = p.load()
     assert lex.version != "v0", "E1 runs on the frozen lexicon (tag e1-frozen)"
 

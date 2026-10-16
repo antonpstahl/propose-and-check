@@ -1,0 +1,193 @@
+model,scenario,n,kind,role,claim,label,verdict,oracle,outcome,layer
+EBM,pls-none-n5000-s1,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.129)",true,false,undecidable,blocked_correct,model
+EBM,pls-none-n5000-s1,5000,negligible,correlated_null,"negligible(""BILL_AMT2"")",true,false,true,blocked_correct,model
+EBM,pls-none-n5000-s1,5000,share,correlated_null,"share(""BILL_AMT2"") == approx(0.0)",true,false,true,blocked_correct,model
+EBM,pls-none-n5000-s1,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+EBM,pls-none-n5000-s1,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+EBM,pls-none-n5000-s1,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+EBM,pls-none-n5000-s1,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s1,5000,strength,correlated_null,"strength(""BILL_AMT2"") in (""weak"", ""moderate"")",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s1,5000,rank,moderate,"rank(""BILL_AMT1"") in (3, 4)",true,false,true,blocked_correct,model
+EBM,pls-none-n5000-s1,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s2,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.131)",true,false,undecidable,blocked_correct,model
+EBM,pls-none-n5000-s2,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s2,5000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s2,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s2,5000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s3,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.129)",true,false,undecidable,blocked_correct,model
+EBM,pls-none-n5000-s3,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+EBM,pls-none-n5000-s3,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+EBM,pls-none-n5000-s3,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+EBM,pls-none-n5000-s3,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n5000-s3,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n30000-s2,30000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-none-n30000-s2,30000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-none-n30000-s3,30000,rank,near_flat,"rank(""EDUCATION"") == 7",true,false,true,blocked_correct,model
+EBM,pls-none-n30000-s3,30000,rank,near_flat,"rank(""EDUCATION"") in (6, 7)",true,false,true,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.117)",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,negligible,correlated_null,"negligible(""BILL_AMT2"")",true,false,true,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,share,correlated_null,"share(""BILL_AMT2"") == approx(0.0)",true,false,true,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,rank,near_flat,"rank(""EDUCATION"") == 7",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+EBM,pls-weak-n5000-s1,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s1,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,undecidable,released_wrong,model
+EBM,pls-weak-n5000-s1,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s1,5000,strength,correlated_null,"strength(""BILL_AMT2"") in (""weak"", ""moderate"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s1,5000,rank,near_flat,"rank(""EDUCATION"") in (6, 7)",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s1,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s2,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s2,5000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s2,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s2,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,true,released_wrong,data
+EBM,pls-weak-n5000-s2,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s2,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s2,5000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s3,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.118)",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s3,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s3,5000,rank,near_flat,"rank(""EDUCATION"") == 7",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s3,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s3,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+EBM,pls-weak-n5000-s3,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s3,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s3,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,undecidable,released_wrong,model
+EBM,pls-weak-n5000-s3,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+EBM,pls-weak-n5000-s3,5000,rank,near_flat,"rank(""EDUCATION"") in (6, 7)",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n5000-s3,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-weak-n30000-s1,30000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,true,blocked_correct,model
+EBM,pls-weak-n30000-s1,30000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,false,released_wrong,model
+EBM,pls-weak-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-weak-n30000-s1,30000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+EBM,pls-weak-n30000-s1,30000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,undecidable,released_wrong,model
+EBM,pls-weak-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-weak-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-weak-n30000-s2,30000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""amplification"")",true,false,true,blocked_correct,model
+EBM,pls-weak-n30000-s2,30000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,false,released_wrong,model
+EBM,pls-weak-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-weak-n30000-s3,30000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,false,released_wrong,model
+EBM,pls-dominant-n5000-s1,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n5000-s1,5000,rank,moderate,"rank(""PAY_AMT1"") == 4",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n5000-s1,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n5000-s1,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+EBM,pls-dominant-n5000-s1,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-dominant-n5000-s1,5000,direction,near_flat,"direction(""EDUCATION"") == ""increasing""",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-dominant-n5000-s1,5000,threshold,threshold,"threshold(""PAY_AMT2"", at=2000.0)",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n5000-s1,5000,rank,moderate,"rank(""PAY_AMT1"") in (4, 5)",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n5000-s1,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-dominant-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-dominant-n5000-s3,5000,direction,near_flat,"direction(""EDUCATION"") == ""increasing""",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n30000-s1,30000,strength,strong,"strength(""LIMIT_BAL"") == ""strong""",true,false,true,blocked_correct,model
+EBM,pls-dominant-n30000-s1,30000,strength,strong,"strength(""LIMIT_BAL"") == ""moderate""",false,true,false,released_wrong,model
+EBM,pls-dominant-n30000-s1,30000,share,strong,"share(""LIMIT_BAL"") == approx(0.176)",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n30000-s1,30000,negligible,near_flat,"negligible(""EDUCATION"")",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n30000-s1,30000,strength,near_flat,"strength(""EDUCATION"") == ""weak""",false,true,undecidable,released_wrong,model
+EBM,pls-dominant-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-dominant-n30000-s1,30000,strength,strong,"strength(""LIMIT_BAL"") in (""weak"", ""moderate"")",false,true,false,released_wrong,model
+EBM,pls-dominant-n30000-s1,30000,strength,near_flat,"strength(""EDUCATION"") in (""weak"", ""moderate"")",false,true,undecidable,released_wrong,model
+EBM,pls-dominant-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-dominant-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+EBM,pls-dominant-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+EBM,pls-dominant-n30000-s3,30000,strength,threshold,"strength(""PAY_AMT2"") == ""moderate""",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n30000-s3,30000,direction,near_flat,"direction(""EDUCATION"") == ""increasing""",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n30000-s3,30000,strength,threshold,"strength(""PAY_AMT2"") in (""moderate"", ""strong"")",true,false,undecidable,blocked_correct,model
+EBM,pls-dominant-n30000-s3,30000,strength,threshold,"strength(""PAY_AMT2"") in (""negligible"", ""weak"")",false,true,undecidable,released_wrong,model
+XGB2,pls-none-n5000-s1,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.129)",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s1,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s1,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s1,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+XGB2,pls-none-n5000-s1,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-none-n5000-s1,5000,threshold,threshold,"threshold(""PAY_AMT2"", at=2000.0)",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s1,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-none-n5000-s2,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.131)",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s2,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-none-n5000-s2,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-none-n5000-s3,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.129)",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s3,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s3,5000,rank,moderate,"rank(""PAY_AMT1"") == 4",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s3,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s3,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+XGB2,pls-none-n5000-s3,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-none-n5000-s3,5000,rank,moderate,"rank(""PAY_AMT1"") in (4, 5)",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n5000-s3,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-none-n30000-s1,30000,share,moderate,"share(""BILL_AMT1"") == approx(0.13)",true,false,true,blocked_correct,model
+XGB2,pls-none-n30000-s1,30000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-none-n30000-s1,30000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-none-n30000-s2,30000,share,moderate,"share(""BILL_AMT1"") == approx(0.13)",true,false,undecidable,blocked_correct,model
+XGB2,pls-none-n30000-s2,30000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-none-n30000-s2,30000,direction,strong,"direction(""LIMIT_BAL"") == ""decreasing""",true,false,true,blocked_correct,model
+XGB2,pls-none-n30000-s2,30000,direction,strong,"direction(""LIMIT_BAL"") == ""mostly_decreasing""",false,true,undecidable,released_wrong,model
+XGB2,pls-none-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-none-n30000-s2,30000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-none-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-none-n30000-s3,30000,share,moderate,"share(""BILL_AMT1"") == approx(0.13)",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s1,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.117)",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s1,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s1,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s1,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+XGB2,pls-weak-n5000-s1,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s1,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s1,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,undecidable,released_wrong,model
+XGB2,pls-weak-n5000-s1,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s1,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s2,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.119)",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s2,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s2,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,true,released_wrong,data
+XGB2,pls-weak-n5000-s2,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""sign_flip"")",true,false,true,blocked_correct,model
+XGB2,pls-weak-n5000-s2,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s2,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s3,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.118)",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s3,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s3,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n5000-s3,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+XGB2,pls-weak-n5000-s3,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s3,5000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,undecidable,released_wrong,model
+XGB2,pls-weak-n5000-s3,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n5000-s3,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n30000-s1,30000,share,moderate,"share(""BILL_AMT1"") == approx(0.118)",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n30000-s1,30000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n30000-s1,30000,interaction,pair,"interaction(""PAY_0"", ""EDUCATION"", pattern=""none"")",false,true,undecidable,released_wrong,model
+XGB2,pls-weak-n30000-s1,30000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n30000-s2,30000,share,moderate,"share(""BILL_AMT1"") == approx(0.118)",true,false,undecidable,blocked_correct,model
+XGB2,pls-weak-n30000-s2,30000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-weak-n30000-s2,30000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-weak-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s1,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n5000-s1,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n5000-s1,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+XGB2,pls-dominant-n5000-s1,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s1,5000,threshold,threshold,"threshold(""PAY_AMT2"", at=2000.0)",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n5000-s1,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""sign_flip"")",true,false,true,blocked_correct,model
+XGB2,pls-dominant-n5000-s1,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s1,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s1,5000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s2,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s2,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s2,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s3,5000,share,moderate,"share(""BILL_AMT1"") == approx(0.095)",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n5000-s3,5000,rank,moderate,"rank(""BILL_AMT1"") == 3",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n5000-s3,5000,comparison,comparison,"effect(""BILL_AMT1"") > effect(""PAY_AMT1"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n5000-s3,5000,comparison,comparison,"effect(""PAY_AMT1"") > effect(""BILL_AMT1"")",false,true,undecidable,released_wrong,model
+XGB2,pls-dominant-n5000-s3,5000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s3,5000,interaction,pair,"interaction(""AGE"", ""BILL_AMT1"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n5000-s3,5000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-dominant-n30000-s1,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n30000-s2,30000,direction,strong,"direction(""PAY_0"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-dominant-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") == ""increasing""",false,true,false,released_wrong,model
+XGB2,pls-dominant-n30000-s2,30000,direction,strong,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n30000-s2,30000,direction,correlated_null,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",false,true,false,released_wrong,model
+XGB2,pls-dominant-n30000-s3,30000,strength,threshold,"strength(""PAY_AMT2"") == ""moderate""",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n30000-s3,30000,strength,threshold,"strength(""PAY_AMT2"") in (""moderate"", ""strong"")",true,false,undecidable,blocked_correct,model
+XGB2,pls-dominant-n30000-s3,30000,strength,threshold,"strength(""PAY_AMT2"") in (""negligible"", ""weak"")",false,true,undecidable,released_wrong,model

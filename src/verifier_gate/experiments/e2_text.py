@@ -371,7 +371,8 @@ def main() -> None:
         part = table[table.source.isin([source, "control"] if source == "script" else [source])]
         if len(part):
             part.to_csv(out / f"{source}.csv", index=False)
-    summary = summarise(table)
+    on_disk = [pd.read_csv(out / f"{source}.csv") for source in ("script", "llm") if (out / f"{source}.csv").exists()]
+    summary = summarise(pd.concat(on_disk, ignore_index=True))  # both sources, whichever this run read
     summary.to_csv(out / "summary.csv", index=False)
     pd.set_option("display.width", 250)
     print(summary.to_string(index=False))
