@@ -58,35 +58,37 @@ def _counts(ax, k, cuts, scores, band, color, offset):
     ax.plot(k + offset, _at(cuts, scores, k), "o", ms=5, color=color, mec=SURFACE, mew=0.8, zorder=3)
 
 
-def draw(scenario: dgp.Scenario, out: Path = OUT) -> Path:
+def draw(scenario: dgp.Scenario, out: Path = OUT, features: tuple[str, ...] = FEATURES, name: str = "") -> Path:
+    """All nine features (Fig. 2), or a subset in one row (the worked example, experiments/worked_example.py)."""
     data = dgp.generate(scenario)
     planted = data.truth.shares(data.X)
     facts = {kind: load(scenario, kind, draws=False) for kind in MODELS}
     plt.rcParams.update({"font.size": 7.5, "axes.edgecolor": MUTED, "axes.labelcolor": MUTED, "xtick.color": MUTED,
                          "ytick.color": MUTED, "axes.titlecolor": INK, "axes.titlesize": 7.5,
                          "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6})  # fmt: skip
-    fig, axes = plt.subplots(3, 3, figsize=(7.2, 6.6), facecolor=SURFACE)
-    for ax, name in zip(axes.flat, FEATURES):
+    rows = -(-len(features) // 3)
+    fig, axes = plt.subplots(rows, 3, figsize=(7.2, 6.6 if rows == 3 else 2.2 * rows + 0.9), facecolor=SURFACE, squeeze=False)
+    for ax, feature in zip(axes.flat, features):
         ax.set_facecolor(SURFACE)
-        values = np.asarray(data.X[name])
+        values = np.asarray(data.X[feature])
         lo, hi = np.quantile(values, RANGE)
         if is_count(values):
             k = np.arange(np.ceil(lo), np.floor(hi) + 1)
             for i, (kind, color) in enumerate(MODELS.items()):
-                f = facts[kind].feature(name)
+                f = facts[kind].feature(feature)
                 _counts(ax, k, f.cuts, f.scores, f.simultaneous, color, (2 * i - 1) * DODGE)
-            ax.hlines(data.truth.term(name, {name: k}), k - 0.32, k + 0.32, color=INK, lw=1.3, zorder=4)
+            ax.hlines(data.truth.term(feature, {feature: k}), k - 0.32, k + 0.32, color=INK, lw=1.3, zorder=4)
             ax.set_xticks(k)
         else:
             x = np.linspace(lo, hi, 2_000)
             for kind, color in MODELS.items():
-                f = facts[kind].feature(name)
+                f = facts[kind].feature(feature)
                 _continuous(ax, x, f.cuts, f.scores, f.simultaneous, color)
-            ax.plot(x, data.truth.term(name, {name: x}), color=INK, lw=1.1, ls=(0, (4, 2)), zorder=4)
+            ax.plot(x, data.truth.term(feature, {feature: x}), color=INK, lw=1.1, ls=(0, (4, 2)), zorder=4)
             if hi >= 10_000:
                 ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v / 1000:.0f}k"))
-        shares = " · ".join([f"T {planted[name]:.1%}"] + [f"{k} {facts[k].feature(name).share.value:.1%}" for k in MODELS])
-        ax.set_title(f"{name}\n{shares}", loc="left", pad=4)
+        shares = " · ".join([f"T {planted[feature]:.1%}"] + [f"{k} {facts[k].feature(feature).share.value:.1%}" for k in MODELS])
+        ax.set_title(f"{feature}\n{shares}", loc="left", pad=4)
         ax.axhline(0, color=GRID, lw=0.8, zorder=0)
         ax.tick_params(length=2.5, pad=2)
         for side in ("top", "right"):
@@ -105,9 +107,12 @@ def draw(scenario: dgp.Scenario, out: Path = OUT) -> Path:
     fig.suptitle(f"Planted vs fitted terms on {scenario.id}. Shading and bars: each model's simultaneous 95% band from "
                  f"{refits} Poisson refits,\nthe band the verifier uses. Titles: share of importance.",
                  x=0.01, ha="left", color=INK, fontsize=7.5, linespacing=1.4)  # fmt: skip
-    fig.tight_layout(rect=(0, 0.035, 1, 0.975), h_pad=1.2, w_pad=0.8)
+    if rows == 3:
+        fig.tight_layout(rect=(0, 0.035, 1, 0.975), h_pad=1.2, w_pad=0.8)
+    else:
+        fig.tight_layout(rect=(0, 0.11, 1, 0.97), w_pad=0.8)
     out.mkdir(parents=True, exist_ok=True)
-    path = out / f"fig2_curves_{scenario.id}"
+    path = out / (name or f"fig2_curves_{scenario.id}")
     for suffix in (".png", ".pdf"):
         fig.savefig(path.with_suffix(suffix), dpi=300, facecolor=SURFACE)
     plt.close(fig)

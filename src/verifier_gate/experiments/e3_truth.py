@@ -10,7 +10,8 @@ than hedges that are false against T, and P_U against T (a text with such a clai
 affected.
 
 Run: `uv run python -m verifier_gate.experiments.e3_truth`. Writes results/e3/v3-x3/truth_without_hedges.csv
-(per writer, naming and pilot datasets apart, as E3's summary) and truth_rows.csv (per run and arm).
+(per writer, naming and pilot datasets apart, as E3's summary), truth_rows.csv (per run and arm) and claims.csv
+(per claim a text states: its DSL line and its verdicts against M and T; the data of Fig. 4).
 """
 
 import json
@@ -57,11 +58,12 @@ def score_text(sentences: list, ctx: g.Context, truth, run_id: str, system: str,
         "false T": sum(v == FALSE for v in on_t),
         "false T, no hedges": sum(v == FALSE and not h for v, h in zip(on_t, hedge)),
         "hedges false T": sum(v == FALSE and h for v, h in zip(on_t, hedge)),
+        "lines": [(line, value, t, h) for (line, value), t, h in zip(lines, on_t, hedge)],
     }  # fmt: skip
 
 
-def rescore(client: Client) -> pd.DataFrame:
-    system, ctxs, truths, out = x3_system(), {}, {}, []
+def rescore(client: Client) -> tuple[pd.DataFrame, pd.DataFrame]:
+    system, ctxs, truths, out, claims = x3_system(), {}, {}, [], []
     for writer in WRITERS:
         rows = pd.read_csv(SOURCE / writer / "rows.csv").set_index("run")
         for path in sorted((SOURCE / writer / "runs").glob("*.json")):
@@ -80,8 +82,11 @@ def rescore(client: Client) -> pd.DataFrame:
                 e3 = rows.loc[run.run_id]
                 if bool(found["scored"]) != bool(e3[f"{arm} scored"]) or (found["scored"] and any(found[k] != e3[f"{arm} {k}"] for k in CHECKED)):
                     raise ValueError(f"{run.run_id} ({arm}): the rebuilt readings do not reproduce E3's row")
-                out.append({"writer": writer, "naming": naming, "pilot dataset": scenario in e2_text.PILOT, "run": run.run_id, "arm": arm, **found})
-    return pd.DataFrame(out)
+                base = {"writer": writer, "naming": naming, "pilot dataset": scenario in e2_text.PILOT, "run": run.run_id, "arm": arm}
+                claims += [base | {"scenario": scenario, "model": model, "dsl": line, "verdict M": m, "verdict T": t, "hedge": h}
+                           for line, m, t, h in found.pop("lines", [])]  # fmt: skip
+                out.append(base | found)
+    return pd.DataFrame(out), pd.DataFrame(claims)
 
 
 def summarise(table: pd.DataFrame) -> pd.DataFrame:
@@ -105,8 +110,9 @@ def summarise(table: pd.DataFrame) -> pd.DataFrame:
 
 def main() -> None:
     log = Path(tempfile.mkdtemp(prefix="e3_truth_")) / "lookups.jsonl"  # cache lookups only: not the call log
-    table = rescore(Client("batch", log_path=log))
+    table, claims = rescore(Client("batch", log_path=log))
     table.to_csv(SOURCE / "truth_rows.csv", index=False)
+    claims.to_csv(SOURCE / "claims.csv", index=False)
     summary = summarise(table)
     summary.to_csv(SOURCE / "truth_without_hedges.csv", index=False)
     print(f"{len(table)} texts rebuilt from the cache; every scored text reproduces E3's counts ({', '.join(CHECKED)})")

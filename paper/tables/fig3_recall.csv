@@ -1,0 +1,37 @@
+row,condition,errors,caught,recall
+M1,plan level,365,365,1.0
+M2,plan level,791,791,1.0
+M3,plan level,551,551,1.0
+M4,plan level,567,567,1.0
+M5,plan level,527,527,1.0
+M6,plan level,168,168,1.0
+M7,plan level,2492,2492,1.0
+M8,plan level,131,131,1.0
+M9,plan level,1903,1903,1.0
+M11,plan level,3225,3225,1.0
+M1,"text, synthetic, x3",194,194,1.0
+M11,"text, synthetic, x3",572,571,0.9982517482517482
+M3,"text, synthetic, x3",359,359,1.0
+M4,"text, synthetic, x3",313,313,1.0
+M6,"text, synthetic, x3",100,100,1.0
+M7,"text, synthetic, x3",160,160,1.0
+M8,"text, synthetic, x3",71,71,1.0
+M9,"text, synthetic, x3",543,195,0.35911602209944754
+M1,"text, synthetic, x4",192,192,1.0
+M11,"text, synthetic, x4",573,570,0.9947643979057592
+M3,"text, synthetic, x4",357,357,1.0
+M4,"text, synthetic, x4",312,312,1.0
+M6,"text, synthetic, x4",99,99,1.0
+M7,"text, synthetic, x4",160,160,1.0
+M8,"text, synthetic, x4",71,71,1.0
+M9,"text, synthetic, x4",542,458,0.8450184501845018
+M1,"text, plasmode, x4",65,65,1.0
+M11,"text, plasmode, x4",180,180,1.0
+M3,"text, plasmode, x4",57,57,1.0
+M4,"text, plasmode, x4",87,87,1.0
+M6,"text, plasmode, x4",3,3,1.0
+M7,"text, plasmode, x4",64,63,0.984375
+M8,"text, plasmode, x4",20,20,1.0
+M9,"text, plasmode, x4",174,130,0.7471264367816092
+LLM-written errors (human labels),"text, synthetic, x3",95,93,0.9789473684210527
+LLM-written errors (human labels),"text, synthetic, x4",95,93,0.9789473684210527
