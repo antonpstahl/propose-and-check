@@ -1,0 +1,844 @@
+{
+ "F001": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "States a small upward effect and hedges only its size; the claim hedges the direction, settled (+0.11, band +0.02 to +0.19). Size hedge holds: 1.7%, band 0.4-3.0%."
+  }
+ },
+ "F002": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'somewhat higher risk' is magnitude; 'increases' is true (net +0.23, band +0.09 to +0.34, no exception)."
+  }
+ },
+ "F003": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "Reading correct (presupposes weak or moderate). Share 6.7%, band 1.8-9.2%; 100 refits: 73 moderate, 23 weak, 4 below 2% (0.86, 1.07, 1.62, 1.97%). Effect detectable (-0.41, band -0.73 to -0.03). Blocked by about 2 refits."
+  }
+ },
+ "F004": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'steepest rise at high utilization' is no peak at 1 (no interior maximum); biggest step at 0.712."
+  }
+ },
+ "F005": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Three features read as one three-way term; each hardly matters (1.5%, 1.1%, 0.5%, none detectable)."
+  }
+ },
+ "F006": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Arguments swapped: the sentence says inquiries' effect reverses with history (+1.02 to -0.38, true) and history's effect grows."
+  }
+ },
+ "F007": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Narrowed to sign flip; general hedge holds (utilization x history 3.2%, band 0.3-3.9%, not detectable)."
+  }
+ },
+ "F008": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Curve 0: -0.4, 1: +0.2, >=2: +0.5; the rise lies within 0-2, the jump at 0.5."
+  }
+ },
+ "F009": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'matter less' read as 'hardly matters'; dti 6.6% at rank 5 does matter less.",
+   "1": "'the other attributes matter less' read as 'feature_b hardly matters'; sentence 7 hedges feature_b."
+  }
+ },
+ "F010": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Narrowed to sign flip; general hedge holds (utilization x history 2.4%, band 0.7-4.2%, not detectable)."
+  }
+ },
+ "F011": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented jump at 0.7 (not significant); steepest steps at 0.78-0.85."
+  }
+ },
+ "F012": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "Merged the stated 'at most weak' with the hedge. The hedge 'weak or negligible' is shaky: age 1.4%, band 0.3-2.5%, not detectable, so negligible is certified; unsettled(weak) would pass, unsettled(negligible) fail. Lean misreading."
+  }
+ },
+ "F013": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'tends to increase'; 'generally increases' true (net +0.20, band +0.004 to +0.51)."
+  }
+ },
+ "F014": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Narrowed to amplification (false: utilization's effect shrinks 3.12 to 2.86); general hedge holds (1.8%, band 1.3-2.8%)."
+  }
+ },
+ "F015": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "As F014 (same facts)."
+  }
+ },
+ "F016": {
+  "labels": {
+   "0": "unsure",
+   "1": "unsure",
+   "2": "unsure",
+   "3": "unsure"
+  },
+  "notes": {
+   "0": "'lower part of the list' read as ranks 6-9; age rank 9, band 5-9. Lean misreading.",
+   "1": "Inquiries rank 7, band 5-9. Lean misreading.",
+   "2": "Months at address rank 8, band 5-9. Lean misreading.",
+   "3": "Dependents rank 5, band 4-9. Lean real error."
+  }
+ },
+ "F017": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "Narrowed to amplification; general hedge holds (dti x feature_b 2.4%, band 0-3.4%, not detectable).",
+   "1": "Narrowed to amplification; general hedge holds (history x feature_b 2.8%, band 0-3.9%, not detectable)."
+  }
+ },
+ "F018": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Narrowed to sign flip; general hedge holds (history x inquiries 2.2%, band 0-3.4%, not detectable)."
+  }
+ },
+ "F019": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'from 0 to 2 or more' is the feature's range, flagged as an uncheckable number (D44 b); 'increases' covers it (net +0.94)."
+  }
+ },
+ "F020": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'do not settle the shape' read as a hedge on a jump at 0; direction and weak to moderate (7.4%, band 2.5-9.7%) hold."
+  }
+ },
+ "F021": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented peak at 0.9 (no interior maximum); biggest step at 0.725."
+  }
+ },
+ "F022": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "unsettled(negligible) holds: dti 4.4%, band 1.4-7.6%, not detectable."
+  }
+ },
+ "F023": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'interact strongly' = a strong pair; pair share 13.8%, band 12.1-22.6%: not settled, point estimate moderate."
+  }
+ },
+ "F024": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'most of the rise at high utilization' read as a peak at 0.9 (no interior maximum)."
+  }
+ },
+ "F025": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented peak at 0.9 (no interior maximum); biggest step at 0.628."
+  }
+ },
+ "F026": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented peak at 1 (no interior maximum); biggest step +1.0 at 0.801."
+  }
+ },
+ "F027": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'add modest risk when high' read as a jump at 0.5; inquiries step at 4; size unsettled (2.4%, band 1.8-3.5%).",
+   "1": "Same for dti: step at 0.444; size unsettled (6.4%, band 4.8-7.2%)."
+  }
+ },
+ "F028": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'weak or not clearly detectable' read as 'hardly matters'; age not detectable (4.0%, band 1.7-7.9%).",
+   "1": "Same for inquiries: 1.2%, band 0-5.3%, not detectable."
+  }
+ },
+ "F029": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Income net change -0.79, band -0.90 to -0.64."
+  }
+ },
+ "F030": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'estimated share is small' read as 'about 0%'; pair 1.7%, band 0-4.7%, not detectable, so 'do not interact' holds."
+  }
+ },
+ "F031": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'shape not settled' read as a hedge on a peak at 0; weak to moderate (5.5%, band 2.6-8.4%) holds."
+  }
+ },
+ "F032": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented jump at 0.7 (not significant); biggest step +0.89 at 0.804."
+  }
+ },
+ "F033": {
+  "labels": {
+   "0": "unsure",
+   "1": "unsure"
+  },
+  "notes": {
+   "0": "'does not interact ... as far as the data can tell; the data do not settle either way'. Literal reading unsupported (dti x months 2.3%, band 0-3.7%); hedged reading holds. Lean misreading.",
+   "1": "Same for inquiries x dependents (2.2%, band 0-3.9%). Lean misreading."
+  }
+ },
+ "F034": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "Pair term 'feature_a & feature_b' plus 'at most moderate'. The correct reading fails for feature_a (0.3%, band 0.1-3.9%, not detectable: hardly matters certified); fine for feature_b (2.0%, band 0-5.9%)."
+  }
+ },
+ "F035": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'tends to lower'; generally decreasing true (net -0.62, band -1.24 to -0.45)."
+  }
+ },
+ "F036": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Narrowed to amplification; general hedge holds (delinquencies x dti 3.0%, band 0-4.6%, not detectable)."
+  }
+ },
+ "F037": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented peak at 1 (no interior maximum); biggest step at 0.804."
+  }
+ },
+ "F038": {
+  "labels": {
+   "0": "unsure",
+   "1": "unsure",
+   "2": "unsure"
+  },
+  "notes": {
+   "0": "'among the least important' read as ranks 7-9; inquiries rank 6, band 4-9. Lean real error.",
+   "1": "feature_a rank 9, band 6-9. Lean misreading.",
+   "2": "feature_b rank 8, band 5-9. Lean misreading."
+  }
+ },
+ "F039": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "States 'risk decreasing' and hedges the shape; direction settled (net -0.44, band -0.69 to -0.08).",
+   "1": "Shape hedge read as a jump at income 0."
+  }
+ },
+ "F040": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'work together as the main source of risk' read as a pair rank; ranks exist only for features (utilization 1, delinquencies 2)."
+  }
+ },
+ "F041": {
+  "labels": {
+   "0": "misreading",
+   "1": "unsure"
+  },
+  "notes": {
+   "0": "unsettled(negligible) holds for months at address: 2.1%, band 0.7-3.6%, not detectable.",
+   "1": "Correct reading 'unsettled whether dependents matter' fails: 1.4%, band 0.7-2.8%, not detectable, so hardly matters is certified."
+  }
+ },
+ "F042": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'n_dependents' is not a model name; num_dependents at most moderate holds (band 0-5.9%)."
+  }
+ },
+ "F043": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "'rank low' read as ranks 6-9; inquiries rank 7, band 4-9. Coin flip."
+  }
+ },
+ "F044": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'plays a smaller role' read as 'moderate'; dti rank 5-6, share 5.0%."
+  }
+ },
+ "F045": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "History net change -0.50, band -0.67 to -0.43."
+  }
+ },
+ "F046": {
+  "labels": {
+   "0": "unsure",
+   "1": "unsure",
+   "2": "unsure",
+   "3": "unsure",
+   "4": "unsure",
+   "5": "unsure"
+  },
+  "notes": {
+   "0": "Six 'grows with' hedges invented; the sentence's claim (unsettled whether they interact in any practical way) is itself wrong: history x age band 0-1.8%, history x dependents 0-1.4%, dependents x income 0-1.5%; the other three pairs are not in the model.",
+   "1": "Six 'grows with' hedges invented; the sentence's claim (unsettled whether they interact in any practical way) is itself wrong: history x age band 0-1.8%, history x dependents 0-1.4%, dependents x income 0-1.5%; the other three pairs are not in the model.",
+   "2": "Six 'grows with' hedges invented; the sentence's claim (unsettled whether they interact in any practical way) is itself wrong: history x age band 0-1.8%, history x dependents 0-1.4%, dependents x income 0-1.5%; the other three pairs are not in the model.",
+   "3": "Six 'grows with' hedges invented; the sentence's claim (unsettled whether they interact in any practical way) is itself wrong: history x age band 0-1.8%, history x dependents 0-1.4%, dependents x income 0-1.5%; the other three pairs are not in the model.",
+   "4": "Six 'grows with' hedges invented; the sentence's claim (unsettled whether they interact in any practical way) is itself wrong: history x age band 0-1.8%, history x dependents 0-1.4%, dependents x income 0-1.5%; the other three pairs are not in the model.",
+   "5": "Six 'grows with' hedges invented; the sentence's claim (unsettled whether they interact in any practical way) is itself wrong: history x age band 0-1.8%, history x dependents 0-1.4%, dependents x income 0-1.5%; the other three pairs are not in the model."
+  }
+ },
+ "F047": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'generally lowers'; decreasing true (net -0.84, no exception)."
+  }
+ },
+ "F048": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "Hedge 'uniform or concentrated' read as a jump at 0.5; no lexicon word for the hedge; jump location band 0.16-0.81. Lean misreading."
+  }
+ },
+ "F049": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "States 'generally increasing', hedges the shape; direction settled (net +0.32, band +0.01 to +0.61)."
+  }
+ },
+ "F050": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'highest levels when utilization is high' is the top of a rising curve, not a peak at 1."
+  }
+ },
+ "F051": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'smaller effects' (comparative) read as 'at most weak'; dti 5.8% (band 4.4-6.4%) is below income and history. Close to the table's 'a small effect'."
+  }
+ },
+ "F052": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'strongest jump at high levels' read as a jump at 0.8 (not significant); biggest step at 0.726."
+  }
+ },
+ "F053": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "'among the less important features' read as ranks 6-9; dti rank 5, band 4-9. Lean real error."
+  }
+ },
+ "F054": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'do not reverse each other's effects, but unsettled whether exactly additive' read as 'do not interact'; the hedge holds (2.3%, band 1.0-4.9%)."
+  }
+ },
+ "F055": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'inquiries' effect larger when history is short' read as 'grows with history'; facts +0.90 to -0.46."
+  }
+ },
+ "F056": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Income net change -0.84, band -0.94 to -0.69."
+  }
+ },
+ "F057": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'moderate to strong' read as 'moderate'; 18.1%, band 11.2-20.2% fits the set."
+  }
+ },
+ "F058": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'flattening at two or more' read as a peak at 2."
+  }
+ },
+ "F059": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'tends to fall'; generally decreasing true (net -0.27, band -0.66 to -0.09)."
+  }
+ },
+ "F060": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "unsettled(negligible) holds for months at address: 2.1%, band 0.7-3.6%."
+  }
+ },
+ "F061": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'generally increasing'; true (net +0.12, band +0.04 to +0.21)."
+  }
+ },
+ "F062": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented jump at 0.7 (not significant); biggest step at 0.777."
+  }
+ },
+ "F063": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "As F014 (same facts)."
+  }
+ },
+ "F064": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'most of the increase at high levels' says where, not an exception; increasing true (net +3.57)."
+  }
+ },
+ "F065": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading",
+   "2": "misreading",
+   "3": "misreading",
+   "4": "misreading"
+  },
+  "notes": {
+   "0": "States dti increasing, hedges the shape; direction settled (net +0.23, band +0.002 to +0.50).",
+   "1": "History decreasing settled (net -0.23, band -0.53 to -0.02).",
+   "2": "Shape hedge read as a peak at history 0.5.",
+   "3": "Shape hedge read as a jump at dti 0.5.",
+   "4": "Shape hedge read as a jump at history 0.5."
+  }
+ },
+ "F066": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "History net change -0.65, band -0.78 to -0.55."
+  }
+ },
+ "F067": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Curve 0: -0.4, 1: +0.2, >=2: +0.5; jump at 0.5."
+  }
+ },
+ "F068": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'generally decreasing'; true (net -0.31, band -0.95 to -0.15)."
+  }
+ },
+ "F069": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Income net change -0.79, band -0.87 to -0.57."
+  }
+ },
+ "F070": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented peak at 1 (no interior maximum); biggest step at 0.711."
+  }
+ },
+ "F071": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Income net change -0.76, band -0.89 to -0.58."
+  }
+ },
+ "F072": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Curve 0: -0.4, 1: +0.2, >=2: +0.56; jump at 1."
+  }
+ },
+ "F073": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'generally increases'; increasing true (net +2.93)."
+  }
+ },
+ "F074": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'slightly increasing'; increasing true (net +0.11, band +0.02 to +0.19)."
+  }
+ },
+ "F075": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented peak at 0.9 (no interior maximum); biggest step at 0.712."
+  }
+ },
+ "F076": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'do not settle the shape' read as a peak at age 0; age hardly matters (0.3%, band 0.2-1.5%).",
+   "1": "Same for months at address (0.5%, band 0.3-2.1%)."
+  }
+ },
+ "F077": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "'largest increase at the highest levels' read as a jump at 0.9 (not significant); biggest step at 0.605 (+0.75) against +0.64 at 0.755, so the sentence slightly overstates. Lean misreading."
+  }
+ },
+ "F078": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Curve 0: -0.4, 1: +0.2, >=2: +0.61; jump at 0.5."
+  }
+ },
+ "F079": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented jump at 0.7 (not significant); biggest step at 0.85."
+  }
+ },
+ "F080": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'rises steadily'; increasing true (net +3.41)."
+  }
+ },
+ "F081": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Opening sentence dropped in E3; the text still says 'matters less than utilization' (18.1% vs 40.6%, bands apart) and hedges utilization x history (2.1%, band 0-4.2%). Covered by the page's rule; it never states utilization's strength or direction."
+  }
+ },
+ "F082": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "Asserts 'the effect of past delinquencies grows somewhat with recent inquiries'; contrast band -0.02 to +0.30, not settled; sentence 9 hedges the same thing."
+  }
+ },
+ "F083": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'do not settle whether age matters'; age 1.5%, band 0.2-2.4%, not detectable, so hardly matters is certified (D25) and the hedge refuted (D30)."
+  }
+ },
+ "F084": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'sharpest drop at lower incomes' read as a jump at income 0 (not significant); biggest step at 25,000."
+  }
+ },
+ "F085": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'highest risk at high utilization' read as a peak at 1 (no interior maximum)."
+  }
+ },
+ "F086": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Curve 0: -0.4, 1: +0.2, >=2: +0.6; jump at 0.5."
+  }
+ },
+ "F087": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'whether negligible, weak or moderate' states the range and hedges the class; each class undecidable (3.4%, band 0.3-7.8%)."
+  }
+ },
+ "F088": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'n_dependents' is not a model name; num_dependents hardly matters (1.9%, band 0-4.6%, not detectable)."
+  }
+ },
+ "F089": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Curve 0: -0.4, 1: +0.2, >=2: +0.6; jump at 0.5."
+  }
+ },
+ "F090": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "unsettled(negligible) holds for dependents: 2.0%, band 0.6-3.2%, undecidable."
+  }
+ },
+ "F091": {
+  "labels": {
+   "0": "error",
+   "1": "error"
+  },
+  "notes": {
+   "0": "Months at address 1.6%, band 0.3-4.1%, not detectable: hardly matters certified, hedge refuted.",
+   "1": "Dependents 1.9%, band 0.2-4.0%, not detectable: hardly matters certified, hedge refuted."
+  }
+ },
+ "F092": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Narrowed to sign flip; general hedge holds (utilization x delinquencies 3.2%, band 1.4-5.4%, not detectable)."
+  }
+ },
+ "F093": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'zero to one or two' read as a jump at 1.5; jump at 0.5."
+  }
+ },
+ "F094": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "States amplification (verifier: true); the claim hedges it."
+  }
+ },
+ "F095": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'the other features they are paired with' read as pairs with feature_a, which the model lacks; the model's pairs (history x inquiries 5.6%, band 0-6.6%) are unsettled.",
+   "1": "Same; utilization x inquiries 2.8%, band 0-3.5%, unsettled."
+  }
+ },
+ "F096": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'dti risks rising with default' (garbled: risk rises with dti) read as a hedge; increasing settled (net +0.47, band +0.08 to +0.73).",
+   "1": "Narrowed to amplification; general hedge holds (delinquencies x dti 3.0%, band 0-4.6%)."
+  }
+ },
+ "F097": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Invented jump at 0.7 (not significant); steepest rise at the high end."
+  }
+ },
+ "F098": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'concentrated at high utilization' read as a jump at 0.7 (not significant)."
+  }
+ },
+ "F099": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Curve 0: -0.4, 1: +0.2, >=2: +0.6; jump at 0.5."
+  }
+ }
+}

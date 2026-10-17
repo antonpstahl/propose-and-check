@@ -1,0 +1,11 @@
+quantity,value
+"P_U off, E3 (unlabelled)",0.5853
+sampled drafts: real error / open / misreading,14 / 7 / 19 of 40
+"P_U off, labelled",0.2049
+"P_U off, labelled, 95% interval",0.1295 to 0.2955
+"P_U off, open drafts counted as errors",0.3073
+"P_U on, E3 (unlabelled)",0.0453
+"P_U on, labelled (open: as errors)",0.0016 (0.0078)
+"E_U, E3 (unlabelled)",0.923
+"E_U, labelled",0.992
+"E_U, worst case (P_U on with open texts, P_U off at its interval's low end)",0.94

@@ -1,0 +1,360 @@
+{
+ "D001": {
+  "labels": {
+   "0": "error",
+   "1": "misreading",
+   "2": "misreading"
+  },
+  "notes": {
+   "0": "'risk jumps at about 0.71': the EBM's rise is spread over many cuts; no window holds half the range (jump not significant).",
+   "1": "'risk generally decreases as income rises' read as increases (net -0.62).",
+   "2": "'whether dti matters more than a weak effect' read as a comparison with a term 'weak'; the hedge holds (2.6%, band 0.8-7.7%)."
+  }
+ },
+ "D002": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "States 'risk decreasing' and hedges the shape; direction settled (net -0.41, band -0.73 to -0.03)."
+  }
+ },
+ "D003": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'do not settle whether dti matters strongly': share band 0.3-8.4%, strong (15%+) ruled out."
+  }
+ },
+ "D004": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'rises steeply once utilization passes about 78%': the largest step is at 0.777 (exact curve 0.772); no jump is claimed."
+  }
+ },
+ "D005": {
+  "labels": {
+   "0": "unsure",
+   "1": "unsure"
+  },
+  "notes": {
+   "0": "Interaction hedge narrowed to amplification; the general hedge fails too: dti x dependents is not in the model (no interaction).",
+   "1": "Same for inquiries x months at address (not in the model)."
+  }
+ },
+ "D006": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'do not settle whether ... age change[s] risk in a consistent direction': age decreases risk (net -0.40, band -0.57 to -0.02), settled."
+  }
+ },
+ "D007": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'especially above about 70%': the largest step is at 0.698; no jump is claimed."
+  }
+ },
+ "D008": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "States 'at most a moderate size' and hedges within it; the claim hedges 'at most moderate'.",
+   "1": "General hedge holds (delinquencies x dti 3.0%, band 0-4.6%, not detectable)."
+  }
+ },
+ "D009": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading",
+   "2": "misreading"
+  },
+  "notes": {
+   "0": "Hedges whether the effects 'follow a single steady pattern' (shape, unresolved per the facts); read as a hedge on dti's direction (settled).",
+   "1": "Same for history length (direction settled).",
+   "2": "Same for income (direction settled)."
+  }
+ },
+ "D010": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "Read as a comparison with dti; the correct reading 'unsettled whether larger than weak' fails too: age 1.4%, band 0.3-2.5%."
+  }
+ },
+ "D011": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'risk generally decreasing as history gets longer' read as increasing (net -0.67)."
+  }
+ },
+ "D012": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'do not settle whether history length and inquiries interact': the interaction is settled (share band 2.0-4.1%, detectable; amplification true)."
+  }
+ },
+ "D013": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'rising sharply once utilization passes roughly 0.7': the largest step is at 0.725; no jump is claimed."
+  }
+ },
+ "D014": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'do not settle whether [utilization's effect] depends on income': no interaction certified (1.3%, band to 4.0%, not detectable)."
+  }
+ },
+ "D015": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'jumps once utilization passes about 0.73': the step at 0.726 is 47% of the range in the handover, and the exact curve's largest jump is 0.55 (not significant)."
+  }
+ },
+ "D016": {
+  "labels": {
+   "0": "unsure",
+   "1": "error"
+  },
+  "notes": {
+   "0": "'especially above roughly three-quarters': the step at 0.628 (+1.32) is as large as the one at 0.744 (+1.25). Lean real error.",
+   "1": "Opaque naming: the writer saw feature_a/feature_b, yet hedges an interaction with 'the number of dependents' (also in sentences 8 and 9)."
+  }
+ },
+ "D017": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'sharpest step between about 0.63 and 0.75': the exact curve's largest jump is at 0.675; read as a jump at 0.69 of half the range."
+  }
+ },
+ "D018": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'risk rising as the ratio gets above roughly the middle of its range' (about 0.3): the step is at 0.446. The same sentence is in the released text (F047's run); the scoring readings missed it there."
+  }
+ },
+ "D019": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading",
+   "2": "misreading"
+  },
+  "notes": {
+   "0": "'a much higher one above roughly 0.8' describes the level, which is true (+3.8); not a jump.",
+   "1": "Jump at 1 (0.5 gap), the rise lies within 0-2.",
+   "2": "'practically meaningful effect' read as moderate or strong; unsettled(negligible) holds (1.7%, band 0.4-3.0%, detectable)."
+  }
+ },
+ "D020": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "Narrowed to amplification; the general hedge fails too: age x dependents band 0-1.2%, no interaction."
+  }
+ },
+ "D021": {
+  "labels": {
+   "0": "misreading",
+   "1": "unsure"
+  },
+  "notes": {
+   "0": "Jump at 0.5, the rise lies within 0-2.",
+   "1": "States 'at most weak', hedges 'beyond a small share'; the hedge fails too: feature_b 1.4%, band 0.7-2.8%, not detectable (hardly matters certified)."
+  }
+ },
+ "D022": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "General hedge holds (utilization x delinquencies 1.8%, band 1.3-2.8%)."
+  }
+ },
+ "D023": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "As D022 (same facts)."
+  }
+ },
+ "D024": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "As D022 (same facts)."
+  }
+ },
+ "D025": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading",
+   "2": "unsure"
+  },
+  "notes": {
+   "0": "'especially above roughly 0.6': most of the rise (3.4 of 4.2) lies above 0.606; no jump is claimed.",
+   "1": "Jump at 1, the rise lies within 0-2.",
+   "2": "Read as 'at most moderate'; the correct reading 'unsettled whether dependents matter' fails too (1.1%, band 0.2-2.2%, not detectable)."
+  }
+ },
+ "D026": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'jumps sharply once utilization reaches about 0.71, the largest single step': true of the handover's merged step (+1.78), but the exact curve's largest jump is 1.17 of a 3.9 range, not significant."
+  }
+ },
+ "D027": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'especially above about 0.71': 58% of the rise lies above 0.711; no jump is claimed."
+  }
+ },
+ "D028": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'whether this effect is strong enough to matter beyond a small contribution' read as 'strong'; unsettled(small) holds (6.9%, band 2.7-10.1%)."
+  }
+ },
+ "D029": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'the largest step at high utilization' read as a jump at 0.7."
+  }
+ },
+ "D030": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'risk stays low until utilization passes roughly three-quarters': risk rises at 0.441 and 0.626 (from -0.5 to +1.4) before 0.746."
+  }
+ },
+ "D031": {
+  "labels": {
+   "0": "error"
+  },
+  "notes": {
+   "0": "'risk jumps sharply once utilization reaches about 75 percent': the step at 0.746 is 46% of the range in the handover; exact largest jump 0.58, not significant."
+  }
+ },
+ "D032": {
+  "labels": {
+   "0": "error",
+   "1": "error",
+   "2": "error"
+  },
+  "notes": {
+   "0": "'jumps once utilization passes about 0.75': the larger step is at 0.628 (+1.4); exact largest jump 0.81 of a 3.0 range, not significant.",
+   "1": "'do not settle whether higher income lowers predicted risk': decreasing settled (net -0.37, band -0.66 to -0.04).",
+   "2": "'do not settle whether age matters': 1.4%, band 0-4.8%, not detectable, hardly matters certified."
+  }
+ },
+ "D033": {
+  "labels": {
+   "0": "misreading",
+   "1": "error"
+  },
+  "notes": {
+   "0": "'the data do not separate one delinquency from several' (the curve is flat for 1 or more, true) read as a self-comparison.",
+   "1": "'The risk jumps at a utilization of about 0.745': as D032 (same model)."
+  }
+ },
+ "D034": {
+  "labels": {
+   "0": "error",
+   "1": "error"
+  },
+  "notes": {
+   "0": "'risk jumps once an applicant has two or more delinquencies': the jump is at 1 (+0.6); the step at 2 is 40% of the range.",
+   "1": "'do not settle whether months at address matters': 0.3%, band 0.2-2.0%, not detectable, hardly matters certified."
+  }
+ },
+ "D035": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'most of the increase arriving by the second delinquency' read as a jump at 2; jump at 0.5.",
+   "1": "'inquiries' effect larger for short histories' read as 'grows with history' (facts +0.84 to -0.13)."
+  }
+ },
+ "D036": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "'rises steeply once utilization passes roughly 0.6': steps of +0.7 to +1.1 above 0.614 against +0.3 below; no jump is claimed."
+  }
+ },
+ "D037": {
+  "labels": {
+   "0": "misreading"
+  },
+  "notes": {
+   "0": "Arguments swapped: the sentence says inquiries' effect reverses with history (+1.02 to -0.38, true)."
+  }
+ },
+ "D038": {
+  "labels": {
+   "0": "misreading",
+   "1": "unsure"
+  },
+  "notes": {
+   "0": "'rising most between zero and two' read as a jump at 2; jump at 1.",
+   "1": "'do not settle how large the effect of inquiries is': weak is certified (4.4%, band 2.6-4.9%), but 2 of 100 refits are above 5% and 1 below 2%; the hedge fails by about one refit."
+  }
+ },
+ "D039": {
+  "labels": {
+   "0": "misreading",
+   "1": "misreading"
+  },
+  "notes": {
+   "0": "'the two together raise risk more than either alone' (amplification's consequence) read as the pair's importance exceeding delinquencies'.",
+   "1": "Same, against utilization."
+  }
+ },
+ "D040": {
+  "labels": {
+   "0": "unsure"
+  },
+  "notes": {
+   "0": "'do not settle whether inquiries have more than a weak effect': band 2.6-4.9%, 2 of 100 refits above 5%; refuted by about one refit (the mirror of F003)."
+  }
+ }
+}

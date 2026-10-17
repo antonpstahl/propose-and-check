@@ -19,7 +19,8 @@ label per claim; never which extractor blocked it) and writes items.json, key.cs
 fa_page.html next to this file). A claim is labelled error (the sentence says this, and the facts do not support
 it: the block is right), misreading (the sentence does not say this: a false alarm) or unsure. `--score
 labels.json` writes score.csv: per extractor version, the blocked texts that are real errors, false alarms (every
-blocking claim a misreading) or open, and the false-alarm rate per text, blocked-but-correct over correct texts.
+blocking claim a misreading) or open, and the false-alarm rate per text, blocked-but-correct over correct texts. `--e3 labels.json` writes e3_residual.csv: E3's P_U(on) re-scored with the
+labels.
 """
 
 import argparse
@@ -40,7 +41,7 @@ from verifier_gate.experiments.pilot import NAMINGS
 from verifier_gate.gate.template import phrase, synthetic_label
 from verifier_gate.llm.handover import handover
 from verifier_gate.verifier.certified import certified_plan
-from verifier_gate.experiments.e3_end_to_end import SCORING_REPLICAS
+from verifier_gate.experiments.e3_end_to_end import RESULTS as E3_RESULTS, SCORING_REPLICAS
 from verifier_gate.gate import roundtrip as rt
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.llm import batch, extract, prompts, settings
@@ -221,6 +222,133 @@ def score(out: Path, labels_path: Path) -> pd.DataFrame:
     return table
 
 
+def e3_residual(out: Path, labels_path: Path) -> pd.DataFrame:
+    """E3's P_U(on) re-scored with the labels (plan §14.21). E3 counts a gate-on text if its scoring readings (x3,
+    replicas 3 to 5) find a claim false against M in at least two readings; those claims are x3's blocked claims of
+    kind "false" here. A text keeps its count if a label calls one of them a real error; open if one is unsure;
+    else it was a misreading. Haiku writer, outside the pilot datasets, as in the false-alarm run."""
+    labels = json.loads(labels_path.read_text())
+    key = pd.read_csv(out / "key.csv")
+    key["human"] = [labels.get(r.item, {}).get("labels", {}).get(str(r.claim)) for r in key.itertuples()]
+    false = key[(key.x3 == True) & (key.kind == "false")]  # noqa: E712
+    verdict = false.groupby("run").human.agg(lambda h: "error" if "error" in set(h) else "open" if "unsure" in set(h) else "misreading")
+    rows_ = pd.read_csv(E3_RESULTS / e2_text.E3_SOURCE / "haiku" / "rows.csv")
+    on = rows_[(rows_["on scored"] == True) & (~rows_["pilot dataset"])]  # noqa: E712
+    if set(on.run[on["on false M"] > 0]) != set(verdict.index):
+        raise ValueError("E3's texts with a false claim are not x3's blocked texts with a false claim")
+    on = on.assign(verdict=on.run.map(verdict))
+    rows = []
+    for naming, part in [*on.groupby("naming"), ("both", on)]:
+        n, error, open_ = len(part), int((part.verdict == "error").sum()), int((part.verdict == "open").sum())
+        rows.append({"naming": naming, "texts scored": n, "with a false claim (E3)": int(part.verdict.notna().sum()),
+                     "real error": error, "open": open_, "misreading": int((part.verdict == "misreading").sum()),
+                     "P_U on (E3)": round(float(part.verdict.notna().mean()), 4), "P_U on, labelled": round(error / n, 4),
+                     "P_U on, open as errors": round((error + open_) / n, 4)})  # fmt: skip
+    table = pd.DataFrame(rows)
+    table.to_csv(out / "e3_residual.csv", index=False)
+    return table
+
+
+DRAFTS = 40  # first drafts sampled for a labelled P_U(off), fixed before any draft was read (plan §14.21)
+
+
+def drafts(out: Path, client: Client) -> pd.DataFrame:
+    """E3's gate-off arm: the Haiku writer's first drafts outside the pilot datasets, with E3's scoring readings (x3,
+    replicas 3 to 5) from the cache ($0) and E3's scoring rule (a claim in at least two readings, no plan). Checks
+    each draft's count of claims false against M against E3's rows, then draws DRAFTS of the drafts with one (SEED)
+    and writes drafts/items.json (sentences, claims, the facts shown) and drafts/key.csv for labelling."""
+    system, ctxs, found = x3_system(), {}, {}
+    for path in sorted((E3_RESULTS / e2_text.E3_SOURCE / "haiku" / "runs").glob("*.json")):
+        run = json.loads(path.read_text())
+        scenario, model, variant, draw, writer, naming = run["run_id"].split("_")
+        first = next((v for v in run["versions"] if v["source"] in ("proposer", "format retry")), None)
+        if scenario in e2_text.PILOT or first is None:
+            continue
+        text = {"run": run["run_id"], "sentences": first["sentences"]}
+        ctx = e2_text.context(e2_text.Case(run["run_id"], "draft", scenario, model, naming, first["sentences"], [], None, {}), ctxs)
+        rs = requests_for(text, ctx, system)
+        answers = {r.key: a for r in rs if (a := client.lookup(r)) is not None}
+        good, bad = readings(text, ctx, rs, answers)
+        again = [replace(r, attempt=1) for r in bad]
+        answers |= {r.key: a for r in again if (a := client.lookup(r)) is not None}
+        good += readings(text, ctx, again, answers)[0]
+        if len(good) < rt.EXTRACTED:
+            continue
+        trip = rt.compare(good, [], [i for i, _ in first["sentences"]], ctx.facts, ctx.certified)
+        found[run["run_id"]] = (scenario, model, naming, first["sentences"], [(sid, line, reason, evidence) for sid, line, value, code, reason, evidence in trip.unplanned if value == p.FALSE])  # fmt: skip
+    rows_ = pd.read_csv(E3_RESULTS / e2_text.E3_SOURCE / "haiku" / "rows.csv")
+    off = rows_[(rows_["off scored"] == True) & (~rows_["pilot dataset"])].set_index("run")  # noqa: E712
+    counts = {run: len(c[4]) for run, c in found.items()}
+    if set(counts) != set(off.index) or any(counts[run] != off.at[run, "off false M"] for run in counts):
+        raise ValueError("the first drafts' readings do not reproduce E3's gate-off scores")
+    with_false = sorted(run for run, n in counts.items() if n)
+    sample = sorted(np.random.default_rng(SEED).choice(with_false, DRAFTS, replace=False))
+    facts, items, key = {}, [], []
+    for k, run in enumerate(sample, 1):
+        scenario, model, naming, sentences, claims = found[run]
+        ctx_id = f"{scenario}_{model}_{naming}"
+        if ctx_id not in facts:
+            s = next(x for x in dgp.SCENARIOS if x.id == scenario)
+            f = load(s, model)
+            head, parts = e2_labels.blocks(handover(f, dgp.generate(s).X, "H1", certified_plan(f), names=NAMINGS[naming]).text)
+            facts[ctx_id] = {"head": head, "blocks": parts}
+        shown = [n for b in facts[ctx_id]["blocks"] for n in b["names"] if len(b["names"]) == 1]
+        listed = []
+        for c, (sid, line, reason, evidence) in enumerate(claims):
+            listed.append({"sentence_id": sid, "dsl": line, "words": words(line, naming), "why": f"{reason or 'the facts contradict it'} ({evidence})"})
+            key.append({"item": f"D{k:03d}", "claim": c, "run": run, "sentence id": sid, "dsl": line})
+        mentioned = " ".join([s for _, s in sentences] + [c["words"] for c in listed])
+        items.append({"id": f"D{k:03d}", "run": run, "facts": ctx_id, "sentences": sentences,
+                      "named": e2_labels.named([mentioned], shown), "claims": listed})  # fmt: skip
+    folder = out / "drafts"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "items.json").write_text(json.dumps({"seed": SEED, "drafts with a false claim": len(with_false),
+                                                   "drafts scored": len(counts), "facts": facts, "items": items}, indent=1))  # fmt: skip
+    pd.DataFrame(key).to_csv(folder / "key.csv", index=False)
+    return pd.DataFrame({"drafts scored": [len(counts)], "with a false claim": [len(with_false)], "sampled": [len(sample)], "claims sampled": [len(key)]})
+
+
+def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """95% Wilson interval for a proportion k of n."""
+    p, d = k / n, 1 + z**2 / n
+    centre, half = (p + z**2 / (2 * n)) / d, z * np.sqrt(p * (1 - p) / n + z**2 / (4 * n**2)) / d
+    return centre - half, centre + half
+
+
+def e3_effect(out: Path, on_labels: Path, off_labels: Path) -> pd.DataFrame:
+    """E3's P_U off and on and E_U = 1 - P_U(on) / P_U(off) with human labels (Haiku, outside the pilot datasets,
+    both namings). On: every gate-on text with a false claim is labelled (e3_residual). Off: a random sample of the
+    first drafts with a false claim (drafts); P_U(off) = the share of drafts with a false claim x the sampled share
+    with a real error, with its 95% Wilson interval. Open texts (an unsure claim, no error) give the upper bounds."""
+    on = e3_residual(out, on_labels).set_index("naming").loc["both"]
+    labels = json.loads(off_labels.read_text())
+    folder = out / "drafts"
+    meta = json.loads((folder / "items.json").read_text())
+    key = pd.read_csv(folder / "key.csv")
+    key["human"] = [labels.get(r.item, {}).get("labels", {}).get(str(r.claim)) for r in key.itertuples()]
+    verdict = key.groupby("item").human.agg(lambda h: "error" if "error" in set(h) else "open" if "unsure" in set(h) else "misreading")
+    n, error, open_ = len(verdict), int((verdict == "error").sum()), int((verdict == "open").sum())
+    share = meta["drafts with a false claim"] / meta["drafts scored"]
+    lo, hi = wilson(error, n)
+    p_on, p_on_hi = on["P_U on, labelled"], on["P_U on, open as errors"]
+    p_off, p_off_lo, p_off_open = share * error / n, share * lo, share * (error + open_) / n
+    rows = [
+        {"quantity": "P_U off, E3 (unlabelled)", "value": round(share, 4)},
+        {"quantity": "sampled drafts: real error / open / misreading", "value": f"{error} / {open_} / {n - error - open_} of {n}"},
+        {"quantity": "P_U off, labelled", "value": round(p_off, 4)},
+        {"quantity": "P_U off, labelled, 95% interval", "value": f"{share * lo:.4f} to {share * hi:.4f}"},
+        {"quantity": "P_U off, open drafts counted as errors", "value": round(p_off_open, 4)},
+        {"quantity": "P_U on, E3 (unlabelled)", "value": on["P_U on (E3)"]},
+        {"quantity": "P_U on, labelled (open: as errors)", "value": f"{p_on} ({p_on_hi})"},
+        {"quantity": "E_U, E3 (unlabelled)", "value": round(1 - on["P_U on (E3)"] / share, 3)},
+        {"quantity": "E_U, labelled", "value": round(1 - p_on / p_off, 3)},
+        {"quantity": "E_U, worst case (P_U on with open texts, P_U off at its interval's low end)", "value": round(1 - p_on_hi / p_off_lo, 3)},
+    ]
+    table = pd.DataFrame(rows)
+    table.to_csv(out / "e3_effect.csv", index=False)
+    return table
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--x3", action="store_true", help="x3 only: E3's scoring readings from the cache, $0")
@@ -228,6 +356,9 @@ def main() -> None:
     parser.add_argument("--estimate", action="store_true", help="count the calls and estimate the cost, no network")
     parser.add_argument("--page", action="store_true", help="the labelling page from the statements on disk, no network")
     parser.add_argument("--score", type=Path, help="labels read back from the page's store")
+    parser.add_argument("--e3", type=Path, help="labels: E3's residual P_U(on) re-scored with them")
+    parser.add_argument("--drafts", action="store_true", help="sample E3's first drafts with a false claim for labels, $0")
+    parser.add_argument("--effect", type=Path, nargs=2, metavar=("ON_LABELS", "OFF_LABELS"), help="E3's P_U and E_U with human labels")
     args = parser.parse_args()
     versions = [v for v, on in (("x3", args.x3), ("x4", args.x4)) if on] or ["x3", "x4"]
     out = e2_text.RESULTS / p.load().version / "text" / "false_alarms"
@@ -237,6 +368,15 @@ def main() -> None:
     if args.score:
         pd.set_option("display.width", 250)
         print(score(out, args.score).to_string(index=False))
+        return
+    if args.e3:
+        print(e3_residual(out, args.e3).to_string(index=False))
+        return
+    if args.drafts:
+        print(drafts(out, Client("batch")).to_string(index=False))
+        return
+    if args.effect:
+        print(e3_effect(out, *args.effect).to_string(index=False))
         return
     if args.estimate:
         n = len(e2_text.released_texts())

@@ -18,6 +18,7 @@ from dataclasses import dataclass, field
 from verifier_gate.data import labels
 from verifier_gate.dsl.grammar import Claim
 from verifier_gate.dsl.parse import DSLError, parse
+from verifier_gate.facts.local import LocalFacts
 from verifier_gate.facts.schema import Facts
 from verifier_gate.llm import prompts, settings
 from verifier_gate.llm.client import Request, Response
@@ -55,18 +56,21 @@ class Extraction:
     format_errors: list[str] = field(default_factory=list)
 
 
-def features_text(facts: Facts, names: Mapping[str, str] = labels.SYNTHETIC_NAMES,
+def features_text(facts: Facts | LocalFacts, names: Mapping[str, str] = labels.SYNTHETIC_NAMES,
                   descriptions: Mapping[str, str] = labels.SYNTHETIC_DESCRIPTIONS) -> str:  # fmt: skip
     """The features as the writer saw them, in the Facts' order (not by importance: the extractor does not see it)."""
-    shown = [labels.shown(f.name, names) for f in facts.features]
+    features = [v.feature for v in facts.values] if isinstance(facts, LocalFacts) else [f.name for f in facts.features]
+    shown = [labels.shown(f, names) for f in features]
     return "\n".join(f'- "{name}": {descriptions.get(name, "")}'.rstrip(": ") for name in sorted(shown))
 
 
 def extractor_request(sentences: list[tuple[int, str]] | list[list], features: str, draw: int = 0, replica: int = 0,
-                      model: str = settings.EXTRACTOR) -> Request:  # fmt: skip
+                      model: str = settings.EXTRACTOR, local: bool = False) -> Request:  # fmt: skip
+    """local: a notice of the local spot check, read with the local extractor prompt."""
     text = "\n".join(f"{i}. {t}" for i, t in sentences)
     user = prompts.load("extract").replace("{features}", features).replace("{sentences}", text)
-    return Request("extractor", model, prompts.extractor_system(), (("user", user),), EXTRACTION_SCHEMA, draw=draw, replica=replica)
+    system = prompts.extractor_system(local=local)
+    return Request("extractor", model, system, (("user", user),), EXTRACTION_SCHEMA, draw=draw, replica=replica)
 
 
 def extraction_from(response: Response | Mapping, sentence_ids: set[int], names: Mapping[str, str] = labels.SYNTHETIC_NAMES) -> Extraction:

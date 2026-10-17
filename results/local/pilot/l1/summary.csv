@@ -1,0 +1,4 @@
+model,pilot notices,notices,exit RELEASED,exit RELEASED_REDUCED,exit TEMPLATE,exit ESCALATE,P_U off,P_U on,E_U,P_U off vs T,P_U on vs T,reasons stated on,of them true vs T,true reasons missed on,declined by M only,cost per notice
+EBM,True,1,1,0,0,0,1.0,0.0,1.0,1.0,1.0,3,2,2,0,0.0019
+XGB2,True,1,1,0,0,0,0.0,0.0,,0.0,0.0,3,3,1,0,0.00239
+both,False,0,0,0,0,0,,,,,,0,0,0,0,

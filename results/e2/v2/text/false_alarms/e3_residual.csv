@@ -1,0 +1,4 @@
+naming,texts scored,with a false claim (E3),real error,open,misreading,P_U on (E3),"P_U on, labelled","P_U on, open as errors"
+opaque,320,15,0,1,14,0.0469,0.0,0.0031
+plausible,320,14,1,3,10,0.0437,0.0031,0.0125
+both,640,29,1,4,24,0.0453,0.0016,0.0078

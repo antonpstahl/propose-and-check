@@ -1,0 +1,585 @@
+{
+ "run_id": "syn-weak-n50000-s2_EBM_r2629_claude-haiku-5-5",
+ "budget": 16,
+ "calls": 9,
+ "rounds": 2,
+ "format_retry_used": false,
+ "pending": null,
+ "extracting": [],
+ "checking": null,
+ "checking_mode": "",
+ "readings": [],
+ "writer": {
+  "role": "repair 2",
+  "model": "claude-haiku-5-5",
+  "system": "You write the reasons part of an adverse-action notice: a credit model has declined one applicant, and the applicant must be told the principal reasons for the decision. You receive the facts about this one decision and write the reasons in plain English, together with a plan of claims that a verifier checks against the model before anything is released.\n\n# The text\n\n- Write 2 to 6 sentences in plain English, addressed to the applicant, who is not a data scientist.\n- Give the principal reasons for the decision, at most four, the most important first. A principal reason is a factor that pushes this applicant's score towards the decline by at least 10% of the gap between the applicant's score and the average score of comparable approved applicants, and is among the four largest such factors.\n- Name each reason by its factor, and describe the applicant's value in words that match the facts: \"high credit utilization\" only if the applicant's utilization is above that of comparable approved applicants; \"a short credit history\" only if it is below.\n- A combination of two factors (an interaction in the model) can be a reason: name both factors (\"the combination of your credit utilization and your past delinquencies\").\n- Say only what the facts support. Do not give a factor that works in the applicant's favour as a reason, do not add reasons from general knowledge about credit, and do not give advice.\n- When the facts do not settle something, say so (\"the data do not settle whether ...\") or leave it out.\n- Do not state numbers: no scores, probabilities, contributions or percentages.\n\n# Choosing the words\n\nThe facts give each factor's contribution to the gap with its 95% band, its share of the gap with its band, and its rank among the factors with its band. A word is right only if the whole band supports it:\n\n- **Principal reason.** Only if the whole band of the factor's share of the gap lies at 10% or above, and the whole rank band lies within ranks 1 to 4.\n- **Order.** \"The main reason\" only if the rank band is the single rank 1; \"the second reason\" only if it is the single rank 2, and so on. If the rank band spans two or three ranks, say \"one of the two main reasons\" (ranks 1 to 2) or name the ranks it spans (\"the second or third reason\"), or state no order.\n- **High and low.** \"High x\" or \"x is higher than for comparable approved applicants\" only if the applicant's value is above the median of the comparable approved applicants; \"low x\" (or \"short\", \"few\") only if it is below. If the two are equal, use neither.\n- **Hedging.** Say \"the data do not settle whether x is a principal reason\" only if the bands leave it open (the share band crosses 10%, or the rank band reaches beyond 4). When the bands settle it, state the answer; never hedge it.\n\n# The claims\n\nFor every sentence that states something about the decision, add at least one claim in the DSL below, with that sentence's id. A sentence that only frames the text (\"We have reviewed your application.\") needs no claim. Each claim must say exactly what its sentence says, no more and no less. Use the feature names exactly as they are written in the facts, in quotes.\n\n| Words in the text | DSL claim | Meaning |\n|---|---|---|\n| \"a principal reason\", \"a key reason for the decision\" | `principal_reason(\"x\")` | x pushes the score towards the decline by at least 10% of the gap to comparable approved applicants, and is among the four largest such factors |\n| \"the main reason\", \"the first reason\" | `reason_rank(\"x\") == 1` | x pushes the score towards the decline more than any other factor |\n| \"the second reason\", \"the third reason\" | `reason_rank(\"x\") == 2` (or 3, 4) | x is the second (third, fourth) largest factor pushing towards the decline |\n| \"one of the two main reasons\", \"the second or third reason\" | `reason_rank(\"x\") in (1, 2)`, `reason_rank(\"x\") in (2, 3)` | one of consecutive ranks |\n| \"high x\", \"x is higher than for approved applicants\" | `higher_than_reference(\"x\")` | the applicant's value is above the median of comparable approved applicants |\n| \"low x\", \"a short x\", \"few x\" | `lower_than_reference(\"x\")` | the applicant's value is below that median |\n| \"the data do not settle whether ...\" | `unsettled(<any claim above>)` | the facts leave that claim open |\n\nRules of the DSL: one claim per line, exactly in the forms above; ranks as plain whole numbers; a set of ranks is a tuple of consecutive ranks; `unsettled(...)` wraps one other claim. A combination of two factors is named as \"x & y\" in `principal_reason` and `reason_rank`; `higher_than_reference` and `lower_than_reference` take a single feature.\n\n# The answer\n\nReturn one JSON object with two lists: `sentences`, each with an `id` (1, 2, 3, ...) and its `text`, and `claims`, each with the `sentence_id` it belongs to and its `dsl` line.\n\nExample (other features than in your facts):\n\n{\"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the number of missed payments on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"A short time in your current job is also a principal reason.\"}], \"claims\": [{\"sentence_id\": 1, \"dsl\": \"reason_rank(\\\"missed_payments\\\") == 1\"}, {\"sentence_id\": 1, \"dsl\": \"principal_reason(\\\"missed_payments\\\")\"}, {\"sentence_id\": 1, \"dsl\": \"higher_than_reference(\\\"missed_payments\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"principal_reason(\\\"months_in_job\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"lower_than_reference(\\\"months_in_job\\\")\"}]}\n",
+  "messages": [
+   [
+    "user",
+    "These are the facts about one declined application.\n\nDecision: the credit model, an explainable boosting machine (EBM), declined this applicant. The lender declines the 20% of applicants with the highest predicted risk of default.\nThe applicant's predicted risk of default is 37.6%. Comparable approved applicants (the 500 approved applicants closest to the cutoff) have an average predicted risk of 28.2%.\nThe gap between the applicant's score and their average score is +0.43 (95% band +0.08 to +0.57) on the log-odds scale. Each factor below adds to the gap or takes from it, and together they make it up exactly. Every band is a 95% band from 100 refits of the model on resampled data.\nA factor is a principal reason if its share of the gap is at least 10% and it is among the 4 largest factors.\n\nFactors that push towards the decline, largest first:\n- `n_delinquencies`: number of past delinquencies on the credit file (0 to 6). `n_delinquencies` 2 (comparable approved applicants' median 1).\n  Contribution +0.27 (95% band +0.22 to +0.31); share of the gap 63% (95% band 45% to 319%); rank 1 to 2 among the 14 factors.\n- `n_inquiries`: number of recent credit inquiries. `n_inquiries` 4 (comparable approved applicants' median 1).\n  Contribution +0.24 (95% band +0.13 to +0.31); share of the gap 55% (95% band 35% to 258%); rank 1 to 4 among the 14 factors.\n- `history_months & n_inquiries`: the combination of the length of credit history and the number of recent inquiries (an interaction in the model). `history_months` 84.3 (comparable approved applicants' median 140); `n_inquiries` 4 (comparable approved applicants' median 1).\n  Contribution +0.20 (95% band +0.11 to +0.26); share of the gap 46% (95% band 30% to 228%); rank 1 to 4 among the 14 factors.\n- `months_at_address`: months at the current address (standardised). `months_at_address` -2.53 (comparable approved applicants' median 0.0979).\n  Contribution +0.07 (95% band -0.10 to +0.24); share of the gap 17% (95% band -56% to 62%); rank 2 to 12 among the 14 factors.\n- `history_months`: length of the credit history in months. `history_months` 84.3 (comparable approved applicants' median 140).\n  Contribution +0.03 (95% band -0.03 to +0.09); share of the gap 6.5% (95% band -15% to 27%); rank 4 to 11 among the 14 factors.\n- `utilization & n_inquiries`: the combination of credit utilization and the number of recent inquiries (an interaction in the model). `utilization` 0.462 (comparable approved applicants' median 0.497); `n_inquiries` 4 (comparable approved applicants' median 1).\n  Contribution +0.01 (95% band -0.01 to +0.03); share of the gap 3.1% (95% band -5.4% to 8.3%); rank 4 to 9 among the 14 factors.\nSmaller factors pushing towards the decline (each under 2% of the gap): `age & num_dependents`.\n\nFactors in the applicant's favour (they reduce the gap): `age` -0.04, `income` -0.04, `num_dependents` -0.04, `dti` -0.11, `utilization` -0.14.\nThe other 2 factors reduce the gap by less than 2% each.\n\nWrite the reasons for the decision and their claims.\n"
+   ],
+   [
+    "assistant",
+    "{\"claims\": [{\"dsl\": \"reason_rank(\\\"n_delinquencies\\\") in (1, 2)\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"reason_rank(\\\"n_inquiries\\\") == 1\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"history_months & n_inquiries\\\")\", \"sentence_id\": 3}, {\"dsl\": \"lower_than_reference(\\\"history_months\\\")\", \"sentence_id\": 3}, {\"dsl\": \"reason_rank(\\\"history_months & n_inquiries\\\") in (2, 3)\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(principal_reason(\\\"months_at_address\\\"))\", \"sentence_id\": 4}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved.\"}, {\"id\": 3, \"text\": \"The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason.\"}, {\"id\": 4, \"text\": \"The data do not settle whether the length of time you have lived at your current address is a principal reason.\"}]}"
+   ],
+   [
+    "user",
+    "The verifier did not accept parts of your draft:\n\n- Sentence 2: `reason_rank(\"n_inquiries\") == 1` is undecidable. Evidence: rank 2; rank band 1 to 4; contribution band 0.127 to 0.314; claimed 1. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 3: `reason_rank(\"history_months & n_inquiries\") in (2, 3)` is undecidable. Evidence: rank 3; rank band 1 to 4; contribution band 0.107 to 0.264; claimed 2 to 3. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n\nRewrite only the sentences named above, so that every claim is true of the facts; keep every other sentence and its claims exactly as they are. Return the whole draft again, all sentences and all claims, in the same JSON format.\n"
+   ],
+   [
+    "assistant",
+    "{\"claims\": [{\"dsl\": \"reason_rank(\\\"n_delinquencies\\\") in (1, 2)\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"unsettled(reason_rank(\\\"n_inquiries\\\") == 1)\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"history_months & n_inquiries\\\")\", \"sentence_id\": 3}, {\"dsl\": \"lower_than_reference(\\\"history_months\\\")\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(reason_rank(\\\"history_months & n_inquiries\\\") in (2, 3))\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(principal_reason(\\\"months_at_address\\\"))\", \"sentence_id\": 4}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved, although the data do not settle whether it is the single largest reason.\"}, {\"id\": 3, \"text\": \"The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason, and the data do not settle its exact order among the main reasons.\"}, {\"id\": 4, \"text\": \"The data do not settle whether the length of time you have lived at your current address is a principal reason.\"}]}"
+   ],
+   [
+    "user",
+    "The verifier did not accept parts of your draft:\n\n- Sentence 1 says more than its claims: a reader takes it to state `reason_rank(\"n_delinquencies\") == 1`, which is undecidable. Evidence: rank 1; rank band 1 to 2; contribution band 0.218 to 0.311; claimed 1. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it. Change the sentence itself, not only its claims.\n- The text does not give `n_delinquencies` as a reason in words a reader can find, although the facts make it a principal reason for this decision: your claims about it are not in the sentences. Say it in a sentence, with its claims.\n\nRewrite only the sentences named above, so that every claim is true of the facts; keep every other sentence and its claims exactly as they are. Return the whole draft again, all sentences and all claims, in the same JSON format.\n"
+   ]
+  ],
+  "schema": "{\"additionalProperties\": false, \"properties\": {\"claims\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"dsl\": {\"type\": \"string\"}, \"sentence_id\": {\"type\": \"integer\"}}, \"required\": [\"sentence_id\", \"dsl\"], \"type\": \"object\"}, \"type\": \"array\"}, \"sentences\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"id\": {\"type\": \"integer\"}, \"text\": {\"type\": \"string\"}}, \"required\": [\"id\", \"text\"], \"type\": \"object\"}, \"type\": \"array\"}}, \"required\": [\"sentences\", \"claims\"], \"type\": \"object\"}",
+  "effort": "medium",
+  "thinking": "off",
+  "max_tokens": 16000,
+  "draw": 0,
+  "attempt": 0,
+  "replica": 0
+ },
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [
+    [
+     1,
+     "The main reason for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved."
+    ],
+    [
+     2,
+     "The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved."
+    ],
+    [
+     3,
+     "The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason."
+    ],
+    [
+     4,
+     "The data do not settle whether the length of time you have lived at your current address is a principal reason."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "reason_rank(\"n_delinquencies\") in (1, 2)",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 2; contribution band 0.218 to 0.311; claimed 1 to 2"
+    ],
+    [
+     1,
+     "principal_reason(\"n_delinquencies\")",
+     "true",
+     "",
+     "",
+     "fraction 0.625; fraction band 0.452 to 3.19; rank band 1 to 2; materiality 0.1; max reasons 4"
+    ],
+    [
+     1,
+     "higher_than_reference(\"n_delinquencies\")",
+     "true",
+     "",
+     "",
+     "applicant 2; reference median 1"
+    ],
+    [
+     2,
+     "reason_rank(\"n_inquiries\") == 1",
+     "undecidable",
+     "insufficient_evidence",
+     "",
+     "rank 2; rank band 1 to 4; contribution band 0.127 to 0.314; claimed 1"
+    ],
+    [
+     2,
+     "principal_reason(\"n_inquiries\")",
+     "true",
+     "",
+     "",
+     "fraction 0.554; fraction band 0.351 to 2.58; rank band 1 to 4; materiality 0.1; max reasons 4"
+    ],
+    [
+     2,
+     "higher_than_reference(\"n_inquiries\")",
+     "true",
+     "",
+     "",
+     "applicant 4; reference median 1"
+    ],
+    [
+     3,
+     "principal_reason(\"history_months & n_inquiries\")",
+     "true",
+     "",
+     "",
+     "fraction 0.464; fraction band 0.301 to 2.28; rank band 1 to 4; materiality 0.1; max reasons 4"
+    ],
+    [
+     3,
+     "lower_than_reference(\"history_months\")",
+     "true",
+     "",
+     "",
+     "applicant 84.3; reference median 140"
+    ],
+    [
+     3,
+     "reason_rank(\"history_months & n_inquiries\") in (2, 3)",
+     "undecidable",
+     "insufficient_evidence",
+     "",
+     "rank 3; rank band 1 to 4; contribution band 0.107 to 0.264; claimed 2 to 3"
+    ],
+    [
+     4,
+     "unsettled(principal_reason(\"noise_1\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; fraction 0.167; fraction band -0.558 to 0.616; rank band 2 to 12"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"reason_rank(\\\"n_delinquencies\\\") in (1, 2)\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"reason_rank(\\\"n_inquiries\\\") == 1\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"history_months & n_inquiries\\\")\", \"sentence_id\": 3}, {\"dsl\": \"lower_than_reference(\\\"history_months\\\")\", \"sentence_id\": 3}, {\"dsl\": \"reason_rank(\\\"history_months & n_inquiries\\\") in (2, 3)\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(principal_reason(\\\"months_at_address\\\"))\", \"sentence_id\": 4}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved.\"}, {\"id\": 3, \"text\": \"The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason.\"}, {\"id\": 4, \"text\": \"The data do not settle whether the length of time you have lived at your current address is a principal reason.\"}]}",
+   "roundtrip": null
+  },
+  {
+   "source": "repair 1",
+   "sentences": [
+    [
+     1,
+     "The main reason for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved."
+    ],
+    [
+     2,
+     "The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved, although the data do not settle whether it is the single largest reason."
+    ],
+    [
+     3,
+     "The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason, and the data do not settle its exact order among the main reasons."
+    ],
+    [
+     4,
+     "The data do not settle whether the length of time you have lived at your current address is a principal reason."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "reason_rank(\"n_delinquencies\") in (1, 2)",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 2; contribution band 0.218 to 0.311; claimed 1 to 2"
+    ],
+    [
+     1,
+     "principal_reason(\"n_delinquencies\")",
+     "true",
+     "",
+     "",
+     "fraction 0.625; fraction band 0.452 to 3.19; rank band 1 to 2; materiality 0.1; max reasons 4"
+    ],
+    [
+     1,
+     "higher_than_reference(\"n_delinquencies\")",
+     "true",
+     "",
+     "",
+     "applicant 2; reference median 1"
+    ],
+    [
+     2,
+     "principal_reason(\"n_inquiries\")",
+     "true",
+     "",
+     "",
+     "fraction 0.554; fraction band 0.351 to 2.58; rank band 1 to 4; materiality 0.1; max reasons 4"
+    ],
+    [
+     2,
+     "higher_than_reference(\"n_inquiries\")",
+     "true",
+     "",
+     "",
+     "applicant 4; reference median 1"
+    ],
+    [
+     2,
+     "unsettled(reason_rank(\"n_inquiries\") == 1)",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; rank 2; rank band 1 to 4; contribution band 0.127 to 0.314"
+    ],
+    [
+     3,
+     "principal_reason(\"history_months & n_inquiries\")",
+     "true",
+     "",
+     "",
+     "fraction 0.464; fraction band 0.301 to 2.28; rank band 1 to 4; materiality 0.1; max reasons 4"
+    ],
+    [
+     3,
+     "lower_than_reference(\"history_months\")",
+     "true",
+     "",
+     "",
+     "applicant 84.3; reference median 140"
+    ],
+    [
+     3,
+     "unsettled(reason_rank(\"history_months & n_inquiries\") in (2, 3))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; rank 3; rank band 1 to 4; contribution band 0.107 to 0.264"
+    ],
+    [
+     4,
+     "unsettled(principal_reason(\"noise_1\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; fraction 0.167; fraction band -0.558 to 0.616; rank band 2 to 12"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"reason_rank(\\\"n_delinquencies\\\") in (1, 2)\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"unsettled(reason_rank(\\\"n_inquiries\\\") == 1)\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"history_months & n_inquiries\\\")\", \"sentence_id\": 3}, {\"dsl\": \"lower_than_reference(\\\"history_months\\\")\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(reason_rank(\\\"history_months & n_inquiries\\\") in (2, 3))\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(principal_reason(\\\"months_at_address\\\"))\", \"sentence_id\": 4}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved, although the data do not settle whether it is the single largest reason.\"}, {\"id\": 3, \"text\": \"The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason, and the data do not settle its exact order among the main reasons.\"}, {\"id\": 4, \"text\": \"The data do not settle whether the length of time you have lived at your current address is a principal reason.\"}]}",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "higher_than_reference(\"n_delinquencies\")",
+      3
+     ],
+     [
+      1,
+      "reason_rank(\"n_delinquencies\") == 1",
+      3
+     ],
+     [
+      2,
+      "higher_than_reference(\"n_inquiries\")",
+      3
+     ],
+     [
+      2,
+      "principal_reason(\"n_inquiries\")",
+      3
+     ],
+     [
+      2,
+      "unsettled(reason_rank(\"n_inquiries\") == 1)",
+      3
+     ],
+     [
+      3,
+      "lower_than_reference(\"history_months\")",
+      3
+     ],
+     [
+      3,
+      "principal_reason(\"history_months & n_inquiries\")",
+      3
+     ],
+     [
+      3,
+      "unsettled(reason_rank(\"history_months & n_inquiries\") in (1, 2))",
+      3
+     ],
+     [
+      4,
+      "unsettled(principal_reason(\"noise_1\"))",
+      3
+     ]
+    ],
+    "unplanned": [
+     [
+      1,
+      "reason_rank(\"n_delinquencies\") == 1",
+      "undecidable",
+      "insufficient_evidence",
+      "",
+      "rank 1; rank band 1 to 2; contribution band 0.218 to 0.311; claimed 1"
+     ],
+     [
+      3,
+      "unsettled(reason_rank(\"history_months & n_inquiries\") in (1, 2))",
+      "true",
+      "",
+      "the evidence does not settle the claim",
+      "claim verdict undecidable; claim code insufficient_evidence; rank 3; rank band 1 to 4; contribution band 0.107 to 0.264"
+     ]
+    ],
+    "plan_only": [
+     [
+      1,
+      "reason_rank(\"n_delinquencies\") in (1, 2)"
+     ],
+     [
+      1,
+      "principal_reason(\"n_delinquencies\")"
+     ],
+     [
+      3,
+      "unsettled(reason_rank(\"history_months & n_inquiries\") in (2, 3))"
+     ]
+    ],
+    "ambiguous": [],
+    "gap": [
+     [
+      2,
+      [
+       "major reason, a principal reason",
+       "a major reason"
+      ]
+     ],
+     [
+      3,
+      [
+       "the order among main reasons is unsettled",
+       "order among the main reasons is unsettled"
+      ]
+     ]
+    ],
+    "numbers": [],
+    "missing": [
+     "n_delinquencies"
+    ],
+    "emphasis": [],
+    "format_errors": 0
+   }
+  },
+  {
+   "source": "repair 2",
+   "sentences": [
+    [
+     1,
+     "One of the two main reasons for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved."
+    ],
+    [
+     2,
+     "The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved, although the data do not settle whether it is the single largest reason."
+    ],
+    [
+     3,
+     "The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason, and the data do not settle its exact order among the main reasons."
+    ],
+    [
+     4,
+     "The data do not settle whether the length of time you have lived at your current address is a principal reason."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "reason_rank(\"n_delinquencies\") in (1, 2)",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 2; contribution band 0.218 to 0.311; claimed 1 to 2"
+    ],
+    [
+     1,
+     "principal_reason(\"n_delinquencies\")",
+     "true",
+     "",
+     "",
+     "fraction 0.625; fraction band 0.452 to 3.19; rank band 1 to 2; materiality 0.1; max reasons 4"
+    ],
+    [
+     1,
+     "higher_than_reference(\"n_delinquencies\")",
+     "true",
+     "",
+     "",
+     "applicant 2; reference median 1"
+    ],
+    [
+     2,
+     "principal_reason(\"n_inquiries\")",
+     "true",
+     "",
+     "",
+     "fraction 0.554; fraction band 0.351 to 2.58; rank band 1 to 4; materiality 0.1; max reasons 4"
+    ],
+    [
+     2,
+     "higher_than_reference(\"n_inquiries\")",
+     "true",
+     "",
+     "",
+     "applicant 4; reference median 1"
+    ],
+    [
+     2,
+     "unsettled(reason_rank(\"n_inquiries\") == 1)",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; rank 2; rank band 1 to 4; contribution band 0.127 to 0.314"
+    ],
+    [
+     3,
+     "principal_reason(\"history_months & n_inquiries\")",
+     "true",
+     "",
+     "",
+     "fraction 0.464; fraction band 0.301 to 2.28; rank band 1 to 4; materiality 0.1; max reasons 4"
+    ],
+    [
+     3,
+     "lower_than_reference(\"history_months\")",
+     "true",
+     "",
+     "",
+     "applicant 84.3; reference median 140"
+    ],
+    [
+     3,
+     "unsettled(reason_rank(\"history_months & n_inquiries\") in (2, 3))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; rank 3; rank band 1 to 4; contribution band 0.107 to 0.264"
+    ],
+    [
+     4,
+     "unsettled(principal_reason(\"noise_1\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; fraction 0.167; fraction band -0.558 to 0.616; rank band 2 to 12"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"reason_rank(\\\"n_delinquencies\\\") in (1, 2)\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"n_delinquencies\\\")\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"n_inquiries\\\")\", \"sentence_id\": 2}, {\"dsl\": \"unsettled(reason_rank(\\\"n_inquiries\\\") == 1)\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"history_months & n_inquiries\\\")\", \"sentence_id\": 3}, {\"dsl\": \"lower_than_reference(\\\"history_months\\\")\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(reason_rank(\\\"history_months & n_inquiries\\\") in (2, 3))\", \"sentence_id\": 3}, {\"dsl\": \"unsettled(principal_reason(\\\"months_at_address\\\"))\", \"sentence_id\": 4}], \"sentences\": [{\"id\": 1, \"text\": \"One of the two main reasons for our decision is the number of past delinquencies on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The number of recent credit inquiries on your file is also a major reason, and it is higher than for applicants we approved, although the data do not settle whether it is the single largest reason.\"}, {\"id\": 3, \"text\": \"The combination of your credit history length, which is shorter than for approved applicants, and your recent credit inquiries is a further principal reason, and the data do not settle its exact order among the main reasons.\"}, {\"id\": 4, \"text\": \"The data do not settle whether the length of time you have lived at your current address is a principal reason.\"}]}",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "higher_than_reference(\"n_delinquencies\")",
+      3
+     ],
+     [
+      1,
+      "reason_rank(\"n_delinquencies\") in (1, 2)",
+      3
+     ],
+     [
+      2,
+      "higher_than_reference(\"n_inquiries\")",
+      3
+     ],
+     [
+      2,
+      "principal_reason(\"n_inquiries\")",
+      3
+     ],
+     [
+      2,
+      "unsettled(reason_rank(\"n_inquiries\") == 1)",
+      3
+     ],
+     [
+      3,
+      "lower_than_reference(\"history_months\")",
+      3
+     ],
+     [
+      3,
+      "principal_reason(\"history_months & n_inquiries\")",
+      3
+     ],
+     [
+      3,
+      "unsettled(reason_rank(\"history_months & n_inquiries\") in (1, 2))",
+      3
+     ],
+     [
+      4,
+      "unsettled(principal_reason(\"noise_1\"))",
+      3
+     ]
+    ],
+    "unplanned": [
+     [
+      3,
+      "unsettled(reason_rank(\"history_months & n_inquiries\") in (1, 2))",
+      "true",
+      "",
+      "the evidence does not settle the claim",
+      "claim verdict undecidable; claim code insufficient_evidence; rank 3; rank band 1 to 4; contribution band 0.107 to 0.264"
+     ]
+    ],
+    "plan_only": [
+     [
+      1,
+      "principal_reason(\"n_delinquencies\")"
+     ],
+     [
+      3,
+      "unsettled(reason_rank(\"history_months & n_inquiries\") in (2, 3))"
+     ]
+    ],
+    "ambiguous": [],
+    "gap": [
+     [
+      3,
+      [
+       "exact order among the main reasons is unsettled",
+       "exact order among the main reasons"
+      ]
+     ]
+    ],
+    "numbers": [],
+    "missing": [],
+    "emphasis": [],
+    "format_errors": 0
+   }
+  }
+ ],
+ "failed_before": [
+  "not covered by the text: n_delinquencies",
+  "reason_rank(\"history_months & n_inquiries\") in (2, 3)",
+  "reason_rank(\"n_delinquencies\") == 1",
+  "reason_rank(\"n_inquiries\") == 1"
+ ],
+ "exit": "RELEASED",
+ "reason": "passed after 2 repair round(s)",
+ "flagged": false,
+ "roundtrip": "passed",
+ "cost": 0.0014993450000000002,
+ "spent": 0.0014993450000000002,
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 20439,
+  "input_tokens": 8913,
+  "output_tokens": 3806
+ },
+ "events": [
+  "repair round 1: 2 problem(s)",
+  "round trip of the draft: 3 extractions",
+  "repair round 2: 2 problem(s) in the text",
+  "round trip of the draft: 3 extractions",
+  "RELEASED: passed after 2 repair round(s)"
+ ]
+}

@@ -13,11 +13,22 @@ The eight claim types, one line each:
 | threshold   | threshold("t", at=x)  /  peak("t", at=x)                     | x, a number                        |
 | interaction | interaction("a", "b", pattern="amplification")               | one of PATTERNS                    |
 
+Local claims, about one declined applicant (the spot check, D49; verified on facts/local.LocalFacts by
+lexicon/local.py; on a model's global Facts they are not applicable):
+
+| kind                  | form                                   | value              |
+|-----------------------|----------------------------------------|--------------------|
+| reason_rank           | reason_rank("t") == k                  | k, an int >= 1     |
+| principal_reason      | principal_reason("t")                  |                    |
+| higher_than_reference | higher_than_reference("f")             |                    |
+| lower_than_reference  | lower_than_reference("f")              |                    |
+
 Sets of values (D33): a tuple after `in`, stored in the order below.
 
 | kind        | form                                                         | value                              |
 |-------------|--------------------------------------------------------------|------------------------------------|
 | rank        | rank("t") in (2, 3)                                          | two or more consecutive ranks      |
+| reason_rank | reason_rank("t") in (1, 2)                                   | two or more consecutive ranks      |
 | direction   | direction("t") in ("decreasing", "mostly_decreasing")        | a strict word and its "mostly" word |
 | strength    | strength("t") in ("negligible", "weak")                      | two or more neighbouring CLASSES, not all four |
 
@@ -31,12 +42,17 @@ from dataclasses import dataclass
 
 from verifier_gate.lexicon.predicates import CLASSES, DIRECTIONS, PATTERNS, STRENGTHS
 
-__all__ = ["CALLS", "CLASSES", "COMPARED", "DIRECTIONS", "HEDGE", "KINDS", "PATTERNS", "RELATIONS", "SETS", "STRENGTHS", "Claim"]
+__all__ = ["CALLS", "CLASSES", "COMPARED", "DIRECTIONS", "HEDGE", "KINDS", "LOCAL_CALLS", "LOCAL_KINDS", "PATTERNS", "RANKS", "RELATIONS",
+           "SETS", "STRENGTHS", "Claim"]
 
-KINDS = ("rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction", "unsettled")
-COMPARED = {"rank": int, "share": float, "direction": DIRECTIONS, "strength": STRENGTHS}  # f("t") == value
-SETS = ("rank", "direction", "strength")  # f("t") in (values)
+LOCAL_CALLS = ("principal_reason", "higher_than_reference", "lower_than_reference")  # f("t"), no value
+LOCAL_KINDS = ("reason_rank", *LOCAL_CALLS)
+KINDS = ("rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction", *LOCAL_KINDS, "unsettled")
+COMPARED = {"rank": int, "share": float, "direction": DIRECTIONS, "strength": STRENGTHS, "reason_rank": int}  # f("t") == value
+SETS = ("rank", "direction", "strength", "reason_rank")  # f("t") in (values)
+RANKS = ("rank", "reason_rank")  # compared with whole numbers >= 1
 CALLS = {"negligible": (1, ()), "threshold": (1, ("at",)), "peak": (1, ("at",)), "interaction": (2, ("pattern",))}
+CALLS |= {kind: (1, ()) for kind in LOCAL_CALLS}
 HEDGE = "unsettled"
 RELATIONS = (">", "<")
 
@@ -63,8 +79,8 @@ class Claim:
         if self.kind in COMPARED:
             value = f'"{self.value}"' if isinstance(self.value, str) else self.value
             return f"{self.kind}({t[0]}) == {value}"
-        if self.kind == "negligible":
-            return f"negligible({t[0]})"
+        if self.kind == "negligible" or self.kind in LOCAL_CALLS:
+            return f"{self.kind}({t[0]})"
         if self.kind == "comparison":
             return f"effect({t[0]}) {self.relation} effect({t[1]})"
         if self.kind in ("threshold", "peak"):

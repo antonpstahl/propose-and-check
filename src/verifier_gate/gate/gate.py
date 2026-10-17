@@ -20,6 +20,11 @@ once; fewer than two readings after that is a round trip that could not run: the
 The template is not round-tripped: its sentences are fixed phrases of its claims. `Context.roundtrip` False skips
 the round trip (the first-draft checks of the pilot, whose budget is one call).
 
+A notice of the local spot check (D49): `Context.facts` is the notice's facts (facts/local.LocalFacts), the
+certified plan is verifier/certified.certified_local, the writer and the extractor get the local prompts (l1), and
+coverage, emphasis and the template follow the notice (gate/roundtrip.py, gate/template.py). A template with no
+sentence (no principal reason certified) ends the run as ESCALATE: there is nothing certified to state.
+
 Stop rules (§5.8): at most 2 repair rounds; no progress (a problem that failed in an earlier version fails again,
 compared by gate/advice.problem_key: the claim's line, or one key for a jump or peak on a curve that has none)
 stops repairing; a format problem (no valid JSON, truncated, or DSL lines that do not parse) gets one format-only
@@ -36,6 +41,7 @@ from pathlib import Path
 from verifier_gate.data import labels
 from verifier_gate.dsl.grammar import Claim
 from verifier_gate.dsl.parse import parse
+from verifier_gate.facts.local import LocalFacts
 from verifier_gate.facts.schema import Facts
 from verifier_gate.gate import template as templates
 from verifier_gate.gate.draft import Draft
@@ -56,7 +62,7 @@ CALL_BUDGET = 16
 class Context:
     """What the gate needs besides the run; not saved, rebuilt from the run's ids."""
 
-    facts: Facts
+    facts: Facts | LocalFacts
     certified: list[Claim]
     names: Mapping[str, str] = field(default_factory=lambda: labels.SYNTHETIC_NAMES)
     label: Callable[[str], str] | None = None
@@ -140,9 +146,11 @@ def _pending(run: Run, request: Request | None) -> Run:
     return run
 
 
-def start(run_id: str, handover: str, model: str, draw: int = 0, budget: int = CALL_BUDGET, **request_options) -> Run:
+def start(run_id: str, handover: str, model: str, draw: int = 0, budget: int = CALL_BUDGET, local: bool = False,
+          **request_options) -> Run:  # fmt: skip
+    """local: a notice of the local spot check, written with the local prompts."""
     run = Run(run_id, budget)
-    return _pending(run, propose.proposer_request(handover, model, draw, **request_options))
+    return _pending(run, propose.proposer_request(handover, model, draw, local=local, **request_options))
 
 
 # --- the plan check ---------------------------------------------------------------------------------------
@@ -182,7 +190,7 @@ def problems(version: Version, ctx: Context) -> str:
     """The repair message's list: each failing claim with its verdict, reason, evidence and advice that says why it
     failed (gate/advice.py), then the format errors and the missing terms. In the writer's names; the texts are in
     llm/prompts/advice.json."""
-    text = prompts.advice()
+    text = prompts.advice(local=isinstance(ctx.facts, LocalFacts))
     lines = []
     for sentence_id, line, value, code, reason, evidence in version.claims:
         if value == TRUE:
@@ -200,8 +208,8 @@ def problems(version: Version, ctx: Context) -> str:
 
 def text_problems(trip: rt.RoundTrip, ctx: Context) -> str:
     """The repair message's list for a text that failed its round trip, in the writer's names."""
-    text = prompts.advice()
-    shares = {" & ".join(sorted(k)): v for k, v in rt._shares(ctx.facts).items()}
+    text = prompts.advice(local=isinstance(ctx.facts, LocalFacts))
+    shares = {" & ".join(sorted(k)): v for k, v in rt._shares(ctx.facts).items()} if trip.emphasis else {}
     lines = []
     for sentence_id, line, value, code, reason, evidence in trip.unplanned:
         if value == TRUE:
@@ -238,6 +246,8 @@ def _end(run: Run, exit_state: str, reason: str, version: Version | None = None)
 
 def _template(run: Run, ctx: Context) -> Run:
     draft = templates.template(ctx.facts, ctx.certified, ctx.label or templates.synthetic_label(ctx.names))
+    if not draft.sentences:
+        return _end(run, ESCALATE, "nothing certified to state: the template has no sentence")
     version = check(draft, ctx)
     if version.passed:
         return _end(run, TEMPLATE, "template text from the certified facts", version)
@@ -279,7 +289,8 @@ def _roundtrip(run: Run, version: Version, ctx: Context, mode: str) -> Run:
     features = extract.features_text(ctx.facts, ctx.names, ctx.descriptions)
     draw = run.writer["draw"] if run.writer else 0
     run.checking, run.checking_mode, run.readings = asdict(version), mode, []
-    run.extracting = [asdict(extract.extractor_request(version.sentences, features, draw, k)) for k in range(extract.EXTRACTIONS)]
+    local = isinstance(ctx.facts, LocalFacts)
+    run.extracting = [asdict(extract.extractor_request(version.sentences, features, draw, k, local=local)) for k in range(extract.EXTRACTIONS)]
     run.events.append(f"round trip of the {'draft' if mode == 'draft' else 'reduced text'}: {extract.EXTRACTIONS} extractions")
     return _pending(run, None)
 

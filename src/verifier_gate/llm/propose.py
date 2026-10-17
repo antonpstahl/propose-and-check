@@ -6,6 +6,7 @@ parse, or names a sentence that does not exist, is a format error kept with the 
 features are mapped back to the Facts' names (data/labels.py) before anything is verified.
 
 Repair and format-only retries continue the same conversation: the writer's previous answer, then the problems.
+A notice of the local spot check (D49) uses the local prompts (system_local.md, propose_local.md).
 """
 
 import json
@@ -48,9 +49,10 @@ DRAFT_SCHEMA = json.dumps(
 
 
 def proposer_request(handover: str, model: str = settings.WRITER, draw: int = 0, effort: str = settings.EFFORT,
-                     thinking: str = settings.THINKING) -> Request:  # fmt: skip
-    user = prompts.load("propose").format(handover=handover)
-    return Request("proposer", model, prompts.load("system"), (("user", user),), DRAFT_SCHEMA, effort, thinking, draw=draw)
+                     thinking: str = settings.THINKING, local: bool = False) -> Request:  # fmt: skip
+    suffix = "_local" if local else ""
+    user = prompts.load(f"propose{suffix}").format(handover=handover)
+    return Request("proposer", model, prompts.load(f"system{suffix}"), (("user", user),), DRAFT_SCHEMA, effort, thinking, draw=draw)
 
 
 def follow_up(previous: Request, answer: str, message: str, role: str) -> Request:

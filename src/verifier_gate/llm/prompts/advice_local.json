@@ -1,0 +1,5 @@
+{
+ "missing_term": "- The text does not give {names} as a reason, although the facts make it a principal reason for this decision. Add a sentence that gives it as a reason, with its claims.",
+ "missing_in_text": "- The text does not give {names} as a reason in words a reader can find, although the facts make it a principal reason for this decision: your claims about it are not in the sentences. Say it in a sentence, with its claims.",
+ "unexpressed": "- Sentence {sentence} states a number that no claim form can check: {statements}. Leave the number out and describe the reason in words."
+}

@@ -16,6 +16,12 @@ the words the same way; and extract.md (the features and the text). EXTRACTOR_VE
 x3 (frozen 15 Oct) ran E3 and the first text-level E2; x4 (15 Oct, after text-level E2, plan §14.17) writes a
 statement about a feature the list does not have as a claim with the text's name, so that the verifier finds the
 term unknown, where x3 filed it as content without a DSL form (M9: 36% caught). EXTRACTOR_HISTORY keeps x3's hashes.
+
+The local spot check's prompts (D49), versioned and frozen apart from both: system_local.md (the writer of an
+adverse-action notice's reasons, with the local DSL table), propose_local.md (wraps the notice's handover),
+extract_local_system.md (the extractor, x4's rules for a notice, whose DSL section is system_local.md's table) and
+advice_local.json (the repair lines that differ for a notice; the rest of advice.json applies). The repair message
+(repair.md) is shared. LOCAL_VERSION; frozen_local.json, written after the local pilot.
 """
 
 import hashlib
@@ -24,12 +30,15 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 NAMES = ("system", "propose", "repair", "advice")
-FILES = {"advice": "advice.json"}  # the others are <name>.md
+FILES = {"advice": "advice.json", "advice_local": "advice_local.json"}  # the others are <name>.md
 FROZEN = HERE / "frozen.json"
 VERSION = "v3"
 EXTRACTOR_NAMES = ("extract_system", "extract")
 FROZEN_EXTRACTOR = HERE / "frozen_extractor.json"
 EXTRACTOR_VERSION = "x4"  # x1, x2: the round-trip pilot runs in results/pilot/v3/live_x1/, live_x2/ (plan §14.15)
+LOCAL_NAMES = ("system_local", "propose_local", "extract_local_system", "advice_local")
+FROZEN_LOCAL = HERE / "frozen_local.json"
+LOCAL_VERSION = "l1"
 EXTRACTOR_HISTORY = {
     "x3": {
         "extract_system": "55b93253eeba587e88bc1c1aebf4759e1a46b4c66baa3540bac6b1cb192cb127",
@@ -54,24 +63,34 @@ def load(name: str) -> str:
     return (HERE / FILES.get(name, f"{name}.md")).read_text()
 
 
-def advice() -> dict[str, str]:
-    return json.loads(load("advice"))
+def advice(local: bool = False) -> dict[str, str]:
+    """The repair message's lines; for a notice, with advice_local.json's lines in place of the global ones."""
+    return json.loads(load("advice")) | (json.loads(load("advice_local")) if local else {})
 
 
-def dsl_reference() -> str:
-    """The writer's DSL table and the rules of the DSL, from system.md: the one source of what the words mean."""
-    lines = load("system").splitlines()
+def dsl_reference(source: str = "system") -> str:
+    """The writer's DSL table and the rules of the DSL, from system.md (system_local.md for a notice): the one
+    source of what the words mean."""
+    lines = load(source).splitlines()
     start = next(i for i, line in enumerate(lines) if line.startswith("| Words in the text |"))
     end = next(i for i, line in enumerate(lines) if line.startswith("Rules of the DSL:"))
     return "\n".join(lines[start : end + 1])
 
 
-def extractor_system() -> str:
+def extractor_system(local: bool = False) -> str:
+    if local:
+        return load("extract_local_system").replace("{dsl}", dsl_reference("system_local"))
     return load("extract_system").replace("{dsl}", dsl_reference())
 
 
+def _text(name: str) -> str:
+    if name in ("extract_system", "extract_local_system"):
+        return extractor_system(local=name == "extract_local_system")
+    return load(name)
+
+
 def _texts(names: tuple[str, ...]) -> dict[str, str]:
-    return {name: extractor_system() if name == "extract_system" else load(name) for name in names}
+    return {name: _text(name) for name in names}
 
 
 def hashes(names: tuple[str, ...] = NAMES) -> dict[str, str]:

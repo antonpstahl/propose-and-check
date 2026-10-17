@@ -9,11 +9,16 @@ Candidates per feature: strength (or negligible), direction, rank, share (M's sh
 the largest jump and "peaks at" the highest steps (both located on M, kept only if certified), and the
 comparison with the next feature in M's ranking. Per pair of the model: its pattern, for either feature as the
 one whose effect changes, and "none". Nothing here reads T or the oracle.
+
+For one notice of the local spot check (`certified_local`, D49): per term of M with a contribution above zero, that
+it is a principal reason, its reason rank (single, else the narrowest set of two or three), and for a feature
+that is a certified principal reason, how its value compares with the reference.
 """
 
 from collections.abc import Iterable
 
 from verifier_gate.dsl.grammar import HEDGE, Claim
+from verifier_gate.facts.local import LocalFacts
 from verifier_gate.facts.schema import Facts
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.lexicon.predicates import CLASSES, STRENGTHS, TRUE
@@ -51,6 +56,28 @@ def point_class(facts: Facts, feature: str, lex: p.Lexicon) -> Claim:
     if share < lex.strength["weak"]:
         return Claim("negligible", (feature,))
     return Claim("strength", (feature,), next(s for s in reversed(STRENGTHS) if share >= lex.strength[s]))
+
+
+def certified_local(lf: LocalFacts, lex: p.Lexicon | None = None) -> list[Claim]:
+    lex = lex or p.load()
+    reasons = [r for r in lf.reasons if r.rank is not None]
+    ranks = tuple(range(1, len(reasons) + 1))
+    plan: list[Claim] = []
+    for r in reasons:
+        if p.interval(r.contribution)[0] <= 0:
+            continue  # no reason at any rank: nothing to certify
+        principal = Claim("principal_reason", (r.term,))
+        is_principal = verify(principal, lf, lex).value == TRUE
+        if is_principal:
+            plan.append(principal)
+        ladder = [Claim("reason_rank", (r.term,), k) for k in ranks]
+        rank = first_certified(ladder + [Claim("reason_rank", (r.term,), run) for k in (2, 3) for run in _runs(ranks, k)], lf, lex)
+        if rank is not None:
+            plan.append(rank)
+        if is_principal and len(r.term.split(" & ")) == 1:
+            plan += [c for kind in ("higher_than_reference", "lower_than_reference")
+                     if verify(c := Claim(kind, (r.term,)), lf, lex).value == TRUE]  # fmt: skip
+    return plan
 
 
 def certified_plan(facts: Facts, lex: p.Lexicon | None = None) -> list[Claim]:

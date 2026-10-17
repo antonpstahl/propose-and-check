@@ -22,6 +22,11 @@ Emphasis: the opening sentence (the first with a claim) must not mention a term 
 edge (weak or negligible) unless it also mentions a strong term (share at the strong edge or above), when the
 model has one. Shares are M's point estimates: emphasis is about prominence, not certification. A stronger word
 for a weak term needs no rule of its own: its claim is false.
+
+A notice of the local spot check (facts/local.LocalFacts; D49, D53): the required terms are the principal reasons
+the verifier certifies under M, all of them (Regulation B asks for the principal reasons), and a term is covered
+by a reason claim (principal_reason, reason_rank), not by a wording claim alone. Emphasis is not checked: the
+order of the reasons is what reason_rank claims state, and those are verified.
 """
 
 import re
@@ -30,6 +35,7 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 
 from verifier_gate.dsl.grammar import HEDGE, Claim
+from verifier_gate.facts.local import LocalFacts
 from verifier_gate.facts.schema import Facts
 from verifier_gate.facts.steps import PAIR_SEPARATOR
 from verifier_gate.lexicon import predicates as p
@@ -39,6 +45,7 @@ from verifier_gate.verifier.verify import evidence_text, verify
 TOP_TERMS = 3
 PAIR_SHARE = 0.10
 EXTRACTED = 2  # of llm/extract.EXTRACTIONS readings
+REASON_KINDS = ("principal_reason", "reason_rank")  # the claims that state a reason in a notice
 NUMBER = re.compile(r"\d")  # a statement with a number: digits, a percentage, an amount (the extractor keeps them as written)
 
 
@@ -71,7 +78,14 @@ def claim_terms(claim: Claim) -> set[frozenset]:
     return {term_key(t) for t in claim.terms}
 
 
-def required_terms(facts: Facts) -> tuple[frozenset, ...]:
+def _states_a_reason(claim: Claim) -> bool:
+    return (claim.inner if claim.kind == HEDGE else claim).kind in REASON_KINDS
+
+
+def required_terms(facts: Facts | LocalFacts) -> tuple[frozenset, ...]:
+    if isinstance(facts, LocalFacts):  # every certified principal reason, in the order of M's contributions
+        principal = (r.term for r in facts.reasons if r.rank is not None)
+        return tuple(term_key(t) for t in principal if verify(Claim("principal_reason", (t,)), facts).value == TRUE)
     shares = {frozenset([f.name]): f.share.value for f in facts.features}
     shares |= {frozenset(q.features): q.share.value for q in facts.pairs}
     top = sorted(shares, key=lambda k: -shares[k])[:TOP_TERMS]
@@ -83,6 +97,8 @@ def coverage(claims: Iterable[Claim], facts: Facts, certified: Iterable[Claim]) 
     """certified: what the verifier certifies about the model (verifier/certified.py), to decide whether a hedge
     may cover a term."""
     claims = list(claims)
+    if isinstance(facts, LocalFacts):
+        claims, certified = [c for c in claims if _states_a_reason(c)], [c for c in certified if _states_a_reason(c)]
     stated = set().union(*(claim_terms(c) for c in claims if c.kind != HEDGE))
     hedged = set().union(*(claim_terms(c) for c in claims if c.kind == HEDGE))
     settled = set().union(*(claim_terms(c) for c in certified if c.kind != HEDGE))
@@ -141,6 +157,8 @@ def _shares(facts: Facts) -> dict[frozenset, float]:
 
 def emphasis(order: Sequence[int], mentions: dict[int, set[frozenset]], facts: Facts, lex: p.Lexicon) -> list:
     """The opening sentence's emphasis problem, if any: [sentence id, minor terms, strong terms]."""
+    if isinstance(facts, LocalFacts):
+        return []
     opening = next((sid for sid in order if mentions.get(sid)), None)
     if opening is None:
         return []

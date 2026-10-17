@@ -3,23 +3,33 @@
 Pure Python and deterministic: each claim type maps to one lexicon predicate (lexicon/predicates.py), which
 reads only the Facts of one model. No LLM. A set of values (D33) goes to the set form of its predicate; the
 hedge unsettled(<claim>) (D30) is judged on the verdict of its claim.
+
+The local spot check (D49): given one notice's facts (facts/local.LocalFacts) instead of a model's Facts, the
+local claims go to lexicon/local.py, and a global claim goes to the model's Facts the notice carries
+(`model_facts`), or is not applicable if it carries none. A local claim on a model's Facts is not applicable.
 """
 
 from collections.abc import Iterable, Mapping
 
-from verifier_gate.dsl.grammar import HEDGE, Claim
+from verifier_gate.dsl.grammar import HEDGE, LOCAL_KINDS, Claim
 from verifier_gate.dsl.parse import parse
+from verifier_gate.facts.local import LocalFacts
 from verifier_gate.facts.schema import Facts
+from verifier_gate.lexicon import local as lp
 from verifier_gate.lexicon import predicates as p
 
 
-def verify(claim: Claim | str, facts: Facts, lex: p.Lexicon | None = None) -> p.Verdict:
+def verify(claim: Claim | str, facts: Facts | LocalFacts, lex: p.Lexicon | None = None) -> p.Verdict:
     claim = parse(claim) if isinstance(claim, str) else claim
     lex = lex or p.load()
     t = claim.terms
     if claim.kind == HEDGE:
         verdict = p.unsettled(verify(claim.inner, facts, lex))
         return p.Verdict(verdict.value, {"claim": str(claim.inner)} | verdict.evidence, verdict.reason)
+    if isinstance(facts, LocalFacts):
+        return _local(claim, facts, lex)
+    if claim.kind in LOCAL_KINDS:
+        return p.Verdict(p.UNDECIDABLE, {"term": t[0]}, "a claim about one applicant; these facts are about the model", p.NOT_APPLICABLE)
     if isinstance(claim.value, tuple):
         match claim.kind:
             case "rank":
@@ -49,6 +59,20 @@ def verify(claim: Claim | str, facts: Facts, lex: p.Lexicon | None = None) -> p.
         case "interaction":
             return p.interaction(facts, t[0], t[1], claim.value, lex)
     raise ValueError(f"unknown claim kind {claim.kind}")
+
+
+def _local(claim: Claim, lf: LocalFacts, lex: p.Lexicon) -> p.Verdict:
+    t = claim.terms
+    match claim.kind:
+        case "reason_rank":
+            return lp.reason_rank(lf, t[0], claim.value)
+        case "principal_reason":
+            return lp.principal_reason(lf, t[0])
+        case "higher_than_reference" | "lower_than_reference":
+            return lp.compared_to_reference(lf, t[0], higher=claim.kind == "higher_than_reference")
+    if lf.model_facts is not None:
+        return verify(claim, lf.model_facts, lex)
+    return p.Verdict(p.UNDECIDABLE, {"term": t[0]}, "a claim about the whole model; the notice carries no model facts", p.NOT_APPLICABLE)
 
 
 def verify_all(claims: Iterable[Claim | str], facts: Facts, lex: p.Lexicon | None = None) -> list[tuple[Claim, p.Verdict]]:
