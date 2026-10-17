@@ -1,0 +1,8 @@
+Words in the text,DSL claim,Meaning (judged on the whole 95% band)
+"""a principal reason"", ""a key reason for the decision""","`principal_reason(""x"")`","x pushes the score towards the decline by at least 10% of the gap to comparable approved applicants, and is among the four largest such factors"
+"""the main reason"", ""the first reason""","`reason_rank(""x"") == 1`",x pushes the score towards the decline more than any other factor
+"""the second reason"", ""the third reason""","`reason_rank(""x"") == 2` (or 3, 4)","x is the second (third, fourth) largest factor pushing towards the decline"
+"""one of the two main reasons"", ""the second or third reason""","`reason_rank(""x"") in (1, 2)`, `reason_rank(""x"") in (2, 3)`",one of consecutive ranks
+"""high x"", ""x is higher than for approved applicants""","`higher_than_reference(""x"")`",the applicant's value is above the median of comparable approved applicants
+"""low x"", ""a short x"", ""few x""","`lower_than_reference(""x"")`",the applicant's value is below that median
+"""the data do not settle whether ...""",`unsettled(<any claim above>)`,the facts leave that claim open

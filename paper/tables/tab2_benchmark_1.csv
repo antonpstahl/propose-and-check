@@ -1,0 +1,10 @@
+Feature,Role,Distribution,Planted shape,Share (no interaction)
+utilization,strong,"Beta(2, 3)","increasing, steeper above 0.6",40%
+n_delinquencies,strong,"min(Poisson(0.8), 6)","increasing, saturating",24%
+income,moderate,"lognormal, median 50,000, σ 0.5",decreasing (−log income),13%
+history_months,peak,uniform 6 to 360,"decreasing, with a bump at 36 months (rising on 7% of the data)",10%
+dti,threshold,uniform 0 to 0.6,a step up at 0.43,8%
+n_inquiries,weak,Poisson(1.5),increasing (linear),4%
+age,near flat,uniform 21 to 75,decreasing (linear),1%
+noise_1,noise,"N(0, 1)",zero,0%
+noise_2,noise,"N(0, 1)",zero,0%

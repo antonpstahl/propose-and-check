@@ -1,0 +1,26 @@
+# Tab. 3: E1, the lexicon's verdicts against the planted truth, by tier
+
+| tier | layer (reference) | model | n | claims | decided | accuracy among decided | confident errors |
+|---|---|---|---|---|---|---|---|
+| synthetic | data | oracle | 5,000 | 1521 | 62% | 98.5% | 0.9% |
+| synthetic | data | oracle | 50,000 | 1521 | 89% | 100.0% | 0.0% |
+| synthetic | model | EBM | 5,000 | 947 | 63% | 99.8% | 0.1% |
+| synthetic | model | EBM | 50,000 | 1358 | 79% | 99.2% | 0.7% |
+| synthetic | model | XGB2 | 5,000 | 947 | 60% | 98.8% | 0.7% |
+| synthetic | model | XGB2 | 50,000 | 1358 | 75% | 98.9% | 0.8% |
+| synthetic | end to end | EBM | 5,000 | 1521 | 43% | 96.6% | 1.4% |
+| synthetic | end to end | EBM | 50,000 | 1521 | 72% | 99.0% | 0.7% |
+| synthetic | end to end | XGB2 | 5,000 | 1521 | 41% | 94.2% | 2.4% |
+| synthetic | end to end | XGB2 | 50,000 | 1521 | 69% | 98.7% | 0.9% |
+| plasmode | data | oracle | 5,000 | 1512 | 58% | 99.7% | 0.2% |
+| plasmode | data | oracle | 30,000 | 1512 | 79% | 100.0% | 0.0% |
+| plasmode | model | EBM | 5,000 | 873 | 56% | 93.1% | 3.9% |
+| plasmode | model | EBM | 30,000 | 1192 | 72% | 97.2% | 2.0% |
+| plasmode | model | XGB2 | 5,000 | 873 | 49% | 93.4% | 3.2% |
+| plasmode | model | XGB2 | 30,000 | 1192 | 65% | 97.7% | 1.5% |
+| plasmode | end to end | EBM | 5,000 | 1512 | 40% | 88.6% | 4.6% |
+| plasmode | end to end | EBM | 30,000 | 1512 | 60% | 96.2% | 2.2% |
+| plasmode | end to end | XGB2 | 5,000 | 1512 | 35% | 88.4% | 4.0% |
+| plasmode | end to end | XGB2 | 30,000 | 1512 | 54% | 96.6% | 1.9% |
+
+Data layer: the lexicon on the oracle (what the sample supports); model layer: on the fitted model, against the oracle's labels; end to end: on the fitted model, against the planted labels (D12). Each tier pools its three seeds (synthetic: the discovery seed and the two confirmation seeds); the model layer counts only the claims the oracle decides. Confident errors: a false claim certified or a true claim refuted, over all claims (D31).

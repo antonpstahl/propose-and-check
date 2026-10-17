@@ -27,6 +27,7 @@ from pathlib import Path
 from verifier_gate.llm import settings
 
 CACHE = Path(__file__).parents[3] / "cache" / "llm"
+OFFLINE = "VERIFIER_GATE_OFFLINE"  # set: a request not in the cache raises instead of calling the API (experiments/reproduce.py)
 DOTENV = Path(__file__).parents[3] / ".env"  # git-ignored; .env.example is the template
 EFFORTS_WITHOUT_THINKING = ("low", "medium", "high")
 THINKING_OFF = {"claude-haiku-5-5": {"type": "disabled"}, "claude-sonnet-5-5": {"type": "between_tools"}}
@@ -176,7 +177,8 @@ class Client:
             raise ValueError("stub mode needs a responder")
         self.transport, self.responder, self.max_retries = transport, responder, max_retries
         self.cache_dir = Path(cache_dir)
-        self.log_path = Path(log_path) if log_path else self.cache_dir / "calls.jsonl"
+        default_log = "offline_lookups.jsonl" if os.environ.get(OFFLINE) else "calls.jsonl"  # a reproduction logs apart (git-ignored)
+        self.log_path = Path(log_path) if log_path else self.cache_dir / default_log
         self._sdk = None
 
     def call(self, request: Request) -> Response:
@@ -222,6 +224,8 @@ class Client:
     def _send(self, request: Request) -> dict | None:
         import anthropic
 
+        if os.environ.get(OFFLINE):
+            raise RuntimeError(f"{OFFLINE} is set and a {request.role} request is not in the cache: nothing is sent")
         if self._sdk is None:
             load_dotenv()
             self._sdk = anthropic.Anthropic(max_retries=self.max_retries)

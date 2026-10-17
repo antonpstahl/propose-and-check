@@ -115,7 +115,7 @@ def main() -> None:
     table.to_csv(OUT / "tables" / "fig3_recall.csv", index=False)
     fig = draw(table)
     for suffix in ("png", "pdf"):
-        fig.savefig(OUT / "figures" / f"fig3_recall.{suffix}", dpi=200, facecolor=SURFACE)
+        fig.savefig(OUT / "figures" / f"fig3_recall.{suffix}", dpi=200, facecolor=SURFACE, metadata={"CreationDate": None} if str(suffix).endswith("pdf") else None)
     print(json.dumps({r: round(v, 3) for r, v in table.groupby("condition").apply(lambda p: p.caught.sum() / p.errors.sum(), include_groups=False).items()}))
     print(f"written to {OUT / 'figures'} and {OUT / 'tables' / 'fig3_recall.csv'}")
 

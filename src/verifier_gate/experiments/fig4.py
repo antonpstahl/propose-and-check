@@ -143,7 +143,7 @@ def main() -> None:
     t.round(4).to_csv(OUT / "tables" / "fig4_faithfulness.csv", index=False)
     fig = draw(t)
     for suffix in ("png", "pdf"):
-        fig.savefig(OUT / "figures" / f"fig4_faithfulness.{suffix}", dpi=200, facecolor=SURFACE)
+        fig.savefig(OUT / "figures" / f"fig4_faithfulness.{suffix}", dpi=200, facecolor=SURFACE, metadata={"CreationDate": None} if str(suffix).endswith("pdf") else None)
     low = t[t.role != "not in the model"].groupby("arm").faithfulness.agg(["min", "max"]).round(3)
     print(low.to_string())
     print(f"written to {OUT / 'figures'} and {OUT / 'tables' / 'fig4_faithfulness.csv'}")

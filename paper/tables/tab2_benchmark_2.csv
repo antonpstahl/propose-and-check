@@ -1,0 +1,10 @@
+Feature,Role,Planted shape,Share (no interaction)
+PAY_0,strong,"the real-label EBM's, per status value",40%
+LIMIT_BAL,strong,"decreasing, smooth",24%
+BILL_AMT1,moderate,"increasing, smooth",13%
+PAY_AMT1,moderate,"decreasing, smooth",10%
+PAY_AMT2,threshold,"a step down at 2,000",8%
+AGE,weak,"increasing, smooth",4%
+EDUCATION,near flat,"linear in the code, clipped to 1 to 3",1%
+BILL_AMT2,correlated null,zero; Spearman 0.91 with BILL_AMT1,0%
+PAY_AMT3,noise,zero,0%

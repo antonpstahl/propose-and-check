@@ -1,0 +1,5 @@
+Tier,Pair,Pattern,"Share, none","Share, weak","Share, dominant"
+synthetic,utilization & n_delinquencies,amplification,0%,3%,21%
+synthetic,history_months & n_inquiries,sign flip,0%,6%,6%
+plasmode,PAY_0 & EDUCATION,amplification,0%,3%,21%
+plasmode,AGE & BILL_AMT1,sign flip,0%,6%,6%

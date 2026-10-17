@@ -21,6 +21,7 @@ requests are submitted again on the next start.
 
 import fcntl
 import json
+import os
 import time
 from contextlib import contextmanager
 from collections import Counter
@@ -30,7 +31,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 from verifier_gate.gate import gate as g
-from verifier_gate.llm.client import Client, Request, Response, load_dotenv
+from verifier_gate.llm.client import OFFLINE, Client, Request, Response, load_dotenv
 
 MAX_SUBMISSIONS = 3
 MAX_WAVES = g.CALL_BUDGET * MAX_SUBMISSIONS  # a run needs at most this many; more is a bug, never more paid batches
@@ -59,6 +60,8 @@ class BatchAPI:
         return self._sdk
 
     def create(self, requests: list[Request]) -> str:
+        if os.environ.get(OFFLINE):
+            raise RuntimeError(f"{OFFLINE} is set and {len(requests)} request(s) are not in the cache: no batch is submitted")
         batch = self.sdk().messages.batches.create(requests=[{"custom_id": r.key, "params": r.params()} for r in requests])
         return batch.id
 

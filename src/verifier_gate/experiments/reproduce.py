@@ -1,0 +1,136 @@
+"""One command that reproduces every number of the working paper from the repository (plan §13), without network.
+
+Inputs, as committed: the code, the frozen prompts and lexicon, the LLM cache (cache/llm: every answer as received),
+E3's run traces (results/e3/v3-x3/*/runs: the record of what was paid; E3 ran with extractor x3, which the current
+code reads from git where it needs it), and the human labels (results/e2/v2/text/labels, .../false_alarms). Not
+committed and rebuilt here if missing: the Facts and refits in cache/facts (hours of fitting from fixed seeds) and
+the datasets.
+
+Every step runs with VERIFIER_GATE_OFFLINE set: a request that is not in the LLM cache raises instead of calling the
+API, so a reproduction costs $0 or stops. At the end, `git status` over results/ and paper/ lists every output that
+differs from the committed one; none should. Two differences are not results and are handled: a file that differs only in
+`spent` (what an execution paid: $0 on a rerun from the cache) is restored, so the record of what was paid stays; a PDF
+whose PNG is unchanged differs only in metadata (PDFs written before 17 Oct carry a creation date).
+
+Run: `uv run python -m verifier_gate.experiments.reproduce` (about half an hour with the Facts cached). Options:
+--list, --only <step names, comma-separated>, --from <step name>.
+"""
+
+import argparse
+import io
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import pandas as pd
+
+from verifier_gate.llm.client import OFFLINE
+
+REPO = Path(__file__).parents[3]
+LABELS = "results/e2/v2/text/false_alarms/labels.json"
+DRAFT_LABELS = "results/e2/v2/text/false_alarms/drafts/labels.json"
+STEPS = [  # name, module, arguments
+    ("facts", "build_facts", []),
+    ("facts-plasmode", "build_facts", ["--tier", "plasmode"]),
+    ("e1-discovery", "e1_lexicon", []),
+    ("e1-confirmation", "e1_lexicon", ["--seeds", "2,3"]),
+    ("e1-plasmode", "e1_lexicon", ["--tier", "plasmode"]),
+    ("e2-plan-discovery", "e2_mutation", []),
+    ("e2-plan-confirmation", "e2_mutation", ["--seeds", "2,3"]),
+    ("e2-plan-plasmode", "e2_mutation", ["--tier", "plasmode"]),
+    ("e2-text-script", "e2_text", ["--script"]),  # the two sources as they were run, so each CSV keeps its own columns
+    ("e2-text-llm", "e2_text", ["--llm"]),
+    ("e2-text-plasmode", "e2_text", ["--tier", "plasmode", "--seeds", "1"]),
+    ("e2-text-compare", "e2_text", ["--compare"]),
+    ("e3-check-and-truth", "e3_truth", []),
+    ("false-alarms", "e2_false_alarms", ["--score", LABELS]),
+    ("e3-residual", "e2_false_alarms", ["--e3", LABELS]),
+    ("e3-effect", "e2_false_alarms", ["--effect", LABELS, DRAFT_LABELS]),
+    ("local-refits", "local_refits", []),
+    ("local-facts", "local_facts", []),
+    ("local-pilot", "local_run", ["--pilot"]),
+    ("local-run", "local_run", []),
+    ("fig1", "fig1", []),
+    ("fig2", "fig2", []),
+    ("fig3", "fig3", []),
+    ("fig4", "fig4", []),
+    ("tables", "tables", []),
+    ("worked-example", "worked_example", []),
+]
+
+
+def committed(path: str) -> str:
+    return subprocess.run(["git", "show", f"HEAD:{path}"], cwd=REPO, capture_output=True, text=True, check=True).stdout
+
+
+def only_spent(path: str) -> bool:
+    """The file equals its committed version apart from what the execution paid."""
+    if path.endswith(".json"):
+        old, new = json.loads(committed(path)), json.loads((REPO / path).read_text())
+        return isinstance(old, dict) and {k: v for k, v in old.items() if k != "spent"} == {k: v for k, v in new.items() if k != "spent"}
+    if path.endswith(".csv"):
+        old, new = pd.read_csv(io.StringIO(committed(path))), pd.read_csv(REPO / path)
+        cols = [c for c in old.columns if c != "spent"]
+        return "spent" in old.columns and list(old.columns) == list(new.columns) and old[cols].equals(new[cols])
+    return False
+
+
+def changed() -> list[str]:
+    out = subprocess.run(["git", "status", "--porcelain", "--", "results", "paper"], cwd=REPO, capture_output=True, text=True, check=True)
+    return [line for line in out.stdout.splitlines() if line.strip()]
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--list", action="store_true", help="print the steps and stop")
+    parser.add_argument("--only", default="", help="comma-separated step names")
+    parser.add_argument("--from", dest="start", default="", help="start at this step")
+    args = parser.parse_args()
+    names = [name for name, *_ in STEPS]
+    if args.list:
+        print("\n".join(f"{name}: python -m verifier_gate.experiments.{module} {' '.join(a)}" for name, module, a in STEPS))
+        return
+    steps = STEPS
+    if args.only:
+        wanted = args.only.split(",")
+        unknown = set(wanted) - set(names)
+        if unknown:
+            raise SystemExit(f"unknown steps: {sorted(unknown)}")
+        steps = [s for s in STEPS if s[0] in wanted]
+    elif args.start:
+        steps = STEPS[names.index(args.start):]
+    before = set(changed())
+    env = {**os.environ, OFFLINE: "1"}
+    start = time.perf_counter()
+    for name, module, arguments in steps:
+        t0 = time.perf_counter()
+        print(f"[{name}] python -m verifier_gate.experiments.{module} {' '.join(arguments)}", flush=True)
+        result = subprocess.run([sys.executable, "-m", f"verifier_gate.experiments.{module}", *arguments], cwd=REPO, env=env,
+                                capture_output=True, text=True)  # fmt: skip
+        if result.returncode != 0:
+            print(result.stdout[-2000:], result.stderr[-4000:], sep="\n")
+            raise SystemExit(f"[{name}] failed after {time.perf_counter() - t0:.0f}s")
+        print(f"[{name}] done in {time.perf_counter() - t0:.0f}s", flush=True)
+    after = [line for line in changed() if line not in before]
+    print(f"\n{len(steps)} steps in {(time.perf_counter() - start) / 60:.1f} min, no API call")
+    restored = [line for line in after if line.startswith(" M") and only_spent(line[3:])]
+    for line in restored:
+        subprocess.run(["git", "checkout", "--", line[3:]], cwd=REPO, check=True)
+    pngs = {line[3:] for line in changed()}
+    metadata = [line for line in after if line[3:].endswith(".pdf") and line[3:].replace(".pdf", ".png") not in pngs]
+    after = [line for line in after if line not in restored and line not in metadata]
+    if restored:
+        print(f"{len(restored)} file(s) differed only in 'spent' (paid by the original run, $0 now) and were restored")
+    if metadata:
+        print(f"{len(metadata)} PDF(s) differ only in metadata (their PNGs are unchanged): " + ", ".join(m[3:] for m in metadata))
+    if after:
+        print("outputs that differ from the committed ones:\n" + "\n".join(after))
+        raise SystemExit(1)
+    print("every output under results/ and paper/ equals the committed one" + (" (files already changed before the run were not checked)" if before else ""))
+
+
+if __name__ == "__main__":
+    main()

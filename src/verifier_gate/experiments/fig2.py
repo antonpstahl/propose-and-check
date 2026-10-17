@@ -114,7 +114,7 @@ def draw(scenario: dgp.Scenario, out: Path = OUT, features: tuple[str, ...] = FE
     out.mkdir(parents=True, exist_ok=True)
     path = out / (name or f"fig2_curves_{scenario.id}")
     for suffix in (".png", ".pdf"):
-        fig.savefig(path.with_suffix(suffix), dpi=300, facecolor=SURFACE)
+        fig.savefig(path.with_suffix(suffix), dpi=300, facecolor=SURFACE, metadata={"CreationDate": None} if str(suffix).endswith("pdf") else None)
     plt.close(fig)
     return path.with_suffix(".png")
 
