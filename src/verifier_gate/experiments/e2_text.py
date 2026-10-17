@@ -22,8 +22,13 @@ unchanged template texts (each claim certified, so any failure is one), and a co
 turns undecidable abstains, reported apart). The readings are replicas 0 to 2, as in
 the gate; no text here was read before.
 
-Run: `uv run python -m verifier_gate.experiments.e2_text [--dry | --estimate] [--script | --llm]`. Batched; stopping
-is safe, the same command resumes. Writes results/e2/<lexicon version>/text/<extractor version>/: script.csv,
+The plasmode tier (D54, plan §14.23): `--tier plasmode` builds the script mutants of the plasmode models' template
+texts (the LLM mutants start from E3's synthetic texts and are not built), with the TaiwanCredit column codes as
+names, their data-dictionary descriptions and plain words in the sentences (data/labels.py); `--seeds` limits the
+datasets (D54: seed 1). Results go to results/e2/<lexicon version>/text_plasmode/<extractor version>/.
+
+Run: `uv run python -m verifier_gate.experiments.e2_text [--dry | --estimate] [--script | --llm] [--tier plasmode
+--seeds 1]`. Batched; stopping is safe, the same command resumes. Writes results/e2/<lexicon version>/text/<extractor version>/: script.csv,
 llm.csv, summary.csv. `--compare` puts the summaries of all extractor versions on disk side by side
 (text/by_extractor.csv), from the CSVs alone. The LLM mutants always start from E3 as run (E3_SOURCE).
 """
@@ -38,7 +43,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from verifier_gate.data import dgp, labels
+from verifier_gate.data import dgp, labels, tiers
 from verifier_gate.dsl.grammar import Claim
 from verifier_gate.dsl.parse import DSLError, parse
 from verifier_gate.experiments import e2_mutation as e2
@@ -47,7 +52,7 @@ from verifier_gate.experiments.e3_end_to_end import RESULTS as E3_RESULTS
 from verifier_gate.experiments.pilot import NAMINGS
 from verifier_gate.gate import gate as g
 from verifier_gate.gate import roundtrip as rt
-from verifier_gate.gate.template import phrase, sentence, synthetic_label, template
+from verifier_gate.gate.template import phrase, plasmode_label, sentence, synthetic_label, template
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.llm import batch, extract, prompts, settings
 from verifier_gate.llm.client import Client, Request, Response, stub_message
@@ -83,16 +88,24 @@ class Case:
 # --- script mutants ---------------------------------------------------------------------------------------
 
 
-def _label(term: str) -> str:
-    return "the savings balance" if term == e2.UNKNOWN else synthetic_label()(term)
+NAMES = {**NAMINGS, "codes": {}}  # "codes": the plasmode tier's column codes, shown as they are (D54)
+NAMING = {"synthetic": "plausible", "plasmode": "codes"}
+DESCRIPTIONS = {"synthetic": labels.SYNTHETIC_DESCRIPTIONS, "plasmode": labels.PLASMODE_DESCRIPTIONS}
+
+
+def _label(term: str, tier: str = "synthetic") -> str:
+    if term == e2.UNKNOWN:
+        return "the savings balance"
+    return synthetic_label()(term) if tier == "synthetic" else plasmode_label(term)
 
 
 def _same(a: Claim, b: Claim) -> bool:
     return (a.kind, a.terms, a.value, a.relation, a.inner) == (b.kind, b.terms, b.value, b.relation, b.inner)
 
 
-def render(draft, original: Claim | None, mutant: Claim | None, omitted: frozenset | None) -> tuple[list, int | None]:
+def render(draft, original: Claim | None, mutant: Claim | None, omitted: frozenset | None, tier: str = "synthetic") -> tuple[list, int | None]:
     """The template text with one claim's clause changed; the changed sentence's id."""
+    label = lambda term: _label(term, tier)  # noqa: E731
     groups = {sid: [c for c in draft.claims if c.sentence_id == sid] for sid in draft.ids()}
     changed = None
     if omitted is not None:  # M8 omission: drop the pair's clauses
@@ -111,24 +124,25 @@ def render(draft, original: Claim | None, mutant: Claim | None, omitted: frozens
         else:
             groups[sid] = [mutant if c.kind == "interaction" and frozenset(c.terms) == pair else c for c in groups[sid]]
         changed = sid
-    return [[sid, sentence([phrase(c, _label) for c in group])] for sid, group in groups.items() if group], changed
+    return [[sid, sentence([phrase(c, label) for c in group])] for sid, group in groups.items() if group], changed
 
 
 def script_cases(scenarios=dgp.SCENARIOS, lex: p.Lexicon | None = None) -> list[Case]:
     lex = lex or p.load()
     cases = []
     for s in scenarios:
-        X = dgp.generate(s).X
+        tier = tiers.name(s)
+        X = tiers.generate(s).X
         for kind in e2.MODELS:
             facts = load(s, kind)
             point = e2.point_facts(facts, X)
-            draft = template(facts, certified_plan(facts, lex))
+            draft = template(facts, certified_plan(facts, lex), synthetic_label() if tier == "synthetic" else plasmode_label)
             base = f"{s.id}_{kind}"
-            cases.append(Case(f"{base}_control", "control", s.id, kind, "plausible", [list(x) for x in draft.sentences], draft.claims, None,
+            cases.append(Case(f"{base}_control", "control", s.id, kind, NAMING[tier], [list(x) for x in draft.sentences], draft.claims, None,
                               {"role": "control text"}))  # fmt: skip
             for k, m in enumerate(e2.mutants(draft.claims, facts, lex)):
-                sentences, changed = render(draft, m.original, m.claim, m.omitted)
-                cases.append(Case(f"{base}_{k:03d}", "script", s.id, kind, "plausible", sentences, draft.claims, changed, {
+                sentences, changed = render(draft, m.original, m.claim, m.omitted, tier)
+                cases.append(Case(f"{base}_{k:03d}", "script", s.id, kind, NAMING[tier], sentences, draft.claims, changed, {
                     "operator": m.operator, "variant": m.variant, "original": str(m.original) if m.original else "",
                     "mutant": str(m.claim) if m.claim else f"omit {' & '.join(sorted(m.omitted))}", "role": e2.label(m, point, lex),
                     "omitted": " & ".join(sorted(m.omitted)) if m.omitted else ""}))  # fmt: skip
@@ -193,8 +207,9 @@ def llm_cases(texts: list[dict], answers: dict[str, Response], requests: dict[st
 def context(case: Case, cache: dict) -> g.Context:
     key = (case.scenario, case.model, case.naming)
     if key not in cache:
-        facts = load(next(s for s in dgp.SCENARIOS if s.id == case.scenario), case.model)
-        cache[key] = g.Context(facts, certified_plan(facts), NAMINGS[case.naming])
+        scenario = tiers.scenario(case.scenario)
+        facts = load(scenario, case.model)
+        cache[key] = g.Context(facts, certified_plan(facts), NAMES[case.naming], descriptions=DESCRIPTIONS[tiers.name(scenario)])
     return cache[key]
 
 
@@ -249,7 +264,7 @@ def score(cases: list[Case], client: Client, api, poll: float, log=print) -> pd.
         ctx = context(case, ctxs)
         good = readings.get(case.case_id, [])
         trip = rt.compare(good, case.plan, [i for i, _ in case.sentences], ctx.facts, ctx.certified) if len(good) >= rt.EXTRACTED else None
-        scenario = next(s for s in dgp.SCENARIOS if s.id == case.scenario)
+        scenario = tiers.scenario(case.scenario)
         rows.append({"case": case.case_id, "source": case.source, "scenario": case.scenario, "n": scenario.n, "interaction": scenario.interaction,
                      "pilot dataset": case.scenario in PILOT, "model": case.model, **case.info, **outcome(case, trip)})  # fmt: skip
     return pd.DataFrame(rows)
@@ -316,16 +331,24 @@ def main() -> None:
     parser.add_argument("--script", action="store_true", help="only the script mutants")
     parser.add_argument("--llm", action="store_true", help="only the LLM mutants")
     parser.add_argument("--compare", action="store_true", help="the extractor versions on disk side by side, no network")
+    parser.add_argument("--tier", default="synthetic", choices=tuple(tiers.TIERS), help="plasmode: script mutants only (D54)")
+    parser.add_argument("--seeds", default=None, help="comma-separated, e.g. 1 (default: all)")
     args = parser.parse_args()
     lex = p.load()
+    folder = "text" if args.tier == "synthetic" else f"text_{args.tier}"
     if args.compare:
-        table = compare_versions(RESULTS / lex.version / "text")
-        table.to_csv(RESULTS / lex.version / "text" / "by_extractor.csv", index=False)
+        table = compare_versions(RESULTS / lex.version / folder)
+        table.to_csv(RESULTS / lex.version / folder / "by_extractor.csv", index=False)
         pd.set_option("display.width", 250)
         print(table[table.source != "llm"].to_string(index=False))
         return
+    if args.tier != "synthetic":  # the LLM mutants start from E3's synthetic texts
+        args.script, args.llm = True, False
     both = not (args.script or args.llm)
-    scenarios = dgp.SCENARIOS[:2] if args.dry else dgp.SCENARIOS
+    scenarios = tiers.module(args.tier).SCENARIOS
+    if args.seeds:
+        scenarios = tuple(s for s in scenarios if s.seed in {int(x) for x in args.seeds.split(",")})
+    scenarios = scenarios[:2] if args.dry else scenarios
     script = script_cases(scenarios, lex) if (both or args.script) else []
     texts = released_texts() if (both or args.llm) and not args.dry else []
     if args.dry and (both or args.llm):
@@ -350,7 +373,7 @@ def main() -> None:
         out = scratch / "results"
     else:
         client, api, poll = Client("batch"), batch.BatchAPI(), batch.POLL_SECONDS
-        out = RESULTS / lex.version / "text" / prompts.EXTRACTOR_VERSION
+        out = RESULTS / lex.version / folder / prompts.EXTRACTOR_VERSION
     cases = list(script)
     if texts:
         ctxs: dict = {}

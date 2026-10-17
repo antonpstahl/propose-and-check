@@ -6,6 +6,11 @@ application-scorecard variables, fixed before any LLM run (SYNTHETIC_NAMES). Any
 whose direction we cannot control, so the pilot checks whether the names change the writer's behaviour against
 opaque names (OPAQUE_NAMES), with a rule fixed in advance. The verifier works on the Facts' names; `internal` maps
 the names the writer used back before verification.
+
+The plasmode tier (D54, plan §14.23) keeps the TaiwanCredit column codes as names (`PAY_0`, `BILL_AMT1`, ...), each
+with its data-dictionary description (Yeh and Lien 2009, UCI), the month's place added so that a reader can tell
+`BILL_AMT1` from `BILL_AMT2`, and plain words in sentences (PLASMODE_LABELS): how a bank's model documentation
+names features. None of the names tells which column has no planted effect.
 """
 
 from collections.abc import Mapping
@@ -40,6 +45,30 @@ SYNTHETIC_LABELS = {  # how a sentence refers to the feature
     "num_dependents": "the number of dependents",
     "feature_a": "feature a",
     "feature_b": "feature b",
+}
+
+
+PLASMODE_DESCRIPTIONS = {  # D54: the data dictionary of TaiwanCredit, with the month's place
+    "PAY_0": "repayment status in September 2005, the latest month (-2 no consumption, -1 paid in full, 0 revolving credit used, 1 to 9 months of payment delay)",
+    "LIMIT_BAL": "amount of the given credit in NT dollars, individual and family (supplementary) credit",
+    "BILL_AMT1": "amount of the bill statement in September 2005, the latest month, in NT dollars",
+    "BILL_AMT2": "amount of the bill statement in August 2005, the month before, in NT dollars",
+    "PAY_AMT1": "amount paid in September 2005, the latest month, in NT dollars",
+    "PAY_AMT2": "amount paid in August 2005, the month before, in NT dollars",
+    "PAY_AMT3": "amount paid in July 2005, two months before, in NT dollars",
+    "AGE": "age in years",
+    "EDUCATION": "education (1 graduate school, 2 university, 3 high school, 4 others; 0, 5 and 6 unknown)",
+}
+PLASMODE_LABELS = {  # how a sentence refers to the feature
+    "PAY_0": "the latest repayment status",
+    "LIMIT_BAL": "the credit limit",
+    "BILL_AMT1": "the latest bill amount",
+    "BILL_AMT2": "the bill amount of the month before",
+    "PAY_AMT1": "the latest payment",
+    "PAY_AMT2": "the payment of the month before",
+    "PAY_AMT3": "the payment two months before",
+    "AGE": "age",
+    "EDUCATION": "the education level",
 }
 
 

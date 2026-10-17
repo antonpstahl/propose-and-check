@@ -42,3 +42,19 @@ def test_the_script_mutants_of_one_dataset_are_labelled(draft):
     roles = {c.info["role"] for c in cases}
     assert sum(c.source == "control" for c in cases) == 2 and "error" in roles
     assert all(c.changed is not None or c.info.get("omitted") or c.source == "control" for c in cases)
+
+
+def test_plasmode_texts_use_the_columns_words_and_the_data_dictionary():
+    from verifier_gate.data import labels, plasmode, tiers
+    from verifier_gate.llm import extract
+
+    scenario = next(s for s in plasmode.SCENARIOS if s.seed == 1)
+    cases = e2_text.script_cases((scenario,))
+    control = next(c for c in cases if c.source == "control")
+    text = " ".join(t for _, t in control.sentences)
+    assert control.naming == "codes" and "the latest repayment status" in text.lower() and "PAY_0" not in text
+    ctx = e2_text.context(control, {})
+    listed = extract.features_text(ctx.facts, ctx.names, ctx.descriptions)
+    assert '"BILL_AMT2": amount of the bill statement in August 2005' in listed
+    assert set(labels.PLASMODE_DESCRIPTIONS) == set(plasmode.FEATURES) == set(labels.PLASMODE_LABELS)
+    assert tiers.name(scenario) == "plasmode"

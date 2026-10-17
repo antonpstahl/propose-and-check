@@ -1,0 +1,7 @@
+writer,naming,pilot datasets,texts off,"claims false vs T, off (E3)","claims false vs T, off, no hedges",P_U off vs T (E3),"P_U off vs T, no hedges",hedges off,"hedges refuted by T, off",texts on,"claims false vs T, on (E3)","claims false vs T, on, no hedges",P_U on vs T (E3),"P_U on vs T, no hedges",hedges on,"hedges refuted by T, on"
+haiku,opaque,False,319,0.173,0.118,0.994,0.962,384,382,320,0.102,0.077,0.959,0.931,155,155
+haiku,opaque,True,40,0.187,0.129,1.0,0.975,49,49,40,0.121,0.079,0.95,0.85,32,32
+haiku,plausible,False,320,0.169,0.114,0.997,0.963,390,389,320,0.101,0.075,0.972,0.934,168,167
+haiku,plausible,True,40,0.185,0.133,0.975,0.975,43,43,40,0.129,0.087,1.0,0.975,33,33
+sonnet,plausible,False,64,0.136,0.083,1.0,0.984,71,71,64,0.108,0.072,0.969,0.953,48,48
+sonnet,plausible,True,8,0.15,0.087,1.0,1.0,11,11,8,0.119,0.079,1.0,1.0,7,7

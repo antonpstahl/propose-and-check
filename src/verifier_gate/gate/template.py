@@ -109,6 +109,11 @@ def synthetic_label(names: Mapping[str, str] = labels.SYNTHETIC_NAMES) -> Callab
     return lambda term: labels.SYNTHETIC_LABELS.get(labels.shown(term, names), labels.shown(term, names))
 
 
+def plasmode_label(term: str) -> str:
+    """A TaiwanCredit column in a sentence (D54): its plain words, or the code if it has none."""
+    return labels.PLASMODE_LABELS.get(term, term)
+
+
 def notice_template(lf: LocalFacts, certified: list[Claim], label: Callable[[str], str] | None = None) -> Draft:
     label = label or synthetic_label()
 
