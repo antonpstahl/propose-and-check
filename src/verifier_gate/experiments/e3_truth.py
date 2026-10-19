@@ -35,7 +35,7 @@ from verifier_gate.verifier.certified import certified_plan
 from verifier_gate.verifier.verify import verify
 
 SOURCE = RESULTS / e2_text.E3_SOURCE
-WRITERS = ("haiku", "sonnet")
+WRITERS = ("haiku", "sonnet", "qwen3.8-27b")  # folder names under SOURCE; also the "writer" label in the output
 CHECKED = ("claims", "false M", "false T", "hedges")
 
 
