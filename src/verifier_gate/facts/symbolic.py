@@ -1,7 +1,7 @@
 """SymPy export of Facts (§5.1): each term as a Piecewise, the whole model as one expression, and relations
 between terms as SymPy relationals.
 
-Where SymPy is needed and where numpy is enough (Agus suggested SymPy and will ask):
+Where SymPy is needed and where numpy is enough:
 - Evaluating, comparing and checking monotonicity: numpy is enough. Both models are step functions, so these
   are searchsorted and np.diff on the facts; the verifier uses numpy.
 - SymPy adds (a) an exact symbolic form of the fitted model (exact=True keeps every float bit for bit; the

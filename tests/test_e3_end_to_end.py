@@ -1,10 +1,13 @@
 """E3 (experiments/e3_end_to_end.py): the design, scoring readings apart from the gate's, the score of a text,
-and a run end to end in stub mode."""
+and a run end to end in stub mode. All but the first test read the Facts in cache/facts/ (the archive or build_facts,
+see the README); without them they are skipped."""
 
 import pytest
 
+from verifier_gate.data import tiers
 from verifier_gate.dsl.parse import parse
 from verifier_gate.experiments import e3_end_to_end as e3
+from verifier_gate.experiments.build_facts import path
 from verifier_gate.gate import gate as g
 from verifier_gate.llm import batch, extract
 from verifier_gate.llm.client import Client
@@ -20,6 +23,8 @@ def test_the_design_has_720_haiku_runs_and_72_sonnet_runs():
 @pytest.fixture(scope="module")
 def setup():
     specs = e3.plan(dry=True)[:2]
+    if not all(path(tiers.scenario(s.scenario), s.model).with_suffix(".json").exists() for s in specs):
+        pytest.skip("Facts not on disk (cache/facts/, see the README)")
     ctxs, texts = e3.contexts(specs)
     return specs, ctxs, texts
 

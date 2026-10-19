@@ -33,5 +33,5 @@ M6,"text, plasmode, x4",3,3,1.0
 M7,"text, plasmode, x4",64,63,0.984375
 M8,"text, plasmode, x4",20,20,1.0
 M9,"text, plasmode, x4",174,130,0.7471264367816092
-LLM-written errors (human labels),"text, synthetic, x3",95,93,0.9789473684210527
-LLM-written errors (human labels),"text, synthetic, x4",95,93,0.9789473684210527
+LLM-written errors (author-reviewed labels),"text, synthetic, x3",95,93,0.9789473684210527
+LLM-written errors (author-reviewed labels),"text, synthetic, x4",95,93,0.9789473684210527

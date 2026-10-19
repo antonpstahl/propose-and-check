@@ -59,6 +59,7 @@ ZIP_SHA256 = "56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602"
 XLS_SHA256 = "30c6be3abd8dcfd3e6096c828bad8c2f011238620f5369220bd60cfc82700933"
 RAW = Path(__file__).parents[3] / "data" / "raw"
 XLS = RAW / "taiwan_credit.xls"
+XLS_MEMBER = "default of credit card clients.xls"  # the file inside the UCI zip
 SHAPES = Path(__file__).with_name("plasmode_shapes.json")  # the planted shapes, derived once and kept
 
 FEATURES = ("PAY_0", "LIMIT_BAL", "BILL_AMT1", "PAY_AMT1", "PAY_AMT2", "AGE", "EDUCATION", "BILL_AMT2", "PAY_AMT3")
@@ -103,7 +104,7 @@ def fetch() -> Path:
     if _sha256(archive) != ZIP_SHA256:
         raise RuntimeError("the downloaded archive does not match the recorded hash")
     with zipfile.ZipFile(archive) as z:
-        XLS.write_bytes(z.read("default of credit card clients.xls"))
+        XLS.write_bytes(z.read(XLS_MEMBER))
     if _sha256(XLS) != XLS_SHA256:
         raise RuntimeError("the extracted file does not match the recorded hash")
     return XLS

@@ -2,9 +2,10 @@
 
 Inputs, as committed: the code, the frozen prompts and lexicon, the LLM cache (cache/llm: every answer as received),
 E3's run traces (results/e3/v3-x3/*/runs: the record of what was paid; E3 ran with extractor x3, which the current
-code reads from git where it needs it), and the human labels (results/e2/v2/text/labels, .../false_alarms). Not
-committed and rebuilt here if missing: the Facts and refits in cache/facts (hours of fitting from fixed seeds) and
-the datasets.
+code reads from git where it needs it), and the labels (results/e2/v2/text/labels, .../false_alarms). Not committed:
+the Facts and refits in cache/facts and the TaiwanCredit file in data/raw. Unpacked from the Facts archive
+(experiments/facts_archive.py), they make the run offline; otherwise the first steps refit every model from the fixed
+seeds (about six hours) and download TaiwanCredit from UCI.
 
 Every step runs with VERIFIER_GATE_OFFLINE set: a request that is not in the LLM cache raises instead of calling the
 API, so a reproduction costs $0 or stops. At the end, `git status` over results/ and paper/ lists every output that
@@ -12,8 +13,8 @@ differs from the committed one; none should. Two differences are not results and
 `spent` (what an execution paid: $0 on a rerun from the cache) is restored, so the record of what was paid stays; a PDF
 whose PNG is unchanged differs only in metadata (PDFs written before 17 Oct carry a creation date).
 
-Run: `uv run python -m verifier_gate.experiments.reproduce` (about half an hour with the Facts cached). Options:
---list, --only <step names, comma-separated>, --from <step name>.
+Run: `uv run python -m verifier_gate.experiments.reproduce` (30 steps, about seven minutes with the Facts on disk).
+Options: --list, --only <step names, comma-separated>, --from <step name>.
 """
 
 import argparse
@@ -62,6 +63,7 @@ STEPS = [  # name, module, arguments
     ("fig4", "fig4", []),
     ("tables", "tables", []),
     ("worked-example", "worked_example", []),
+    ("spend", "spend", []),  # what the live calls cost, from the call log
 ]
 
 

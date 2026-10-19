@@ -1,6 +1,7 @@
-% References of the working paper. Sources: the literature review of 9 Oct 2026 (Preparation/Literature_Review_Verifier_Gate.md)
-% with titles and authors checked against the arXiv API on 17 Oct 2026; the seminar's literature.bib (model papers);
-% the local PDF of Sudjianto (2026). Entries marked "check" were written from general knowledge and should be checked.
+% References of the working paper. Titles and authors of the arXiv entries checked against the arXiv API on 17 Oct 2026;
+% the model papers from the seminar's bibliography; Sudjianto (2026) from the author's manuscript. Lengerich et al.,
+% Montiel Olea and Plagborg-Moller, Yeh and Lien, and Franklin et al. checked against the publishers' records on
+% 19 Oct 2026 (PMLR, RePEc, the UCI dataset page, PubMed Central).
 
 @misc{gao2023pal,
   author       = {Gao, Luyu and Madaan, Aman and Zhou, Shuyan and Alon, Uri and Liu, Pengfei and Yang, Yiming and Callan, Jamie and Neubig, Graham},
@@ -137,41 +138,53 @@
   pages     = {785--794}
 }
 
-% check: written from general knowledge
 @inproceedings{lengerich2020purifying,
   author    = {Lengerich, Benjamin and Tan, Sarah and Chang, Chun-Hao and Hooker, Giles and Caruana, Rich},
   title     = {Purifying Interaction Effects with the Functional {ANOVA}: An Efficient Algorithm for Recovering Identifiable Additive Models},
   booktitle = {Proceedings of the 23rd International Conference on Artificial Intelligence and Statistics ({AISTATS})},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {108},
+  pages     = {2402--2412},
   year      = {2020}
 }
 
-% check: written from general knowledge
 @article{montielolea2019simultaneous,
   author  = {Montiel Olea, Jos{\'e} Luis and Plagborg-M{\o}ller, Mikkel},
   title   = {Simultaneous Confidence Bands: Theory, Implementation, and an Application to {SVARs}},
   journal = {Journal of Applied Econometrics},
   year    = {2019},
   volume  = {34},
-  number  = {1}
+  number  = {1},
+  pages   = {1--17},
+  doi     = {10.1002/jae.2656}
 }
 
-% check: written from general knowledge
 @article{yeh2009comparisons,
   author  = {Yeh, I-Cheng and Lien, Che-hui},
   title   = {The Comparisons of Data Mining Techniques for the Predictive Accuracy of Probability of Default of Credit Card Clients},
   journal = {Expert Systems with Applications},
   year    = {2009},
   volume  = {36},
-  number  = {2}
+  number  = {2},
+  pages   = {2473--2480}
 }
 
-% check: written from general knowledge
+@misc{yeh2009uci,
+  author       = {Yeh, I-Cheng},
+  title        = {Default of Credit Card Clients},
+  year         = {2009},
+  howpublished = {UCI Machine Learning Repository, dataset 350, CC BY 4.0},
+  doi          = {10.24432/C55S3H}
+}
+
 @article{franklin2014plasmode,
   author  = {Franklin, Jessica M. and Schneeweiss, Sebastian and Polinski, Jennifer M. and Rassen, Jeremy A.},
   title   = {Plasmode Simulation for the Evaluation of Pharmacoepidemiologic Methods in Complex Healthcare Databases},
   journal = {Computational Statistics \& Data Analysis},
   year    = {2014},
-  volume  = {72}
+  volume  = {72},
+  pages   = {219--226},
+  doi     = {10.1016/j.csda.2013.10.018}
 }
 
 @misc{sr262026,
@@ -184,12 +197,14 @@
 @misc{regb,
   author       = {{Consumer Financial Protection Bureau}},
   title        = {{Equal Credit Opportunity Act (Regulation B), 12 CFR Part 1002}},
-  howpublished = {Code of Federal Regulations}
+  year         = {2026},
+  howpublished = {Code of Federal Regulations, Title 12; statement of specific reasons: \S~1002.9(b)(2)}
 }
 
 @unpublished{stahl2026seminar,
   author = {Stahl, Anton},
   title  = {{LLM}-Assisted Explanation of Machine Learning Model Outputs: The Effect of {XAI} Method and Handover Format on Explanation Quality},
   year   = {2026},
-  note   = {Term paper, research seminar}
+  note   = {Term paper, research seminar, Chair of Business Information Systems, esp.\ Intelligent Systems and Services,
+            TU Dresden. Code: \url{https://github.com/antonpstahl/llm-assisted-xai-explanations}}
 }

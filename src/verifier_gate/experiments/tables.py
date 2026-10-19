@@ -9,8 +9,9 @@
   sample size; the synthetic tier pooled over its three seeds (discovery and confirmation, recomputed from the
   counts, not averaged), the plasmode tier over its three seeds.
 - Tab. 4, survival, control effectiveness and cost (D36): per writer, outside the pilot datasets: exit states,
-  repair rounds, P_U before and after the gate and E_U, as run and with human labels where they exist (§14.21), and
-  the cost per run; the local spot check (§14.22) as its own row.
+  repair rounds, P_U before and after the gate and E_U, as run and with author-reviewed labels where they exist
+  (§14.21), Haiku also split by handover (H1: the facts only; H2: with the certified statements; WP3's handover
+  question), and the cost per run; the local spot check (§14.22) as its own row.
 
 Each table is also written as a LaTeX tabular (booktabs) for paper/main.tex, which inputs it: no number of the paper is
 typed by hand.
@@ -176,12 +177,15 @@ def tab4() -> None:
     sonnet = pd.read_csv(RESULTS / "e3" / "v3-x3" / "sonnet" / "rows.csv")
     qwen = pd.read_csv(RESULTS / "e3" / "v3-x3" / "qwen3.8-27b" / "rows.csv")
     local = pd.read_csv(RESULTS / "local" / "run" / "l1" / "rows.csv")
-    rows = [_e3_row("Claude Haiku 5.5, global (E3)", haiku[~haiku["pilot dataset"]]),
+    haiku = haiku[~haiku["pilot dataset"]]
+    rows = [_e3_row("Claude Haiku 5.5, global (E3)", haiku),
+            _e3_row("Claude Haiku 5.5, global, facts only (H1)", haiku[haiku.handover == "H1"]),
+            _e3_row("Claude Haiku 5.5, global, with certified statements (H2)", haiku[haiku.handover == "H2"]),
             _e3_row("Claude Sonnet 5.5, global (E3 subset)", sonnet[~sonnet["pilot dataset"]]),
-            _e3_row("Qwen3 27B, self-hosted, global (E3 subset)", qwen[~qwen["pilot dataset"]]),
+            _e3_row("qwen3.8:27b (NVFP4), self-hosted, global (E3 subset)", qwen[~qwen["pilot dataset"]]),
             _e3_row("Claude Haiku 5.5, adverse-action notices (local spot check)", local[~local["pilot notice"]])]  # fmt: skip
     effect = pd.read_csv(RESULTS / "e2" / "v2" / "text" / "false_alarms" / "e3_effect.csv").set_index("quantity").value
-    labelled = {"Writer, setting": "Claude Haiku 5.5, global, with human labels", "runs": "40 drafts, all released texts with a false claim",
+    labelled = {"Writer, setting": "Claude Haiku 5.5, global, with author-reviewed labels", "runs": "40 drafts, all released texts with a false claim",
                 "released / reduced / template / escalate": "", "repair rounds (mean)": "",
                 "P_U before": f"{float(effect['P_U off, labelled']):.1%} (95% interval " + "–".join(f"{float(x):.1%}" for x in effect['P_U off, labelled, 95% interval'].split(' to ')) + ")",
                 "P_U after": f"{float(effect['P_U on, labelled (open: as errors)'].split()[0]):.2%}",
@@ -191,8 +195,9 @@ def tab4() -> None:
     write("tab4_e3", "Tab. 4: survival, control effectiveness and cost (E3, D36)", [("", pd.DataFrame(rows))],
           "Outside the pilot datasets and the pilot notices. P_U: share of texts with a claim false against the fitted model, as read by three "
           "scoring readings apart from the gate's (a claim counts if two find it); before = the writer's first draft, after = the released "
-          "text; E_U = 1 − P_U after / P_U before. With human labels, most false claims in released texts are misreadings by the scoring "
-          "readings (§14.21). Cost per run: every call of the trace at its price when made (batch prices for E3).",
+          "text; E_U = 1 − P_U after / P_U before. With author-reviewed labels, most false claims in released texts are misreadings by the "
+          "scoring readings. H1: the facts only; H2: the facts and the statements the verifier certifies. Cost per run: every call of the "
+          "trace at its price when made (batch prices for E3).",
           ["p{3.7cm}p{1.7cm}p{2.1cm}p{1.1cm}p{1.9cm}p{1.1cm}p{1.6cm}p{1.1cm}"])  # fmt: skip
 
 

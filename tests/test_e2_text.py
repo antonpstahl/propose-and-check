@@ -1,18 +1,25 @@
 """Text-level E2 (experiments/e2_text.py): the template text with one clause changed and its plan unchanged; the
-pipeline in stub mode catches every labelled error at the changed sentence and blocks no unchanged text."""
+pipeline in stub mode catches every labelled error at the changed sentence and blocks no unchanged text. The tests
+read the Facts in cache/facts/ (the archive or build_facts, see the README); without them they are skipped."""
 
 import pytest
 
 from verifier_gate.data import dgp
 from verifier_gate.dsl.parse import parse
 from verifier_gate.experiments import e2_text
-from verifier_gate.experiments.build_facts import load
+from verifier_gate.experiments.build_facts import load, path
 from verifier_gate.gate.template import template
 from verifier_gate.verifier.certified import certified_plan
 
 
+def built(scenario) -> bool:
+    return all(path(scenario, kind).with_suffix(".json").exists() for kind in ("EBM", "XGB2"))
+
+
 @pytest.fixture(scope="module")
 def draft():
+    if not built(dgp.SCENARIOS[0]):
+        pytest.skip("Facts not on disk (cache/facts/, see the README)")
     facts = load(dgp.SCENARIOS[0], "EBM")
     return template(facts, certified_plan(facts))
 
@@ -49,6 +56,8 @@ def test_plasmode_texts_use_the_columns_words_and_the_data_dictionary():
     from verifier_gate.llm import extract
 
     scenario = next(s for s in plasmode.SCENARIOS if s.seed == 1)
+    if not (built(scenario) and plasmode.XLS.exists()):
+        pytest.skip("plasmode Facts or TaiwanCredit not on disk (cache/facts/, data/raw/, see the README)")
     cases = e2_text.script_cases((scenario,))
     control = next(c for c in cases if c.source == "control")
     text = " ".join(t for _, t in control.sentences)

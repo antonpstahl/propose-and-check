@@ -1,6 +1,5 @@
 """Hand-written check of the extractor's handling of features the list does not have (none uses "the savings
 balance", the E2 term). Three readings each, synchronous, cached."""
-import sys
 from verifier_gate.data import dgp
 from verifier_gate.experiments.build_facts import load
 from verifier_gate.llm import extract

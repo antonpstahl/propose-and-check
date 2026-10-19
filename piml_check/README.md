@@ -1,6 +1,6 @@
-# PiML check (working paper plan §14.4, D27)
+# PiML check (plan §14.4, D27; see `docs/decisions.md`)
 
-Required before the paper says anything about XGB2 as implemented in PiML, the toolbox Agus Sudjianto co-created.
+Required before the paper says anything about XGB2 as implemented in PiML.
 Two questions on one dataset (`syn-none-n50000-s1`, level "none"):
 
 1. Does our XGB2 decomposition (`src/verifier_gate/facts/xgb2.py`) agree with PiML's on the same fitted model?
@@ -59,7 +59,7 @@ Our own XGB2 on the same data: 1.2%, largest pair.
 | data weights (`true_to_data=True`, ours) | variance share | 2 of 33 | 2 of 36 |
 | data weights | mean \|score\| share | 1 of 33 | 1 of 36 |
 
-## Side findings (for Agus, as a constructive note with a minimal reproduction)
+## Side findings (to be reported to PiML's maintainers, with a minimal reproduction)
 
 - PiML's XGB2 decomposition reproduces the model's margin only for `tree_method="exact"`. For `hist` and `approx` it
   misroutes training rows that sit on a split value (narrowed by the toy check below; the 13 Oct reading, "about
@@ -72,7 +72,7 @@ Our own XGB2 on the same data: 1.2%, largest pair.
 
 ## Toy check of the hist/approx finding (14 Oct 2026, D28)
 
-Before the finding goes to Agus, it was reproduced on a toy dataset outside our benchmark, with PiML's own API for the
+Before the finding is reported, it was reproduced on a toy dataset outside our benchmark, with PiML's own API for the
 outcome (`toy_hist.py`; rule fixed in the script before the run). Toy: 3 features uniform on [0, 1], n = 2,000,
 logit 2 x1 − 1.5 x2 + 4 (x1 − 0.5)(x3 − 0.5). The margin is rebuilt from `parse_model()` (intercept + main effects +
 interactions, PiML's raw outputs) and compared with `decision_function`.
@@ -101,11 +101,11 @@ logits (below the rule's 0.05). The 13 Oct statement ("about 0.3 logits even awa
   constant offset of 0.32 logits on every row that we have not explained. `parse_model()`, what users get, does not
   expose it.
 
-**What the note to Agus can say** (constructive, with `toy_hist.py` as the reproduction): on hist and approx trees,
+**What the evidence supports** (with `toy_hist.py` as the reproduction): on hist and approx trees,
 PiML's XGB2 effects misroute training rows that lie on split values, by up to about 1 logit (continuous features) and
 2 logits (count features, where most rows are affected); exact trees are right; the default `auto` means hist from
-xgboost 2.0 on; `split_calibration` looks like the intended fix and could be the default. What it should not say: that
-the effects are wrong away from split values, or anything about the 0.32 offset before it is understood.
+xgboost 2.0 on; `split_calibration` looks like the intended fix and could be the default. What it does not support:
+that the effects are wrong away from split values, or anything about the 0.32 offset before it is understood.
 
 Run (seconds): `piml_check/.venv.nosync/bin/python piml_check/toy_hist.py` and `toy_hist_followup.py`; for xgboost
 2.0.3, the same in an environment with `PiML==0.6.0.post2` and `xgboost==2.0.3`. Results: `results/toy_hist/`.

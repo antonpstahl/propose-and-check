@@ -1,7 +1,7 @@
 """Toy check of PiML's XGB2 decomposition for hist and approx trees (plan §14.4 side finding, D28). PiML's env.
 
-Before the hist/approx finding goes to Agus Sudjianto as a note, it is reproduced on a toy dataset outside our
-benchmark, with PiML's own API only for the outcome (no code of ours evaluates PiML's effects there).
+Before the hist/approx finding is reported, it is reproduced on a toy dataset outside our benchmark, with PiML's
+own API only for the outcome (no code of ours evaluates PiML's effects there).
 
 Toy data: 3 features uniform on [0, 1], n = 2,000 (seed 0), logit 2 x1 - 1.5 x2 + 4 (x1 - 0.5)(x3 - 0.5), y drawn
 from it. For tree_method exact, hist and approx, and PiML's defaults: fit PiML's XGB2Classifier, then rebuild the
@@ -16,7 +16,7 @@ here, on parse_model()'s effects), with split_calibration off and on: does the o
 
 Outcome rule, fixed before the run (14 Oct): the defect is confirmed if the exact fit's largest gap is at most
 1e-4 logits and the hist or the approx fit's largest gap on rows away from the splits is at least 0.05 logits.
-Otherwise it is not reproduced on the toy data, and the note does not go out as written.
+Otherwise it is not reproduced on the toy data, and the finding is not reported as written.
 
 Run: `piml_check/.venv.nosync/bin/python piml_check/toy_hist.py [label]` (seconds). The label (default: the
 xgboost version) names the output, results/toy_hist/<label>.json, so the same script can run in environments

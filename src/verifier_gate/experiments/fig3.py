@@ -2,9 +2,9 @@
 §14.19, §14.23).
 
 One row per operator (e2_mutation.py, M1 to M11 without M10, which is not labelled), and a last row for the
-LLM-written errors with human labels. Recall is the share of errors not released (D32). Plan level: the mutated
+LLM-written errors with author-reviewed labels. Recall is the share of errors not released (D32). Plan level: the mutated
 claim goes straight to the verifier, pooled over the synthetic tier (all three seeds) and the plasmode tier; it is
-100% for every operator, drawn as a grey reference mark. Text level: the template text with one clause changed and
+100% for every operator, drawn as a gray reference mark. Text level: the template text with one clause changed and
 its plan unchanged, so only the round trip can catch it, read by extractor x3 and x4 on the synthetic tier and by
 x4 on the plasmode tier (seed 1, D54). M2 and M5 (ranks, shares) have no text-level row: the template texts do not
 state them. Values below 99% are labelled; the numbers behind every mark are written to
@@ -41,7 +41,7 @@ OPERATORS = {
     "M9": "feature the model lacks",
     "M11": "settled claim hedged",
 }
-LLM_ROW = "LLM-written errors (human labels)"
+LLM_ROW = "LLM-written errors (author-reviewed labels)"
 TEXT = {  # condition: (script.csv, colour, marker)
     "text, synthetic, x3": (E2 / "text" / "x3" / "script.csv", "#eb6834", "s"),
     "text, synthetic, x4": (E2 / "text" / "x4" / "script.csv", "#2a78d6", "o"),

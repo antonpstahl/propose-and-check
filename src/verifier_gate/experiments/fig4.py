@@ -11,7 +11,7 @@ over the datasets of each interaction level (2,000 draws), the models pooled; an
 an arrowhead at the axis.
 
 The released texts are read by the same LLM readings as the drafts, so their misreadings count as false claims:
-with human labels, 32 of the 43 false claims in released texts are misreadings and 2 are real errors (§14.21), so the
+with author-reviewed labels, 32 of the 43 false claims in released texts are misreadings and 2 are real errors (§14.21), so the
 values after the gate are a lower bound.
 
 Run: `uv run python -m verifier_gate.experiments.fig4`. Writes paper/figures/fig4_faithfulness.png and .pdf and

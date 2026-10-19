@@ -1,10 +1,11 @@
 """Fig. 1: the propose-and-prove loop as built (plan §5, §8; adapted from panel C of the thesis overview).
 
-Seven steps left to right; grey fill: an LLM step; thick frame: the contribution (verifier, round trip, lexicon,
+Seven steps left to right; gray fill: an LLM step; thick frame: the contribution (verifier, round trip, lexicon,
 gate; plan §0). The lexicon feeds the verifier and the round trip; the gate sends failing claims back to the writer
 with their evidence (at most two rounds, then the failing sentences are dropped or the template is released); the
-released text's every claim is certified on M. The strip below names the two references the evaluation keeps
-apart: the fitted model M (is the text faithful?) and the planted truth T (is it true?).
+released text's every claim is certified on M. The strip below names the three references the evaluation keeps
+apart: the fitted model M (is the text faithful?), the planted truth T (is it true?) and, in E1, an oracle fitted to
+T's shapes (what can the sample support?).
 
 Run: `uv run python -m verifier_gate.experiments.fig1`. Writes paper/figures/fig1_loop.png and .pdf.
 """
@@ -75,11 +76,12 @@ def draw() -> plt.Figure:
     arrow(ax, (rx, Y - 0.004), (rx, 0.3))
     ax.text(rx, 0.28, "released text:\nevery claim\ncertified on M", fontsize=6.5, color=INK, ha="center", va="top", linespacing=1.3,
             transform=ax.transAxes)  # fmt: skip
-    # the two references of the evaluation
+    # the three references of the evaluation
     ax.plot([xs[0], xs[3] + W], [0.12, 0.12], color=GRID, lw=0.8, transform=ax.transAxes)
-    ax.text(xs[0], 0.095, "Evaluation, two references kept apart: the fitted model M (is the text faithful? E2, E3)\n"
-            "and the planted truth T (is it true? E1, E3)", fontsize=6.5, color=MUTED, va="top", linespacing=1.3, transform=ax.transAxes)  # fmt: skip
-    ax.text(xs[0], 0.36, "grey: an LLM step\nthick frame: the contribution", fontsize=6.3, color=MUTED, va="top", linespacing=1.35,
+    ax.text(xs[0], 0.095, "Evaluation, three references kept apart: the fitted model M (is the text faithful? E2, E3), the planted truth T\n"
+            "(is it true? E1, E3) and an oracle fitted to T's shapes (what can the sample support? E1)", fontsize=6.5, color=MUTED, va="top",
+            linespacing=1.3, transform=ax.transAxes)  # fmt: skip
+    ax.text(xs[0], 0.36, "gray: an LLM step\nthick frame: the contribution", fontsize=6.3, color=MUTED, va="top", linespacing=1.35,
             transform=ax.transAxes)  # fmt: skip
     return fig
 
