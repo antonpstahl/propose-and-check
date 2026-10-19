@@ -19,6 +19,7 @@ A rejected request (400, 401, 403, 404) is a bug in our code, not a run outcome,
 import hashlib
 import json
 import os
+import sys
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
@@ -27,7 +28,11 @@ from pathlib import Path
 from verifier_gate.llm import settings
 
 CACHE = Path(__file__).parents[3] / "cache" / "llm"
-OFFLINE = "VERIFIER_GATE_OFFLINE"  # set: a request not in the cache raises instead of calling the API (experiments/reproduce.py)
+OFFLINE = "VERIFIER_GATE_OFFLINE"
+LOCAL_PREFIX = "ollama/"  # a model named ollama/<tag> runs on the local Ollama server (D55): synchronous, $0
+OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+OLLAMA_NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "10240"))  # writer prompt 5.5k tokens; two repair rounds reach about 8k
+OLLAMA_NUM_BATCH = int(os.environ.get("OLLAMA_NUM_BATCH", "64"))  # small prompt batches keep the peak memory down (24 GB machine)  # set: a request not in the cache raises instead of calling the API (experiments/reproduce.py)
 DOTENV = Path(__file__).parents[3] / ".env"  # git-ignored; .env.example is the template
 EFFORTS_WITHOUT_THINKING = ("low", "medium", "high")
 THINKING_OFF = {"claude-haiku-5-5": {"type": "disabled"}, "claude-sonnet-5-5": {"type": "between_tools"}}
@@ -124,7 +129,9 @@ class Response:
 
 
 def cost(model: str, usage: Mapping, batch: bool = False) -> float:
-    """USD for one call from its usage (settings.PRICES; input_tokens excludes cached tokens)."""
+    """USD for one call from its usage (settings.PRICES; input_tokens excludes cached tokens). A local model costs 0."""
+    if model.startswith(LOCAL_PREFIX):
+        return 0.0
     price_in, price_out, price_read = settings.PRICES[model]
     total = (
         usage.get("input_tokens", 0) * price_in
@@ -142,6 +149,51 @@ def stub_message(data: Mapping | str | None, stop_reason: str = "end_turn", usag
         "id": "stub", "model": model, "stop_reason": stop_reason, "stop_details": None,
         "content": [] if text is None else [{"type": "text", "text": text}],
         "usage": dict(usage or {"input_tokens": 1000, "output_tokens": 300}),
+    }  # fmt: skip
+
+
+def send_local(request: Request, url: str = OLLAMA_URL, timeout: float = 3600.0) -> dict | None:
+    """One call to a local model on an Ollama server (D55), returned in the API's message shape so that the rest of
+    the pipeline (cache, parsing, gate) is unchanged. The answer is constrained to the request's JSON schema;
+    thinking is off. None if the server cannot be reached (the "api" outcome, not cached)."""
+    import urllib.error
+    import urllib.request
+
+    tag = request.model.removeprefix(LOCAL_PREFIX)
+    body = {
+        "model": tag, "stream": False, "think": request.thinking != "off", "format": json.loads(request.schema), "keep_alive": "30m",
+        "messages": [{"role": "system", "content": request.system}] + [{"role": r, "content": t} for r, t in request.messages],
+        "options": {"num_ctx": OLLAMA_NUM_CTX, "num_batch": OLLAMA_NUM_BATCH, "num_predict": request.max_tokens},
+    }  # fmt: skip
+
+    def post(payload: dict) -> dict:
+        req = urllib.request.Request(f"{url}/api/chat", json.dumps(payload).encode(), {"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=timeout) as answer:
+            return json.loads(answer.read())
+
+    try:
+        try:
+            out = post(body)
+        except urllib.error.HTTPError as e:  # a model without a thinking switch rejects the "think" field
+            message = e.read().decode(errors="ignore")
+            if e.code == 400 and "think" in message.lower():
+                out = post({k: v for k, v in body.items() if k != "think"})
+            else:
+                sys.stderr.write(f"ollama: HTTP {e.code}: {message[:300]}\n")  # e.g. out of memory at this context size
+                return None
+    except urllib.error.URLError as e:
+        sys.stderr.write(f"ollama: {e.reason}\n")
+        return None
+    reason = out.get("done_reason") or ""
+    if out.get("prompt_eval_count", 0) >= OLLAMA_NUM_CTX - 32:  # the prompt filled the context: its start may be cut
+        sys.stderr.write(f"ollama: the prompt filled the context of {OLLAMA_NUM_CTX} tokens; answer treated as truncated\n")
+        reason = "length"
+    return {
+        "id": "local", "model": request.model, "stop_details": None,
+        "stop_reason": "max_tokens" if reason == "length" else "end_turn",
+        "content": [{"type": "text", "text": (out.get("message") or {}).get("content", "")}],
+        "usage": {"input_tokens": out.get("prompt_eval_count", 0), "output_tokens": out.get("eval_count", 0)},
+        "_local": {k: out.get(k) for k in ("total_duration", "load_duration", "prompt_eval_duration", "eval_duration")},
     }  # fmt: skip
 
 
@@ -226,6 +278,8 @@ class Client:
 
         if os.environ.get(OFFLINE):
             raise RuntimeError(f"{OFFLINE} is set and a {request.role} request is not in the cache: nothing is sent")
+        if request.model.startswith(LOCAL_PREFIX):
+            return send_local(request)
         if self._sdk is None:
             load_dotenv()
             self._sdk = anthropic.Anthropic(max_retries=self.max_retries)

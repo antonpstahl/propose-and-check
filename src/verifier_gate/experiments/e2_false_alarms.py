@@ -24,9 +24,7 @@ labels.
 """
 
 import argparse
-import hashlib
 import json
-import subprocess
 from dataclasses import replace
 from pathlib import Path
 
@@ -56,12 +54,7 @@ OPAQUE = {"noise_1": "feature a", "noise_2": "feature b"}
 
 
 def x3_system() -> str:
-    text = subprocess.run(["git", "show", f"{X3_COMMIT}:src/verifier_gate/llm/prompts/extract_system.md"], cwd=REPO,
-                          capture_output=True, text=True, check=True).stdout  # fmt: skip
-    system = text.replace("{dsl}", prompts.dsl_reference())
-    if hashlib.sha256(system.encode()).hexdigest() != prompts.EXTRACTOR_HISTORY["x3"]["extract_system"]:
-        raise ValueError("x3's system prompt from git does not match its frozen hash")
-    return system
+    return prompts.historical_extractor_system("x3")
 
 
 def requests_for(text: dict, ctx, system: str | None, attempt: int = 0) -> list[Request]:

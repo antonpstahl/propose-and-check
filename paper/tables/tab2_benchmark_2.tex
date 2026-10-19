@@ -1,0 +1,15 @@
+\begin{tabular}{llp{7cm}r}
+\toprule
+\textbf{Feature} & \textbf{Role} & \textbf{Planted shape} & \textbf{Share (no interaction)} \\
+\midrule
+PAY\_0 & strong & the real-label EBM's, per status value & 40\% \\
+LIMIT\_BAL & strong & decreasing, smooth & 24\% \\
+BILL\_AMT1 & moderate & increasing, smooth & 13\% \\
+PAY\_AMT1 & moderate & decreasing, smooth & 10\% \\
+PAY\_AMT2 & threshold & a step down at 2,000 & 8\% \\
+AGE & weak & increasing, smooth & 4\% \\
+EDUCATION & near flat & linear in the code, clipped to 1 to 3 & 1\% \\
+BILL\_AMT2 & correlated null & zero; Spearman 0.91 with BILL\_AMT1 & 0\% \\
+PAY\_AMT3 & noise & zero & 0\% \\
+\bottomrule
+\end{tabular}

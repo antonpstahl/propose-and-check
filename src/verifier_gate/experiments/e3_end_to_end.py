@@ -67,12 +67,17 @@ class Spec:
 
     @property
     def run_id(self) -> str:
-        return f"{self.scenario}_{self.model}_{self.variant}_d{self.draw}_{self.writer}_{self.naming}"
+        writer = self.writer.replace("/", "-").replace(":", "-")  # a local model's tag (ollama/qwen3.8:27b) in a file name
+        return f"{self.scenario}_{self.model}_{self.variant}_d{self.draw}_{writer}_{self.naming}"
 
 
-def plan(sonnet: bool = False, dry: bool = False) -> list[Spec]:
-    if sonnet:
-        return [Spec(s.id, m, v, 0, settings.WRITER_SUBSET, "plausible") for s in dgp.SCENARIOS for m in MODELS for v in VARIANTS]
+def writer_folder(writer: str) -> str:
+    return writer.removeprefix("ollama/").replace(":", "-")
+
+
+def plan(sonnet: bool = False, dry: bool = False, writer: str | None = None) -> list[Spec]:
+    if sonnet or writer:  # a writer subset (D37, D55): one draw per cell, plausible names
+        return [Spec(s.id, m, v, 0, writer or settings.WRITER_SUBSET, "plausible") for s in dgp.SCENARIOS for m in MODELS for v in VARIANTS]
     scenarios = dgp.SCENARIOS[:2] if dry else dgp.SCENARIOS
     draws = range(1) if dry else range(DRAWS)
     return [Spec(s.id, m, v, d, settings.WRITER, naming) for naming in NAMINGS for s in scenarios for m in MODELS for v in VARIANTS for d in draws]
@@ -211,7 +216,8 @@ def estimate(specs: list[Spec]) -> float:
     total = 0.0
     for spec in specs:
         kind = "sonnet" if "sonnet" in spec.writer else "haiku"
-        writer = PER_RUN[kind]["writer"] * RATES[f"{kind} writer"]
+        local = spec.writer.startswith("ollama/")  # a local writer costs nothing; its runs are paced like Haiku's
+        writer = 0.0 if local else PER_RUN[kind]["writer"] * RATES[f"{kind} writer"]
         extractor = (PER_RUN[kind]["extractor"] + 2 * len(SCORING_REPLICAS)) * RATES["haiku extractor"]
         total += (writer + extractor) * settings.BATCH_DISCOUNT
     return total
@@ -222,8 +228,13 @@ def main() -> None:
     parser.add_argument("--sonnet", action="store_true", help="the Sonnet writer subset (D37)")
     parser.add_argument("--dry", action="store_true", help="stub writer and extractor on 16 runs, no network")
     parser.add_argument("--estimate", action="store_true", help="print the runs and the estimated cost, no network")
+    parser.add_argument("--writer", default=None, help="another writer for a subset as for Sonnet, e.g. ollama/qwen3.8:27b (D55)")
+    parser.add_argument("--extractor", default="x3", help="the extractor version for the gate and the scoring (E3 ran with x3)")
+    parser.add_argument("--limit", type=int, default=0, help="only the first N runs (a pilot of a writer subset)")
     args = parser.parse_args()
-    specs = plan(args.sonnet, args.dry)
+    prompts.pin_extractor(args.extractor)
+    specs = plan(args.sonnet, args.dry, args.writer)
+    specs = specs[: args.limit] if args.limit else specs
     if args.estimate:
         print(f"{len(specs)} runs; estimated cost at batch prices, from the pilot's rates: ${estimate(specs):.2f}")
         return
@@ -235,11 +246,13 @@ def main() -> None:
         texts = {rid: f"RUN: {rid}\n{t}" for rid, t in texts.items()}
     else:
         client, api, poll = Client("batch"), batch.BatchAPI(), batch.POLL_SECONDS
-        out = RESULTS / f"{prompts.VERSION}-{prompts.EXTRACTOR_VERSION}" / ("sonnet" if args.sonnet else "haiku")
+        folder = "sonnet" if args.sonnet else writer_folder(args.writer) if args.writer else "haiku"
+        out = RESULTS / f"{prompts.VERSION}-{prompts.extractor_version()}" / folder
     by_id = {spec.run_id: spec for spec in specs}
     jobs = {rid: batch.Job(g.start(rid, texts[rid], spec.writer, spec.draw), ctxs[rid], out / "runs" / f"{rid}.json") for rid, spec in by_id.items()}
-    print(f"E3 ({'Sonnet subset' if args.sonnet else 'Haiku'}{', no network' if args.dry else ''}): {len(jobs)} runs; "
-          f"prompts {prompts.VERSION}, extractor {prompts.EXTRACTOR_VERSION}")  # fmt: skip
+    label = "Sonnet subset" if args.sonnet else f"{args.writer} subset" if args.writer else "Haiku"
+    print(f"E3 ({label}{', no network' if args.dry else ''}): {len(jobs)} runs; "
+          f"prompts {prompts.VERSION}, extractor {prompts.extractor_version()}")  # fmt: skip
     runs = batch.run_waves(jobs, client, api, poll=poll)
     scores = score_runs(runs, ctxs, by_id, client, api, poll)
     table = pd.DataFrame([row(by_id[rid], run, scores) for rid, run in runs.items()])

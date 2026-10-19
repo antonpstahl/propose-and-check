@@ -40,7 +40,7 @@ from pathlib import Path
 
 from verifier_gate.data import labels
 from verifier_gate.dsl.grammar import Claim
-from verifier_gate.dsl.parse import parse
+from verifier_gate.dsl.parse import LOCAL_SCOPE, parse
 from verifier_gate.facts.local import LocalFacts
 from verifier_gate.facts.schema import Facts
 from verifier_gate.gate import template as templates
@@ -377,6 +377,14 @@ def _decide(run: Run, version: Version, request: Request, ctx: Context) -> Run:
 def advance(run: Run, response: Response | list[Response], ctx: Context) -> Run:
     """Take the answers to the pending requests (one writer answer, or the extractions of a text); return the run
     with its next requests or its exit state."""
+    token = LOCAL_SCOPE.set(isinstance(ctx.facts, LocalFacts))
+    try:
+        return _advance(run, response, ctx)
+    finally:
+        LOCAL_SCOPE.reset(token)
+
+
+def _advance(run: Run, response: Response | list[Response], ctx: Context) -> Run:
     responses = response if isinstance(response, list) else [response]
     expected = run.requests()
     if not expected:

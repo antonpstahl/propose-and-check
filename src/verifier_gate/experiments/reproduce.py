@@ -45,6 +45,9 @@ STEPS = [  # name, module, arguments
     ("e2-text-llm", "e2_text", ["--llm"]),
     ("e2-text-plasmode", "e2_text", ["--tier", "plasmode", "--seeds", "1"]),
     ("e2-text-compare", "e2_text", ["--compare"]),
+    ("e3-haiku", "e3_end_to_end", []),  # E3 as run (extractor x3 pinned), every call from the cache
+    ("e3-sonnet", "e3_end_to_end", ["--sonnet"]),
+    ("e3-qwen", "e3_end_to_end", ["--writer", "ollama/qwen3.8:27b"]),  # the self-hosted writer subset (D55), every call from the cache ($0)
     ("e3-check-and-truth", "e3_truth", []),
     ("false-alarms", "e2_false_alarms", ["--score", LABELS]),
     ("e3-residual", "e2_false_alarms", ["--e3", LABELS]),
@@ -126,8 +129,12 @@ def main() -> None:
         print(f"{len(restored)} file(s) differed only in 'spent' (paid by the original run, $0 now) and were restored")
     if metadata:
         print(f"{len(metadata)} PDF(s) differ only in metadata (their PNGs are unchanged): " + ", ".join(m[3:] for m in metadata))
+    modified, new = [x for x in after if not x.startswith("??")], [x for x in after if x.startswith("??")]
+    if new:
+        print("new outputs, not in the commit (commit them or remove them):\n" + "\n".join(new))
+    if modified:
+        print("outputs that differ from the committed ones:\n" + "\n".join(modified))
     if after:
-        print("outputs that differ from the committed ones:\n" + "\n".join(after))
         raise SystemExit(1)
     print("every output under results/ and paper/ equals the committed one" + (" (files already changed before the run were not checked)" if before else ""))
 

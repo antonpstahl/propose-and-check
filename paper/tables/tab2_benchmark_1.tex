@@ -1,0 +1,15 @@
+\begin{tabular}{llp{3.4cm}p{4.6cm}r}
+\toprule
+\textbf{Feature} & \textbf{Role} & \textbf{Distribution} & \textbf{Planted shape} & \textbf{Share (no interaction)} \\
+\midrule
+utilization & strong & Beta(2, 3) & increasing, steeper above 0.6 & 40\% \\
+n\_delinquencies & strong & min(Poisson(0.8), 6) & increasing, saturating & 24\% \\
+income & moderate & lognormal, median 50,000, σ 0.5 & decreasing (−log income) & 13\% \\
+history\_months & peak & uniform 6 to 360 & decreasing, with a bump at 36 months (rising on 7\% of the data) & 10\% \\
+dti & threshold & uniform 0 to 0.6 & a step up at 0.43 & 8\% \\
+n\_inquiries & weak & Poisson(1.5) & increasing (linear) & 4\% \\
+age & near flat & uniform 21 to 75 & decreasing (linear) & 1\% \\
+noise\_1 & noise & N(0, 1) & zero & 0\% \\
+noise\_2 & noise & N(0, 1) & zero & 0\% \\
+\bottomrule
+\end{tabular}

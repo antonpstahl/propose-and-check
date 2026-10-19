@@ -6,11 +6,16 @@ whitelisted comparisons, and literals of the wrong type are all errors.
 """
 
 import ast
+from contextvars import ContextVar
 from dataclasses import replace
 
-from verifier_gate.dsl.grammar import CALLS, CLASSES, COMPARED, HEDGE, LOCAL_CALLS, PATTERNS, RANKS, SETS, Claim
+from verifier_gate.dsl.grammar import CALLS, CLASSES, COMPARED, HEDGE, LOCAL_CALLS, LOCAL_KINDS, PATTERNS, RANKS, SETS, Claim
 
 COMPARISONS = {ast.Gt: ">", ast.Lt: "<"}
+# Set while the gate handles a notice of the local spot check (gate/gate.py): error messages then list the local forms
+# too. Outside it they list the global forms only, word for word as before the local forms existed, so a format
+# retry of a global run sends the same message and replays from the cache.
+LOCAL_SCOPE: ContextVar[bool] = ContextVar("local_dsl_scope", default=False)
 
 
 class DSLError(ValueError):
@@ -34,7 +39,8 @@ def _number(node: ast.AST, what: str) -> float | int:
 
 def _call(node: ast.AST, names: tuple[str, ...] | set[str]) -> ast.Call:
     if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in names):
-        raise DSLError(f"expected a call to one of {sorted(names)}")
+        shown = names if LOCAL_SCOPE.get() else [n for n in names if n not in LOCAL_KINDS]
+        raise DSLError(f"expected a call to one of {sorted(shown)}")
     return node
 
 

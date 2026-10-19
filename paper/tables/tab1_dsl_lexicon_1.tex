@@ -1,0 +1,23 @@
+\begin{tabular}{p{3.3cm}p{5.1cm}p{6.4cm}}
+\toprule
+\textbf{Words in the text} & \textbf{DSL claim} & \textbf{Meaning (judged on the whole 95\% band)} \\
+\midrule
+“a strong / moderate / weak effect” & \texttt{strength("x") == "strong"} (or “moderate”, “weak”) & share of the model's importance at least 15\% / 5\% to 15\% / 2\% to 5\%, and an effect the data can detect \\
+“a weak to moderate effect”, “a moderate to strong effect” & \texttt{strength("x") in ("weak", "moderate")} & the share lies somewhere in the classes named \\
+“at most a weak effect”, “a small effect” & \texttt{strength("x") in ("negligible", "weak")} & share below 5\% \\
+“hardly matters”, “negligible” & \texttt{negligible("x")} & share below 2\%, or no detectable effect and a small share \\
+“the most important”, “the second most important” & \texttt{rank("x") == 1} & rank among the features by importance \\
+“second or third”, “among the three most important” & \texttt{rank("x") in (2, 3)}, \texttt{rank("x") in (1, 2, 3)} & one of consecutive ranks \\
+“about 30\% of the importance” & \texttt{share("x") == approx(0.30)} & share of importance, within 2 points or 10\% \\
+“matters more than” & \texttt{effect("x") > effect("y")} & x's importance exceeds y's \\
+“risk increases with x” / “decreases” & \texttt{direction("x") == "increasing"} (or “decreasing”) & rises from the 5th to the 95th percentile, with no reversal the data can detect \\
+“risk mostly increases with x” & \texttt{direction("x") == "mostly\_increasing"} (or “mostly\_decreasing”) & rises overall, with a detected reversal on at most 10\% of the data \\
+“risk generally increases with x” & \texttt{direction("x") in ("increasing", "mostly\_increasing")} & either of the two above \\
+“risk jumps at x = 0.43” & \texttt{threshold("x", at=0.43)} & one sharp step near that value, at least half of the curve's range \\
+“risk peaks at x = 36” & \texttt{peak("x", at=36)} & the highest point of the curve lies near that value, with lower values on both sides \\
+“the effect of x grows with y” & \texttt{interaction("x", "y", pattern="amplification")} & the effect of x is larger when y is high \\
+“the effect of x reverses with y” & \texttt{interaction("x", "y", pattern="sign\_flip")} & the effect of x has opposite signs at low and high y \\
+“x and y do not interact” & \texttt{interaction("x", "y", pattern="none")} & no interaction of practical size \\
+“the data do not settle whether ...” & \texttt{unsettled(<any claim above>)} & the facts leave that claim open at this sample size \\
+\bottomrule
+\end{tabular}

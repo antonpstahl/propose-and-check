@@ -12,10 +12,15 @@
   repair rounds, P_U before and after the gate and E_U, as run and with human labels where they exist (§14.21), and
   the cost per run; the local spot check (§14.22) as its own row.
 
+Each table is also written as a LaTeX tabular (booktabs) for paper/main.tex, which inputs it: no number of the paper is
+typed by hand.
+
 Run: `uv run python -m verifier_gate.experiments.tables`.
 """
 
 from pathlib import Path
+
+import re
 
 import pandas as pd
 import yaml
@@ -51,12 +56,37 @@ def markdown(df: pd.DataFrame) -> str:
     return "\n".join(lines + ["| " + " | ".join(r) + " |" for r in cells]) + "\n"
 
 
-def write(name: str, title: str, parts: list[tuple[str, pd.DataFrame]], note: str = "") -> None:
+def _tex(text: str) -> str:
+    """Plain text for LaTeX; `code` spans become \texttt."""
+
+    def escape(s: str) -> str:
+        s = s.replace("\\", r"\textbackslash{}")
+        for ch in "&%$#_{}":
+            s = s.replace(ch, "\\" + ch)
+        return s.replace("~", r"\textasciitilde{}").replace("^", r"\textasciicircum{}")
+
+    def prose(s: str) -> str:  # curly quotes; P_U and E_U as math
+        s = re.sub(r'"([^"]*)"', "\u201c\\1\u201d", escape(s))
+        return s.replace(r"P\_U", r"$P_U$").replace(r"E\_U", r"$E_U$")
+
+    parts = re.split(r"`([^`]*)`", str(text))
+    return "".join(prose(p) if i % 2 == 0 else r"\texttt{" + escape(p) + "}" for i, p in enumerate(parts))
+
+
+def latex(df: pd.DataFrame, spec: str) -> str:
+    rows = [" & ".join(_tex(v) for v in row) + r" \\" for row in df.itertuples(index=False)]
+    head = " & ".join(r"\textbf{" + _tex(c) + "}" for c in df.columns) + r" \\"
+    return "\n".join([rf"\begin{{tabular}}{{{spec}}}", r"\toprule", head, r"\midrule", *rows, r"\bottomrule", r"\end{tabular}"]) + "\n"
+
+
+def write(name: str, title: str, parts: list[tuple[str, pd.DataFrame]], note: str = "", specs: list[str] | None = None) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     text = f"# {title}\n\n" + "\n".join((f"**{caption}**\n\n" if caption else "") + markdown(df) for caption, df in parts)
     (OUT / f"{name}.md").write_text(text + (f"\n{note}\n" if note else ""))
     for k, (_, df) in enumerate(parts):
-        df.to_csv(OUT / f"{name}{'' if len(parts) == 1 else f'_{k + 1}'}.csv", index=False)
+        stem = f"{name}{'' if len(parts) == 1 else f'_{k + 1}'}"
+        df.to_csv(OUT / f"{stem}.csv", index=False)
+        (OUT / f"{stem}.tex").write_text(latex(df, specs[k] if specs else "l" * len(df.columns)))
 
 
 def dsl_rows(source: str) -> pd.DataFrame:
@@ -84,7 +114,8 @@ def tab1() -> None:
           [("Claims about the model (global)", dsl_rows("system")), ("Claims about one declined applicant (local spot check)", dsl_rows("system_local")),
            ("The lexicon's thresholds", thresholds)],
           "A claim is true if the whole band lies inside the set its word names, false if it lies outside, undecidable otherwise; "
-          "undecidable claims are never released as stated (D30).")  # fmt: skip
+          "undecidable claims are never released as stated (D30).",
+          ["p{3.3cm}p{5.1cm}p{6.4cm}", "p{3.3cm}p{4.5cm}p{7cm}", "p{4.2cm}p{10.8cm}"])  # fmt: skip
 
 
 def tab2() -> None:
@@ -100,7 +131,8 @@ def tab2() -> None:
           [(f"Synthetic tier: n = {', '.join(f'{n:,}' for n in dgp.SAMPLE_SIZES)}; seeds {', '.join(map(str, dgp.SEEDS))}; base rate {dgp.BASE_RATE:.0%}", syn),
            (f"Plasmode tier: TaiwanCredit features (UCI 350), planted outcome; n = {', '.join(f'{n:,}' for n in plasmode.SAMPLE_SIZES)}; seeds {', '.join(map(str, plasmode.SEEDS))}", pls),
            ("Planted pairs (pairs take their share from the total; main terms keep their coefficients)", pairs)],
-          "18 datasets per tier: 3 interaction levels × 2 sample sizes × 3 seeds. EBM and XGB2 are fitted on each (36 models per tier).")  # fmt: skip
+          "18 datasets per tier: 3 interaction levels × 2 sample sizes × 3 seeds. EBM and XGB2 are fitted on each (36 models per tier).",
+          ["llp{3.4cm}p{4.6cm}r", "llp{7cm}r", "lllrrr"])  # fmt: skip
 
 
 def tab3() -> None:
@@ -125,7 +157,8 @@ def tab3() -> None:
           [("", t)],
           "Data layer: the lexicon on the oracle (what the sample supports); model layer: on the fitted model, against the oracle's labels; "
           "end to end: on the fitted model, against the planted labels (D12). Each tier pools its three seeds (synthetic: the discovery "
-          "seed and the two confirmation seeds); the model layer counts only the claims the oracle decides. Confident errors: a false claim certified or a true claim refuted, over all claims (D31).")  # fmt: skip
+          "seed and the two confirmation seeds); the model layer counts only the claims the oracle decides. Confident errors: a false claim certified or a true claim refuted, over all claims (D31).",
+          ["lllrrrrr"])  # fmt: skip
 
 
 def _e3_row(name: str, rows: pd.DataFrame) -> dict:
@@ -141,12 +174,14 @@ def _e3_row(name: str, rows: pd.DataFrame) -> dict:
 def tab4() -> None:
     haiku = pd.read_csv(RESULTS / "e3" / "v3-x3" / "haiku" / "rows.csv")
     sonnet = pd.read_csv(RESULTS / "e3" / "v3-x3" / "sonnet" / "rows.csv")
+    qwen = pd.read_csv(RESULTS / "e3" / "v3-x3" / "qwen3.8-27b" / "rows.csv")
     local = pd.read_csv(RESULTS / "local" / "run" / "l1" / "rows.csv")
     rows = [_e3_row("Claude Haiku 5.5, global (E3)", haiku[~haiku["pilot dataset"]]),
             _e3_row("Claude Sonnet 5.5, global (E3 subset)", sonnet[~sonnet["pilot dataset"]]),
+            _e3_row("Qwen3 27B, self-hosted, global (E3 subset)", qwen[~qwen["pilot dataset"]]),
             _e3_row("Claude Haiku 5.5, adverse-action notices (local spot check)", local[~local["pilot notice"]])]  # fmt: skip
     effect = pd.read_csv(RESULTS / "e2" / "v2" / "text" / "false_alarms" / "e3_effect.csv").set_index("quantity").value
-    labelled = {"Writer, setting": "Claude Haiku 5.5, global, with human labels (§14.21)", "runs": "40 drafts, all released texts with a false claim",
+    labelled = {"Writer, setting": "Claude Haiku 5.5, global, with human labels", "runs": "40 drafts, all released texts with a false claim",
                 "released / reduced / template / escalate": "", "repair rounds (mean)": "",
                 "P_U before": f"{float(effect['P_U off, labelled']):.1%} (95% interval " + "–".join(f"{float(x):.1%}" for x in effect['P_U off, labelled, 95% interval'].split(' to ')) + ")",
                 "P_U after": f"{float(effect['P_U on, labelled (open: as errors)'].split()[0]):.2%}",
@@ -157,7 +192,8 @@ def tab4() -> None:
           "Outside the pilot datasets and the pilot notices. P_U: share of texts with a claim false against the fitted model, as read by three "
           "scoring readings apart from the gate's (a claim counts if two find it); before = the writer's first draft, after = the released "
           "text; E_U = 1 − P_U after / P_U before. With human labels, most false claims in released texts are misreadings by the scoring "
-          "readings (§14.21). Cost per run: every call of the trace at its price when made (batch prices for E3).")  # fmt: skip
+          "readings (§14.21). Cost per run: every call of the trace at its price when made (batch prices for E3).",
+          ["p{3.7cm}p{1.7cm}p{2.1cm}p{1.1cm}p{1.9cm}p{1.1cm}p{1.6cm}p{1.1cm}"])  # fmt: skip
 
 
 def main() -> None:

@@ -114,3 +114,27 @@ def test_the_dotenv_loader_reads_spaced_lines_and_never_overrides(tmp_path, monk
     assert os.environ["ANTHROPIC_API_KEY"] == "sk-test-123" and os.environ["QUOTED"] == "x y"
     env.write_text("KEEP = 2\n")
     assert c.load_dotenv(env) == [] and os.environ["KEEP"] == "1"
+
+
+def test_a_local_model_answers_in_the_api_shape_and_costs_nothing(monkeypatch):
+    import io
+    import urllib.request
+
+    from verifier_gate.llm import client as c
+
+    sent = {}
+
+    def fake_urlopen(req, timeout=None):
+        sent["body"] = json.loads(req.data)
+        answer = {"message": {"content": json.dumps({"sentences": [], "claims": []})}, "done_reason": "stop",
+                  "prompt_eval_count": 4800, "eval_count": 700, "total_duration": 9}  # fmt: skip
+        return io.BytesIO(json.dumps(answer).encode())
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    request = c.Request("proposer", "ollama/qwen-test", "system text", (("user", "the facts"),), json.dumps({"type": "object"}))
+    raw = c.send_local(request)
+    assert sent["body"]["model"] == "qwen-test" and sent["body"]["think"] is False and sent["body"]["format"] == {"type": "object"}
+    assert sent["body"]["messages"][0] == {"role": "system", "content": "system text"}
+    response = c.interpret(request, raw, latency=1.0, cached=False)
+    assert response.ok and response.data == {"sentences": [], "claims": []} and response.cost == 0.0
+    assert response.usage == {"input_tokens": 4800, "output_tokens": 700}

@@ -1,0 +1,3 @@
+writer,naming,pilot datasets,runs,exit RELEASED,exit RELEASED_REDUCED,exit TEMPLATE,exit ESCALATE,P_U off,P_U on,E_U,P_U off vs T,P_U on vs T,"claims false vs T, off","claims false vs T, on",claims off,claims on,hedge share on,cost per run
+ollama/qwen3.8:27b,plausible,False,64,57,4,3,0,0.281,0.016,0.944,0.906,0.875,0.133,0.122,16.5,16.2,0.058,0.00062
+ollama/qwen3.8:27b,plausible,True,8,5,1,2,0,0.375,0.0,1.0,0.875,0.75,0.143,0.098,18.4,16.5,0.03,0.00104

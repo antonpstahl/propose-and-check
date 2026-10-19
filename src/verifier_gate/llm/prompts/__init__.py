@@ -26,6 +26,7 @@ advice_local.json (the repair lines that differ for a notice; the rest of advice
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).parent
@@ -39,6 +40,8 @@ EXTRACTOR_VERSION = "x4"  # x1, x2: the round-trip pilot runs in results/pilot/v
 LOCAL_NAMES = ("system_local", "propose_local", "extract_local_system", "advice_local")
 FROZEN_LOCAL = HERE / "frozen_local.json"
 LOCAL_VERSION = "l1"
+EXTRACTOR_COMMITS = {"x3": "56c77b0a"}  # the last commit with each earlier extractor version (E3 ran with x3)
+_PINNED: dict[str, str] = {}  # an earlier extractor version used for global readings, by pin_extractor
 EXTRACTOR_HISTORY = {
     "x3": {
         "extract_system": "55b93253eeba587e88bc1c1aebf4759e1a46b4c66baa3540bac6b1cb192cb127",
@@ -77,9 +80,33 @@ def dsl_reference(source: str = "system") -> str:
     return "\n".join(lines[start : end + 1])
 
 
+def historical_extractor_system(version: str) -> str:
+    """An earlier extractor version's system prompt, from git, checked against its frozen hash."""
+    repo = HERE.parents[3]
+    text = subprocess.run(["git", "show", f"{EXTRACTOR_COMMITS[version]}:src/verifier_gate/llm/prompts/extract_system.md"], cwd=repo,
+                          capture_output=True, text=True, check=True).stdout  # fmt: skip
+    system = text.replace("{dsl}", dsl_reference())
+    if hashlib.sha256(system.encode()).hexdigest() != EXTRACTOR_HISTORY[version]["extract_system"]:
+        raise ValueError(f"{version}'s system prompt from git does not match its frozen hash")
+    return system
+
+
+def pin_extractor(version: str) -> None:
+    """Read global texts with an earlier extractor version (E3 and its writer subsets ran with x3)."""
+    _PINNED.clear()
+    if version != EXTRACTOR_VERSION:
+        _PINNED[version] = historical_extractor_system(version)
+
+
+def extractor_version() -> str:
+    return next(iter(_PINNED), EXTRACTOR_VERSION)
+
+
 def extractor_system(local: bool = False) -> str:
     if local:
         return load("extract_local_system").replace("{dsl}", dsl_reference("system_local"))
+    if _PINNED:
+        return next(iter(_PINNED.values()))
     return load("extract_system").replace("{dsl}", dsl_reference())
 
 

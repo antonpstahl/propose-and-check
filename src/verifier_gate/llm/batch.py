@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 from verifier_gate.gate import gate as g
-from verifier_gate.llm.client import OFFLINE, Client, Request, Response, load_dotenv
+from verifier_gate.llm.client import LOCAL_PREFIX, OFFLINE, Client, Request, Response, load_dotenv, send_local
 
 MAX_SUBMISSIONS = 3
 MAX_WAVES = g.CALL_BUDGET * MAX_SUBMISSIONS  # a run needs at most this many; more is a bug, never more paid batches
@@ -171,12 +171,25 @@ def collect(path: Path, wave: dict, client: Client, api, poll: float = POLL_SECO
     return fresh
 
 
+def _local(client: Client, request: Request) -> Response:
+    """A request for a local model (D55): answered at once on this machine, then cached and logged like any other."""
+    if os.environ.get(OFFLINE):
+        raise RuntimeError(f"{OFFLINE} is set and a {request.role} request for {request.model} is not in the cache")
+    start = time.monotonic()
+    raw = send_local(request)
+    if raw is None:
+        return Response(request.key, request.role, request.model, "", "api")
+    return client.store(request, raw, time.monotonic() - start, "local")
+
+
 def _advance(jobs: Mapping[str, Job], client: Client, fresh: dict[str, Response], submissions: Counter) -> list[Request]:
-    """Advance every run as far as the answers at hand allow; the requests still without an answer."""
+    """Advance every run as far as the answers at hand allow; the requests still without an answer. A request for a
+    local model is answered on the spot (synchronously); everything else waits for the next wave."""
     wave: dict[str, Request] = {}
     for job in jobs.values():
         while requests := job.run.requests():
             answers = [fresh.pop(r.key, None) or client.lookup(r) for r in requests]
+            answers = [_local(client, r) if a is None and r.model.startswith(LOCAL_PREFIX) else a for r, a in zip(requests, answers)]
             answers = [Response(r.key, r.role, r.model, "", "api") if a is None and submissions[r.key] >= MAX_SUBMISSIONS else a
                        for r, a in zip(requests, answers)]  # fmt: skip
             if any(a is None for a in answers):
