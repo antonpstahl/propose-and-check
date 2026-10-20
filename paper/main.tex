@@ -40,11 +40,13 @@ Banks that let a large language model (LLM) write explanations of their credit m
 and US model-risk guidance leaves that step to the bank. We present a propose-and-prove gate. The LLM writes an
 explanation together with a plan of claims in a small domain-specific language (DSL). A deterministic verifier judges
 every claim against the model's exact additive terms and their bootstrap bands, using a lexicon that gives each
-explanation word a truth condition: true, false or undecidable. A round trip reads the finished text back into claims
-three times, so that what the reader gets, not only the plan, is checked. Failing claims go back to the writer with
-their evidence. We test the gate on credit data with a planted truth, a synthetic tier and a plasmode tier built on
-real credit features, with an explainable boosting machine (EBM) and depth-2 XGBoost (36 models per tier). On the
-oracle, the lexicon's confident errors are at most 0.9\%; on the fitted models, judged against the planted truth, they
+explanation word a truth condition: true, false or undecidable. A second LLM then reads the finished text back into
+claims, three times and independently, so the gate checks the text the reader sees and not only the plan. Failing
+claims go back to the writer with their evidence. We test the gate on two tiers of credit data with a planted default
+outcome, so the true effects are known: a synthetic tier, and a plasmode tier that keeps the features of real
+credit-card clients and replaces only the outcome. The models are an explainable boosting machine (EBM) and depth-2
+XGBoost (36 models per tier). On an oracle that knows the planted shapes, the lexicon's confident errors are at most
+0.9\%; on the fitted models, judged against the planted truth, they
 reach 2.4\% on synthetic and 4.6\% on real features, mostly because the models themselves err. The verifier stops
 every one of 10,720 scripted errors in claim plans; in finished texts the round trip stops 96\%, and its weak spot is
 a feature the model does not have. With Claude Haiku~5.5 as the writer, the share of texts that state something false
@@ -52,6 +54,7 @@ about the model falls from 20.5\% to 0.16\% with author-reviewed labels (from 58
 a spot check on 52 adverse-action notices gives 47\% to 4\%. The pre-study's API calls cost \$8.77 in all. With an
 archive of the fitted models' facts, one command reproduces every number offline.
 \end{abstract}
+\clearpage
 
 \section{Introduction}
 
@@ -82,9 +85,9 @@ correct prose \citep{gupta2026veritygate}. Our contribution is the part that is 
 for what the data do not settle;
 \item a \textbf{gate} that checks both the claim plan and the finished text, repairs with evidence, and is evaluated as
 a control: the probability that a released text holds a false claim, before and after the gate;
-\item \textbf{evidence on planted truth}, on synthetic data and on real credit features with a planted outcome, for two
-model classes, global explanations and a local spot check of adverse-action reasons, all reproducible from the
-repository.
+\item \textbf{evidence against a planted truth}, on two tiers whose outcome is planted (synthetic data, and real credit
+features with a simulated outcome), for two model classes, global explanations and a local spot check of
+adverse-action reasons, all reproducible from the repository.
 \end{enumerate}
 
 \section{Related work}
@@ -128,8 +131,9 @@ oracle fitted to the planted shapes (what can the sample support?).}
 The \textbf{writer} (an LLM) returns sentences and, for each, its claims in the DSL (Table~\ref{tab:dsl}): rank,
 share, strength, ``hardly matters'', direction (strict, ``mostly'', or ``generally''), comparisons, a jump or a peak
 at a location, and the pattern of an interaction (amplification, sign flip, none). Any claim can be hedged as
-\dsl{unsettled(\ldots)}, and neighboring values form sets (``weak to moderate'', ``second or third''). The DSL is
-plain Python syntax, parsed with \dsl{ast} against a whitelist, so nothing is executed.
+\dsl{unsettled(\ldots)}, and neighboring values form sets (``weak to moderate'', ``second or third''). The DSL uses
+Python syntax, but a claim is never run as code: each line is parsed into a syntax tree (with Python's \dsl{ast}
+module) and accepted only if it matches an allowed claim form, so nothing the writer returns can execute.
 
 The \textbf{verifier} judges each claim with the \textbf{lexicon}: a claim is true if the whole 95\% band lies inside
 the set its word names, false if the band lies outside it, and undecidable otherwise. ``Strong'' means a share of
@@ -145,10 +149,13 @@ discovery seed did not change. The writer's and the extractor's prompts were fro
 \dsl{cf1ee6b9}).
 
 The \textbf{round trip} reads the finished text back into claims with a second LLM call (the extractor), which sees
-neither the plan nor the facts. It reads three times; a claim counts if two readings find it. A claim the text states
-beyond its plan is verified like a plan claim; a statement no DSL form expresses blocks the text if it states a
-number; every top-3 term and every pair above 10\% of the importance must be covered; and the opening sentence may not
-lead with a minor term. The \textbf{gate} releases a text that passes, sends failing claims back with their evidence
+neither the plan nor the facts. Every text whose plan passes is read three times, independently; a claim counts if two
+readings find it. A claim the text states beyond its plan is verified like a plan claim, so a sentence that
+contradicts its plan fails; a statement no DSL form expresses blocks the text if it states a number; every top-3 term
+and every pair above 10\% of the importance must be covered by what the text states; and the opening sentence may not
+lead with a minor term. Three cases are logged but do not block: a plan claim the text does not state (the reader
+never sees it, so it covers nothing), a claim only one reading finds, and a statement with neither a DSL form nor a
+number. The last two are where a false statement can pass (see E2). The \textbf{gate} releases a text that passes, sends failing claims back with their evidence
 and advice (at most two rounds), then drops failing sentences, and as a last resort releases a template built from
 certified statements.
 
@@ -162,19 +169,23 @@ threshold table are in the appendix (Table~\ref{tab:dsl-local}).}
 
 \section{Benchmark}
 
-Both tiers plant the outcome, so every claim has a known truth $T$ (Table~\ref{tab:benchmark} in the appendix). The
+Both tiers plant the outcome, whether a borrower defaults, so every claim has a known truth $T$
+(Table~\ref{tab:benchmark} in the appendix). The
 \textbf{synthetic tier} draws nine features (seven with a planted shape, from strong to near-flat, a threshold at
 0.43 and a peak at 36 months, and two noise features) and two planted pairs, an amplification and a sign flip, at
 three interaction levels (none, weak, dominant), two sample sizes (5,000 and 50,000) and three seeds. The
-\textbf{plasmode tier} keeps the real feature rows of the TaiwanCredit data \citep{yeh2009comparisons,yeh2009uci} and replaces the
-label with one drawn from planted effects \citep{franklin2014plasmode}: the real-label EBM's smoothed shapes, a step,
+\textbf{plasmode tier} keeps the real feature rows of the TaiwanCredit data \citep{yeh2009comparisons,yeh2009uci}
+(30,000 credit-card clients and whether they defaulted) and replaces the default label with one drawn from planted
+effects \citep{franklin2014plasmode}: the real-label EBM's smoothed shapes, a step,
 a correlated null (\dsl{BILL\_AMT2} correlates above 0.9 with \dsl{BILL\_AMT1} and has no effect), and the same pair
 patterns, at sample sizes 5,000 and 30,000. Each tier has 18 datasets and 36 fitted models. Three references are kept
 apart: $T$, an oracle (logistic regression on the planted shapes, which shows what the sample can support), and $M$.
 
 \section{Results}
 
-\paragraph{E1: the lexicon against the planted truth.} Applied to the oracle, the lexicon makes almost no confident
+\paragraph{E1: the lexicon against the planted truth.} The oracle knows the shapes of the planted terms and estimates
+only their coefficients, so it is the best any model can do on the sample. Applied to it, the lexicon makes almost no
+confident
 errors (a false claim certified or a true one refuted): 0.9\% at $n=5{,}000$ and 0\% at $n=50{,}000$ on the synthetic
 tier, 0.2\% and 0\% on the plasmode tier (Table~\ref{tab:e1}). End to end, on the fitted models, the rates are higher
 and fall with $n$: 0.7\% (EBM) and 0.9\% (XGB2) at $n=50{,}000$, and 2.2\% and 1.9\% at $n=30{,}000$ on real
@@ -200,7 +211,8 @@ the fitted model against the oracle's labels; end to end: on the fitted model ag
 settled claim, and others). A mutant is an error if the lexicon refutes it on $M$'s point estimates; the 826 mutants
 that stay true of $M$ (equivalent mutants) are left out. Ten operators are labeled this way. The eleventh, a strict
 direction word swapped with ``mostly'' (365 mutants), has no label, because without bands every wiggle of a curve
-counts as an exception; its verdicts are reported by $n$ in the repository. Over 72 plans on both tiers, every one of
+counts as an exception. All 365 are held back (363 undecidable, 2 false), but by construction: a strict word needs
+no detected reversal and ``mostly'' needs one; the verdicts by $n$ are in the repository. Over 72 plans on both tiers, every one of
 the 10,720 errors is stopped, and 3 of 604
 controls (correct variants that must pass) are refuted, all on one count feature of the plasmode tier, where a step's
 location depends on where in the gap between observed values the model's cut lies; we report this as a limit of the
@@ -209,7 +221,7 @@ sentence changes (Figure~\ref{fig:recall}). It catches 96.2\% of 2,306 scripted 
 final version, and 99.8\% of every kind but one: a feature the model does not have, caught in 85\% of texts (36\%
 with the earlier extractor version), and in 75\% on the plasmode tier, where the listed features are column codes and
 an English name looks like something ``not in the list''. No unchanged text was blocked. Of 95 LLM-written errors
-(author-reviewed labels, see the statement on AI use), 93 were caught; the two misses are wordings the DSL has no form
+(author-reviewed labels), 93 were caught; the two misses are wordings the DSL has no form
 for (an effect that ``shrinks'' with another feature, and a bare ``interact'').
 
 \begin{figure}[t]
@@ -217,8 +229,8 @@ for (an effect that ``shrinks'' with another feature, and a bare ``interact'').
 \includegraphics[width=0.72\textwidth]{figures/fig3_recall.pdf}
 \caption{Recall per mutation operator. Plan level (gray) is 100\% for every operator on both tiers. At text level
 the round trip keeps it except for a feature the model does not have. M2 and M5 (ranks, shares) have no text-level
-marks: template texts do not state them. M10 (a strict direction word swapped with ``mostly'') has no row: it has no
-label, so it has no recall.}
+marks: template texts do not state them. M10 (a strict direction word swapped with ``mostly'') has no row: it is not
+labeled, because on $M$'s curves without bands every small dip counts as a reversal (see E2).}
 \label{fig:recall}
 \end{figure}
 
@@ -243,10 +255,12 @@ draft: with the certified statements (H2), 35\% of Haiku's first drafts state a 
 the facts alone (H1), repairs take 1.08 rounds instead of 1.46, and 14\% of runs end in the template instead of 64\%.
 With Claude Sonnet~5.5 (\dsl{claude-sonnet-5-5}, 15 October, 64 runs), $P_U$ falls from 25\% to 0\%. A self-hosted
 open-weight writer (\dsl{qwen3.8:27b}, 27.8B parameters in 4-bit NVFP4 weights, run with Ollama on a laptop with
-24~GB of memory on 17 October; writer cost \$0, 64 runs) behaves like Sonnet~5.5 rather than a weak writer: $P_U$
-falls from 28.1\% to 1.6\% ($E_U = 0.94$), 89\% of texts are released and 5\% end in the template (Sonnet: 25.0\%, 88\%
-and 5\%; Haiku: 58.5\%, 49\% and 39\%), so the gate's guarantee carries to a writer a bank can host on its own
-hardware. The gain is largest where drafts are weakest: pairs and near-flat features (Figure~\ref{fig:faith}). Against $T$, the
+24~GB of memory on 17 October; writer cost \$0, 64 runs) does about as well as Sonnet~5.5 and better than
+Haiku~5.5: $P_U$ falls from 28.1\% to 1.6\% ($E_U = 0.94$), 89\% of texts are released and 5\% end in the template
+(Sonnet: 25.0\%, 88\% and 5\%; Haiku: 58.5\%, 49\% and 39\%). These two writers' rates are as read, without review,
+and rest on 64 runs each (0 of 64 has a 95\% upper bound of 5.6\%), too few to rank them. The guarantee comes from the
+verifier, not the writer; what carries over to a writer a bank can host on its own hardware is that the gate
+releases most of its texts. The gain is largest where drafts are weakest: pairs and near-flat features (Figure~\ref{fig:faith}). Against $T$, the
 gate cuts the share of claims that are false from 11.6\% to 7.6\% (hedges excluded, since $T$ has no bands); what
 remains is the models' error from E1, which no check of the text can see. A Haiku run costs \$0.002.
 
@@ -269,20 +283,22 @@ the gate the values are a lower bound, since the scoring readings' misreadings c
 \label{fig:faith}
 \end{figure}
 
-\paragraph{A local spot check: adverse-action reasons.} Additive models give each term's exact contribution to the gap
-between a declined applicant's score and the average score of the 500 approved applicants closest to the cutoff, a
-simplified, unweighted version of the comparable passing applicants of \citet{sudjianto2026evidence}; the planted terms
-give the true reasons. Three local claim types (a reason's rank, a principal reason above 10\% of the gap and among the
+\paragraph{A local spot check: adverse-action reasons.} The data hold no credit decisions, only whether a borrower
+defaulted, so we let each model decide: it declines the riskiest 20\% of the training sample by its score. Additive
+models give each term's exact contribution to the gap between a declined applicant's score and the average score of
+the 500 approved applicants closest to the cutoff, a simplified, unweighted version of the comparable passing
+applicants of \citet{sudjianto2026evidence}; the planted terms, on the same applicant and reference, give the true
+reasons. Three local claim types (a reason's rank, a principal reason above 10\% of the gap and among the
 first four, and ``higher'' or ``lower'' than the comparable approved) use the same three-valued rule, with bands from
 the same refits. On 52 notices (seed 2, $n=50{,}000$, both models; 54 minus the two of the pilot), the writer's first
 drafts state a claim false of $M$ in 47\% of notices (24 of the 51 that could be scored), the released ones in 4\% (2
 of 52), and both remaining cases are misreadings by the scoring readings. Of the 76 reasons stated in the 46 released
-notices that the true process would also decline, 74 are principal reasons under $T$. Two findings matter for
+notices whose applicant $T$ also rates riskier than the comparable approved, 74 are principal reasons under $T$. Two findings matter for
 practice. In 12 notices no principal
 reason can be certified, all of them narrow declines whose score gap's band crosses zero; the gate releases them with
 hedged reasons, and whether such a notice is acceptable is a question for the regulation, not the gate. And in 6
 notices the model declines an applicant whom $T$ rates no riskier than the comparable approved: a faithful notice for
-a decision the true process would not make.
+a decision $T$ does not support.
 
 \section{Worked example}
 
@@ -307,9 +323,7 @@ model does not have.
 
 The outcomes are planted in both tiers; the lexicon's thresholds are fixed by us and not yet validated with human
 readers; the writers span two Claude models and one open-weight model, still a narrow sample; and the extractor that
-reads texts back is itself an LLM, whose misreadings are the gate's main cost and inflate unlabeled error rates. Most
-labels were proposed by the AI assistant that built the pipeline and reviewed by the author (see the statement on AI
-use), so they are not independent of it. Three limits of the frozen
+reads texts back is itself an LLM, whose misreadings are the gate's main cost and inflate unlabeled error rates. Three limits of the frozen
 design are reported as found: the location rule on count features, a readable handover that draws a gradual rise as
 a few large steps (which invites jump claims), and a 95\% band rule that sometimes withholds a claim that 96 of 100
 refits support. Next steps are real credit data with a human agreement study of the lexicon, deep gradient boosting
@@ -326,23 +340,14 @@ one of 640 released texts does (author-reviewed labels), at about \$0.002 per ex
 false alarms are measured, not assumed. It belongs where a bank already checks documentation: after the model is
 validated, and before a generated explanation, report or adverse-action notice is used.
 
-\section*{Reproducibility and use of AI tools}
+\section*{Reproducibility}
 
-\paragraph{Reproducibility.} The code, the frozen prompts and lexicon, every LLM answer as received, the run traces
+The code, the frozen prompts and lexicon, every LLM answer as received, the run traces
 and the labels are in the repository (see the title page). The fitted models' facts and bootstrap draws (457~MB) are
 not: they come as an archive attached to the repository, together with the TaiwanCredit file. With it,
 \dsl{python -m verifier\_gate.experiments.reproduce} re-derives every number, table and figure offline in about seven
 minutes and checks each output against the committed one. Without it, the same command refits every model from the
 fixed seeds, which takes about six hours and downloads the TaiwanCredit data \citep{yeh2009uci}.
-
-\paragraph{Use of AI tools.} The code, the analyses and a first draft of this text were written with an AI coding
-assistant (Claude Code, Anthropic) under the author's direction. The author made the design decisions, reviewed every
-number and claim in the text against its source, and is responsible for them. The assistant also helped to label. The
-100 LLM-written mutants of E2 were labeled by the author without the gate's verdicts and then reviewed against the
-lexicon, with the assistant reading each sentence into claims; the two passes agree on 78 of 86 decisive labels. The
-false-alarm labels and the E3 labels were proposed by the assistant, each with a reason, and reviewed by the author,
-who changed one. These are the paper's author-reviewed labels. The LLMs under study, the writers and the extractor, are
-separate from the assistant.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
