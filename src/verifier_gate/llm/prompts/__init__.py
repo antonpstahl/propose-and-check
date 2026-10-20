@@ -22,6 +22,12 @@ adverse-action notice's reasons, with the local DSL table), propose_local.md (wr
 extract_local_system.md (the extractor, x4's rules for a notice, whose DSL section is system_local.md's table) and
 advice_local.json (the repair lines that differ for a notice; the rest of advice.json applies). The repair message
 (repair.md) is shared. LOCAL_VERSION; frozen_local.json, written after the local pilot.
+
+The LLM critic's prompts (D56, plan §14.29), versioned and frozen apart from the others: critic_system.md (role,
+what counts as unsupported, the answer format), whose rules section is the writer's "Choosing the words" from
+system.md, so the critic judges by the rules the writer was given, and whose coverage and emphasis rules are the
+round trip's (gate/roundtrip.py); and critic.md (the facts and the text). CRITIC_VERSION; frozen_critic.json,
+written after the critic's pilot.
 """
 
 import hashlib
@@ -40,6 +46,9 @@ EXTRACTOR_VERSION = "x4"  # x1, x2: the round-trip pilot runs in results/pilot/v
 LOCAL_NAMES = ("system_local", "propose_local", "extract_local_system", "advice_local")
 FROZEN_LOCAL = HERE / "frozen_local.json"
 LOCAL_VERSION = "l1"
+CRITIC_NAMES = ("critic_system", "critic")
+FROZEN_CRITIC = HERE / "frozen_critic.json"
+CRITIC_VERSION = "c1"
 EXTRACTOR_COMMITS = {"x3": "56c77b0a"}  # the last commit with each earlier extractor version (E3 ran with x3)
 _PINNED: dict[str, str] = {}  # an earlier extractor version used for global readings, by pin_extractor
 EXTRACTOR_HISTORY = {
@@ -80,6 +89,16 @@ def dsl_reference(source: str = "system") -> str:
     return "\n".join(lines[start : end + 1])
 
 
+def word_rules() -> str:
+    """The writer's rules for choosing words, from system.md ("# Choosing the words" up to "# The claims")."""
+    text = load("system")
+    return text[text.index("# Choosing the words") : text.index("# The claims")].strip()
+
+
+def critic_system() -> str:
+    return load("critic_system").replace("{rules}", word_rules())
+
+
 def historical_extractor_system(version: str) -> str:
     """An earlier extractor version's system prompt, from git, checked against its frozen hash."""
     repo = HERE.parents[3]
@@ -113,6 +132,8 @@ def extractor_system(local: bool = False) -> str:
 def _text(name: str) -> str:
     if name in ("extract_system", "extract_local_system"):
         return extractor_system(local=name == "extract_local_system")
+    if name == "critic_system":
+        return critic_system()
     return load(name)
 
 

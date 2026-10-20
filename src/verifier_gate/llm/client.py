@@ -8,7 +8,10 @@ thinking, prompt hashes, stop reason, token use, request id, latency and cost.
 
 Transports: "stub" (no network; a responder function scripts the response: tests and dry runs) and "sync" (the
 Messages API: the smoke test and the pilot). The Batch API (E3, the Sonnet subset) is driven by llm/batch.py, which
-stores each result through `store`, so a batched answer sits in the same cache and log as a synchronous one.
+stores each result through `store`, so a batched answer sits in the same cache and log as a synchronous one. A
+model named ollama/<tag> runs on the local Ollama server (D55), and one named openai/<model> on OpenAI's Chat
+Completions API (the LLM critic, D56); both answers are returned in the Messages API's shape, so the cache, the
+log and the cost work unchanged. The client is safe to call from several threads (the critic's calls run in parallel).
 
 Outcomes, in `Response.error`: "" (parsed JSON in `data`), "truncated" (stop_reason max_tokens: never parsed, a
 format error for the gate), "refusal" (D39: no fallback; the gate escalates), "invalid_json", "no_text", "api" (the
@@ -20,6 +23,7 @@ import hashlib
 import json
 import os
 import sys
+import threading
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field
@@ -33,8 +37,11 @@ LOCAL_PREFIX = "ollama/"  # a model named ollama/<tag> runs on the local Ollama 
 OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "10240"))  # writer prompt 5.5k tokens; two repair rounds reach about 8k
 OLLAMA_NUM_BATCH = int(os.environ.get("OLLAMA_NUM_BATCH", "64"))  # small prompt batches keep the peak memory down (24 GB machine)  # set: a request not in the cache raises instead of calling the API (experiments/reproduce.py)
+OPENAI_PREFIX = "openai/"  # a model named openai/<model> runs on OpenAI's Chat Completions API (the critic, D56)
+OPENAI_URL = "https://api.openai.com/v1/chat/completions"
 DOTENV = Path(__file__).parents[3] / ".env"  # git-ignored; .env.example is the template
 EFFORTS_WITHOUT_THINKING = ("low", "medium", "high")
+_LOG_LOCK = threading.Lock()
 THINKING_OFF = {"claude-haiku-5-5": {"type": "disabled"}, "claude-sonnet-5-5": {"type": "between_tools"}}
 
 
@@ -197,6 +204,60 @@ def send_local(request: Request, url: str = OLLAMA_URL, timeout: float = 3600.0)
     }  # fmt: skip
 
 
+def openai_message(out: Mapping, model: str) -> dict:
+    """An answer of OpenAI's Chat Completions API in the Messages API's shape. Usage: input_tokens excludes the cached
+    prompt tokens, as on the Claude API; output_tokens includes the reasoning tokens, which are billed as output and
+    also kept apart. A refusal or a content filter is a refusal; a cut-off answer is truncated."""
+    choice = (out.get("choices") or [{}])[0]
+    message = choice.get("message") or {}
+    finish = choice.get("finish_reason") or ""
+    usage = out.get("usage") or {}
+    cached = (usage.get("prompt_tokens_details") or {}).get("cached_tokens") or 0
+    stop = "refusal" if message.get("refusal") or finish == "content_filter" else "max_tokens" if finish == "length" else "end_turn"
+    return {
+        "id": out.get("id"), "model": model, "stop_reason": stop, "stop_details": {"finish_reason": finish, "refusal": message.get("refusal")},
+        "content": [] if message.get("content") is None else [{"type": "text", "text": message["content"]}],
+        "usage": {"input_tokens": usage.get("prompt_tokens", 0) - cached, "cache_read_input_tokens": cached,
+                  "output_tokens": usage.get("completion_tokens", 0),
+                  "reasoning_tokens": (usage.get("completion_tokens_details") or {}).get("reasoning_tokens", 0)},
+        "_served_by": out.get("model"),
+    }  # fmt: skip
+
+
+def send_openai(request: Request, url: str = OPENAI_URL, timeout: float = 600.0, max_retries: int = 3) -> dict | None:
+    """One call to an OpenAI model (the critic, D56), returned in the API's message shape. The answer is constrained
+    to the request's JSON schema (strict); `effort` is the reasoning effort. A rate limit, a server error or a lost
+    connection is retried with a growing wait; after `max_retries` it is the "api" outcome (None, not cached). Any
+    other rejection is a bug in our request and raises."""
+    import urllib.error
+    import urllib.request
+
+    body = {
+        "model": request.model.removeprefix(OPENAI_PREFIX), "reasoning_effort": request.effort, "max_completion_tokens": request.max_tokens,
+        "messages": [{"role": "system", "content": request.system}] + [{"role": r, "content": t} for r, t in request.messages],
+        "response_format": {"type": "json_schema", "json_schema": {"name": request.role, "strict": True, "schema": json.loads(request.schema)}},
+    }  # fmt: skip
+    headers = {"Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}", "Content-Type": "application/json"}
+    for attempt in range(max_retries + 1):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, json.dumps(body).encode(), headers), timeout=timeout) as answer:
+                raw = openai_message(json.loads(answer.read()), request.model)
+                raw["_request_id"] = answer.headers.get("x-request-id")
+                return raw
+        except urllib.error.HTTPError as e:
+            message = e.read().decode(errors="ignore")
+            if e.code != 429 and e.code < 500:
+                raise RuntimeError(f"openai: HTTP {e.code}: {message[:500]}") from None  # our request is wrong
+            wait = float(e.headers.get("retry-after") or 2 ** (attempt + 1))
+            sys.stderr.write(f"openai: HTTP {e.code}, retry in {wait:.0f}s\n")
+        except (urllib.error.URLError, TimeoutError) as e:
+            wait = 2 ** (attempt + 1)
+            sys.stderr.write(f"openai: {getattr(e, 'reason', e)}, retry in {wait}s\n")
+        if attempt < max_retries:
+            time.sleep(wait)
+    return None
+
+
 def interpret(request: Request, raw: Mapping, latency: float, cached: bool) -> Response:
     stop = raw.get("stop_reason") or ""
     texts = [b["text"] for b in raw.get("content", []) if b.get("type") == "text"]
@@ -280,6 +341,9 @@ class Client:
             raise RuntimeError(f"{OFFLINE} is set and a {request.role} request is not in the cache: nothing is sent")
         if request.model.startswith(LOCAL_PREFIX):
             return send_local(request)
+        if request.model.startswith(OPENAI_PREFIX):
+            load_dotenv()
+            return send_openai(request, max_retries=self.max_retries)
         if self._sdk is None:
             load_dotenv()
             self._sdk = anthropic.Anthropic(max_retries=self.max_retries)
@@ -303,8 +367,8 @@ class Client:
             "messages_hash": sha(json.dumps(request.messages))[:16], "stop_reason": response.stop_reason,
             "error": response.error, "usage": response.usage, "request_id": response.request_id,
             "latency": round(response.latency, 3), "cost": response.cost, "cached": response.cached,
-            "price_date": settings.PRICE_DATE,
+            "price_date": settings.PRICE_DATES.get(request.model, settings.PRICE_DATE),
         }  # fmt: skip
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
-        with self.log_path.open("a") as log:
+        with _LOG_LOCK, self.log_path.open("a") as log:
             log.write(json.dumps(record) + "\n")

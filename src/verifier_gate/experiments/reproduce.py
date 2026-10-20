@@ -33,6 +33,7 @@ from verifier_gate.llm.client import OFFLINE
 REPO = Path(__file__).parents[3]
 LABELS = "results/e2/v2/text/false_alarms/labels.json"
 DRAFT_LABELS = "results/e2/v2/text/false_alarms/drafts/labels.json"
+CRITIC_LABELS = "results/e2/v2/text/critic/gpt-6-luna/c1/labels/labels.json"
 STEPS = [  # name, module, arguments
     ("facts", "build_facts", []),
     ("facts-plasmode", "build_facts", ["--tier", "plasmode"]),
@@ -53,6 +54,9 @@ STEPS = [  # name, module, arguments
     ("false-alarms", "e2_false_alarms", ["--score", LABELS]),
     ("e3-residual", "e2_false_alarms", ["--e3", LABELS]),
     ("e3-effect", "e2_false_alarms", ["--effect", LABELS, DRAFT_LABELS]),
+    ("e2-critic", "e2_critic", []),  # the LLM critic (D56), every call from the cache
+    ("e2-critic-sol", "e2_critic", ["--model", "openai/gpt-6.1-sol", "--sources", "llm,control"]),
+    ("e2-critic-e3-labels", "e2_critic", ["--score", CRITIC_LABELS]),  # the author's labels of Luna's E3 flags
     ("local-refits", "local_refits", []),
     ("local-facts", "local_facts", []),
     ("local-pilot", "local_run", ["--pilot"]),

@@ -1,0 +1,3 @@
+checker,texts,blocked,labelled blocked texts,real error (labelled),false alarm (labelled),open (labelled),false-alarm rate (per correct text)
+critic,390,300,40,26,0,14,0.0
+gate (x4 readings),387,64,64,2,54,8,0.143

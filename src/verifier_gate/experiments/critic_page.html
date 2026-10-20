@@ -1,0 +1,414 @@
+<title>Critic Flag Labels</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout: the same reading desk as the first labelling page. The blocked sentence in its text and the claims to judge on the left, the facts on the right; one column on phones. */
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --ink: #17202c; --ink-2: #485366; --ink-3: #6f7a8c; --rule: #dbe0e8;
+  --accent: #2a5b89; --accent-soft: #e3ecf5; --mark: #ffe48a; --mark-ink: #17202c;
+  --err: #b3261e; --err-soft: #f9e3e1; --mis: #5b4fb0; --mis-soft: #ebe8f8; --unsure: #8f6200; --unsure-soft: #f6ecd6;
+  --zone-1: #eef1f5; --zone-2: #e5e9ef; --zone-3: #dbe0e8; --zone-4: #d0d7e1;
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-read: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --step--1: 0.8125rem; --step-0: 0.9375rem; --step-1: 1.125rem; --step-2: 1.375rem;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --ink-2: #aeb6c3; --ink-3: #848d9d; --rule: #2b3340;
+  --accent: #82b2df; --accent-soft: #1f2d3d; --mark: #5a4914; --mark-ink: #fff2c2;
+  --err: #f0877e; --err-soft: #3a1f1d; --mis: #b2a8f0; --mis-soft: #26223f; --unsure: #e0b44f; --unsure-soft: #352a12;
+  --zone-1: #1e252f; --zone-2: #242c37; --zone-3: #2b3440; --zone-4: #333d4a; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --ink-2: #aeb6c3; --ink-3: #848d9d; --rule: #2b3340;
+  --accent: #82b2df; --accent-soft: #1f2d3d; --mark: #5a4914; --mark-ink: #fff2c2;
+  --err: #f0877e; --err-soft: #3a1f1d; --mis: #b2a8f0; --mis-soft: #26223f; --unsure: #e0b44f; --unsure-soft: #352a12;
+  --zone-1: #1e252f; --zone-2: #242c37; --zone-3: #2b3440; --zone-4: #333d4a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 var(--step-0)/1.5 var(--font-ui); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 18px; }
+h1, h2 { margin: 0; text-wrap: balance; }
+h1 { font: 600 var(--step-2)/1.2 var(--font-ui); letter-spacing: -0.01em; }
+h2 { font: 600 var(--step--1)/1.3 var(--font-ui); text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
+.sub { color: var(--ink-2); max-width: 70ch; margin: 4px 0 0; }
+.tally { display: flex; flex-wrap: wrap; gap: 6px 16px; font-variant-numeric: tabular-nums; color: var(--ink-2); font-size: var(--step--1); }
+.tally b { color: var(--ink); font-weight: 600; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; }
+
+.guide { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+.guide summary { padding: 10px 14px; font-weight: 600; cursor: pointer; }
+.guide .body { padding: 0 14px 14px; display: grid; gap: 8px; max-width: 82ch; color: var(--ink-2); }
+.guide p { margin: 0; }
+.guide dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; }
+.guide dt { font-weight: 600; color: var(--ink); }
+.guide dd { margin: 0; }
+kbd { font: 500 0.75rem/1 var(--font-mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 2px 5px; background: var(--bg); color: var(--ink-2); }
+
+.strip { display: flex; flex-wrap: wrap; gap: 3px; }
+.cell { width: 20px; height: 20px; border-radius: 3px; border: 1px solid var(--rule); background: var(--surface); padding: 0; }
+.cell[data-l="partial"] { background: linear-gradient(135deg, var(--accent-soft) 50%, var(--surface) 50%); }
+.cell[data-l="error"] { background: var(--err); border-color: var(--err); }
+.cell[data-l="misreading"] { background: var(--mis); border-color: var(--mis); }
+.cell[data-l="unsure"] { background: var(--unsure); border-color: var(--unsure); }
+.cell[aria-current="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+
+main { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 920px) { main { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.item-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.item-id { font: 500 var(--step-1)/1 var(--font-mono); }
+.meta { color: var(--ink-3); font-size: var(--step--1); }
+ol.text { margin: 0; padding-left: 1.6rem; display: grid; gap: 6px; font: 400 var(--step-0)/1.55 var(--font-read); color: var(--ink-3); }
+ol.text li.hit { color: var(--ink); font-size: var(--step-1); }
+ol.text li.hit span { background: var(--mark); color: var(--mark-ink); border-radius: 2px; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+ol.text li.hit::marker { color: var(--accent); font-weight: 600; }
+
+.claims { display: grid; gap: 12px; }
+.claim { border: 1px solid var(--rule); border-radius: 8px; padding: 12px; display: grid; gap: 8px; }
+.claim .q { font-weight: 600; }
+.claim .said { font: 400 var(--step-1)/1.45 var(--font-read); }
+.claim .dsl { font: 400 0.75rem/1.4 var(--font-mono); color: var(--ink-3); overflow-wrap: anywhere; }
+.claim .why { font-size: var(--step--1); color: var(--ink-2); }
+.claim .why b { color: var(--ink); font-weight: 600; }
+.labels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.lab { border: 1.5px solid var(--rule); background: var(--surface); border-radius: 8px; padding: 8px 6px; display: grid; gap: 2px; justify-items: center; text-align: center; }
+.lab .name { font-weight: 600; font-size: var(--step--1); }
+.lab .hint { font-size: 0.6875rem; color: var(--ink-3); }
+.lab[data-v="error"][aria-pressed="true"] { border-color: var(--err); background: var(--err-soft); color: var(--err); }
+.lab[data-v="misreading"][aria-pressed="true"] { border-color: var(--mis); background: var(--mis-soft); color: var(--mis); }
+.lab[data-v="unsure"][aria-pressed="true"] { border-color: var(--unsure); background: var(--unsure-soft); color: var(--unsure); }
+.lab:hover { border-color: var(--ink-3); }
+.claim.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+label.note { display: grid; gap: 4px; font-size: var(--step--1); color: var(--ink-2); }
+textarea { font: 400 var(--step-0)/1.45 var(--font-ui); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; min-height: 3.2rem; resize: vertical; width: 100%; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 1px solid var(--rule); background: var(--surface); border-radius: 6px; padding: 6px 12px; font-size: var(--step--1); }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+details.more > summary { cursor: pointer; color: var(--accent); font-size: var(--step--1); font-weight: 500; }
+details.more[open] > summary { margin-bottom: 8px; }
+.facts { display: grid; gap: 12px; }
+.block { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); min-width: 0; }
+.block:last-child { border-bottom: 0; padding-bottom: 0; }
+.fname { font: 500 var(--step-0)/1.35 var(--font-mono); }
+.fdesc { color: var(--ink-2); font-size: var(--step--1); }
+.fline { font-size: var(--step--1); color: var(--ink); font-variant-numeric: tabular-nums; }
+.curve { font: 400 0.75rem/1.5 var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.band { width: 100%; max-width: 360px; height: auto; display: block; }
+.band .z1 { fill: var(--zone-1); } .band .z2 { fill: var(--zone-2); } .band .z3 { fill: var(--zone-3); } .band .z4 { fill: var(--zone-4); }
+.band text { fill: var(--ink-3); font: 500 8.5px var(--font-ui); }
+.band .bar { fill: var(--accent); } .band .pt { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+.head-note { color: var(--ink-2); font-size: var(--step--1); margin: 0; }
+.key { overflow-x: auto; }
+.key table { border-collapse: collapse; font-size: 0.8125rem; min-width: 520px; }
+.key th, .key td { text-align: left; vertical-align: top; padding: 5px 8px; border-bottom: 1px solid var(--rule); }
+.key th { color: var(--ink-3); font-weight: 600; }
+.key td:first-child { font-family: var(--font-read); }
+
+footer.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; font-size: var(--step--1); color: var(--ink-2); }
+.status::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--ink-3); vertical-align: 1px; }
+.status[data-s="saved"]::before { background: #2c7a4d; }
+.status[data-s="saving"]::before { background: var(--accent); }
+.status[data-s="local"]::before, .status[data-s="failed"]::before { background: var(--unsure); }
+#copybox { width: 100%; min-height: 6rem; font: 400 0.75rem/1.4 var(--font-mono); }
+@media (prefers-reduced-motion: no-preference) { .lab, .cell, .btn { transition: background-color .12s, border-color .12s, color .12s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Critic Flag Labels</h1>
+      <p class="sub">Sentences from texts the gate released (E3) that the LLM critic would block. For each problem the critic names: is the sentence really unsupported by the facts?</p>
+    </div>
+    <div class="tally" id="tally" aria-live="polite"></div>
+  </header>
+
+  <details class="guide" id="guide" open>
+    <summary>How to label</summary>
+    <div class="body">
+      <p>The LLM critic says the highlighted sentence states something the facts do not support, and gives its reason. Your job is to judge the <b>critic</b>: read the sentence against the facts on the right.</p>
+      <dl>
+        <dt>Real error</dt><dd>The sentence states something the facts do not support: false, or more than the bands allow. The block is right.</dd>
+        <dt>False alarm</dt><dd>What the sentence says is supported by the facts. Blocking it would be a false alarm, whatever the critic's reason.</dd>
+        <dt>Unsure</dt><dd>You cannot tell. Add a note if you can say why.</dd>
+      </dl>
+      <p>Judge by the meanings under <i>What the words mean</i> (the lexicon), as for the earlier labels. If the critic is right by a reasonable reading of the words but the lexicon accepts the sentence, choose Unsure and start the note with <b>lexicon</b>: that is where readers and the lexicon differ.</p>
+      <p>Judge the sentence, not the critic's wording: if the sentence is unsupported for another reason than the one given, it is still a real error; add a note. Items for the whole text (no sentence highlighted) say the text fails to mention a feature or pair: is that feature among the three most important, or a pair with a share of at least 10%, and missing from the text?</p>
+      <p>Keys: <kbd>E</kbd> real error, <kbd>F</kbd> false alarm, <kbd>U</kbd> unsure (each labels the highlighted problem and moves on), <kbd>←</kbd> <kbd>→</kbd> previous and next sentence. Labels save as you go.</p>
+    </div>
+  </details>
+
+  <nav class="strip" id="strip" aria-label="Items"></nav>
+
+  <main>
+    <section class="panel" aria-labelledby="item-id">
+      <div class="item-head">
+        <span class="item-id" id="item-id">F001</span>
+        <span class="meta" id="item-meta"></span>
+      </div>
+      <ol class="text" id="text"></ol>
+      <div class="claims" id="claims"></div>
+      <label class="note" for="note">Note (optional)
+        <textarea id="note" placeholder="Why, or what you would want checked"></textarea>
+      </label>
+      <div class="nav">
+        <button class="btn" id="prev">← Previous</button>
+        <button class="btn" id="next">Next →</button>
+        <button class="btn primary" id="next-open">Next unlabelled</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Facts">
+      <h2>Facts for the features named</h2>
+      <div class="facts" id="facts-named"></div>
+      <details class="more">
+        <summary>All other facts about this model</summary>
+        <div class="facts" id="facts-other"></div>
+      </details>
+      <details class="more">
+        <summary>About this model</summary>
+        <p class="head-note" id="head"></p>
+      </details>
+      <details class="more">
+        <summary>What the words mean</summary>
+        <div class="key">
+          <table>
+            <thead><tr><th>Words in the text</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>a strong / moderate / weak effect</td><td>share at least 15% / 5% to 15% / 2% to 5%, and an effect the data can detect</td></tr>
+              <tr><td>a weak to moderate, a moderate to strong effect</td><td>the share lies somewhere in the classes named</td></tr>
+              <tr><td>at most a weak effect, a small effect</td><td>share below 5%</td></tr>
+              <tr><td>hardly matters, negligible</td><td>share below 2%, or no detectable effect and a small share</td></tr>
+              <tr><td>the most important, the second most important</td><td>rank among the features by importance</td></tr>
+              <tr><td>second or third, among the three most important</td><td>one of consecutive ranks</td></tr>
+              <tr><td>about 30% of the importance</td><td>share within 2 points or 10%</td></tr>
+              <tr><td>matters more than</td><td>x's importance exceeds y's</td></tr>
+              <tr><td>risk increases / decreases with x</td><td>rises from the 5th to the 95th percentile, with no reversal the data can detect</td></tr>
+              <tr><td>risk mostly increases with x</td><td>rises overall, with a detected reversal on at most 10% of the data</td></tr>
+              <tr><td>risk generally increases with x</td><td>either of the two above</td></tr>
+              <tr><td>risk jumps at x = 0.43</td><td>one sharp step near that value, at least half of the curve's range</td></tr>
+              <tr><td>risk peaks at x = 36</td><td>the highest point of the curve lies near that value, lower on both sides</td></tr>
+              <tr><td>the effect of x grows with y</td><td>the effect of x is larger when y is high (both effects one sign, the difference significant, the pair's share band at 2% or more)</td></tr>
+              <tr><td>the effect of x reverses with y</td><td>the effect of x has opposite signs at low and high y</td></tr>
+              <tr><td>x and y do not interact</td><td>no interaction of practical size: the pair's share band below 2%, or no detectable interaction with a share below 2% and a band below 5%</td></tr>
+              <tr><td>the data do not settle whether …</td><td>the facts leave that claim open at this sample size; wrong if the facts settle it either way</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="bar">
+    <span class="status" id="status" data-s="connecting">Connecting to the label store…</span>
+    <span class="nav"><button class="btn" id="copy">Copy labels as JSON</button></span>
+    <textarea id="copybox" hidden readonly aria-label="Labels as JSON"></textarea>
+  </footer>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const ITEMS = DATA.items;
+  const LOCAL_KEY = "e2-critic-labels";
+  const NAMES = { error: "Real error", misreading: "False alarm", unsure: "Unsure" };
+  const KEYS = { error: "E", misreading: "F", unsure: "U" };
+  const $ = (id) => document.getElementById(id);
+  const state = { idx: 0, labels: {}, db: null, canWrite: true, queue: {}, noteTimer: null };
+
+  try { state.labels = JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}") || {}; } catch { state.labels = {}; }
+  try { if (localStorage.getItem("e2-critic-guide-closed") === "1") $("guide").open = false; } catch {}
+  $("guide").addEventListener("toggle", () => { try { localStorage.setItem("e2-critic-guide-closed", $("guide").open ? "0" : "1"); } catch {} });
+
+  const saveLocal = () => { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(state.labels)); } catch {} };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const rec = (id) => state.labels[id] || {};
+  const claimLabels = (id) => rec(id).labels || {};
+  const nClaims = (it) => it.claims.length;
+  function itemState(it) {
+    const l = claimLabels(it.id), vals = it.claims.map((_, k) => l[k]).filter(Boolean);
+    if (!vals.length) return null;
+    if (vals.length < nClaims(it)) return "partial";
+    if (vals.includes("error")) return "error";
+    if (vals.every((v) => v === "misreading")) return "misreading";
+    return "unsure";
+  }
+  const done = (it) => { const s = itemState(it); return s && s !== "partial"; };
+  function setStatus(s, text) { const el = $("status"); el.dataset.s = s; el.textContent = text; }
+
+  const EDGES = [[0, 0], [2, 60], [5, 120], [15, 200], [50, 300]];
+  function x(v) {
+    v = Math.max(0, Math.min(50, v));
+    for (let k = 1; k < EDGES.length; k++) { const [v0, x0] = EDGES[k - 1], [v1, x1] = EDGES[k]; if (v <= v1) return x0 + (v - v0) / (v1 - v0) * (x1 - x0); }
+    return 300;
+  }
+  function bandSvg(pt, lo, hi) {
+    const zones = [["z1", 0, 60, "negligible"], ["z2", 60, 120, "weak"], ["z3", 120, 200, "moderate"], ["z4", 200, 300, "strong"]];
+    const z = zones.map(([c, a, b, t]) => `<rect class="${c}" x="${a}" y="0" width="${b - a - 1}" height="30" rx="2"/><text x="${a + 4}" y="10">${t}</text>`).join("");
+    const ticks = [[2, 60], [5, 120], [15, 200]].map(([v, px]) => `<text x="${px}" y="40" text-anchor="middle">${v}%</text>`).join("");
+    return `<svg class="band" viewBox="0 0 300 42" role="img" aria-label="Share ${pt}%, 95% band ${lo}% to ${hi}%"><title>Share ${pt}% (95% band ${lo}% to ${hi}%)</title>${z}${ticks}` +
+      `<rect class="bar" x="${x(lo)}" y="17" width="${Math.max(3, x(hi) - x(lo))}" height="6" rx="3"/><circle class="pt" cx="${x(pt)}" cy="20" r="4.5"/></svg>`;
+  }
+  const SHARE = /share of importance ([\d.]+)% \(95% band ([\d.]+)% to ([\d.]+)%\)/i;
+  function blockHtml(b) {
+    const [first, ...rest] = b.lines;
+    let html = "";
+    if (b.names.length) {
+      const m = first.match(/^`([^`]+)`:\s*(.*)$/);
+      html += `<div class="fname">${esc(m ? m[1] : first)}</div>`;
+      if (m && m[2]) {
+        const sm = m[2].match(SHARE);
+        html += sm ? `<div class="fline">${esc(m[2].replace(/`/g, ""))}</div>${bandSvg(+sm[1], +sm[2], +sm[3])}` : `<div class="fdesc">${esc(m[2].replace(/`/g, ""))}</div>`;
+      }
+    } else html += `<div class="fdesc">${esc(first.replace(/`/g, ""))}</div>`;
+    for (const line of rest) {
+      const clean = line.replace(/`/g, ""), sm = clean.match(SHARE);
+      html += (/^Curve/.test(clean) || /^Effect of/.test(clean)) ? `<div class="curve">${esc(clean)}</div>` : `<div class="fline">${esc(clean)}</div>` + (sm ? bandSvg(+sm[1], +sm[2], +sm[3]) : "");
+    }
+    return `<div class="block">${html}</div>`;
+  }
+
+  function renderStrip() {
+    const strip = $("strip");
+    if (!strip.childElementCount) ITEMS.forEach((it, k) => {
+      const b = document.createElement("button");
+      b.className = "cell"; b.title = it.id; b.addEventListener("click", () => go(k)); strip.appendChild(b);
+    });
+    ITEMS.forEach((it, k) => {
+      const b = strip.children[k], s = itemState(it);
+      if (s) b.dataset.l = s; else delete b.dataset.l;
+      b.setAttribute("aria-current", k === state.idx ? "true" : "false");
+      b.setAttribute("aria-label", `${it.id}, ${s ? (s === "partial" ? "partly labelled" : NAMES[s] || s) : "not labelled"}`);
+    });
+  }
+  function renderTally() {
+    let claims = 0, labelled = 0; const c = { error: 0, misreading: 0, unsure: 0 };
+    ITEMS.forEach((it) => { const l = claimLabels(it.id); claims += nClaims(it); it.claims.forEach((_, k) => { if (l[k]) { labelled++; c[l[k]]++; } }); });
+    $("tally").innerHTML = `<span><b>${labelled}</b> / ${claims} problems labelled</span>` +
+      `<span><i class="dot" style="background:var(--err)"></i>${c.error} real error</span>` +
+      `<span><i class="dot" style="background:var(--mis)"></i>${c.misreading} false alarm</span>` +
+      `<span><i class="dot" style="background:var(--unsure)"></i>${c.unsure} unsure</span>`;
+  }
+  const activeClaim = (it) => { const l = claimLabels(it.id); const k = it.claims.findIndex((_, i) => !l[i]); return k < 0 ? null : k; };
+
+  function renderItem() {
+    const it = ITEMS[state.idx], f = DATA.facts[it.facts];
+    const n = (f.head.match(/\(([\d,]+) applicants\)/) || [])[1];
+    $("item-id").textContent = it.id;
+    const where = it.sentence_id == null ? "the whole text" : `sentence ${it.sentences.findIndex((s) => s[0] === it.sentence_id) + 1} of ${it.sentences.length}`;
+    $("item-meta").textContent = `${it.facts.split("_")[1]} · ${n ? n + " applicants" : ""} · ${where} · ${nClaims(it)} problem${nClaims(it) > 1 ? "s" : ""}`;
+    $("text").innerHTML = it.sentences.map(([sid, s]) => sid === it.sentence_id ? `<li class="hit"><span>${esc(s)}</span></li>` : `<li>${esc(s)}</li>`).join("");
+    const l = claimLabels(it.id), act = activeClaim(it);
+    $("claims").innerHTML = it.claims.map((c, k) => `
+      <div class="claim${k === act ? " active" : ""}" data-k="${k}">
+        <div class="q">${it.sentence_id == null ? "Is the critic right about the text?" : "Is the critic right?"}</div>
+        <div class="said">${esc(c.words)}</div>
+        
+        <div class="labels" role="group" aria-label="Label for claim ${k + 1}">
+          ${["error", "misreading", "unsure"].map((v) => `<button class="lab" data-v="${v}" data-k="${k}" aria-pressed="${l[k] === v}" ${state.canWrite ? "" : "disabled"}><span class="name">${NAMES[v]}</span><span class="hint">key ${KEYS[v]}</span></button>`).join("")}
+        </div>
+      </div>`).join("");
+    document.querySelectorAll("#claims .lab").forEach((el) => el.addEventListener("click", () => setLabel(+el.dataset.k, el.dataset.v)));
+    const named = new Set(it.named);
+    const isNamed = (bl) => bl.names.length && (bl.names.length === 1 ? named.has(bl.names[0]) : bl.names.every((y) => named.has(y)));
+    const mine = f.blocks.filter(isNamed), other = f.blocks.filter((bl) => !isNamed(bl));
+    $("facts-named").innerHTML = mine.length ? mine.map(blockHtml).join("") : `<p class="head-note">No feature name was recognised; see all facts below.</p>`;
+    $("facts-other").innerHTML = other.map(blockHtml).join("");
+    $("head").textContent = f.head;
+    const note = $("note");
+    if (document.activeElement !== note) note.value = rec(it.id).note || "";
+    note.readOnly = !state.canWrite;
+    renderStrip(); renderTally();
+  }
+
+  function go(k) { flushNote(); state.idx = (k + ITEMS.length) % ITEMS.length; renderItem(); try { localStorage.setItem("e2-critic-idx", String(state.idx)); } catch {} }
+  const nextOpen = () => { for (let s = 1; s <= ITEMS.length; s++) { const k = (state.idx + s) % ITEMS.length; if (!done(ITEMS[k])) return go(k); } go(state.idx + 1); };
+
+  function write(id) {
+    const r = rec(id), body = { labels: r.labels || {}, note: r.note || "", at: new Date().toISOString() };
+    state.labels[id] = { ...r, at: body.at };
+    saveLocal();
+    if (!state.db) return;
+    setStatus("saving", "Saving…");
+    const run = () => state.db.doc("labels/" + id).set(body).then(
+      () => setStatus("saved", `Saved to the label store (${id})`),
+      (e) => setStatus("failed", `Not saved to the store (${e && e.code ? e.code : "error"}); kept in this browser. Use Copy labels as JSON.`));
+    state.queue[id] = (state.queue[id] || Promise.resolve()).then(run, run);
+  }
+  function setLabel(k, v) {
+    if (!state.canWrite) return;
+    const it = ITEMS[state.idx], r = rec(it.id);
+    state.labels[it.id] = { ...r, labels: { ...(r.labels || {}), [k]: v }, note: $("note").value.trim() };
+    write(it.id);
+    renderItem();
+    if (done(it)) setTimeout(nextOpen, 220);
+  }
+  function flushNote() {
+    if (!state.noteTimer) return;
+    clearTimeout(state.noteTimer); state.noteTimer = null;
+    const id = ITEMS[state.idx].id, text = $("note").value.trim();
+    if ((rec(id).note || "") === text) return;
+    state.labels[id] = { ...rec(id), note: text };
+    write(id);
+  }
+  $("note").addEventListener("input", () => { clearTimeout(state.noteTimer); state.noteTimer = setTimeout(flushNote, 900); });
+  $("note").addEventListener("blur", flushNote);
+  $("prev").addEventListener("click", () => go(state.idx - 1));
+  $("next").addEventListener("click", () => go(state.idx + 1));
+  $("next-open").addEventListener("click", nextOpen);
+  document.addEventListener("keydown", (e) => {
+    if (e.target.closest && e.target.closest("textarea, input")) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const key = e.key.toLowerCase(), it = ITEMS[state.idx], act = activeClaim(it);
+    const v = { e: "error", f: "misreading", u: "unsure" }[key];
+    if (v && act != null) setLabel(act, v);
+    else if (key === "arrowright") go(state.idx + 1);
+    else if (key === "arrowleft") go(state.idx - 1);
+    else return;
+    e.preventDefault();
+  });
+  $("copy").addEventListener("click", () => {
+    const text = JSON.stringify(state.labels, null, 1), box = $("copybox");
+    const show = () => { box.hidden = false; box.value = text; box.select(); };
+    try { navigator.clipboard.writeText(text).then(() => setStatus($("status").dataset.s, "Labels copied as JSON"), show); } catch { show(); }
+  });
+
+  let start = ITEMS.findIndex((it) => !done(it));
+  try { const saved = parseInt(localStorage.getItem("e2-critic-idx"), 10); if (saved >= 0 && saved < ITEMS.length) start = saved; } catch {}
+  state.idx = Math.max(0, start);
+  renderItem();
+
+  (async () => {
+    const use = window.claude && window.claude.use;
+    const db = use ? await window.claude.use("db") : null;
+    if (!db) { setStatus("local", "Label store unavailable here: labels are kept in this browser. Use Copy labels as JSON."); return; }
+    const user = await window.claude.use("user");
+    const owner = user ? await user.isOwner() : true;
+    if (!owner) { state.canWrite = false; setStatus("readonly", "Read only: only the page's owner labels."); }
+    let first = true;
+    db.collection("labels").onSnapshot((snap) => {
+      const remote = {};
+      snap.docs.forEach((d) => { const v = d.data(); if (v) remote[d.id] = { labels: v.labels || {}, note: v.note || "", at: v.at || "" }; });
+      const pending = first && state.canWrite ? Object.keys(state.labels).filter((id) => Object.keys(state.labels[id].labels || {}).length && (!remote[id] || (state.labels[id].at || "") > (remote[id].at || ""))) : [];
+      for (const id of Object.keys(remote)) if (!state.labels[id] || (remote[id].at || "") >= (state.labels[id].at || "")) state.labels[id] = remote[id];
+      saveLocal();
+      if (first) {
+        first = false; state.db = state.canWrite ? db : null;
+        if (state.canWrite) setStatus("saved", `Connected: ${Object.keys(remote).length} sentence(s) in the store`);
+        pending.forEach(write);
+      }
+      renderItem();
+    }, (e) => { state.db = null; setStatus("failed", `Label store stopped (${e.code}); labels are kept in this browser.`); });
+  })();
+})();
+</script>

@@ -1,6 +1,6 @@
 # Decisions and freeze points
 
-The code and the results refer to design decisions as D1 to D58 and to sections of the working plan as "plan §x".
+The code and the results refer to design decisions as D1 to D61 and to sections of the working plan as "plan §x".
 The plan is the author's private working document; this file is the public record. It lists each decision with its
 date (all in October 2026), what was decided and why, the git tags that froze the lexicon and the prompts, and what
 each cited plan section covers. The order matters: it shows what was fixed before which result.
@@ -27,6 +27,7 @@ The order of the work:
 4. 16 Oct: the false-alarm labels; E3 re-scored with labels; the local spot check, designed and priced before it
    ran (D49), with its own frozen prompts.
 5. 17 Oct: plasmode text-level E2 (D54); the self-hosted writer (D55).
+6. 20 Oct: the LLM critic's prompts frozen after its pilot, then the critic run (D61).
 
 ## Decisions
 
@@ -87,9 +88,10 @@ The order of the work:
 | D53 | 16 Oct | Three conventions of the local spot check: no principal reason is true against T where T's gap is not positive; a notice must state every principal reason certified under M; local prompts are frozen apart. | Regulation B asks for the principal reasons. |
 | D54 | 17 Oct | Plasmode text-level E2: the extractor sees the column codes with the data dictionary's descriptions; one seed. | The texts use plain words, the model column codes. |
 | D55 | 17 Oct | A self-hosted open-weight writer (`qwen3.8:27b` through Ollama) as a third E3 writer, with the same extractor. | Banks that host their own models: the facts stay on their hardware. |
-| D56 | 19 Oct | An LLM critic (an LLM given the facts and a text, asked to flag errors) is compared with the gate on texts already labeled, in this paper. Not yet run. | The first question model risk asks: why not ask another LLM? |
+| D56 | 19 Oct | An LLM critic (an LLM given the facts and a text, asked to flag errors) is compared with the gate on texts already labeled, in this paper. Run 20 Oct (D61). | The first question model risk asks: why not ask another LLM? |
 | D57 | 19 Oct | The released text as a distribution (many draws of one cell) is left to later work. | The paper's question is the gate's effect per draft. |
 | D58 | 19 Oct | Four metrics planned for E1 and E3 are computed from results on disk: EBM against XGB2 verdicts, stability across draws, the expressivity gap and Holm-corrected contrasts. Not yet computed. | Promised in the plan's experiment list. |
+| D61 | 20 Oct | The critic is another vendor's model: OpenAI's GPT-6 Luna (priced like Claude Haiku 5.5) on every set, GPT-6.1 Sol (priced like Claude Sonnet 5.5) on the labelled LLM mutants and the template texts; reasoning effort medium. It gets the writer's facts (H1), the writer's rules for choosing words and the round trip's coverage and emphasis rules. Prompts c1, frozen after two pilot rounds on the pilot datasets (`llm/prompts/frozen_critic.json`; round 1 judged phrasing against the rules, so round 2 says a true but less precise statement is supported). Scored against the final labels and the author's first-pass labels, and on E3's released texts with labels of its flags. | A critic of the writer's own model family could share its blind spots; the critic gets everything the writer had, so the comparison is with the strongest version of the alternative. The first-pass labels are free of the lexicon's and any LLM's reading. |
 
 D59 and D60 concern circulating the draft, not the method.
 
@@ -114,3 +116,4 @@ D59 and D60 concern circulating the draft, not the method.
 | §14.21, §14.22 | 16 Oct | The false-alarm labels (D50, D51); the local spot check (D53) |
 | §14.23 | 17 Oct | E3 against T without hedges; plasmode text-level E2 (D54); D52; the figures, tables and worked example; one command for every number (D55 prepared) |
 | §14.24 | 19 Oct | The self-hosted writer's full run (run 17 Oct) |
+| §14.29 | 20 Oct | The LLM critic: its pilot, prompts c1, the runs and their labels (D56, D61) |

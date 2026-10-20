@@ -12,8 +12,11 @@
   repair rounds, P_U before and after the gate and E_U, as run and with author-reviewed labels where they exist
   (§14.21), Haiku also split by handover (H1: the facts only; H2: with the certified statements; WP3's handover
   question), and the cost per run; the local spot check (§14.22) as its own row.
+- Tab. 5, the gate and an LLM critic on the same texts (D56, §14.29): recall and blocked correct texts per set of
+  texts and label source, the critic's confident errors, and the cost per text, from e2_critic's cases.csv (which
+  carries the gate's x4 outcome per case) and, for E3's released texts, the labels of the critic's flags.
 
-Each table is also written as a LaTeX tabular (booktabs) for paper/main.tex, which inputs it: no number of the paper is
+Each table is also written as a LaTeX tabular (booktabs) for the working paper's source, which inputs it: no number of the paper is
 typed by hand.
 
 Run: `uv run python -m verifier_gate.experiments.tables`.
@@ -201,8 +204,69 @@ def tab4() -> None:
           ["p{3.7cm}p{1.7cm}p{2.1cm}p{1.1cm}p{1.9cm}p{1.1cm}p{1.6cm}p{1.1cm}"])  # fmt: skip
 
 
+CRITICS = {"GPT-6 Luna": "gpt-6-luna", "GPT-6.1 Sol": "gpt-6.1-sol"}  # results/e2/v2/text/critic/<folder>/c1
+CORRECT = ("correct", "control", "control text")
+
+
+def _share(hits: int, n: int) -> str:
+    return f"{hits} of {n} ({hits / n:.0%})" if n else "–"
+
+
+def tab5() -> None:
+    base = RESULTS / "e2" / "v2" / "text" / "critic"
+    tables = {name: pd.read_csv(base / folder / "c1" / "cases.csv") for name, folder in CRITICS.items() if (base / folder / "c1" / "cases.csv").exists()}
+    luna = next(iter(tables.values()))
+    sets = [  # name, rows, label column, what is counted
+        ("LLM-written errors caught (final labels)", "llm", "role", "error"),
+        ("LLM-written errors caught (author's first pass)", "llm", "first pass", "error"),
+        ("LLM-written sentences judged correct, blocked (final labels)", "llm", "role", "correct"),
+        ("LLM-written sentences judged correct, blocked (first pass)", "llm", "first pass", "correct"),
+        ("Scripted errors caught (30 per operator)", "script", "role", "error"),
+        ("Scripted errors caught: a feature the model lacks (M9)", "script M9", "role", "error"),
+        ("Template texts, every claim certified, blocked", "control", "role", "correct"),
+        ("Control mutants (a step moved inside the tolerance), blocked", "script", "role", "control"),
+    ]  # fmt: skip
+    rows = []
+    for name, source, column, kind in sets:
+        row = {"Texts": name}
+        for who, table in [("Gate (x4)", luna)] + [(f"Critic: {n}", t) for n, t in tables.items()]:
+            part = table[(table.source == source.split()[0]) & (table.critiqued == True)]  # noqa: E712
+            if source.endswith("M9"):
+                part = part[part.operator == "M9"]
+            part = part[part[column].isin(CORRECT if kind == "correct" else (kind,))]
+            caught = part["gate caught" if who.startswith("Gate") else "blocked"].astype(bool)
+            row[who] = _share(int(caught.sum()), len(part)) if len(part) else "–"
+        rows.append(row)
+    e3 = luna[(luna.source == "e3") & (luna.critiqued == True)]  # noqa: E712
+    fa = pd.read_csv(RESULTS / "e2" / "v2" / "text" / "false_alarms" / "score.csv").set_index("extractor").loc["x4"]
+    labels = base / "gpt-6-luna" / "c1" / "labels" / "score.csv"
+    critic_fa = pd.read_csv(labels).set_index("checker").loc["critic", "false-alarm rate (per correct text)"] if labels.exists() else None
+    rows.append({"Texts": "E3's released texts (LLM-written), blocked", "Gate (x4)": _share(int(fa["blocked"]), int(fa["texts scored"])),
+                 "Critic: GPT-6 Luna": _share(int(e3.blocked.astype(bool).sum()), len(e3)), "Critic: GPT-6.1 Sol": "–"})  # fmt: skip
+    rows.append({"Texts": "E3's released texts: correct texts blocked (false-alarm rate, labelled)", "Gate (x4)": f"{float(fa['false-alarm rate (per correct text)']):.1%}",
+                 "Critic: GPT-6 Luna": f"{critic_fa:.1%}" if critic_fa is not None else "labels pending", "Critic: GPT-6.1 Sol": "–"})  # fmt: skip
+    confident, cost = {"Texts": "Critic's confident errors: correct text blocked at p ≥ 0.9 / error passed at p ≤ 0.1"}, {"Texts": "Cost per text (USD)"}
+    for n, t in tables.items():
+        lab = t[(t.source != "e3") & (t.critiqued == True)]  # noqa: E712
+        wrong_block = lab[lab.role.isin(CORRECT) & lab.blocked.astype(bool)]
+        wrong_pass = lab[(lab.role == "error") & ~lab.blocked.astype(bool)]
+        confident[f"Critic: {n}"] = f"{int((wrong_block.p_error >= 0.9).sum())} of {len(wrong_block)} / {int((wrong_pass.p_error <= 0.1).sum())} of {len(wrong_pass)}"
+        cost[f"Critic: {n}"] = f"{t.cost.mean():.4f}"
+    confident["Gate (x4)"] = "no probability"
+    cost["Gate (x4)"] = f"{3 * 1.628 / 9084:.4f}"  # three extractor readings at x4's measured batch price (e2_false_alarms.PER_CALL)
+    rows += [confident, cost]
+    columns = ["Texts", "Gate (x4)"] + [f"Critic: {n}" for n in tables]
+    write("tab5_critic", "Tab. 5: the gate and an LLM critic on the same texts (D56)", [("", pd.DataFrame(rows)[columns])],
+          "Outside the pilot datasets. Blocked: the critic names a problem; the gate does not release the text (a text the extractor could not "
+          "read falls back to the template). Final labels: the author's labels after a review against the lexicon; first pass: the author's "
+          "labels alone, made without any checker's verdict (unsure left out). Template texts and control mutants are correct by construction "
+          "(every claim certified on the fitted model). The gate's cost is its three readings at batch prices; the critic's one call at "
+          "synchronous prices, reasoning included.",
+          [r">{\raggedright\arraybackslash}p{5.9cm}" + r">{\raggedright\arraybackslash}p{2.8cm}" * 3])  # fmt: skip
+
+
 def main() -> None:
-    for build in (tab1, tab2, tab3, tab4):
+    for build in (tab1, tab2, tab3, tab4, tab5):
         build()
     for path in sorted(OUT.glob("tab*.md")):
         print(f"--- {path.name}\n{path.read_text()}")

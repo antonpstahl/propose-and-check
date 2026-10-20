@@ -1,7 +1,7 @@
 # feasibility-symb-verific-gate-llm-explanation
 
 Code, data and results of the working paper *Propose and Prove: A Symbolic Gate for LLM Explanations of Glass-Box
-Credit Models* (draft of 19 October 2026, `paper/main.pdf`). An LLM writes an explanation of a fitted EBM or depth-2
+Credit Models* (draft of 20 October 2026; the manuscript itself is not in this repository). An LLM writes an explanation of a fitted EBM or depth-2
 XGBoost (XGB2) together with a plan of claims in a small DSL. A deterministic verifier checks every claim against the
 fitted model and its bootstrap bands through a lexicon of truth conditions; a round trip reads the finished text back
 into claims; and a gate repairs, reduces or replaces text that fails. The benchmark has a planted truth: a synthetic
@@ -33,8 +33,9 @@ uv run python -m verifier_gate.experiments.reproduce
   synthetic tier and 2 hours for the plasmode tier) and downloads TaiwanCredit from UCI (hash-checked). Whether
   refits are bit-identical on another platform has not been tested; `facts_archive --check` compares the Facts on
   disk with the archived ones.
-- **The paper:** `cd paper && latexmk -lualatex main.tex` (LuaLaTeX with the Libertinus fonts).
-- **Tests:** `uv run pytest` (440 tests, about 30 seconds). The tests that read the Facts are skipped without them,
+- **The paper's figures and tables** are generated into `paper/figures/` and `paper/tables/` (and the worked example
+  into `paper/worked_example.md`); the manuscript that includes them is kept outside the repository.
+- **Tests:** `uv run pytest` (448 tests, about 30 seconds). The tests that read the Facts are skipped without them,
   and the plasmode tests without TaiwanCredit in `data/raw/`; no test calls an API or downloads anything.
 
 Which file backs which number of the paper: `results/README.md`. What D-numbers and "plan §" in the code mean:
@@ -51,7 +52,7 @@ new request and is paid.
 - **Models:** the writers are Claude Haiku 5.5 (`claude-haiku-5-5`) and, in a subset, Claude Sonnet 5.5
   (`claude-sonnet-5-5`); the extractor is Haiku 5.5 throughout (`llm/settings.py`, with prices). Large runs go
   through the Batch API at half price and resume where they stopped.
-- **Costs as paid:** $8.77 for every live call of the pre-study (`results/spend.csv`, by day, model and role; written
+- **Costs as paid:** $10.94 for every live call of the pre-study, $2.17 of it the LLM critic (`results/spend.csv`, by day, model and role; written
   by `python -m verifier_gate.experiments.spend` from the call log). An E3 run, with its repairs and round trips,
   cost about $0.002 with the Haiku writer and $0.018 with Sonnet (Tab. 4); E3's 792 runs cost $3.77. Price a run
   before starting it.
@@ -121,7 +122,7 @@ data/            raw/ (TaiwanCredit), synthetic/, plasmode/: not tracked
 cache/           llm/ (every LLM answer and the call log, tracked), facts/ (not tracked: the archive),
                  facts_manifest.csv (the archive's files and hashes)
 results/         every result as run, by experiment and version (results/README.md)
-paper/           main.tex, main.pdf, references.bib, worked_example.md, figures/, tables/ (all generated)
+paper/           worked_example.md, figures/, tables/ (all generated; the manuscript is not in the repository)
 ```
 
 ## License

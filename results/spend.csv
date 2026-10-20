@@ -28,4 +28,6 @@ day,model,transport,role,requests,dollars
 2026-10-17,ollama/qwen3.8:27b,local,proposer,72,0.0
 2026-10-17,ollama/qwen3.8:27b,local,repair,65,0.0
 2026-10-17,ollama/qwen3.8:27b,sync,proposer,1,0.0
-all,all,all,all,36605,8.765
+2026-10-20,openai/gpt-6-luna,sync,critic,801,0.8828
+2026-10-20,openai/gpt-6.1-sol,sync,critic,141,1.2899
+all,all,all,all,37547,10.9377

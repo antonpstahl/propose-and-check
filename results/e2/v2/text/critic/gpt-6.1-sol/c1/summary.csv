@@ -1,0 +1,8 @@
+cases,checker,errors,recall,recall at the change,correct texts,false alarms,brier,errors passed with p_error <= 0.1,correct blocked with p_error >= 0.9,blocked but p_error < 0.5,passed but p_error >= 0.5
+LLM-written (author-reviewed labels),critic,95.0,1.0,1.0,5.0,3.0,,,,,
+LLM-written (author-reviewed labels),gate,95.0,0.979,0.968,5.0,1.0,,,,,
+LLM-written (author's first pass),critic,77.0,0.987,0.987,9.0,8.0,,,,,
+LLM-written (author's first pass),gate,77.0,0.961,0.961,9.0,8.0,,,,,
+"template texts, unchanged",critic,0.0,,,32.0,26.0,,,,,
+"template texts, unchanged",gate,0.0,,,32.0,0.0,,,,,
+all labelled,critic,,,,,,0.2133,0.0,29.0,0.0,0.0

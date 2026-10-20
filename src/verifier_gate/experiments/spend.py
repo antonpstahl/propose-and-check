@@ -4,7 +4,7 @@ The client logs every request, also those served from its cache (`cached` true).
 spend counts each request key once among the rows with `cached` false and a transport other than the stub (a batch
 collected twice logs its answers twice, which a plain sum would count double). Self-hosted calls are logged at $0.
 
-Writes results/spend.csv: requests and dollars by day, model, transport and role, and the total ($8.77 for the
+Writes results/spend.csv: requests and dollars by day, model, transport and role, and the total ($10.94 for the
 pre-study). `--from` and `--to` (ISO times) total one window instead, without writing: e.g. what the self-hosted
 writer's arm paid for its Haiku extractor calls, which its run traces do not record (results/README.md):
 `--from 2026-10-17T13:00 --to 2026-10-17T17:00`.
