@@ -1,6 +1,6 @@
 # Decisions and freeze points
 
-The code and the results refer to design decisions as D1 to D61 and to sections of the working plan as "plan §x".
+The code and the results refer to design decisions as D1 to D62 and to sections of the working plan as "plan §x".
 The plan is the author's private working document; this file is the public record. It lists each decision with its
 date (all in October 2026), what was decided and why, the git tags that froze the lexicon and the prompts, and what
 each cited plan section covers. The order matters: it shows what was fixed before which result.
@@ -92,6 +92,7 @@ The order of the work:
 | D57 | 19 Oct | The released text as a distribution (many draws of one cell) is left to later work. | The paper's question is the gate's effect per draft. |
 | D58 | 19 Oct | Four metrics planned for E1 and E3 are computed from results on disk: EBM against XGB2 verdicts, stability across draws, the expressivity gap and Holm-corrected contrasts. Not yet computed. | Promised in the plan's experiment list. |
 | D61 | 20 Oct | The critic is another vendor's model: OpenAI's GPT-6 Luna (priced like Claude Haiku 5.5) on every set, GPT-6.1 Sol (priced like Claude Sonnet 5.5) on the labelled LLM mutants and the template texts; reasoning effort medium. It gets the writer's facts (H1), the writer's rules for choosing words and the round trip's coverage and emphasis rules. Prompts c1, frozen after two pilot rounds on the pilot datasets (`llm/prompts/frozen_critic.json`; round 1 judged phrasing against the rules, so round 2 says a true but less precise statement is supported). Scored against the final labels and the author's first-pass labels, and on E3's released texts with labels of its flags. | A critic of the writer's own model family could share its blind spots; the critic gets everything the writer had, so the comparison is with the strongest version of the alternative. The first-pass labels are free of the lexicon's and any LLM's reading. |
+| D62 | 20 Oct | The author's labels of the critic's flags on E3's released texts (40 texts sampled from the 300 it blocks) are reported as the author's reading, with each flag's type (`flag_types.csv`): most errors follow the writer's prompt where it states a stricter rule than the lexicon (five rules differ: strict direction, "do not interact", "hardly matters", the growth of an effect, jumps); five are statements the round trip does not check. The prompts and the lexicon stay frozen; the differences are reported, and fixing them is later work. | Relabelling after seeing the result would invite bias; the types show which errors the gate missed and which are readings the lexicon makes differently. |
 
 D59 and D60 concern circulating the draft, not the method.
 

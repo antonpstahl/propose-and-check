@@ -245,6 +245,15 @@ def tab5() -> None:
                  "Critic: GPT-6 Luna": _share(int(e3.blocked.astype(bool).sum()), len(e3)), "Critic: GPT-6.1 Sol": "–"})  # fmt: skip
     rows.append({"Texts": "E3's released texts: correct texts blocked (false-alarm rate, labelled)", "Gate (x4)": f"{float(fa['false-alarm rate (per correct text)']):.1%}",
                  "Critic: GPT-6 Luna": f"{critic_fa:.1%}" if critic_fa is not None else "labels pending", "Critic: GPT-6.1 Sol": "–"})  # fmt: skip
+    if labels.exists():  # the author's labels of a sample of the critic's blocks, and each flag's type (flag_types.csv, assigned by hand)
+        score = pd.read_csv(labels).set_index("checker").loc["critic"]
+        types = pd.read_csv(labels.parent / "flag_types.csv")
+        misses = types[(types.label == "error") & types["gate miss"]].text.nunique()
+        sample = int(score["labelled blocked texts"])
+        rows.append({"Texts": "E3's released texts: blocked texts with an error by the author's labels", "Gate (x4)": _share(int(fa["real errors"]), int(fa["blocked"])),
+                     "Critic: GPT-6 Luna": f"{_share(int(score['real error (labelled)']), sample)}, sample", "Critic: GPT-6.1 Sol": "–"})  # fmt: skip
+        rows.append({"Texts": "E3's released texts: blocked texts with an error the round trip does not check", "Gate (x4)": "–",
+                     "Critic: GPT-6 Luna": f"{_share(misses, sample)}, sample", "Critic: GPT-6.1 Sol": "–"})  # fmt: skip
     confident, cost = {"Texts": "Critic's confident errors: correct text blocked at p ≥ 0.9 / error passed at p ≤ 0.1"}, {"Texts": "Cost per text (USD)"}
     for n, t in tables.items():
         lab = t[(t.source != "e3") & (t.critiqued == True)]  # noqa: E712
