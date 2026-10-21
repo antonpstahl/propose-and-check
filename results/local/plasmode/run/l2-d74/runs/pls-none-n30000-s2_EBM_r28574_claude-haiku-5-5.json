@@ -1,0 +1,118 @@
+{
+ "run_id": "pls-none-n30000-s2_EBM_r28574_claude-haiku-5-5",
+ "budget": 16,
+ "calls": 4,
+ "rounds": 0,
+ "format_retry_used": false,
+ "pending": null,
+ "extracting": [],
+ "checking": null,
+ "checking_mode": "",
+ "readings": [],
+ "writer": {
+  "role": "proposer",
+  "model": "claude-haiku-5-5",
+  "system": "You write the reasons part of an adverse-action notice: a credit model has declined one applicant, and the applicant must be told the principal reasons for the decision. You receive the facts about this one decision and write the reasons in plain English, together with a plan of claims that a verifier checks against the model before anything is released.\n\n# The text\n\n- Write 2 to 6 sentences in plain English, addressed to the applicant, who is not a data scientist.\n- Give every principal reason for the decision, the most important first: the facts list them. A principal reason is a factor that pushes this applicant's score towards the decline by at least 10% of the gap between the applicant's score and the average score of comparable approved applicants, and is among the four largest such factors.\n- Name each reason by its factor, and describe the applicant's value in words that match the facts: \"high credit utilization\" only if the applicant's utilization is above that of comparable approved applicants; \"a short credit history\" only if it is below.\n- A combination of two factors (an interaction in the model) can be a reason: name both factors (\"the combination of your credit utilization and your past delinquencies\").\n- Say only what the facts support. Do not mention factors that are not principal reasons, do not add reasons from general knowledge about credit, and do not give advice.\n- Never hedge. The facts are the model's exact numbers for this decision, so they settle every reason: do not write \"the data do not settle whether ...\", \"possibly\", \"may have contributed\" or \"it is unclear whether\". State each principal reason as a reason.\n- Do not state numbers: no scores, probabilities, contributions or percentages.\n\n# Choosing the words\n\nThe facts give each factor's contribution to the gap, its share of the gap and its rank among the factors. They are the model's exact numbers for this decision, so every word is either right or wrong:\n\n- **Principal reason.** Only a factor the facts list as a principal reason: its share of the gap is 10% or above and its rank is 1 to 4.\n- **Order.** \"The main reason\" only for rank 1; \"the second reason\" only for rank 2, and so on.\n- **High and low.** \"High x\" or \"x is higher than for comparable approved applicants\" only if the applicant's value is above the median of the comparable approved applicants; \"low x\" (or \"short\", \"few\") only if it is below. If the two are equal, use neither, and do not compare the value at all: name the factor only.\n\n# The claims\n\nFor every sentence that states something about the decision, add at least one claim in the DSL below, with that sentence's id. A sentence that only frames the text (\"We have reviewed your application.\") needs no claim. Each claim must say exactly what its sentence says, no more and no less. Use the feature names exactly as they are written in the facts, in quotes.\n\n| Words in the text | DSL claim | Meaning |\n|---|---|---|\n| \"a principal reason\", \"a key reason for the decision\" | `principal_reason(\"x\")` | x pushes the score towards the decline by at least 10% of the gap to comparable approved applicants, and is among the four largest such factors |\n| \"the main reason\", \"the first reason\" | `reason_rank(\"x\") == 1` | x pushes the score towards the decline more than any other factor |\n| \"the second reason\", \"the third reason\" | `reason_rank(\"x\") == 2` (or 3, 4) | x is the second (third, fourth) largest factor pushing towards the decline |\n| \"one of the two main reasons\", \"the second or third reason\" | `reason_rank(\"x\") in (1, 2)`, `reason_rank(\"x\") in (2, 3)` | one of consecutive ranks |\n| \"high x\", \"x is higher than for approved applicants\" | `higher_than_reference(\"x\")` | the applicant's value is above the median of comparable approved applicants |\n| \"low x\", \"a short x\", \"few x\" | `lower_than_reference(\"x\")` | the applicant's value is below that median |\n\nRules of the DSL: one claim per line, exactly in the forms above; ranks as plain whole numbers; a set of ranks is a tuple of consecutive ranks. A combination of two factors is named as \"x & y\" in `principal_reason` and `reason_rank`; `higher_than_reference` and `lower_than_reference` take a single feature.\n\n# The answer\n\nReturn one JSON object with two lists: `sentences`, each with an `id` (1, 2, 3, ...) and its `text`, and `claims`, each with the `sentence_id` it belongs to and its `dsl` line.\n\nExample (other features than in your facts):\n\n{\"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the number of missed payments on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"A short time in your current job is also a principal reason.\"}], \"claims\": [{\"sentence_id\": 1, \"dsl\": \"reason_rank(\\\"missed_payments\\\") == 1\"}, {\"sentence_id\": 1, \"dsl\": \"principal_reason(\\\"missed_payments\\\")\"}, {\"sentence_id\": 1, \"dsl\": \"higher_than_reference(\\\"missed_payments\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"principal_reason(\\\"months_in_job\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"lower_than_reference(\\\"months_in_job\\\")\"}]}\n",
+  "messages": [
+   [
+    "user",
+    "These are the facts about one declined application.\n\nDecision: the credit model, an explainable boosting machine (EBM), declined this applicant. The lender declines the 20% of applicants with the highest predicted risk of default.\nThe applicant's predicted risk of default is 86.9%. Comparable approved applicants (the 500 approved applicants closest to the cutoff) have an average predicted risk of 25.1%.\nThe gap between the applicant's score and their average score is +2.98 on the log-odds scale. Each factor below adds to the gap or takes from it, and together they make it up exactly. These are the model's exact numbers for this decision.\nA factor is a principal reason if its share of the gap is at least 10% and it is among the 4 largest factors. The principal reasons for this decision: `PAY_0` (rank 1).\n\nFactors that push towards the decline, largest first:\n- `PAY_0`: repayment status in September 2005, the latest month (-1 paid in full, 1 to 9 months of payment delay; -2 and 0 are not in the data dictionary, commonly read as no consumption and revolving credit used). `PAY_0` 2 (comparable approved applicants' median 0).\n  Contribution +2.42; share of the gap 81%; rank 1 among the 14 factors.\n- `PAY_AMT1`: amount paid in September 2005, the latest month, in NT dollars. `PAY_AMT1` 0 (comparable approved applicants' median 1,240).\n  Contribution +0.23; share of the gap 7.7%; rank 2 among the 14 factors.\n- `BILL_AMT1`: amount of the bill statement in September 2005, the latest month, in NT dollars. `BILL_AMT1` 38,000 (comparable approved applicants' median 9,590).\n  Contribution +0.15; share of the gap 4.9%; rank 3 among the 14 factors.\n- `LIMIT_BAL`: amount of the given credit in NT dollars, individual and family (supplementary) credit. `LIMIT_BAL` 30,000 (comparable approved applicants' median 20,000).\n  Contribution +0.14; share of the gap 4.8%; rank 4 among the 14 factors.\nSmaller factors pushing towards the decline (each under 2% of the gap): `AGE`, `PAY_AMT3`, `PAY_AMT2 & BILL_AMT2`, `BILL_AMT2 & PAY_AMT3`, `BILL_AMT1 & PAY_AMT2`, `BILL_AMT2`, `LIMIT_BAL & PAY_AMT3`.\nThe other 3 factors reduce the gap by less than 2% each.\n\nWrite the reasons for the decision and their claims.\n"
+   ]
+  ],
+  "schema": "{\"additionalProperties\": false, \"properties\": {\"claims\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"dsl\": {\"type\": \"string\"}, \"sentence_id\": {\"type\": \"integer\"}}, \"required\": [\"sentence_id\", \"dsl\"], \"type\": \"object\"}, \"type\": \"array\"}, \"sentences\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"id\": {\"type\": \"integer\"}, \"text\": {\"type\": \"string\"}}, \"required\": [\"id\", \"text\"], \"type\": \"object\"}, \"type\": \"array\"}}, \"required\": [\"sentences\", \"claims\"], \"type\": \"object\"}",
+  "effort": "medium",
+  "thinking": "off",
+  "max_tokens": 16000,
+  "draw": 0,
+  "attempt": 0,
+  "replica": 0
+ },
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [
+    [
+     1,
+     "The main reason for our decision is your repayment status in September 2005, the most recent month, which shows payment delays that are higher than for applicants we approved."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "reason_rank(\"PAY_0\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; contribution 2.42; claimed 1"
+    ],
+    [
+     1,
+     "principal_reason(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "fraction 0.811; rank 1; materiality 0.1; max reasons 4"
+    ],
+    [
+     1,
+     "higher_than_reference(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "applicant 2; reference median 0"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"reason_rank(\\\"PAY_0\\\") == 1\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"PAY_0\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"PAY_0\\\")\", \"sentence_id\": 1}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is your repayment status in September 2005, the most recent month, which shows payment delays that are higher than for applicants we approved.\"}]}",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "higher_than_reference(\"PAY_0\")",
+      3
+     ],
+     [
+      1,
+      "reason_rank(\"PAY_0\") == 1",
+      3
+     ]
+    ],
+    "unplanned": [],
+    "plan_only": [
+     [
+      1,
+      "principal_reason(\"PAY_0\")"
+     ]
+    ],
+    "ambiguous": [],
+    "gap": [],
+    "numbers": [],
+    "hedged": [],
+    "missing": [],
+    "emphasis": [],
+    "format_errors": 0
+   }
+  }
+ ],
+ "failed_before": [],
+ "exit": "RELEASED",
+ "reason": "passed after 0 repair round(s)",
+ "flagged": false,
+ "roundtrip": "passed",
+ "cost": 0.000255145,
+ "spent": 0.000255145,
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 8749,
+  "input_tokens": 2263,
+  "output_tokens": 393
+ },
+ "events": [
+  "round trip of the draft: 3 extractions",
+  "RELEASED: passed after 0 repair round(s)"
+ ]
+}

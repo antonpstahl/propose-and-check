@@ -1,0 +1,10 @@
+variant,run,claim,before,after
+C,syn-none-n5000-s3_XGB2_H1_d3_claude-haiku-5-5_opaque,"unsettled(threshold(""dti"", at=0.5))",false,true
+C,syn-none-n5000-s3_XGB2_H1_d3_claude-haiku-5-5_plausible,"unsettled(threshold(""dti"", at=0.5))",false,true
+C,syn-none-n5000-s3_XGB2_H1_d4_claude-haiku-5-5_opaque,"unsettled(threshold(""dti"", at=0.5))",false,true
+A,syn-weak-n5000-s2_XGB2_H1_d1_claude-haiku-5-5_opaque,"threshold(""n_delinquencies"", at=1.0)",undecidable,true
+B,syn-weak-n5000-s2_XGB2_H1_d1_claude-haiku-5-5_opaque,"threshold(""n_delinquencies"", at=1.0)",undecidable,true
+C,syn-weak-n5000-s2_XGB2_H1_d1_claude-haiku-5-5_opaque,"threshold(""n_delinquencies"", at=1.0)",undecidable,true
+A,syn-weak-n5000-s2_XGB2_H1_d4_claude-haiku-5-5_plausible,"threshold(""n_delinquencies"", at=1.0)",undecidable,true
+B,syn-weak-n5000-s2_XGB2_H1_d4_claude-haiku-5-5_plausible,"threshold(""n_delinquencies"", at=1.0)",undecidable,true
+C,syn-weak-n5000-s2_XGB2_H1_d4_claude-haiku-5-5_plausible,"threshold(""n_delinquencies"", at=1.0)",undecidable,true

@@ -20,7 +20,8 @@ flag of the bands (lexicon/local.second_look), never part of the notice.
 
 The plasmode tier (D67): `--tier plasmode`, the notices of local_facts --tier plasmode (seed 2 at n = 30,000), under
 the column codes with their descriptions and plain words in the template, lexicon v3 and the round trip's rule on
-unknown terms; written to results/local/plasmode/. The synthetic notices are replayed as they ran (l1, l2: lexicon
+unknown terms; written to results/local/plasmode/ (D74's rerun, with its fixes: <prompts>-d74; D67 as run with
+VERIFIER_GATE_D74=0). The synthetic notices are replayed as they ran (l1, l2: lexicon
 v2 and no rule on unknown terms, D68), with VERIFIER_GATE_LEXICON=v2.
 
 Run (cached and resumable, as E3):
@@ -51,7 +52,7 @@ from verifier_gate.gate import gate as g
 from verifier_gate.gate import roundtrip as rt
 from verifier_gate.gate.template import plasmode_label
 from verifier_gate.lexicon import local as lp
-from verifier_gate.lexicon.predicates import TRUE
+from verifier_gate.lexicon.predicates import TRUE, d74_fixes
 from verifier_gate.llm import batch, extract, prompts, settings
 from verifier_gate.llm.client import Client, Request
 from verifier_gate.llm.handover_local import notice_handover
@@ -236,7 +237,7 @@ def main() -> None:
               f"pilot ({len(PILOT)} notices, synchronous) about ${sync * len(PILOT) / len(specs):.3f}")  # fmt: skip
         return
     by_id = {s.run_id: s for s in specs}
-    version = f"{prompts.LOCAL_VERSION}"
+    version = f"{prompts.LOCAL_VERSION}" + ("-d74" if d74_fixes() else "")  # D74's fixes: a folder of their own
     texts = {s.run_id: found[s].handover for s in specs}
     waves = None  # the batch waves' folder: the client's, or the plasmode run's own (D67)
     if args.dry:
@@ -248,7 +249,7 @@ def main() -> None:
     else:
         client, api, poll = Client("sync" if args.pilot else "batch"), batch.BatchAPI(), batch.POLL_SECONDS
         out = (RESULTS if args.tier == "synthetic" else RESULTS / args.tier) / ("pilot" if args.pilot else "run") / version
-        waves = None if args.tier == "synthetic" else client.cache_dir / "batches" / f"local_{args.tier}"
+        waves = None if args.tier == "synthetic" else client.cache_dir / "batches" / (f"local_{args.tier}" + ("-d74" if d74_fixes() else ""))
     print(f"local spot check{' (pilot)' if args.pilot else ''}{' (no network)' if args.dry else ''}: {len(specs)} notices; "
           f"prompts {version}")  # fmt: skip
     if args.pilot:

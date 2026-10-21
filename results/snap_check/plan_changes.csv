@@ -1,0 +1,4 @@
+variant,scenario,kind,removed,added
+A,syn-weak-n5000-s2,XGB2,[],"['threshold(""n_delinquencies"", at=1.0)']"
+B,syn-weak-n5000-s2,XGB2,[],"['threshold(""n_delinquencies"", at=1.0)']"
+C,syn-weak-n5000-s2,XGB2,[],"['threshold(""n_delinquencies"", at=1.0)']"

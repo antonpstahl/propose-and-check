@@ -1,0 +1,14 @@
+part,tier,variant,changed
+band ends,plasmode,A,81
+band ends,plasmode,B,47
+band ends,synthetic,A,20
+band ends,synthetic,B,16
+e1,synthetic,A,0
+e1,synthetic,B,0
+e1,synthetic,C,0
+plans,synthetic,A,1
+plans,synthetic,B,1
+plans,synthetic,C,1
+e3,synthetic,A,2
+e3,synthetic,B,2
+e3,synthetic,C,5

@@ -1,0 +1,6 @@
+writer,naming,pilot datasets,runs,exit RELEASED,exit RELEASED_REDUCED,exit TEMPLATE,exit ESCALATE,P_U off,P_U on,E_U,P_U off vs T,P_U on vs T,"claims false vs T, off","claims false vs T, on",claims off,claims on,hedge share on,cost per run
+claude-haiku-5-5,codes,False,360,129,35,196,0,0.423,0.081,0.809,1.0,1.0,0.242,0.157,18.3,17.0,0.043,0.00268
+claude-haiku-5-5,opaque,False,320,190,42,88,0,0.472,0.025,0.947,0.858,0.584,0.128,0.086,18.4,17.2,0.079,0.00229
+claude-haiku-5-5,opaque,True,40,26,4,10,0,0.4,0.1,0.75,0.9,0.675,0.142,0.089,16.6,16.0,0.073,0.00208
+claude-haiku-5-5,plausible,False,320,193,27,100,0,0.437,0.025,0.943,0.855,0.549,0.128,0.068,18.4,17.3,0.061,0.00222
+claude-haiku-5-5,plausible,True,40,27,2,11,0,0.45,0.05,0.889,0.75,0.55,0.157,0.075,18.0,17.0,0.062,0.00231

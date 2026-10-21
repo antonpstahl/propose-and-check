@@ -1,0 +1,25 @@
+scenario,n,interaction,model,claims,hedges,sets,coverage passed,limited-evidence flag
+syn-none-n5000-s2,5000,none,EBM,29,5,20,True,False
+syn-none-n5000-s2,5000,none,XGB2,58,10,20,True,False
+syn-none-n5000-s3,5000,none,EBM,30,5,18,True,False
+syn-none-n5000-s3,5000,none,XGB2,48,9,20,True,False
+syn-none-n50000-s2,50000,none,EBM,40,0,16,True,False
+syn-none-n50000-s2,50000,none,XGB2,69,2,17,True,False
+syn-none-n50000-s3,50000,none,EBM,41,0,16,True,False
+syn-none-n50000-s3,50000,none,XGB2,64,2,15,True,False
+syn-weak-n5000-s2,5000,weak,EBM,31,4,22,True,False
+syn-weak-n5000-s2,5000,weak,XGB2,54,9,20,True,False
+syn-weak-n5000-s3,5000,weak,EBM,32,5,19,True,False
+syn-weak-n5000-s3,5000,weak,XGB2,51,9,20,True,False
+syn-weak-n50000-s2,50000,weak,EBM,41,0,15,True,False
+syn-weak-n50000-s2,50000,weak,XGB2,67,3,17,True,False
+syn-weak-n50000-s3,50000,weak,EBM,45,3,15,True,False
+syn-weak-n50000-s3,50000,weak,XGB2,63,1,13,True,False
+syn-dominant-n5000-s2,5000,dominant,EBM,31,4,18,True,False
+syn-dominant-n5000-s2,5000,dominant,XGB2,61,5,21,True,False
+syn-dominant-n5000-s3,5000,dominant,EBM,30,4,19,True,False
+syn-dominant-n5000-s3,5000,dominant,XGB2,47,5,20,True,False
+syn-dominant-n50000-s2,50000,dominant,EBM,46,1,12,True,False
+syn-dominant-n50000-s2,50000,dominant,XGB2,73,2,18,True,False
+syn-dominant-n50000-s3,50000,dominant,EBM,43,1,14,True,False
+syn-dominant-n50000-s3,50000,dominant,XGB2,69,0,16,True,False

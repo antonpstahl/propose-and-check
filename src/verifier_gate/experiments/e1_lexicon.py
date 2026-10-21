@@ -142,7 +142,7 @@ def main() -> None:
 
     table = verdicts(scenarios, lex)
     long = layers(table)
-    out = RESULTS / lex.version / name
+    out = RESULTS / (lex.version + ("-d74" if p.d74_fixes(lex) else "")) / name  # D74's fixes: a folder of their own
     out.mkdir(parents=True, exist_ok=True)
     table.to_csv(out / "verdicts.csv", index=False)
     head = headline(long)

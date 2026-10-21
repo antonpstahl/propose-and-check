@@ -278,7 +278,7 @@ def main() -> None:
     assert lex.version != "v0", "E2 runs on the frozen lexicon (tag e1-frozen)"
 
     table, plans = run(scenarios, lex)
-    out = RESULTS / lex.version / name
+    out = RESULTS / (lex.version + ("-d74" if p.d74_fixes(lex) else "")) / name  # D74's fixes: a folder of their own
     out.mkdir(parents=True, exist_ok=True)
     table.to_csv(out / "mutants.csv", index=False)
     plans.to_csv(out / "plans.csv", index=False)

@@ -4,13 +4,14 @@ the lexicon. Each rule is checked against v2 on the same toy facts (tests/test_l
 
 import dataclasses
 import re
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
 import yaml
 from test_lexicon import BASE, MIDS, UP, X, exact_facts, main, pair_grid, per_step, shell, toy_facts  # noqa: F401
 
-from verifier_gate.data import dgp
+from verifier_gate.data import dgp, labels
 from verifier_gate.dsl.parse import DSLError, parse
 from verifier_gate.facts.build import build_facts
 from verifier_gate.facts.reference import reference_steps
@@ -27,8 +28,10 @@ V2, V3 = p.load(p.VERSIONS["v2"]), p.load(p.VERSIONS["v3"])
 
 @pytest.fixture(autouse=True)
 def current(monkeypatch):
-    """These tests are about v3, the default: they run without the pin, whatever the environment says."""
+    """These tests are about v3, the default: they run without the pin or D74's switch, whatever the environment
+    says."""
     monkeypatch.delenv(p.PIN, raising=False)
+    monkeypatch.delenv(p.D74, raising=False)
 
 
 def test_the_default_is_v3_and_the_pin_restores_v2(monkeypatch):
@@ -143,6 +146,39 @@ def test_the_certified_jump_takes_the_sign_of_m_s_step(X):
     jumps = [c for c in certified_plan(down, V3) if c.kind in ("threshold", "drop") and c.terms == ("step",)]
     assert [c.kind for c in jumps] == ["drop"]
     assert [c.kind for c in certified_plan(down, V2) if c.kind in ("threshold", "drop") and c.terms == ("step",)] == ["threshold"]
+
+
+def test_a_location_just_above_a_float32_cut_snaps_back_to_it():
+    """XGBoost stores the cut between the observed values 1 and 2 in float32, just below 2, and an estimate on the
+    jump grid can land just above 2, which _gap puts between 2 and 3 (D42, D50). Snapped to M's nearest cut, it lies
+    between 1 and 2 (D74). Without observed values the band is not moved."""
+    cuts = np.array([np.nextafter(np.float32(v), np.float32(0)) for v in (1.0, 2.0)], dtype=float)
+    f = SimpleNamespace(values=np.array([0.0, 1.0, 2.0, 3.0]), cuts=cuts)
+    band = (2.00049, 2.00049)
+    assert cuts[1] < 2.0 and p._gap(f, band[0]) == (2.0, 3.0)
+    assert p._snap(f, band) == (cuts[1], cuts[1]) and p._gap(f, p._snap(f, band)[0]) == (1.0, 2.0)
+    assert p._snap(SimpleNamespace(values=None, cuts=cuts), band) == band
+
+
+def test_d74_s_fixes_are_on_under_v3_and_off_under_v2_or_the_switch(monkeypatch):
+    assert p.d74_fixes(V3) and p.d74_fixes() and not p.d74_fixes(V2)
+    monkeypatch.setenv(p.D74, "0")
+    assert not p.d74_fixes(V3)
+    monkeypatch.delenv(p.D74)
+    monkeypatch.setenv(p.PIN, "v2")
+    assert not p.d74_fixes()
+
+
+def test_the_plasmode_descriptions_mark_the_undocumented_codes(monkeypatch):
+    """D74 (review minor issue 36): codes the data dictionary does not document are not described as if it did;
+    D66 and D67 ran with D54's text, which the switch restores."""
+    described = labels.plasmode_descriptions()
+    assert "-2 and 0 are not in the data dictionary" in described["PAY_0"]
+    assert "0, 5 and 6 are not in the data dictionary" in described["EDUCATION"]
+    assert described.keys() == labels.PLASMODE_DESCRIPTIONS_D54.keys()
+    assert {k for k in described if described[k] != labels.PLASMODE_DESCRIPTIONS_D54[k]} == {"PAY_0", "EDUCATION"}
+    monkeypatch.setenv(p.D74, "0")
+    assert labels.plasmode_descriptions() is labels.PLASMODE_DESCRIPTIONS_D54
 
 
 def test_drop_parses_only_from_v3(monkeypatch):

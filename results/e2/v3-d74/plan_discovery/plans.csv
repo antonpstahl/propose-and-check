@@ -1,0 +1,13 @@
+scenario,n,interaction,model,claims,hedges,sets,coverage passed,limited-evidence flag
+syn-none-n5000-s1,5000,none,EBM,30,4,20,True,False
+syn-none-n5000-s1,5000,none,XGB2,38,6,19,True,False
+syn-none-n50000-s1,50000,none,EBM,43,0,13,True,False
+syn-none-n50000-s1,50000,none,XGB2,73,2,12,True,False
+syn-weak-n5000-s1,5000,weak,EBM,31,5,17,True,False
+syn-weak-n5000-s1,5000,weak,XGB2,46,7,17,True,False
+syn-weak-n50000-s1,50000,weak,EBM,44,1,15,True,False
+syn-weak-n50000-s1,50000,weak,XGB2,61,3,16,True,False
+syn-dominant-n5000-s1,5000,dominant,EBM,33,4,19,True,False
+syn-dominant-n5000-s1,5000,dominant,XGB2,50,3,20,True,False
+syn-dominant-n50000-s1,50000,dominant,EBM,44,0,16,True,False
+syn-dominant-n50000-s1,50000,dominant,XGB2,72,1,17,True,False

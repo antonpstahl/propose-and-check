@@ -3,13 +3,14 @@
 A text is wrong against T if it states at least one claim, other than a hedge, that is false against the planted
 truth (a hedge is a statement about the evidence in one sample, not about T: e3_truth). Claims are what the scoring
 readings find (experiments/e3_truth.py, claims.csv): first drafts (gate off) and released texts (gate on, templates
-included), Claude Haiku 5.5, outside the two synthetic pilot datasets. Three sources:
+included), Claude Haiku 5.5, outside the two synthetic pilot datasets. Four sources:
 
 - "as run, v2": E3 as run (results/e3/v3-x3), its claims verified against T under lexicon v2, as reported;
 - "as run, v3": the same texts and claims verified against T under lexicon v3, which separates the change of the
   words' meaning from the change of the texts;
 - "rerun, v3": the rerun after the review (D66; results/e3/v4-x5-m5): lexicon v3, prompts v4, extractor x5, both
-  tiers.
+  tiers;
+- "rerun D74, v3": the same with D74's fixes (results/e3/v4-x5-m5-d74), once e3_truth has read it.
 
 Per source, tier and arm: texts, the share wrong against T with a 95% interval from a bootstrap over the datasets
 (2,000 resamples, seed 0), and the share of claims false against T; by model and n; and by claim form (the kind and
@@ -34,7 +35,7 @@ from verifier_gate.experiments.tables import markdown
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.verifier.verify import verify
 
-AS_RUN, RERUN = "v3-x3", "v4-x5-m5"
+AS_RUN, RERUN, RERUN_D74 = "v3-x3", "v4-x5-m5", "v4-x5-m5-d74"
 OUT = RESULTS / "text_error"
 WRITER = "haiku"
 RESAMPLES = 2_000
@@ -129,7 +130,7 @@ def by_form(claims: pd.DataFrame, texts: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
-    sources = {"as run, v2": (AS_RUN, None), "as run, v3": (AS_RUN, p.load(p.VERSIONS["v3"])), "rerun, v3": (RERUN, None)}
+    sources = {"as run, v2": (AS_RUN, None), "as run, v3": (AS_RUN, p.load(p.VERSIONS["v3"])), "rerun, v3": (RERUN, None), "rerun D74, v3": (RERUN_D74, None)}
     all_claims, all_texts = [], []
     for name, (folder, lex) in sources.items():
         if not (RESULTS / folder / "claims.csv").exists():

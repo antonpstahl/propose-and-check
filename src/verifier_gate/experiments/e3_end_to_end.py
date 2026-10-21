@@ -29,8 +29,9 @@ Run (in a terminal: hours, mostly waiting for batches; stopping is safe, the sam
   uv run python -m verifier_gate.experiments.e3_end_to_end --estimate   # runs and cost from the pilot's rates
   uv run python -m verifier_gate.experiments.e3_end_to_end              # the 720 Haiku runs
   uv run python -m verifier_gate.experiments.e3_end_to_end --sonnet     # the 72 Sonnet runs
-  uv run python -m verifier_gate.experiments.e3_end_to_end --revised --tier both   # the rerun (D66): 1,080 runs
-Writes results/e3/<writer prompts>-<extractor prompts>/<haiku|sonnet>/: runs/<run id>.json, rows.csv (one row per
+  uv run python -m verifier_gate.experiments.e3_end_to_end --revised --tier both   # the rerun with D74's fixes: 1,080 runs
+  VERIFIER_GATE_D74=0 uv run python -m verifier_gate.experiments.e3_end_to_end --revised --tier both   # D66 as run
+Writes results/e3/<writer prompts>-<extractor prompts>[-m5][-d74]/<haiku|sonnet>/: runs/<run id>.json, rows.csv (one row per
 run) and summary.csv.
 """
 
@@ -47,6 +48,7 @@ from verifier_gate.experiments.pilot import NAMINGS, stub_writer
 from verifier_gate.gate import gate as g
 from verifier_gate.gate import roundtrip as rt
 from verifier_gate.gate.template import plasmode_label
+from verifier_gate.lexicon.predicates import d74_fixes
 from verifier_gate.llm import batch, extract, prompts, settings
 from verifier_gate.llm.client import Client, Request, Response
 from verifier_gate.llm.handover import handover
@@ -287,7 +289,7 @@ def main() -> None:
     else:
         client, api, poll = Client("batch"), batch.BatchAPI(), batch.POLL_SECONDS
         folder = "sonnet" if args.sonnet else writer_folder(args.writer) if args.writer else "haiku"
-        version = f"{prompts.VERSION}-{prompts.extractor_version()}" + ("-m5" if args.revised else "")
+        version = f"{prompts.VERSION}-{prompts.extractor_version()}" + ("-m5" if args.revised else "") + ("-d74" if args.revised and d74_fixes() else "")
         out = RESULTS / version / ("pilot" if args.pilot else "") / folder
         waves = client.cache_dir / "batches" / f"e3_{version}" if args.revised else None
     by_id = {spec.run_id: spec for spec in specs}

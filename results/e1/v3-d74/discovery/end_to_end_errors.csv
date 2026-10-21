@@ -1,0 +1,18 @@
+model,scenario,n,kind,role,claim,label,verdict,oracle,outcome,layer
+EBM,syn-none-n5000-s1,5000,rank,weak,"rank(""n_inquiries"") == 6",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n5000-s1,5000,share,threshold,"share(""dti"") == approx(0.082)",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n5000-s1,5000,negligible,weak,"negligible(""n_inquiries"")",false,true,undecidable,released_wrong,model
+XGB2,syn-none-n5000-s1,5000,strength,weak,"strength(""n_inquiries"") == ""weak""",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n5000-s1,5000,share,weak,"share(""n_inquiries"") == approx(0.039)",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n5000-s1,5000,rank,weak,"rank(""n_inquiries"") == 6",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n5000-s1,5000,peak,peak,"peak(""history_months"", at=36.0)",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n5000-s1,5000,strength,weak,"strength(""n_inquiries"") in (""weak"", ""moderate"")",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n50000-s1,50000,direction,near_flat,"direction(""age"") == ""decreasing""",true,false,undecidable,blocked_correct,model
+XGB2,syn-weak-n5000-s1,5000,interaction,pair,"interaction(""n_inquiries"", ""history_months"", pattern=""sign_flip"")",true,false,true,blocked_correct,model
+XGB2,syn-weak-n5000-s1,5000,interaction,pair,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,syn-dominant-n5000-s1,5000,negligible,weak,"negligible(""n_inquiries"")",false,true,undecidable,released_wrong,model
+XGB2,syn-dominant-n5000-s1,5000,strength,weak,"strength(""n_inquiries"") == ""weak""",true,false,undecidable,blocked_correct,model
+XGB2,syn-dominant-n5000-s1,5000,interaction,pair,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,syn-dominant-n5000-s1,5000,strength,weak,"strength(""n_inquiries"") in (""weak"", ""moderate"")",true,false,undecidable,blocked_correct,model
+XGB2,syn-dominant-n50000-s1,50000,rank,near_flat,"rank(""age"") == 7",true,false,true,blocked_correct,model
+XGB2,syn-dominant-n50000-s1,50000,rank,near_flat,"rank(""age"") in (6, 7)",true,false,true,blocked_correct,model

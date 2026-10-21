@@ -9,7 +9,9 @@ seeds (about six hours) and download TaiwanCredit from UCI.
 
 Lexicon versions (D63-D66): every step replays a result run under lexicon v2, with VERIFIER_GATE_LEXICON=v2 set (the
 writer's prompts v3, extractor x3 or x4, the template's v2 wording), except the steps in V3_STEPS, which run under
-the current lexicon, v3.
+the current lexicon, v3. Of these, the steps in BEFORE_D74 replay results that ran before D74's fixes (E1 under v3,
+D66, D67), with VERIFIER_GATE_D74=0; the *-d74 steps make the reruns with them (results/e1/v3-d74, results/e2/v3-d74,
+results/e3/v4-x5-m5-d74, results/local/plasmode/run/l2-d74) and the check behind D74 (results/snap_check).
 
 Every step runs with VERIFIER_GATE_OFFLINE set: a request that is not in the LLM cache raises instead of calling the
 API, so a reproduction costs $0 or stops. At the end, `git status` over results/ and paper/ lists every output that
@@ -32,7 +34,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from verifier_gate.lexicon.predicates import PIN
+from verifier_gate.lexicon.predicates import D74, PIN
 from verifier_gate.llm.client import OFFLINE
 
 REPO = Path(__file__).parents[3]
@@ -40,7 +42,11 @@ LABELS = "results/e2/v2/text/false_alarms/labels.json"
 DRAFT_LABELS = "results/e2/v2/text/false_alarms/drafts/labels.json"
 CRITIC_LABELS = "results/e2/v2/text/critic/gpt-6-luna/c1/labels/labels.json"
 V3_STEPS = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "table1-v3", "e3-rerun", "e3-rerun-truth", "e3-text-error",
-             "local-refits-plasmode", "local-facts-plasmode", "local-run-plasmode"}  # under lexicon v3 (D63-D67); every other step replays a result run under v2 (PIN=v2)
+             "local-refits-plasmode", "local-facts-plasmode", "local-run-plasmode",
+             "e1-d74-discovery", "e1-d74-confirmation", "e1-d74-plasmode", "snap-check", "e2-plan-d74-discovery",
+             "e2-plan-d74-confirmation", "e2-plan-d74-plasmode", "e3-rerun-d74", "e3-rerun-d74-truth",
+             "local-run-plasmode-d74"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
+BEFORE_D74 = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "e3-rerun", "e3-rerun-truth", "local-run-plasmode"}  # v3, as run before D74's fixes
 STEPS = [  # name, module, arguments
     ("facts", "build_facts", []),
     ("facts-plasmode", "build_facts", ["--tier", "plasmode"]),
@@ -50,9 +56,16 @@ STEPS = [  # name, module, arguments
     ("e1-v3-discovery", "e1_lexicon", []),  # lexicon v3 (D63, D64): results/e1/v3/
     ("e1-v3-confirmation", "e1_lexicon", ["--seeds", "2,3"]),
     ("e1-v3-plasmode", "e1_lexicon", ["--tier", "plasmode"]),
+    ("e1-d74-discovery", "e1_lexicon", []),  # lexicon v3 with D74's fixes: results/e1/v3-d74/
+    ("e1-d74-confirmation", "e1_lexicon", ["--seeds", "2,3"]),
+    ("e1-d74-plasmode", "e1_lexicon", ["--tier", "plasmode"]),
+    ("snap-check", "snap_check", []),  # the check behind D74: what the location snap changes, $0
     ("e2-plan-discovery", "e2_mutation", []),
     ("e2-plan-confirmation", "e2_mutation", ["--seeds", "2,3"]),
     ("e2-plan-plasmode", "e2_mutation", ["--tier", "plasmode"]),
+    ("e2-plan-d74-discovery", "e2_mutation", []),  # plan-level E2 under v3 with D74's fixes: results/e2/v3-d74/
+    ("e2-plan-d74-confirmation", "e2_mutation", ["--seeds", "2,3"]),
+    ("e2-plan-d74-plasmode", "e2_mutation", ["--tier", "plasmode"]),
     ("e2-text-script", "e2_text", ["--script"]),  # the two sources as they were run, so each CSV keeps its own columns
     ("e2-text-llm", "e2_text", ["--llm"]),
     ("e2-text-plasmode", "e2_text", ["--tier", "plasmode", "--seeds", "1"]),
@@ -63,6 +76,8 @@ STEPS = [  # name, module, arguments
     ("e3-check-and-truth", "e3_truth", []),
     ("e3-rerun", "e3_end_to_end", ["--revised", "--tier", "both"]),  # the rerun on both tiers (D66), every call from the cache
     ("e3-rerun-truth", "e3_truth", ["--source", "v4-x5-m5"]),
+    ("e3-rerun-d74", "e3_end_to_end", ["--revised", "--tier", "both"]),  # the rerun with D74's fixes, every call from the cache
+    ("e3-rerun-d74-truth", "e3_truth", ["--source", "v4-x5-m5-d74"]),
     ("e3-text-error", "e3_text_error", []),  # the text-level error against T by claim form, as run and rerun
     ("e3-baselines", "e3_baselines", []),  # the template-only and plain-prompt arms (D71), scored as E3, from texts.json and the cache
     ("false-alarms", "e2_false_alarms", ["--score", LABELS]),
@@ -81,6 +96,7 @@ STEPS = [  # name, module, arguments
     ("local-refits-plasmode", "local_refits", ["--tier", "plasmode"]),  # the spot check on the plasmode tier (D67)
     ("local-facts-plasmode", "local_facts", ["--tier", "plasmode"]),
     ("local-run-plasmode", "local_run", ["--tier", "plasmode"]),
+    ("local-run-plasmode-d74", "local_run", ["--tier", "plasmode"]),  # the plasmode notices with D74's fixes
     ("fig1", "fig1", []),
     ("fig2", "fig2", []),
     ("fig3", "fig3", []),
@@ -138,7 +154,7 @@ def main() -> None:
     for name, module, arguments in steps:
         t0 = time.perf_counter()
         print(f"[{name}] python -m verifier_gate.experiments.{module} {' '.join(arguments)}", flush=True)
-        pinned = env if name in V3_STEPS else {**env, PIN: "v2"}
+        pinned = {**env, D74: "0"} if name in BEFORE_D74 else env if name in V3_STEPS else {**env, PIN: "v2"}
         result = subprocess.run([sys.executable, "-m", f"verifier_gate.experiments.{module}", *arguments], cwd=REPO, env=pinned,
                                 capture_output=True, text=True)  # fmt: skip
         if result.returncode != 0:

@@ -31,6 +31,38 @@ source,tier,arm,dsl,texts
 "as run, v3",synthetic,on,"interaction(""history_months"", ""n_inquiries"", pattern=""amplification"")",10
 "as run, v3",synthetic,on,"threshold(""n_delinquencies"", at=2.0)",5
 "as run, v3",synthetic,on,"interaction(""history_months"", ""n_inquiries"", pattern=""none"")",4
+"rerun D74, v3",plasmode,off,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",251
+"rerun D74, v3",plasmode,off,"threshold(""PAY_0"", at=2.0)",101
+"rerun D74, v3",plasmode,off,"direction(""PAY_0"") == ""increasing""",77
+"rerun D74, v3",plasmode,off,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",58
+"rerun D74, v3",plasmode,off,"strength(""PAY_AMT2"") in (""negligible"", ""weak"")",45
+"rerun D74, v3",plasmode,off,"direction(""LIMIT_BAL"") in (""increasing"", ""mostly_increasing"")",38
+"rerun D74, v3",plasmode,off,"threshold(""PAY_0"", at=1.5)",36
+"rerun D74, v3",plasmode,off,"strength(""BILL_AMT1"") in (""negligible"", ""weak"")",33
+"rerun D74, v3",plasmode,on,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",271
+"rerun D74, v3",plasmode,on,"direction(""BILL_AMT2"") in (""increasing"", ""mostly_increasing"")",115
+"rerun D74, v3",plasmode,on,"threshold(""PAY_0"", at=2.0)",82
+"rerun D74, v3",plasmode,on,"threshold(""PAY_0"", at=1.5)",66
+"rerun D74, v3",plasmode,on,"direction(""LIMIT_BAL"") in (""increasing"", ""mostly_increasing"")",26
+"rerun D74, v3",plasmode,on,"strength(""BILL_AMT2"") in (""weak"", ""moderate"")",20
+"rerun D74, v3",plasmode,on,"strength(""PAY_AMT2"") in (""negligible"", ""weak"")",17
+"rerun D74, v3",plasmode,on,"direction(""PAY_0"") == ""increasing""",12
+"rerun D74, v3",synthetic,off,"direction(""history_months"") == ""decreasing""",71
+"rerun D74, v3",synthetic,off,"negligible(""n_inquiries"")",71
+"rerun D74, v3",synthetic,off,"strength(""dti"") in (""negligible"", ""weak"")",57
+"rerun D74, v3",synthetic,off,"strength(""history_months"") in (""negligible"", ""weak"")",53
+"rerun D74, v3",synthetic,off,"threshold(""utilization"", at=0.6)",28
+"rerun D74, v3",synthetic,off,"threshold(""utilization"", at=0.7)",28
+"rerun D74, v3",synthetic,off,"strength(""n_delinquencies"") == ""moderate""",23
+"rerun D74, v3",synthetic,off,"threshold(""utilization"", at=0.69)",22
+"rerun D74, v3",synthetic,on,"negligible(""n_inquiries"")",19
+"rerun D74, v3",synthetic,on,"strength(""age"") in (""weak"", ""moderate"")",18
+"rerun D74, v3",synthetic,on,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",11
+"rerun D74, v3",synthetic,on,"interaction(""history_months"", ""n_inquiries"", pattern=""amplification"")",8
+"rerun D74, v3",synthetic,on,"share(""utilization"") == approx(0.35)",6
+"rerun D74, v3",synthetic,on,"share(""n_delinquencies"") == approx(0.206)",3
+"rerun D74, v3",synthetic,on,"rank(""noise_2"") in (4, 5, 6, 7, 8)",2
+"rerun D74, v3",synthetic,on,"threshold(""utilization"", at=0.7)",2
 "rerun, v3",plasmode,off,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",261
 "rerun, v3",plasmode,off,"threshold(""PAY_0"", at=2.0)",115
 "rerun, v3",plasmode,off,"direction(""PAY_0"") == ""increasing""",67

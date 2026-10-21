@@ -43,6 +43,10 @@ Versions. load() reads lexicon.yaml (v3); VERSIONS["v2"] is v2's file, byte for 
 a key the v2 file lacks, so load(VERSIONS["v2"]) gives v2's verdicts. The environment variable PIN
 (VERIFIER_GATE_LEXICON=v2) makes v2 the default, for the steps that replay results run under it.
 
+D74's fixes apply under v3: a jump's estimated location snaps to M's nearest cut on a feature with observed values
+(threshold, _snap), and the plasmode tier's undocumented codes are described as such (data/labels.py). D74
+(VERIFIER_GATE_D74=0) turns them off, for the steps that replay results run before them (D66, D67, E1 under v3).
+
 Reason codes (D30). An undecidable verdict says why: the evidence does not settle the claim
 (INSUFFICIENT_EVIDENCE), the claim names a term the model does not have (UNKNOWN_TERM), or the claim type does
 not apply to the term, e.g. the direction of a pair (NOT_APPLICABLE). Only the first can be hedged:
@@ -74,6 +78,7 @@ LEXICON_PATH = Path(__file__).with_name("lexicon.yaml")
 VERSIONS = {"v2": LEXICON_PATH.with_name("lexicon_v2.yaml"), "v3": LEXICON_PATH}
 CURRENT = "v3"
 PIN = "VERIFIER_GATE_LEXICON"  # the default version, for replaying results that ran under an earlier one
+D74 = "VERIFIER_GATE_D74"  # "0": D74's fixes off, for replaying results that ran before them (D66, D67, E1 under v3)
 DIRECTIONS = {"increasing": (1, False), "decreasing": (-1, False), "mostly_increasing": (1, True), "mostly_decreasing": (-1, True)}
 STRENGTHS = ("weak", "moderate", "strong")
 CLASSES = ("negligible", *STRENGTHS)  # the classes of a share, from below; a strength set spans neighbours (D33)
@@ -126,6 +131,13 @@ def pinned() -> str:
     if version not in VERSIONS:
         raise ValueError(f"{PIN}={version}: the lexicon versions are {sorted(VERSIONS)}")
     return version
+
+
+def d74_fixes(lex: Lexicon | None = None) -> bool:
+    """D74's fixes apply: under lexicon v3 (`lex`'s version, else the default one; v2 stays as frozen), unless D74
+    is "0"."""
+    version = lex.version if lex is not None else pinned()
+    return version != "v2" and os.environ.get(D74, "1") != "0"
 
 
 def load(path: Path | str | None = None) -> Lexicon:
@@ -529,6 +541,16 @@ def _gap(f: FeatureFacts, y: float) -> tuple[float, float]:
     return float(f.values[max(i - 1, 0)]), float(f.values[min(i, len(f.values) - 1)])
 
 
+def _snap(f: FeatureFacts, band: tuple[float, float]) -> tuple[float, float]:
+    """D74: each end of a location band at M's nearest cut, on a feature with observed values (where _gap maps it
+    onto the data). XGBoost stores a cut as float32 just below an observed value (1.99999994 for 2), and an estimate
+    on the jump grid can land just above it, one gap too high (D42, D50). Without observed values, the band."""
+    if f.values is None or len(f.values) < 2 or len(f.cuts) == 0:
+        return band
+    low, high = (float(f.cuts[np.argmin(np.abs(f.cuts - y))]) for y in band)
+    return low, high
+
+
 def _location_verdict(at: float, w: float, band: tuple[float, float], f: FeatureFacts) -> tuple[bool, bool]:
     """Near: every location in the band is within w of `at`, each location taken as its gap on the data; far:
     none is. Without observed values this is the band inside / outside [at - w, at + w]."""
@@ -579,7 +601,7 @@ def threshold(facts: Facts, name: str, at: float, lex: Lexicon | None = None, si
         refit_spread = spread(draws.curves[name])
         ratio_band = build.percentile_band(np.abs(refit_jumps).max(axis=1) / np.where(refit_spread > 0, refit_spread, np.inf))
     significant = up or down
-    near, far = _location_verdict(at, w, location_band, f)
+    near, far = _location_verdict(at, w, _snap(f, location_band) if d74_fixes(lex) else location_band, f)  # the evidence keeps the estimate
     large, small = ratio_band[0] >= lex.jump_fraction, ratio_band[1] < lex.jump_fraction
     if lex.signed_jumps:
         with_sign, against = (up, down) if sign > 0 else (down, up)

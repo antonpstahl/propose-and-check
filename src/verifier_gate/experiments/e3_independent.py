@@ -68,7 +68,8 @@ READERS = {"haiku": settings.EXTRACTOR, "luna": settings.CRITIC}  # the gate's o
 SOURCE = e2_text.E3_SOURCE  # E3 as run: writer prompts v3, extractor x3
 SOURCES = {  # each E3 run's lexicon, extractor version and the round trip's rule on unknown terms (gate/roundtrip.py)
     "v3-x3": {"lexicon": "v2", "extractor": "x3", "unknown_terms": False},
-    "v4-x5-m5": {"lexicon": "v3", "extractor": "x5", "unknown_terms": True},  # lexicon v3, writer prompts v4 (D63-D67), both tiers
+    "v4-x5-m5": {"lexicon": "v3", "extractor": "x5", "unknown_terms": True},  # lexicon v3, writer prompts v4 (D63-D67), both tiers; as run: VERIFIER_GATE_D74=0
+    "v4-x5-m5-d74": {"lexicon": "v3", "extractor": "x5", "unknown_terms": True},  # the same with D74's fixes
 }
 WRITER_ARM = "haiku"  # E3's main arm: Claude Haiku 5.5 writes
 SEED = 20261021

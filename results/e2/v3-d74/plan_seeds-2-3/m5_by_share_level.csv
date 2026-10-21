@@ -1,0 +1,19 @@
+variant,share level,mutants,errors,caught: refuted,caught: undecidable,released wrong,recall,controls,controls blocked,controls certified,equivalent,unlabelled
+x0.8,below 4%,48,0,0,0,0,,48,0,44,0,0
+x1.2,below 4%,48,0,0,0,0,,48,0,45,0,0
+x0.5,below 4%,48,0,0,0,0,,48,0,25,0,0
+x1.5,below 4%,48,0,0,0,0,,48,0,34,0,0
++1.5 tolerance,below 4%,48,48,11,37,0,1.0,0,0,0,0,0
+x0.8,10% and above,19,19,9,10,0,1.0,0,0,0,0,0
+x1.2,10% and above,19,17,9,8,0,1.0,2,0,0,0,0
+x0.5,10% and above,19,19,19,0,0,1.0,0,0,0,0,0
+x1.5,10% and above,19,19,19,0,0,1.0,0,0,0,0,0
+-1.5 tolerance,10% and above,19,19,3,16,0,1.0,0,0,0,0,0
++1.5 tolerance,10% and above,19,19,6,13,0,1.0,0,0,0,0,0
+x0.8,4-10%,24,0,0,0,0,,24,0,4,0,0
+x1.2,4-10%,24,0,0,0,0,,24,0,2,0,0
+x0.5,4-10%,24,24,14,10,0,1.0,0,0,0,0,0
+x1.5,4-10%,24,24,17,7,0,1.0,0,0,0,0,0
+-1.5 tolerance,4-10%,24,24,4,20,0,1.0,0,0,0,0,0
++1.5 tolerance,4-10%,24,24,9,15,0,1.0,0,0,0,0,0
+-1.5 tolerance,below 4%,5,5,2,3,0,1.0,0,0,0,0,0

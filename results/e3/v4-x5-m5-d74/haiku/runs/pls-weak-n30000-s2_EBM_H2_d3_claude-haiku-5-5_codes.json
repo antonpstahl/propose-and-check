@@ -1,0 +1,1199 @@
+{
+ "run_id": "pls-weak-n30000-s2_EBM_H2_d3_claude-haiku-5-5_codes",
+ "budget": 16,
+ "calls": 9,
+ "rounds": 1,
+ "format_retry_used": false,
+ "pending": null,
+ "extracting": [],
+ "checking": null,
+ "checking_mode": "",
+ "readings": [],
+ "writer": {
+  "role": "repair 1",
+  "model": "claude-haiku-5-5",
+  "system": "You explain a fitted credit-risk model to a credit risk manager who is not a data scientist. You receive the facts about one model and write a short explanation of what the model predicts, together with a plan of claims that a verifier checks against the model before anything is released.\n\n# The text\n\n- Write 5 to 8 sentences in plain English, the model's most important features first.\n- Write about the model, not about the world: say what the model predicts (\"the model's predicted default risk rises with credit utilization\", \"credit utilization has a strong effect on the model's predictions\"). Do not call a feature a driver or a cause of default, and do not say what makes applicants risky.\n- Mention an interaction when it matters for the model's predictions.\n- Say only what the facts support. Do not round a weak effect up to a strong one, and do not add knowledge about credit risk that the facts do not show.\n- When the facts do not settle something, say so (\"the data do not settle whether ...\") or leave it out.\n- Describe the strength, the shape and the importance of a feature only with the words in the table below. Close synonyms are fine (\"rises\" or \"goes up\" for \"increases\").\n- Do not state a number, a threshold or a location that no claim covers. If no claim form fits a detail (\"risk rises steeply above about 0.7\"), leave the detail out.\n\n# Choosing the words\n\nThe facts give every estimate with its 95% band. A word is right only if the whole band supports it:\n\n- **Strength.** Use one class word only if the whole share band lies inside its class: weak 2% to 5%, moderate 5% to 15%, strong 15% or more, and the curve shows an effect (its band excludes zero on more than 5% of the data, or the net change's band excludes zero). If the band crosses 2%, 5% or 15%, use the two-class phrase (\"weak to moderate\", \"moderate to strong\"), or \"at most a weak effect\" if the whole band lies below 5%.\n- **\"Hardly matters\".** Only if the whole share band lies below 2%. A curve that shows no movement is not enough: if the band reaches 2%, say \"at most a weak effect\" when the whole band lies below 5%, or say that the data do not settle whether the feature matters.\n- **Rank and share.** A single rank only if the facts give a single rank (\"rank 3\"); for \"rank 3 to 4\" say \"third or fourth\". \"About x%\" only if the whole share band lies within 2 points (or 10%) of x.\n- **Direction.** Say \"generally increases\" (or \"generally decreases\") when the net change's band lies on one side of zero. Leave out \"generally\" only if, in addition, the curve's band rules out any fall larger than 5% of the curve's range anywhere on the data: that needs a narrow band, so use the plain word only when the certified statements give it. \"Mostly increases\" only if the band confirms a fall larger than 5% of the curve's range, on at most 10% of the data.\n- **Jumps and peaks.** \"Jumps at x\" only for one sharp step up, and \"drops at x\" only for one sharp step down, that makes up at least 50% of the curve's range. A curve described in several pieces moves gradually: describe it with a direction, without a jump. \"Peaks at x\" only if the highest piece lies in the middle of the curve, with clearly lower pieces on both sides.\n- **Interactions.** \"The effect of x grows with y\" only if both conditional effects of x have bands on the same side of zero, the one at high y is clearly larger, and the pair's share band lies at or above 2%. \"Reverses\" only if the two bands lie on opposite sides of zero. \"The model shows no interaction between x and y\" only if the model has no such pair, or the pair's whole share band lies below 2%. Otherwise leave the pair out, or say that the data do not settle whether they interact.\n- **Hedging.** Say \"the data do not settle whether ...\" only about what the bands leave open. When a band settles a question (a net change whose band excludes zero settles the direction; a share band inside a class settles the strength), state the answer; never hedge it.\n- **Certified statements.** If the facts list statements the verifier certifies, those are true at this sample size: build the text on them.\n\n# The claims\n\nFor every sentence that states something about the model, add at least one claim in the DSL below, with that sentence's id. A sentence that only frames the text (\"This summary covers the model's main features.\") needs no claim. Each claim must say exactly what its sentence says, no more and no less. Use the feature names exactly as they are written in the facts, in quotes.\n\n| Words in the text | DSL claim | Meaning |\n|---|---|---|\n| \"x has a strong effect on the model's predictions\" / \"x has a moderate effect on the model's predictions\" / \"x has a weak effect on the model's predictions\" | `strength(\"x\") == \"strong\"` / `strength(\"x\") == \"moderate\"` / `strength(\"x\") == \"weak\"` | share of the model's importance at least 15% / 5% to 15% / 2% to 5%, and an effect the data can detect |\n| \"x has a weak to moderate effect on the model's predictions\" / \"x has a moderate to strong effect on the model's predictions\" | `strength(\"x\") in (\"weak\", \"moderate\")` / `strength(\"x\") in (\"moderate\", \"strong\")` | the share lies somewhere in the classes named |\n| \"x has at most a weak effect on the model's predictions\" | `strength(\"x\") in (\"negligible\", \"weak\")` | share below 5% |\n| \"x hardly matters to the model's predictions\" | `negligible(\"x\")` | share below 2% |\n| \"x is the model's most important feature\" / \"x is the model's second most important feature\" | `rank(\"x\") == 1` / `rank(\"x\") == 2` | rank among the features by importance |\n| \"x is the model's second or third most important feature\" / \"x is among the model's three most important features\" | `rank(\"x\") in (2, 3)` / `rank(\"x\") in (1, 2, 3)` | one of consecutive ranks |\n| \"x accounts for about 30% of the model's importance\" | `share(\"x\") == approx(0.30)` | share of importance, within 2 points or 10% |\n| \"x matters more to the model than y\" | `effect(\"x\") > effect(\"y\")` | x's importance exceeds y's |\n| \"the model's predicted default risk increases with x\" / \"the model's predicted default risk decreases with x\" | `direction(\"x\") == \"increasing\"` / `direction(\"x\") == \"decreasing\"` | rises (falls) from the 5th to the 95th percentile, and the band rules out any move the other way larger than 5% of the curve's range |\n| \"the model's predicted default risk mostly increases with x\" / \"the model's predicted default risk mostly decreases with x\" | `direction(\"x\") == \"mostly_increasing\"` / `direction(\"x\") == \"mostly_decreasing\"` | rises (falls) overall, with a move the other way larger than 5% of the curve's range, confirmed by the band, on at most 10% of the data |\n| \"the model's predicted default risk generally increases with x\" | `direction(\"x\") in (\"increasing\", \"mostly_increasing\")` | either of the two above |\n| \"the model's predicted default risk jumps at x = 0.43\" | `threshold(\"x\", at=0.43)` | one sharp step up near that value, at least 50% of the curve's range |\n| \"the model's predicted default risk drops at x = 2,000\" | `drop(\"x\", at=2000)` | one sharp step down near that value, at least 50% of the curve's range |\n| \"the model's predicted default risk peaks at x = 36\" | `peak(\"x\", at=36)` | the highest point of the curve lies near that value, with lower values on both sides |\n| \"in the model, the effect of x grows with y\" | `interaction(\"x\", \"y\", pattern=\"amplification\")` | the effect of x is larger when y is high, and the pair's share band lies at or above 2% |\n| \"in the model, the effect of x reverses its sign as y changes\" | `interaction(\"x\", \"y\", pattern=\"sign_flip\")` | the effect of x has opposite signs at low and high y |\n| \"the model shows no interaction between x and y\" | `interaction(\"x\", \"y\", pattern=\"none\")` | the model has no such pair, or the pair's whole share band lies below 2% |\n| \"the data do not settle whether ...\" | `unsettled(<any claim above>)` | the facts leave that claim open at this sample size |\n\nRules of the DSL: one claim per line, exactly in the forms above; numbers as plain numbers; a set of values is a tuple of neighbouring values; `unsettled(...)` wraps one other claim. A pair of features can be named as \"x & y\" in `strength`, `share`, `negligible` and `effect`.\n\n# The answer\n\nReturn one JSON object with two lists: `sentences`, each with an `id` (1, 2, 3, ...) and its `text`, and `claims`, each with the `sentence_id` it belongs to and its `dsl` line.\n\nExample (other features than in your facts):\n\n{\"sentences\": [{\"id\": 1, \"text\": \"The number of missed payments is the model's most important feature, and the model's predicted default risk generally rises with it.\"}, {\"id\": 2, \"text\": \"Loan purpose hardly matters to the model's predictions.\"}], \"claims\": [{\"sentence_id\": 1, \"dsl\": \"rank(\\\"missed_payments\\\") == 1\"}, {\"sentence_id\": 1, \"dsl\": \"direction(\\\"missed_payments\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"negligible(\\\"loan_purpose\\\")\"}]}\n",
+  "messages": [
+   [
+    "user",
+    "These are the facts about the model.\n\nModel: an explainable boosting machine (EBM), fitted to predict whether a credit applicant defaults (30,000 applicants). Effects are on the log-odds scale: positive values raise the risk of default. Every band is a 95% band from 100 refits of the model on resampled data.\n\nFeatures, in the order of their share of the model's importance:\n- `PAY_0`: repayment status in September 2005, the latest month (-1 paid in full, 1 to 9 months of payment delay; -2 and 0 are not in the data dictionary, commonly read as no consumption and revolving credit used).\n  Share of importance 36.8% (95% band 33.3% to 40.9%); rank 1 among 9 features.\n  Curve (logit contribution by value): <= -1: -0.3; 0: -0.5; 1: +0.6; >= 2: +2.3 (net change from the 5th to the 95th percentile +2.55, 95% band [+2.43, +2.72]).\n- `LIMIT_BAL`: amount of the given credit in NT dollars, individual and family (supplementary) credit.\n  Share of importance 21.6% (95% band 19.5% to 24.8%); rank 2 among 9 features.\n  Curve (logit contribution by value): <= 74999: +0.5; 75000-154999: +0.09; 155000-464999: -0.3629; >= 465000: -1 (net change from the 5th to the 95th percentile -1.29, 95% band [-1.52, -1.06]).\n- `PAY_AMT1`: amount paid in September 2005, the latest month, in NT dollars.\n  Share of importance 9.2% (95% band 6.7% to 12.0%); rank 3 to 5 among 9 features.\n  Curve (logit contribution by value): <= 1100: +0.2; >= 1101: -0.06 (net change from the 5th to the 95th percentile -0.60, 95% band [-0.75, -0.39]).\n- `BILL_AMT1`: amount of the bill statement in September 2005, the latest month, in NT dollars.\n  Share of importance 8.8% (95% band 4.7% to 10.9%); rank 3 to 6 among 9 features.\n  Curve (logit contribution by value): <= 25368: -0.14; >= 25369: +0.1 (net change from the 5th to the 95th percentile +0.70, 95% band [+0.31, +0.94]).\n- `PAY_AMT2`: amount paid in August 2005, the month before, in NT dollars.\n  Share of importance 7.0% (95% band 4.2% to 8.3%); rank 4 to 6 among 9 features.\n  Curve (logit contribution by value): <= 2131: +0.037; >= 2132: -0.1 (net change from the 5th to the 95th percentile -0.21, 95% band [-0.31, -0.05]).\n- `AGE`: age in years.\n  Share of importance 3.5% (95% band 1.5% to 5.1%); rank 5 to 8 among 9 features.\n  Curve (logit contribution by value): no movement resolved at this sample size (net change from the 5th to the 95th percentile +0.07, 95% band [-0.09, +0.21]).\n- `BILL_AMT2`: amount of the bill statement in August 2005, the month before, in NT dollars.\n  Share of importance 3.0% (95% band 1.1% to 6.2%); rank 5 to 8 among 9 features.\n  Curve (logit contribution by value): rises by 0.33 (95% band [+0.07, +0.62]) from x = 0 (5th percentile) to x = 195,000 (95th percentile); the shape in between is not resolved at this sample size.\n- `EDUCATION`: education (1 graduate school, 2 university, 3 high school, 4 others; 0, 5 and 6 are not in the data dictionary).\n  Share of importance 1.5% (95% band 0.1% to 2.9%); rank 6 to 9 among 9 features.\n  Curve (logit contribution by value): rises by 0.10 (95% band [+0.00, +0.17]) from x = 1 (5th percentile) to x = 3 (95th percentile); the shape in between is not resolved at this sample size.\n- `PAY_AMT3`: amount paid in July 2005, two months before, in NT dollars.\n  Share of importance 0.4% (95% band 0.4% to 2.7%); rank 7 to 9 among 9 features.\n  Curve (logit contribution by value): no movement resolved at this sample size (net change from the 5th to the 95th percentile +0.02, 95% band [-0.08, +0.14]).\n\nInteractions: the model has 5 pairs. The larger ones:\n- `BILL_AMT1 & AGE`: share of importance 3.3% (95% band 1.7% to 3.7%).\n  Effect of `BILL_AMT1` from 0 to 201,000: +0.98 (95% band +0.55 to +1.17) when `AGE` = 23, +0.31 (95% band -0.08 to +0.62) when `AGE` = 53.\n  Effect of `AGE` from 23 to 53: +0.37 (95% band +0.11 to +0.57) when `BILL_AMT1` = 0, -0.31 (95% band -0.44 to -0.04) when `BILL_AMT1` = 201,000.\n- `AGE & BILL_AMT2`: share of importance 1.8% (95% band 1.2% to 2.4%).\n  Effect of `AGE` from 23 to 53: +0.14 (95% band -0.05 to +0.34) when `BILL_AMT2` = 0, -0.09 (95% band -0.29 to +0.17) when `BILL_AMT2` = 195,000.\n  Effect of `BILL_AMT2` from 0 to 195,000: +0.39 (95% band +0.13 to +0.77) when `AGE` = 23, +0.16 (95% band -0.10 to +0.47) when `AGE` = 53.\n- `PAY_0 & EDUCATION`: share of importance 1.4% (95% band 0.0% to 1.7%).\n  Effect of `PAY_0` from -2 to 2: +2.47 (95% band +2.34 to +2.66) when `EDUCATION` = 1, +2.78 (95% band +2.47 to +2.88) when `EDUCATION` = 3.\n  Effect of `EDUCATION` from 1 to 3: +0.02 (95% band -0.10 to +0.13) when `PAY_0` = -2, +0.33 (95% band +0.00 to +0.40) when `PAY_0` = 2.\n- `PAY_AMT2 & AGE`: share of importance 0.8% (95% band 0.0% to 1.2%).\n  Effect of `PAY_AMT2` from 0 to 19,000: -0.23 (95% band -0.32 to -0.02) when `AGE` = 23, -0.16 (95% band -0.38 to -0.01) when `AGE` = 53.\n  Effect of `AGE` from 23 to 53: -0.05 (95% band -0.16 to +0.22) when `PAY_AMT2` = 0, +0.01 (95% band -0.17 to +0.21) when `PAY_AMT2` = 19,000.\n- `PAY_0 & AGE`: share of importance 0.8% (95% band 0.0% to 1.0%).\n  Effect of `PAY_0` from -2 to 2: +2.59 (95% band +2.43 to +2.77) when `AGE` = 23, +2.53 (95% band +2.42 to +2.69) when `AGE` = 53.\n  Effect of `AGE` from 23 to 53: +0.19 (95% band -0.05 to +0.30) when `PAY_0` = -2, +0.13 (95% band -0.08 to +0.25) when `PAY_0` = 2.\n\nStatements the verifier certifies for this model (true at this sample size), as DSL and in words:\n- strength(\"PAY_0\") == \"strong\"  (PAY_0 has a strong effect on the model's predictions)\n- direction(\"PAY_0\") in (\"increasing\", \"mostly_increasing\")  (the model's predicted default risk generally increases with PAY_0)\n- rank(\"PAY_0\") == 1  (PAY_0 is the model's most important feature)\n- threshold(\"PAY_0\", at=1.5)  (the model's predicted default risk jumps at PAY_0 = 1.5)\n- strength(\"LIMIT_BAL\") == \"strong\"  (LIMIT_BAL has a strong effect on the model's predictions)\n- direction(\"LIMIT_BAL\") in (\"decreasing\", \"mostly_decreasing\")  (the model's predicted default risk generally decreases with LIMIT_BAL)\n- rank(\"LIMIT_BAL\") == 2  (LIMIT_BAL is the model's second most important feature)\n- strength(\"BILL_AMT1\") in (\"weak\", \"moderate\")  (BILL_AMT1 has a weak to moderate effect on the model's predictions)\n- direction(\"BILL_AMT1\") in (\"increasing\", \"mostly_increasing\")  (the model's predicted default risk generally increases with BILL_AMT1)\n- rank(\"BILL_AMT1\") in (3, 4, 5, 6)  (BILL_AMT1 is the model's third to sixth most important feature)\n- strength(\"PAY_AMT1\") == \"moderate\"  (PAY_AMT1 has a moderate effect on the model's predictions)\n- direction(\"PAY_AMT1\") in (\"decreasing\", \"mostly_decreasing\")  (the model's predicted default risk generally decreases with PAY_AMT1)\n- rank(\"PAY_AMT1\") in (3, 4, 5)  (PAY_AMT1 is the model's third to fifth most important feature)\n- strength(\"PAY_AMT2\") in (\"weak\", \"moderate\")  (PAY_AMT2 has a weak to moderate effect on the model's predictions)\n- direction(\"PAY_AMT2\") in (\"decreasing\", \"mostly_decreasing\")  (the model's predicted default risk generally decreases with PAY_AMT2)\n- rank(\"PAY_AMT2\") in (4, 5, 6)  (PAY_AMT2 is the model's fourth to sixth most important feature)\n- strength(\"AGE\") in (\"negligible\", \"weak\", \"moderate\")  (AGE has at most a moderate effect on the model's predictions)\n- rank(\"AGE\") in (5, 6, 7, 8)  (AGE is the model's fifth to eighth most important feature)\n- strength(\"EDUCATION\") in (\"negligible\", \"weak\")  (EDUCATION has at most a weak effect on the model's predictions)\n- direction(\"EDUCATION\") in (\"increasing\", \"mostly_increasing\")  (the model's predicted default risk generally increases with EDUCATION)\n- rank(\"EDUCATION\") in (6, 7, 8, 9)  (EDUCATION is the model's sixth to ninth most important feature)\n- share(\"EDUCATION\") == approx(0.015)  (EDUCATION accounts for about 1.5% of the model's importance)\n- strength(\"BILL_AMT2\") in (\"negligible\", \"weak\", \"moderate\")  (BILL_AMT2 has at most a moderate effect on the model's predictions)\n- direction(\"BILL_AMT2\") in (\"increasing\", \"mostly_increasing\")  (the model's predicted default risk generally increases with BILL_AMT2)\n- rank(\"BILL_AMT2\") in (5, 6, 7, 8)  (BILL_AMT2 is the model's fifth to eighth most important feature)\n- strength(\"PAY_AMT3\") in (\"negligible\", \"weak\")  (PAY_AMT3 has at most a weak effect on the model's predictions)\n- rank(\"PAY_AMT3\") in (7, 8, 9)  (PAY_AMT3 is the model's seventh to ninth most important feature)\n- effect(\"PAY_0\") > effect(\"LIMIT_BAL\")  (PAY_0 matters more to the model than LIMIT_BAL)\n- effect(\"LIMIT_BAL\") > effect(\"PAY_AMT1\")  (LIMIT_BAL matters more to the model than PAY_AMT1)\n- effect(\"PAY_AMT2\") > effect(\"AGE\")  (PAY_AMT2 matters more to the model than AGE)\n- interaction(\"PAY_0\", \"AGE\", pattern=\"none\")  (the model shows no interaction between PAY_0 and AGE)\n- interaction(\"PAY_0\", \"EDUCATION\", pattern=\"none\")  (the model shows no interaction between PAY_0 and EDUCATION)\n- interaction(\"AGE\", \"BILL_AMT1\", pattern=\"sign_flip\")  (in the model, the effect of AGE reverses its sign as BILL_AMT1 changes)\n- interaction(\"PAY_AMT2\", \"AGE\", pattern=\"none\")  (the model shows no interaction between PAY_AMT2 and AGE)\n- unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"none\"))  (the data do not settle whether the model shows no interaction between AGE and BILL_AMT2)\n\nWrite the explanation and its claims.\n"
+   ],
+   [
+    "assistant",
+    "{\"claims\":[{\"dsl\":\"rank(\\\"PAY_0\\\") == 1\",\"sentence_id\":1},{\"dsl\":\"strength(\\\"PAY_0\\\") == \\\"strong\\\"\",\"sentence_id\":1},{\"dsl\":\"direction(\\\"PAY_0\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":1},{\"dsl\":\"threshold(\\\"PAY_0\\\", at=1.5)\",\"sentence_id\":2},{\"dsl\":\"rank(\\\"LIMIT_BAL\\\") == 2\",\"sentence_id\":3},{\"dsl\":\"strength(\\\"LIMIT_BAL\\\") == \\\"strong\\\"\",\"sentence_id\":3},{\"dsl\":\"direction(\\\"LIMIT_BAL\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":3},{\"dsl\":\"effect(\\\"PAY_0\\\") > effect(\\\"LIMIT_BAL\\\")\",\"sentence_id\":3},{\"dsl\":\"effect(\\\"LIMIT_BAL\\\") > effect(\\\"PAY_AMT1\\\")\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"PAY_AMT1\\\") == \\\"moderate\\\"\",\"sentence_id\":4},{\"dsl\":\"direction(\\\"PAY_AMT1\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":4},{\"dsl\":\"rank(\\\"PAY_AMT1\\\") in (3, 4, 5)\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"BILL_AMT1\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":5},{\"dsl\":\"direction(\\\"BILL_AMT1\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":5},{\"dsl\":\"rank(\\\"BILL_AMT1\\\") in (3, 4, 5, 6)\",\"sentence_id\":5},{\"dsl\":\"interaction(\\\"AGE\\\", \\\"BILL_AMT1\\\", pattern=\\\"sign_flip\\\")\",\"sentence_id\":6},{\"dsl\":\"strength(\\\"PAY_AMT2\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":7},{\"dsl\":\"direction(\\\"PAY_AMT2\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":7},{\"dsl\":\"rank(\\\"PAY_AMT2\\\") in (4, 5, 6)\",\"sentence_id\":7},{\"dsl\":\"effect(\\\"PAY_AMT2\\\") > effect(\\\"AGE\\\")\",\"sentence_id\":7},{\"dsl\":\"strength(\\\"AGE\\\") in (\\\"negligible\\\", \\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":8},{\"dsl\":\"rank(\\\"AGE\\\") in (5, 6, 7, 8)\",\"sentence_id\":8},{\"dsl\":\"strength(\\\"BILL_AMT2\\\") in (\\\"negligible\\\", \\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":9},{\"dsl\":\"direction(\\\"BILL_AMT2\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":9},{\"dsl\":\"rank(\\\"BILL_AMT2\\\") in (5, 6, 7, 8)\",\"sentence_id\":9},{\"dsl\":\"unsettled(interaction(\\\"AGE\\\", \\\"BILL_AMT2\\\", pattern=\\\"none\\\"))\",\"sentence_id\":9},{\"dsl\":\"strength(\\\"EDUCATION\\\") in (\\\"negligible\\\", \\\"weak\\\")\",\"sentence_id\":10},{\"dsl\":\"direction(\\\"EDUCATION\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":10},{\"dsl\":\"rank(\\\"EDUCATION\\\") in (6, 7, 8, 9)\",\"sentence_id\":10},{\"dsl\":\"share(\\\"EDUCATION\\\") == approx(0.015)\",\"sentence_id\":10},{\"dsl\":\"strength(\\\"PAY_AMT3\\\") in (\\\"negligible\\\", \\\"weak\\\")\",\"sentence_id\":11},{\"dsl\":\"rank(\\\"PAY_AMT3\\\") in (7, 8, 9)\",\"sentence_id\":11},{\"dsl\":\"interaction(\\\"PAY_0\\\", \\\"AGE\\\", pattern=\\\"none\\\")\",\"sentence_id\":12},{\"dsl\":\"interaction(\\\"PAY_0\\\", \\\"EDUCATION\\\", pattern=\\\"none\\\")\",\"sentence_id\":12},{\"dsl\":\"interaction(\\\"PAY_AMT2\\\", \\\"AGE\\\", pattern=\\\"none\\\")\",\"sentence_id\":12}],\"sentences\":[{\"id\":1,\"text\":\"PAY_0, the repayment status in the latest month, is the model's most important feature, with a strong effect on its predictions, and the model's predicted default risk generally increases with it.\"},{\"id\":2,\"text\":\"The model's predicted default risk jumps at PAY_0 = 1.5, from a lower contribution at paid-in-full and revolving-credit values to a much higher one at delays of one month or more.\"},{\"id\":3,\"text\":\"LIMIT_BAL, the amount of the given credit, is the model's second most important feature, with a strong effect, and the model's predicted default risk generally decreases as it rises; PAY_0 matters more to the model than LIMIT_BAL.\"},{\"id\":4,\"text\":\"PAY_AMT1, the amount paid in the latest month, has a moderate effect on the model's predictions, and the model's predicted default risk generally decreases with it, ranking third to fifth in importance; LIMIT_BAL matters more to the model than PAY_AMT1.\"},{\"id\":5,\"text\":\"BILL_AMT1, the latest bill amount, has a weak to moderate effect on the model's predictions, ranks third to sixth in importance, and the model's predicted default risk generally increases with it.\"},{\"id\":6,\"text\":\"In the model, the effect of AGE reverses its sign as BILL_AMT1 changes: AGE pushes predicted risk up when BILL_AMT1 is zero and down when it is high.\"},{\"id\":7,\"text\":\"PAY_AMT2, the amount paid in the previous month, has a weak to moderate effect, ranks fourth to sixth in importance, and the model's predicted default risk generally decreases with it; it matters more to the model than AGE.\"},{\"id\":8,\"text\":\"AGE has at most a moderate effect on the model's predictions and ranks fifth to eighth in importance, with no movement the data resolve.\"},{\"id\":9,\"text\":\"BILL_AMT2, the bill amount of the previous month, has at most a moderate effect and ranks fifth to eighth; the model's predicted default risk generally increases with it, but the data do not settle whether AGE and BILL_AMT2 interact.\"},{\"id\":10,\"text\":\"EDUCATION has at most a weak effect on the model's predictions, accounts for about 1.5% of the model's importance, ranks sixth to ninth, and the model's predicted default risk generally increases with it.\"},{\"id\":11,\"text\":\"PAY_AMT3 has at most a weak effect on the model's predictions and ranks seventh to ninth in importance.\"},{\"id\":12,\"text\":\"The model shows no interaction between PAY_0 and AGE, between PAY_0 and EDUCATION, or between PAY_AMT2 and AGE.\"}]}"
+   ],
+   [
+    "user",
+    "The verifier did not accept parts of your draft:\n\n- Sentence 6 states a number that no claim form can check: \"AGE pushes predicted risk up when BILL_AMT1 is zero\"; \"AGE pushes predicted risk down when BILL_AMT1 is high\"; \"AGE pushes predicted risk up when BILL_AMT1 is zero and down when BILL_AMT1 is high\". Say it in a form the DSL reference has, with its claim, or leave the number out.\n\nRewrite only the sentences named above, so that every claim is true of the facts; keep every other sentence and its claims exactly as they are. Return the whole draft again, all sentences and all claims, in the same JSON format.\n"
+   ]
+  ],
+  "schema": "{\"additionalProperties\": false, \"properties\": {\"claims\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"dsl\": {\"type\": \"string\"}, \"sentence_id\": {\"type\": \"integer\"}}, \"required\": [\"sentence_id\", \"dsl\"], \"type\": \"object\"}, \"type\": \"array\"}, \"sentences\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"id\": {\"type\": \"integer\"}, \"text\": {\"type\": \"string\"}}, \"required\": [\"id\", \"text\"], \"type\": \"object\"}, \"type\": \"array\"}}, \"required\": [\"sentences\", \"claims\"], \"type\": \"object\"}",
+  "effort": "medium",
+  "thinking": "off",
+  "max_tokens": 16000,
+  "draw": 3,
+  "attempt": 0,
+  "replica": 0
+ },
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [
+    [
+     1,
+     "PAY_0, the repayment status in the latest month, is the model's most important feature, with a strong effect on its predictions, and the model's predicted default risk generally increases with it."
+    ],
+    [
+     2,
+     "The model's predicted default risk jumps at PAY_0 = 1.5, from a lower contribution at paid-in-full and revolving-credit values to a much higher one at delays of one month or more."
+    ],
+    [
+     3,
+     "LIMIT_BAL, the amount of the given credit, is the model's second most important feature, with a strong effect, and the model's predicted default risk generally decreases as it rises; PAY_0 matters more to the model than LIMIT_BAL."
+    ],
+    [
+     4,
+     "PAY_AMT1, the amount paid in the latest month, has a moderate effect on the model's predictions, and the model's predicted default risk generally decreases with it, ranking third to fifth in importance; LIMIT_BAL matters more to the model than PAY_AMT1."
+    ],
+    [
+     5,
+     "BILL_AMT1, the latest bill amount, has a weak to moderate effect on the model's predictions, ranks third to sixth in importance, and the model's predicted default risk generally increases with it."
+    ],
+    [
+     6,
+     "In the model, the effect of AGE reverses its sign as BILL_AMT1 changes: AGE pushes predicted risk up when BILL_AMT1 is zero and down when it is high."
+    ],
+    [
+     7,
+     "PAY_AMT2, the amount paid in the previous month, has a weak to moderate effect, ranks fourth to sixth in importance, and the model's predicted default risk generally decreases with it; it matters more to the model than AGE."
+    ],
+    [
+     8,
+     "AGE has at most a moderate effect on the model's predictions and ranks fifth to eighth in importance, with no movement the data resolve."
+    ],
+    [
+     9,
+     "BILL_AMT2, the bill amount of the previous month, has at most a moderate effect and ranks fifth to eighth; the model's predicted default risk generally increases with it, but the data do not settle whether AGE and BILL_AMT2 interact."
+    ],
+    [
+     10,
+     "EDUCATION has at most a weak effect on the model's predictions, accounts for about 1.5% of the model's importance, ranks sixth to ninth, and the model's predicted default risk generally increases with it."
+    ],
+    [
+     11,
+     "PAY_AMT3 has at most a weak effect on the model's predictions and ranks seventh to ninth in importance."
+    ],
+    [
+     12,
+     "The model shows no interaction between PAY_0 and AGE, between PAY_0 and EDUCATION, or between PAY_AMT2 and AGE."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"PAY_0\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "strength(\"PAY_0\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.368; share band 0.333 to 0.409; detectable True; mass where the curve band excludes 0 1; net change 2.55"
+    ],
+    [
+     1,
+     "direction(\"PAY_0\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 2.55; net change band 2.43 to 2.72; exception mass 0; margin 0.146; largest reversal the band allows 1.93"
+    ],
+    [
+     2,
+     "threshold(\"PAY_0\", at=1.5)",
+     "true",
+     "",
+     "",
+     "largest jump at 1.5; location band 1.5 to 1.5; tolerance 0.08; jump 1.71; jump significant True"
+    ],
+    [
+     3,
+     "rank(\"LIMIT_BAL\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 2; claimed 2"
+    ],
+    [
+     3,
+     "strength(\"LIMIT_BAL\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.216; share band 0.195 to 0.248; detectable True; mass where the curve band excludes 0 0.868; net change -1.29"
+    ],
+    [
+     3,
+     "direction(\"LIMIT_BAL\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -1.29; net change band -1.52 to -1.06; exception mass 0; margin 0.0695; largest reversal the band allows 3.41"
+    ],
+    [
+     3,
+     "effect(\"PAY_0\") > effect(\"LIMIT_BAL\")",
+     "true",
+     "",
+     "",
+     "difference 0.258; difference band 0.191 to 0.311"
+    ],
+    [
+     4,
+     "effect(\"LIMIT_BAL\") > effect(\"PAY_AMT1\")",
+     "true",
+     "",
+     "",
+     "difference 0.21; difference band 0.151 to 0.272"
+    ],
+    [
+     4,
+     "strength(\"PAY_AMT1\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.0922; share band 0.0672 to 0.12; detectable True; mass where the curve band excludes 0 0.45; net change -0.597"
+    ],
+    [
+     4,
+     "direction(\"PAY_AMT1\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -0.597; net change band -0.745 to -0.385; exception mass 0; margin 0.0323; largest reversal the band allows 2.96"
+    ],
+    [
+     4,
+     "rank(\"PAY_AMT1\") in (3, 4, 5)",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 3 to 5; claimed 3 to 4 to 5"
+    ],
+    [
+     5,
+     "strength(\"BILL_AMT1\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0881; share band 0.0466 to 0.109; detectable True; mass where the curve band excludes 0 0.128; net change 0.701"
+    ],
+    [
+     5,
+     "direction(\"BILL_AMT1\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.701; net change band 0.308 to 0.941; exception mass 0; margin 0.0382; largest reversal the band allows 2.07"
+    ],
+    [
+     5,
+     "rank(\"BILL_AMT1\") in (3, 4, 5, 6)",
+     "true",
+     "",
+     "",
+     "rank 4; rank band 3 to 6; claimed 3 to 4 to 5 to 6"
+    ],
+    [
+     6,
+     "interaction(\"AGE\", \"BILL_AMT1\", pattern=\"sign_flip\")",
+     "true",
+     "",
+     "",
+     "share 0.0331; share band 0.0174 to 0.0369; detectable True; interaction contrast -0.674; interaction contrast band -0.784 to -0.304"
+    ],
+    [
+     7,
+     "strength(\"PAY_AMT2\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0704; share band 0.0416 to 0.0833; detectable True; mass where the curve band excludes 0 0.557; net change -0.214"
+    ],
+    [
+     7,
+     "direction(\"PAY_AMT2\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -0.214; net change band -0.306 to -0.0474; exception mass 0; margin 0.0154; largest reversal the band allows 2.21"
+    ],
+    [
+     7,
+     "rank(\"PAY_AMT2\") in (4, 5, 6)",
+     "true",
+     "",
+     "",
+     "rank 5; rank band 4 to 6; claimed 4 to 5 to 6"
+    ],
+    [
+     7,
+     "effect(\"PAY_AMT2\") > effect(\"AGE\")",
+     "true",
+     "",
+     "",
+     "difference 0.0592; difference band 0.00729 to 0.0981"
+    ],
+    [
+     8,
+     "strength(\"AGE\") in (\"negligible\", \"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [0%, 15%)",
+     "share 0.0355; share band 0.0149 to 0.0512; detectable False; mass where the curve band excludes 0 0.0382; net change 0.0708"
+    ],
+    [
+     8,
+     "rank(\"AGE\") in (5, 6, 7, 8)",
+     "true",
+     "",
+     "",
+     "rank 6; rank band 5 to 8; claimed 5 to 6 to 7 to 8"
+    ],
+    [
+     9,
+     "strength(\"BILL_AMT2\") in (\"negligible\", \"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [0%, 15%)",
+     "share 0.0299; share band 0.0113 to 0.0618; detectable True; mass where the curve band excludes 0 0; net change 0.333"
+    ],
+    [
+     9,
+     "direction(\"BILL_AMT2\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.333; net change band 0.0679 to 0.616; exception mass 0; margin 0.0226; largest reversal the band allows 1.67"
+    ],
+    [
+     9,
+     "rank(\"BILL_AMT2\") in (5, 6, 7, 8)",
+     "true",
+     "",
+     "",
+     "rank 7; rank band 5 to 8; claimed 5 to 6 to 7 to 8"
+    ],
+    [
+     9,
+     "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"none\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0184; share band 0.0115 to 0.0245; detectable False"
+    ],
+    [
+     10,
+     "strength(\"EDUCATION\") in (\"negligible\", \"weak\")",
+     "true",
+     "",
+     "share band inside [0%, 5%)",
+     "share 0.0148; share band 0.00112 to 0.0292; detectable True; mass where the curve band excludes 0 0; net change 0.0978"
+    ],
+    [
+     10,
+     "direction(\"EDUCATION\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.0978; net change band 0.00246 to 0.167; exception mass 0; margin 0.00771; largest reversal the band allows 4.35"
+    ],
+    [
+     10,
+     "rank(\"EDUCATION\") in (6, 7, 8, 9)",
+     "true",
+     "",
+     "",
+     "rank 8; rank band 6 to 9; claimed 6 to 7 to 8 to 9"
+    ],
+    [
+     10,
+     "share(\"EDUCATION\") == approx(0.015)",
+     "true",
+     "",
+     "",
+     "share 0.0148; share band 0.00112 to 0.0292; detectable True; mass where the curve band excludes 0 0; net change 0.0978"
+    ],
+    [
+     11,
+     "strength(\"PAY_AMT3\") in (\"negligible\", \"weak\")",
+     "true",
+     "",
+     "share band inside [0%, 5%)",
+     "share 0.00351; share band 0.00358 to 0.0272; detectable False; mass where the curve band excludes 0 0; net change 0.0218"
+    ],
+    [
+     11,
+     "rank(\"PAY_AMT3\") in (7, 8, 9)",
+     "true",
+     "",
+     "",
+     "rank 9; rank band 7 to 9; claimed 7 to 8 to 9"
+    ],
+    [
+     12,
+     "interaction(\"PAY_0\", \"AGE\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.00793; share band 0 to 0.0104; detectable False; interaction contrast -0.0627; interaction contrast band -0.198 to 0.0452"
+    ],
+    [
+     12,
+     "interaction(\"PAY_0\", \"EDUCATION\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.0137; share band 0 to 0.0171; detectable False; interaction contrast 0.303; interaction contrast band 0 to 0.401"
+    ],
+    [
+     12,
+     "interaction(\"PAY_AMT2\", \"AGE\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.00815; share band 0 to 0.012; detectable False; interaction contrast 0.0617; interaction contrast band -0.185 to 0.119"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\":[{\"dsl\":\"rank(\\\"PAY_0\\\") == 1\",\"sentence_id\":1},{\"dsl\":\"strength(\\\"PAY_0\\\") == \\\"strong\\\"\",\"sentence_id\":1},{\"dsl\":\"direction(\\\"PAY_0\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":1},{\"dsl\":\"threshold(\\\"PAY_0\\\", at=1.5)\",\"sentence_id\":2},{\"dsl\":\"rank(\\\"LIMIT_BAL\\\") == 2\",\"sentence_id\":3},{\"dsl\":\"strength(\\\"LIMIT_BAL\\\") == \\\"strong\\\"\",\"sentence_id\":3},{\"dsl\":\"direction(\\\"LIMIT_BAL\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":3},{\"dsl\":\"effect(\\\"PAY_0\\\") > effect(\\\"LIMIT_BAL\\\")\",\"sentence_id\":3},{\"dsl\":\"effect(\\\"LIMIT_BAL\\\") > effect(\\\"PAY_AMT1\\\")\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"PAY_AMT1\\\") == \\\"moderate\\\"\",\"sentence_id\":4},{\"dsl\":\"direction(\\\"PAY_AMT1\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":4},{\"dsl\":\"rank(\\\"PAY_AMT1\\\") in (3, 4, 5)\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"BILL_AMT1\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":5},{\"dsl\":\"direction(\\\"BILL_AMT1\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":5},{\"dsl\":\"rank(\\\"BILL_AMT1\\\") in (3, 4, 5, 6)\",\"sentence_id\":5},{\"dsl\":\"interaction(\\\"AGE\\\", \\\"BILL_AMT1\\\", pattern=\\\"sign_flip\\\")\",\"sentence_id\":6},{\"dsl\":\"strength(\\\"PAY_AMT2\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":7},{\"dsl\":\"direction(\\\"PAY_AMT2\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":7},{\"dsl\":\"rank(\\\"PAY_AMT2\\\") in (4, 5, 6)\",\"sentence_id\":7},{\"dsl\":\"effect(\\\"PAY_AMT2\\\") > effect(\\\"AGE\\\")\",\"sentence_id\":7},{\"dsl\":\"strength(\\\"AGE\\\") in (\\\"negligible\\\", \\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":8},{\"dsl\":\"rank(\\\"AGE\\\") in (5, 6, 7, 8)\",\"sentence_id\":8},{\"dsl\":\"strength(\\\"BILL_AMT2\\\") in (\\\"negligible\\\", \\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":9},{\"dsl\":\"direction(\\\"BILL_AMT2\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":9},{\"dsl\":\"rank(\\\"BILL_AMT2\\\") in (5, 6, 7, 8)\",\"sentence_id\":9},{\"dsl\":\"unsettled(interaction(\\\"AGE\\\", \\\"BILL_AMT2\\\", pattern=\\\"none\\\"))\",\"sentence_id\":9},{\"dsl\":\"strength(\\\"EDUCATION\\\") in (\\\"negligible\\\", \\\"weak\\\")\",\"sentence_id\":10},{\"dsl\":\"direction(\\\"EDUCATION\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":10},{\"dsl\":\"rank(\\\"EDUCATION\\\") in (6, 7, 8, 9)\",\"sentence_id\":10},{\"dsl\":\"share(\\\"EDUCATION\\\") == approx(0.015)\",\"sentence_id\":10},{\"dsl\":\"strength(\\\"PAY_AMT3\\\") in (\\\"negligible\\\", \\\"weak\\\")\",\"sentence_id\":11},{\"dsl\":\"rank(\\\"PAY_AMT3\\\") in (7, 8, 9)\",\"sentence_id\":11},{\"dsl\":\"interaction(\\\"PAY_0\\\", \\\"AGE\\\", pattern=\\\"none\\\")\",\"sentence_id\":12},{\"dsl\":\"interaction(\\\"PAY_0\\\", \\\"EDUCATION\\\", pattern=\\\"none\\\")\",\"sentence_id\":12},{\"dsl\":\"interaction(\\\"PAY_AMT2\\\", \\\"AGE\\\", pattern=\\\"none\\\")\",\"sentence_id\":12}],\"sentences\":[{\"id\":1,\"text\":\"PAY_0, the repayment status in the latest month, is the model's most important feature, with a strong effect on its predictions, and the model's predicted default risk generally increases with it.\"},{\"id\":2,\"text\":\"The model's predicted default risk jumps at PAY_0 = 1.5, from a lower contribution at paid-in-full and revolving-credit values to a much higher one at delays of one month or more.\"},{\"id\":3,\"text\":\"LIMIT_BAL, the amount of the given credit, is the model's second most important feature, with a strong effect, and the model's predicted default risk generally decreases as it rises; PAY_0 matters more to the model than LIMIT_BAL.\"},{\"id\":4,\"text\":\"PAY_AMT1, the amount paid in the latest month, has a moderate effect on the model's predictions, and the model's predicted default risk generally decreases with it, ranking third to fifth in importance; LIMIT_BAL matters more to the model than PAY_AMT1.\"},{\"id\":5,\"text\":\"BILL_AMT1, the latest bill amount, has a weak to moderate effect on the model's predictions, ranks third to sixth in importance, and the model's predicted default risk generally increases with it.\"},{\"id\":6,\"text\":\"In the model, the effect of AGE reverses its sign as BILL_AMT1 changes: AGE pushes predicted risk up when BILL_AMT1 is zero and down when it is high.\"},{\"id\":7,\"text\":\"PAY_AMT2, the amount paid in the previous month, has a weak to moderate effect, ranks fourth to sixth in importance, and the model's predicted default risk generally decreases with it; it matters more to the model than AGE.\"},{\"id\":8,\"text\":\"AGE has at most a moderate effect on the model's predictions and ranks fifth to eighth in importance, with no movement the data resolve.\"},{\"id\":9,\"text\":\"BILL_AMT2, the bill amount of the previous month, has at most a moderate effect and ranks fifth to eighth; the model's predicted default risk generally increases with it, but the data do not settle whether AGE and BILL_AMT2 interact.\"},{\"id\":10,\"text\":\"EDUCATION has at most a weak effect on the model's predictions, accounts for about 1.5% of the model's importance, ranks sixth to ninth, and the model's predicted default risk generally increases with it.\"},{\"id\":11,\"text\":\"PAY_AMT3 has at most a weak effect on the model's predictions and ranks seventh to ninth in importance.\"},{\"id\":12,\"text\":\"The model shows no interaction between PAY_0 and AGE, between PAY_0 and EDUCATION, or between PAY_AMT2 and AGE.\"}]}",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "direction(\"PAY_0\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      1,
+      "rank(\"PAY_0\") == 1",
+      3
+     ],
+     [
+      1,
+      "strength(\"PAY_0\") == \"strong\"",
+      3
+     ],
+     [
+      2,
+      "threshold(\"PAY_0\", at=1.5)",
+      3
+     ],
+     [
+      3,
+      "direction(\"LIMIT_BAL\") in (\"decreasing\", \"mostly_decreasing\")",
+      3
+     ],
+     [
+      3,
+      "effect(\"PAY_0\") > effect(\"LIMIT_BAL\")",
+      3
+     ],
+     [
+      3,
+      "rank(\"LIMIT_BAL\") == 2",
+      3
+     ],
+     [
+      3,
+      "strength(\"LIMIT_BAL\") == \"strong\"",
+      3
+     ],
+     [
+      4,
+      "direction(\"PAY_AMT1\") in (\"decreasing\", \"mostly_decreasing\")",
+      3
+     ],
+     [
+      4,
+      "effect(\"LIMIT_BAL\") > effect(\"PAY_AMT1\")",
+      3
+     ],
+     [
+      4,
+      "rank(\"PAY_AMT1\") in (3, 4, 5)",
+      3
+     ],
+     [
+      4,
+      "strength(\"PAY_AMT1\") == \"moderate\"",
+      3
+     ],
+     [
+      5,
+      "direction(\"BILL_AMT1\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      5,
+      "rank(\"BILL_AMT1\") in (3, 4, 5, 6)",
+      3
+     ],
+     [
+      5,
+      "strength(\"BILL_AMT1\") in (\"weak\", \"moderate\")",
+      3
+     ],
+     [
+      6,
+      "interaction(\"AGE\", \"BILL_AMT1\", pattern=\"sign_flip\")",
+      3
+     ],
+     [
+      7,
+      "direction(\"PAY_AMT2\") in (\"decreasing\", \"mostly_decreasing\")",
+      3
+     ],
+     [
+      7,
+      "effect(\"PAY_AMT2\") > effect(\"AGE\")",
+      3
+     ],
+     [
+      7,
+      "rank(\"PAY_AMT2\") in (4, 5, 6)",
+      3
+     ],
+     [
+      7,
+      "strength(\"PAY_AMT2\") in (\"weak\", \"moderate\")",
+      3
+     ],
+     [
+      8,
+      "rank(\"AGE\") in (5, 6, 7, 8)",
+      3
+     ],
+     [
+      8,
+      "strength(\"AGE\") in (\"negligible\", \"weak\", \"moderate\")",
+      3
+     ],
+     [
+      9,
+      "direction(\"BILL_AMT2\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      9,
+      "rank(\"BILL_AMT2\") in (5, 6, 7, 8)",
+      3
+     ],
+     [
+      9,
+      "strength(\"BILL_AMT2\") in (\"negligible\", \"weak\", \"moderate\")",
+      3
+     ],
+     [
+      9,
+      "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"none\"))",
+      2
+     ],
+     [
+      10,
+      "direction(\"EDUCATION\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      10,
+      "rank(\"EDUCATION\") in (6, 7, 8, 9)",
+      3
+     ],
+     [
+      10,
+      "share(\"EDUCATION\") == approx(0.015)",
+      3
+     ],
+     [
+      10,
+      "strength(\"EDUCATION\") in (\"negligible\", \"weak\")",
+      3
+     ],
+     [
+      11,
+      "rank(\"PAY_AMT3\") in (7, 8, 9)",
+      3
+     ],
+     [
+      11,
+      "strength(\"PAY_AMT3\") in (\"negligible\", \"weak\")",
+      3
+     ],
+     [
+      12,
+      "interaction(\"PAY_0\", \"AGE\", pattern=\"none\")",
+      3
+     ],
+     [
+      12,
+      "interaction(\"PAY_0\", \"EDUCATION\", pattern=\"none\")",
+      3
+     ],
+     [
+      12,
+      "interaction(\"PAY_AMT2\", \"AGE\", pattern=\"none\")",
+      3
+     ]
+    ],
+    "unplanned": [],
+    "plan_only": [],
+    "ambiguous": [
+     [
+      8,
+      "unsettled(direction(\"AGE\") == \"decreasing\")"
+     ],
+     [
+      8,
+      "unsettled(direction(\"AGE\") == \"increasing\")"
+     ],
+     [
+      9,
+      "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"amplification\"))"
+     ]
+    ],
+    "gap": [
+     [
+      2,
+      [
+       "lower contribution at paid-in-full and revolving-credit values",
+       "much higher contribution at delays of one month or more"
+      ]
+     ],
+     [
+      6,
+      [
+       "AGE pushes predicted risk up when BILL_AMT1 is zero",
+       "AGE pushes predicted risk down when BILL_AMT1 is high",
+       "AGE pushes predicted risk up when BILL_AMT1 is zero and down when BILL_AMT1 is high"
+      ]
+     ],
+     [
+      8,
+      [
+       "no movement the data resolve",
+       "no movement of AGE's effect the data resolve"
+      ]
+     ]
+    ],
+    "numbers": [
+     [
+      6,
+      [
+       "AGE pushes predicted risk up when BILL_AMT1 is zero",
+       "AGE pushes predicted risk down when BILL_AMT1 is high",
+       "AGE pushes predicted risk up when BILL_AMT1 is zero and down when BILL_AMT1 is high"
+      ]
+     ]
+    ],
+    "hedged": [],
+    "missing": [],
+    "emphasis": [],
+    "format_errors": 0
+   }
+  },
+  {
+   "source": "repair 1",
+   "sentences": [
+    [
+     1,
+     "PAY_0, the repayment status in the latest month, is the model's most important feature, with a strong effect on its predictions, and the model's predicted default risk generally increases with it."
+    ],
+    [
+     2,
+     "The model's predicted default risk jumps at PAY_0 = 1.5, from a lower contribution at paid-in-full and revolving-credit values to a much higher one at delays of one month or more."
+    ],
+    [
+     3,
+     "LIMIT_BAL, the amount of the given credit, is the model's second most important feature, with a strong effect, and the model's predicted default risk generally decreases as it rises; PAY_0 matters more to the model than LIMIT_BAL."
+    ],
+    [
+     4,
+     "PAY_AMT1, the amount paid in the latest month, has a moderate effect on the model's predictions, and the model's predicted default risk generally decreases with it, ranking third to fifth in importance; LIMIT_BAL matters more to the model than PAY_AMT1."
+    ],
+    [
+     5,
+     "BILL_AMT1, the latest bill amount, has a weak to moderate effect on the model's predictions, ranks third to sixth in importance, and the model's predicted default risk generally increases with it."
+    ],
+    [
+     6,
+     "In the model, the effect of AGE reverses its sign as BILL_AMT1 changes: AGE's contribution to predicted risk has opposite signs at low and high BILL_AMT1."
+    ],
+    [
+     7,
+     "PAY_AMT2, the amount paid in the previous month, has a weak to moderate effect, ranks fourth to sixth in importance, and the model's predicted default risk generally decreases with it; it matters more to the model than AGE."
+    ],
+    [
+     8,
+     "AGE has at most a moderate effect on the model's predictions and ranks fifth to eighth in importance, with no movement the data resolve."
+    ],
+    [
+     9,
+     "BILL_AMT2, the bill amount of the previous month, has at most a moderate effect and ranks fifth to eighth; the model's predicted default risk generally increases with it, but the data do not settle whether AGE and BILL_AMT2 interact."
+    ],
+    [
+     10,
+     "EDUCATION has at most a weak effect on the model's predictions, accounts for about 1.5% of the model's importance, ranks sixth to ninth, and the model's predicted default risk generally increases with it."
+    ],
+    [
+     11,
+     "PAY_AMT3 has at most a weak effect on the model's predictions and ranks seventh to ninth in importance."
+    ],
+    [
+     12,
+     "The model shows no interaction between PAY_0 and AGE, between PAY_0 and EDUCATION, or between PAY_AMT2 and AGE."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"PAY_0\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "strength(\"PAY_0\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.368; share band 0.333 to 0.409; detectable True; mass where the curve band excludes 0 1; net change 2.55"
+    ],
+    [
+     1,
+     "direction(\"PAY_0\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 2.55; net change band 2.43 to 2.72; exception mass 0; margin 0.146; largest reversal the band allows 1.93"
+    ],
+    [
+     2,
+     "threshold(\"PAY_0\", at=1.5)",
+     "true",
+     "",
+     "",
+     "largest jump at 1.5; location band 1.5 to 1.5; tolerance 0.08; jump 1.71; jump significant True"
+    ],
+    [
+     3,
+     "rank(\"LIMIT_BAL\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 2; claimed 2"
+    ],
+    [
+     3,
+     "strength(\"LIMIT_BAL\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.216; share band 0.195 to 0.248; detectable True; mass where the curve band excludes 0 0.868; net change -1.29"
+    ],
+    [
+     3,
+     "direction(\"LIMIT_BAL\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -1.29; net change band -1.52 to -1.06; exception mass 0; margin 0.0695; largest reversal the band allows 3.41"
+    ],
+    [
+     3,
+     "effect(\"PAY_0\") > effect(\"LIMIT_BAL\")",
+     "true",
+     "",
+     "",
+     "difference 0.258; difference band 0.191 to 0.311"
+    ],
+    [
+     4,
+     "effect(\"LIMIT_BAL\") > effect(\"PAY_AMT1\")",
+     "true",
+     "",
+     "",
+     "difference 0.21; difference band 0.151 to 0.272"
+    ],
+    [
+     4,
+     "strength(\"PAY_AMT1\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.0922; share band 0.0672 to 0.12; detectable True; mass where the curve band excludes 0 0.45; net change -0.597"
+    ],
+    [
+     4,
+     "direction(\"PAY_AMT1\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -0.597; net change band -0.745 to -0.385; exception mass 0; margin 0.0323; largest reversal the band allows 2.96"
+    ],
+    [
+     4,
+     "rank(\"PAY_AMT1\") in (3, 4, 5)",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 3 to 5; claimed 3 to 4 to 5"
+    ],
+    [
+     5,
+     "strength(\"BILL_AMT1\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0881; share band 0.0466 to 0.109; detectable True; mass where the curve band excludes 0 0.128; net change 0.701"
+    ],
+    [
+     5,
+     "direction(\"BILL_AMT1\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.701; net change band 0.308 to 0.941; exception mass 0; margin 0.0382; largest reversal the band allows 2.07"
+    ],
+    [
+     5,
+     "rank(\"BILL_AMT1\") in (3, 4, 5, 6)",
+     "true",
+     "",
+     "",
+     "rank 4; rank band 3 to 6; claimed 3 to 4 to 5 to 6"
+    ],
+    [
+     6,
+     "interaction(\"AGE\", \"BILL_AMT1\", pattern=\"sign_flip\")",
+     "true",
+     "",
+     "",
+     "share 0.0331; share band 0.0174 to 0.0369; detectable True; interaction contrast -0.674; interaction contrast band -0.784 to -0.304"
+    ],
+    [
+     7,
+     "strength(\"PAY_AMT2\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0704; share band 0.0416 to 0.0833; detectable True; mass where the curve band excludes 0 0.557; net change -0.214"
+    ],
+    [
+     7,
+     "direction(\"PAY_AMT2\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -0.214; net change band -0.306 to -0.0474; exception mass 0; margin 0.0154; largest reversal the band allows 2.21"
+    ],
+    [
+     7,
+     "rank(\"PAY_AMT2\") in (4, 5, 6)",
+     "true",
+     "",
+     "",
+     "rank 5; rank band 4 to 6; claimed 4 to 5 to 6"
+    ],
+    [
+     7,
+     "effect(\"PAY_AMT2\") > effect(\"AGE\")",
+     "true",
+     "",
+     "",
+     "difference 0.0592; difference band 0.00729 to 0.0981"
+    ],
+    [
+     8,
+     "strength(\"AGE\") in (\"negligible\", \"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [0%, 15%)",
+     "share 0.0355; share band 0.0149 to 0.0512; detectable False; mass where the curve band excludes 0 0.0382; net change 0.0708"
+    ],
+    [
+     8,
+     "rank(\"AGE\") in (5, 6, 7, 8)",
+     "true",
+     "",
+     "",
+     "rank 6; rank band 5 to 8; claimed 5 to 6 to 7 to 8"
+    ],
+    [
+     9,
+     "strength(\"BILL_AMT2\") in (\"negligible\", \"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [0%, 15%)",
+     "share 0.0299; share band 0.0113 to 0.0618; detectable True; mass where the curve band excludes 0 0; net change 0.333"
+    ],
+    [
+     9,
+     "direction(\"BILL_AMT2\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.333; net change band 0.0679 to 0.616; exception mass 0; margin 0.0226; largest reversal the band allows 1.67"
+    ],
+    [
+     9,
+     "rank(\"BILL_AMT2\") in (5, 6, 7, 8)",
+     "true",
+     "",
+     "",
+     "rank 7; rank band 5 to 8; claimed 5 to 6 to 7 to 8"
+    ],
+    [
+     9,
+     "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"none\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0184; share band 0.0115 to 0.0245; detectable False"
+    ],
+    [
+     10,
+     "strength(\"EDUCATION\") in (\"negligible\", \"weak\")",
+     "true",
+     "",
+     "share band inside [0%, 5%)",
+     "share 0.0148; share band 0.00112 to 0.0292; detectable True; mass where the curve band excludes 0 0; net change 0.0978"
+    ],
+    [
+     10,
+     "direction(\"EDUCATION\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.0978; net change band 0.00246 to 0.167; exception mass 0; margin 0.00771; largest reversal the band allows 4.35"
+    ],
+    [
+     10,
+     "rank(\"EDUCATION\") in (6, 7, 8, 9)",
+     "true",
+     "",
+     "",
+     "rank 8; rank band 6 to 9; claimed 6 to 7 to 8 to 9"
+    ],
+    [
+     10,
+     "share(\"EDUCATION\") == approx(0.015)",
+     "true",
+     "",
+     "",
+     "share 0.0148; share band 0.00112 to 0.0292; detectable True; mass where the curve band excludes 0 0; net change 0.0978"
+    ],
+    [
+     11,
+     "strength(\"PAY_AMT3\") in (\"negligible\", \"weak\")",
+     "true",
+     "",
+     "share band inside [0%, 5%)",
+     "share 0.00351; share band 0.00358 to 0.0272; detectable False; mass where the curve band excludes 0 0; net change 0.0218"
+    ],
+    [
+     11,
+     "rank(\"PAY_AMT3\") in (7, 8, 9)",
+     "true",
+     "",
+     "",
+     "rank 9; rank band 7 to 9; claimed 7 to 8 to 9"
+    ],
+    [
+     12,
+     "interaction(\"PAY_0\", \"AGE\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.00793; share band 0 to 0.0104; detectable False; interaction contrast -0.0627; interaction contrast band -0.198 to 0.0452"
+    ],
+    [
+     12,
+     "interaction(\"PAY_0\", \"EDUCATION\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.0137; share band 0 to 0.0171; detectable False; interaction contrast 0.303; interaction contrast band 0 to 0.401"
+    ],
+    [
+     12,
+     "interaction(\"PAY_AMT2\", \"AGE\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.00815; share band 0 to 0.012; detectable False; interaction contrast 0.0617; interaction contrast band -0.185 to 0.119"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\":[{\"dsl\":\"rank(\\\"PAY_0\\\") == 1\",\"sentence_id\":1},{\"dsl\":\"strength(\\\"PAY_0\\\") == \\\"strong\\\"\",\"sentence_id\":1},{\"dsl\":\"direction(\\\"PAY_0\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":1},{\"dsl\":\"threshold(\\\"PAY_0\\\", at=1.5)\",\"sentence_id\":2},{\"dsl\":\"rank(\\\"LIMIT_BAL\\\") == 2\",\"sentence_id\":3},{\"dsl\":\"strength(\\\"LIMIT_BAL\\\") == \\\"strong\\\"\",\"sentence_id\":3},{\"dsl\":\"direction(\\\"LIMIT_BAL\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":3},{\"dsl\":\"effect(\\\"PAY_0\\\") > effect(\\\"LIMIT_BAL\\\")\",\"sentence_id\":3},{\"dsl\":\"effect(\\\"LIMIT_BAL\\\") > effect(\\\"PAY_AMT1\\\")\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"PAY_AMT1\\\") == \\\"moderate\\\"\",\"sentence_id\":4},{\"dsl\":\"direction(\\\"PAY_AMT1\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":4},{\"dsl\":\"rank(\\\"PAY_AMT1\\\") in (3, 4, 5)\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"BILL_AMT1\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":5},{\"dsl\":\"direction(\\\"BILL_AMT1\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":5},{\"dsl\":\"rank(\\\"BILL_AMT1\\\") in (3, 4, 5, 6)\",\"sentence_id\":5},{\"dsl\":\"interaction(\\\"AGE\\\", \\\"BILL_AMT1\\\", pattern=\\\"sign_flip\\\")\",\"sentence_id\":6},{\"dsl\":\"strength(\\\"PAY_AMT2\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":7},{\"dsl\":\"direction(\\\"PAY_AMT2\\\") in (\\\"decreasing\\\", \\\"mostly_decreasing\\\")\",\"sentence_id\":7},{\"dsl\":\"rank(\\\"PAY_AMT2\\\") in (4, 5, 6)\",\"sentence_id\":7},{\"dsl\":\"effect(\\\"PAY_AMT2\\\") > effect(\\\"AGE\\\")\",\"sentence_id\":7},{\"dsl\":\"strength(\\\"AGE\\\") in (\\\"negligible\\\", \\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":8},{\"dsl\":\"rank(\\\"AGE\\\") in (5, 6, 7, 8)\",\"sentence_id\":8},{\"dsl\":\"strength(\\\"BILL_AMT2\\\") in (\\\"negligible\\\", \\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":9},{\"dsl\":\"direction(\\\"BILL_AMT2\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":9},{\"dsl\":\"rank(\\\"BILL_AMT2\\\") in (5, 6, 7, 8)\",\"sentence_id\":9},{\"dsl\":\"unsettled(interaction(\\\"AGE\\\", \\\"BILL_AMT2\\\", pattern=\\\"none\\\"))\",\"sentence_id\":9},{\"dsl\":\"strength(\\\"EDUCATION\\\") in (\\\"negligible\\\", \\\"weak\\\")\",\"sentence_id\":10},{\"dsl\":\"direction(\\\"EDUCATION\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\",\"sentence_id\":10},{\"dsl\":\"rank(\\\"EDUCATION\\\") in (6, 7, 8, 9)\",\"sentence_id\":10},{\"dsl\":\"share(\\\"EDUCATION\\\") == approx(0.015)\",\"sentence_id\":10},{\"dsl\":\"strength(\\\"PAY_AMT3\\\") in (\\\"negligible\\\", \\\"weak\\\")\",\"sentence_id\":11},{\"dsl\":\"rank(\\\"PAY_AMT3\\\") in (7, 8, 9)\",\"sentence_id\":11},{\"dsl\":\"interaction(\\\"PAY_0\\\", \\\"AGE\\\", pattern=\\\"none\\\")\",\"sentence_id\":12},{\"dsl\":\"interaction(\\\"PAY_0\\\", \\\"EDUCATION\\\", pattern=\\\"none\\\")\",\"sentence_id\":12},{\"dsl\":\"interaction(\\\"PAY_AMT2\\\", \\\"AGE\\\", pattern=\\\"none\\\")\",\"sentence_id\":12}],\"sentences\":[{\"id\":1,\"text\":\"PAY_0, the repayment status in the latest month, is the model's most important feature, with a strong effect on its predictions, and the model's predicted default risk generally increases with it.\"},{\"id\":2,\"text\":\"The model's predicted default risk jumps at PAY_0 = 1.5, from a lower contribution at paid-in-full and revolving-credit values to a much higher one at delays of one month or more.\"},{\"id\":3,\"text\":\"LIMIT_BAL, the amount of the given credit, is the model's second most important feature, with a strong effect, and the model's predicted default risk generally decreases as it rises; PAY_0 matters more to the model than LIMIT_BAL.\"},{\"id\":4,\"text\":\"PAY_AMT1, the amount paid in the latest month, has a moderate effect on the model's predictions, and the model's predicted default risk generally decreases with it, ranking third to fifth in importance; LIMIT_BAL matters more to the model than PAY_AMT1.\"},{\"id\":5,\"text\":\"BILL_AMT1, the latest bill amount, has a weak to moderate effect on the model's predictions, ranks third to sixth in importance, and the model's predicted default risk generally increases with it.\"},{\"id\":6,\"text\":\"In the model, the effect of AGE reverses its sign as BILL_AMT1 changes: AGE's contribution to predicted risk has opposite signs at low and high BILL_AMT1.\"},{\"id\":7,\"text\":\"PAY_AMT2, the amount paid in the previous month, has a weak to moderate effect, ranks fourth to sixth in importance, and the model's predicted default risk generally decreases with it; it matters more to the model than AGE.\"},{\"id\":8,\"text\":\"AGE has at most a moderate effect on the model's predictions and ranks fifth to eighth in importance, with no movement the data resolve.\"},{\"id\":9,\"text\":\"BILL_AMT2, the bill amount of the previous month, has at most a moderate effect and ranks fifth to eighth; the model's predicted default risk generally increases with it, but the data do not settle whether AGE and BILL_AMT2 interact.\"},{\"id\":10,\"text\":\"EDUCATION has at most a weak effect on the model's predictions, accounts for about 1.5% of the model's importance, ranks sixth to ninth, and the model's predicted default risk generally increases with it.\"},{\"id\":11,\"text\":\"PAY_AMT3 has at most a weak effect on the model's predictions and ranks seventh to ninth in importance.\"},{\"id\":12,\"text\":\"The model shows no interaction between PAY_0 and AGE, between PAY_0 and EDUCATION, or between PAY_AMT2 and AGE.\"}]}",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "direction(\"PAY_0\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      1,
+      "rank(\"PAY_0\") == 1",
+      3
+     ],
+     [
+      1,
+      "strength(\"PAY_0\") == \"strong\"",
+      3
+     ],
+     [
+      2,
+      "threshold(\"PAY_0\", at=1.5)",
+      3
+     ],
+     [
+      3,
+      "direction(\"LIMIT_BAL\") in (\"decreasing\", \"mostly_decreasing\")",
+      3
+     ],
+     [
+      3,
+      "effect(\"PAY_0\") > effect(\"LIMIT_BAL\")",
+      3
+     ],
+     [
+      3,
+      "rank(\"LIMIT_BAL\") == 2",
+      3
+     ],
+     [
+      3,
+      "strength(\"LIMIT_BAL\") == \"strong\"",
+      3
+     ],
+     [
+      4,
+      "direction(\"PAY_AMT1\") in (\"decreasing\", \"mostly_decreasing\")",
+      3
+     ],
+     [
+      4,
+      "effect(\"LIMIT_BAL\") > effect(\"PAY_AMT1\")",
+      3
+     ],
+     [
+      4,
+      "rank(\"PAY_AMT1\") in (3, 4, 5)",
+      3
+     ],
+     [
+      4,
+      "strength(\"PAY_AMT1\") == \"moderate\"",
+      3
+     ],
+     [
+      5,
+      "direction(\"BILL_AMT1\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      5,
+      "rank(\"BILL_AMT1\") in (3, 4, 5, 6)",
+      3
+     ],
+     [
+      5,
+      "strength(\"BILL_AMT1\") in (\"weak\", \"moderate\")",
+      3
+     ],
+     [
+      6,
+      "interaction(\"AGE\", \"BILL_AMT1\", pattern=\"sign_flip\")",
+      3
+     ],
+     [
+      7,
+      "direction(\"PAY_AMT2\") in (\"decreasing\", \"mostly_decreasing\")",
+      3
+     ],
+     [
+      7,
+      "effect(\"PAY_AMT2\") > effect(\"AGE\")",
+      3
+     ],
+     [
+      7,
+      "rank(\"PAY_AMT2\") in (4, 5, 6)",
+      3
+     ],
+     [
+      7,
+      "strength(\"PAY_AMT2\") in (\"weak\", \"moderate\")",
+      3
+     ],
+     [
+      8,
+      "rank(\"AGE\") in (5, 6, 7, 8)",
+      3
+     ],
+     [
+      8,
+      "strength(\"AGE\") in (\"negligible\", \"weak\", \"moderate\")",
+      3
+     ],
+     [
+      9,
+      "direction(\"BILL_AMT2\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      9,
+      "rank(\"BILL_AMT2\") in (5, 6, 7, 8)",
+      3
+     ],
+     [
+      9,
+      "strength(\"BILL_AMT2\") in (\"negligible\", \"weak\", \"moderate\")",
+      3
+     ],
+     [
+      9,
+      "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"amplification\"))",
+      3
+     ],
+     [
+      10,
+      "direction(\"EDUCATION\") in (\"increasing\", \"mostly_increasing\")",
+      3
+     ],
+     [
+      10,
+      "rank(\"EDUCATION\") in (6, 7, 8, 9)",
+      3
+     ],
+     [
+      10,
+      "share(\"EDUCATION\") == approx(0.015)",
+      3
+     ],
+     [
+      10,
+      "strength(\"EDUCATION\") in (\"negligible\", \"weak\")",
+      3
+     ],
+     [
+      11,
+      "rank(\"PAY_AMT3\") in (7, 8, 9)",
+      3
+     ],
+     [
+      11,
+      "strength(\"PAY_AMT3\") in (\"negligible\", \"weak\")",
+      3
+     ],
+     [
+      12,
+      "interaction(\"PAY_0\", \"AGE\", pattern=\"none\")",
+      3
+     ],
+     [
+      12,
+      "interaction(\"PAY_0\", \"EDUCATION\", pattern=\"none\")",
+      3
+     ],
+     [
+      12,
+      "interaction(\"PAY_AMT2\", \"AGE\", pattern=\"none\")",
+      3
+     ]
+    ],
+    "unplanned": [
+     [
+      9,
+      "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"amplification\"))",
+      "true",
+      "",
+      "the evidence does not settle the claim",
+      "claim verdict undecidable; claim code insufficient_evidence; share 0.0184; share band 0.0115 to 0.0245; detectable False"
+     ]
+    ],
+    "plan_only": [
+     [
+      9,
+      "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"none\"))"
+     ]
+    ],
+    "ambiguous": [
+     [
+      9,
+      "unsettled(interaction(\"AGE\", \"BILL_AMT2\", pattern=\"sign_flip\"))"
+     ]
+    ],
+    "gap": [
+     [
+      2,
+      [
+       "lower contribution at paid-in-full and revolving-credit values to a much higher one at delays of one month or more",
+       "a much higher contribution at delays of one month or more",
+       "lower contribution at paid-in-full and revolving-credit values",
+       "much higher contribution at delays of one month or more"
+      ]
+     ],
+     [
+      8,
+      [
+       "no movement the data resolve"
+      ]
+     ]
+    ],
+    "numbers": [],
+    "hedged": [],
+    "missing": [],
+    "emphasis": [],
+    "format_errors": 0
+   }
+  }
+ ],
+ "failed_before": [
+  "unchecked number: sentence 6"
+ ],
+ "exit": "RELEASED",
+ "reason": "passed after 1 repair round(s)",
+ "flagged": false,
+ "roundtrip": "passed",
+ "cost": 0.004596740000000001,
+ "spent": 0.004596740000000001,
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 31808,
+  "input_tokens": 20094,
+  "output_tokens": 13732
+ },
+ "events": [
+  "round trip of the draft: 3 extractions",
+  "extraction retry: 1 answer(s) not a reading",
+  "repair round 1: 1 problem(s) in the text",
+  "round trip of the draft: 3 extractions",
+  "RELEASED: passed after 1 repair round(s)"
+ ]
+}
