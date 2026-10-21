@@ -1,0 +1,11 @@
+{
+ "read": "2026-10-21",
+ "extractor": "x4",
+ "lexicon": "v2",
+ "rule on unknown terms sha256": "74fc5af513d68c53a1edb16a374c9a896724bdc233cd2ee734367cf373be95a1",
+ "set sha256": {
+  "terms.csv": "c8483c82813c6de08fd42d417e4f5a72972f6fd317b7ff5a551bbe5829f69527",
+  "template.jsonl": "de4338ead075cc94b07973acfac0eb41e05b45a5aa667083fade997ef9d4a3b1",
+  "llm.jsonl": "6b27a4149e9c6c8527bbaca7ad9614e8a80c80fff1d5345b35c9db10bfda2e6d"
+ }
+}

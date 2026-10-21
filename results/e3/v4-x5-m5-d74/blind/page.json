@@ -1,0 +1,12 @@
+{
+ "url": "https://claude.ai/artifact/U217chxBzrTcVcf8fpkxDk",
+ "published": "2026-10-21T14:15:24+02:00",
+ "version": "1792584924-cf7b",
+ "file": "blind_page.html",
+ "capabilities": {"user": {}, "db": {"rules": [{"path": "raters", "read": "owner", "write": "owner"}, {"path": "raters/{self}", "read": "interact", "write": "interact"}]}},
+ "store": "raters/<rater id> (code, owner, item set, guide hash, start time); raters/<rater id>/labels/<item> (labels, reads, notes, whole, whole_note, at, guide, history of {at, by, field, from, to})",
+ "checked": "right after publishing, raters/ listed empty both as the owner and at contributor (interact) level; with nothing stored this cannot show the rules hiding a document or refusing a write into another rater's slot, and no probe was written",
+ "read back": "ArtifactData list raters, then raters/<id>/labels, into labels/<rater code>.json as {\"rater\": {...}, \"labels\": {...}} for e3_blind --score",
+ "supersedes": "https://claude.ai/artifact/9b8oR9UfFf6EkYSA7bL78n (the D66 sample, D70), unchanged",
+ "sentence ids": "shown 1 to n (D77); the D66 page shows the run's ids, with gaps in 5 of its 78 items"
+}

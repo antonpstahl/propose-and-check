@@ -1,0 +1,62 @@
+{
+ "version": "b1",
+ "source": "v4-x5-m5-d74",
+ "tier": "synthetic",
+ "built": "2026-10-21T14:13:20",
+ "seed": 20261022,
+ "population": {
+  "texts outside the pilot datasets, by kind": {
+   "draft": 638,
+   "LLM-written": 452,
+   "template": 188
+  },
+  "by tier and kind": {
+   "synthetic LLM-written": 452,
+   "synthetic draft": 638,
+   "synthetic template": 188
+  }
+ },
+ "sizes": {
+  "draft": 30,
+  "LLM-written": 40,
+  "template": 10
+ },
+ "sampled entries": 80,
+ "texts shown": 78,
+ "sentence ids": "shown 1 to n; the run's ids in key.csv (D77)",
+ "second rater": "the first 24 items in the shown order",
+ "sha256": {
+  "guide.md": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+  "items.json": "02d4529164d9e4419177db453c23dc3c48c6216d44c7ee1e78459adda79cde79",
+  "key.csv": "06de2fe4afa6021b94c41ed2bfa9b5fb7d41030542b5365d85b43e776e00922d"
+ },
+ "labels": {
+  "sentence": [
+   "supported",
+   "false",
+   "unsettled",
+   "misleading",
+   "nothing",
+   "unsure"
+  ],
+  "whole text": [
+   "yes",
+   "no",
+   "unsure"
+  ],
+  "reads the words differently": "a flag per sentence"
+ },
+ "standards": {
+  "refuted": "a sentence labelled false",
+  "release rule": "a sentence labelled false or unsettled",
+  "broad": "a sentence labelled false or unsettled or misleading, or the whole text a wrong picture"
+ },
+ "open": "no error but an unsure sentence or whole-text answer: reported as an error and as no error",
+ "estimators": "P_U per stratum with 95% Wilson intervals; P_U(on) = the LLM-written and template strata weighted by their population sizes; E_U = 1 - P_U(on) / P_U(off), interval from a stratified bootstrap (BOOT draws within strata)",
+ "blinding": "raters see the text, the model's facts as the H1 handover states them (the same for every text about the model) and the words table; not the arm, exit state, gate verdict, readers' or critic's flags. Templates are recognisable by their fixed wording.",
+ "raters": {
+  "first": "the author, on every item (the page's owner)",
+  "second": "to be named before labelling; the first 24 items"
+ },
+ "provenance": "the page stores each rater's labels under raters/<id>/ with the history of every change (time, field, old and new value); labels are set only through the page"
+}
