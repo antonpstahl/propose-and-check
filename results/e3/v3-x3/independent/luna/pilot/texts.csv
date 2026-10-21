@@ -1,0 +1,17 @@
+run,scenario,model,handover,draw,naming,exit,arm,kind,reader,scored,readings,claims,sentences,words,false M,undecidable M,false T,hedges,unchecked numbers,no DSL form,not covered,emphasis,ambiguous,"undecidable M, insufficient_evidence","undecidable M, unknown_term","undecidable M, not_applicable",lines,unparsed lines
+syn-dominant-n50000-s1_EBM_H1_d0_claude-haiku-5-5_plausible,syn-dominant-n50000-s1,EBM,H1,0,plausible,RELEASED,off,draft,openai/gpt-6-luna,True,3,12,8,154,1,0,2,1,0,3,0,0,0,0,0,0,36,0
+syn-dominant-n50000-s1_EBM_H1_d0_claude-haiku-5-5_plausible,syn-dominant-n50000-s1,EBM,H1,0,plausible,RELEASED,on,LLM-written,openai/gpt-6-luna,True,3,12,8,149,0,0,1,0,0,3,0,0,0,0,0,0,36,0
+syn-dominant-n50000-s1_EBM_H2_d0_claude-haiku-5-5_opaque,syn-dominant-n50000-s1,EBM,H2,0,opaque,RELEASED,off,draft,openai/gpt-6-luna,True,3,18,8,181,0,0,1,0,0,1,0,0,0,0,0,0,54,0
+syn-dominant-n50000-s1_EBM_H2_d0_claude-haiku-5-5_opaque,syn-dominant-n50000-s1,EBM,H2,0,opaque,RELEASED,on,LLM-written,openai/gpt-6-luna,True,3,21,8,180,0,0,1,0,0,1,0,0,0,0,0,0,63,0
+syn-dominant-n50000-s1_EBM_H2_d1_claude-haiku-5-5_opaque,syn-dominant-n50000-s1,EBM,H2,1,opaque,RELEASED,off,draft,openai/gpt-6-luna,True,3,15,6,121,0,0,1,0,0,0,0,0,0,0,0,0,45,0
+syn-dominant-n50000-s1_EBM_H2_d1_claude-haiku-5-5_opaque,syn-dominant-n50000-s1,EBM,H2,1,opaque,RELEASED,on,LLM-written,openai/gpt-6-luna,True,3,15,6,122,0,0,1,0,0,0,0,0,0,0,0,0,45,0
+syn-dominant-n50000-s1_EBM_H2_d2_claude-haiku-5-5_plausible,syn-dominant-n50000-s1,EBM,H2,2,plausible,RELEASED,off,draft,openai/gpt-6-luna,True,3,19,8,175,1,0,2,1,0,0,0,0,2,0,0,0,59,0
+syn-dominant-n50000-s1_EBM_H2_d2_claude-haiku-5-5_plausible,syn-dominant-n50000-s1,EBM,H2,2,plausible,RELEASED,on,LLM-written,openai/gpt-6-luna,True,3,19,8,165,0,0,1,0,0,0,0,0,0,0,0,0,57,0
+syn-dominant-n50000-s1_XGB2_H1_d4_claude-haiku-5-5_plausible,syn-dominant-n50000-s1,XGB2,H1,4,plausible,RELEASED,off,draft,openai/gpt-6-luna,True,3,15,8,176,0,1,2,1,0,1,0,0,0,1,0,0,45,0
+syn-dominant-n50000-s1_XGB2_H1_d4_claude-haiku-5-5_plausible,syn-dominant-n50000-s1,XGB2,H1,4,plausible,RELEASED,on,LLM-written,openai/gpt-6-luna,True,3,15,8,175,0,0,1,1,0,1,0,0,0,0,0,0,45,0
+syn-none-n5000-s1_EBM_H2_d2_claude-haiku-5-5_plausible,syn-none-n5000-s1,EBM,H2,2,plausible,RELEASED,off,draft,openai/gpt-6-luna,True,3,18,8,164,0,0,2,0,0,1,0,0,0,0,0,0,54,0
+syn-none-n5000-s1_EBM_H2_d2_claude-haiku-5-5_plausible,syn-none-n5000-s1,EBM,H2,2,plausible,RELEASED,on,LLM-written,openai/gpt-6-luna,True,3,18,8,164,0,0,2,0,0,1,0,0,0,0,0,0,54,0
+syn-none-n5000-s1_EBM_H2_d4_claude-haiku-5-5_opaque,syn-none-n5000-s1,EBM,H2,4,opaque,RELEASED,off,draft,openai/gpt-6-luna,True,3,18,8,198,0,0,3,1,0,2,0,0,1,0,0,0,55,0
+syn-none-n5000-s1_EBM_H2_d4_claude-haiku-5-5_opaque,syn-none-n5000-s1,EBM,H2,4,opaque,RELEASED,on,LLM-written,openai/gpt-6-luna,True,3,19,8,212,0,2,3,0,0,2,0,0,0,2,0,0,57,0
+syn-none-n5000-s1_XGB2_H1_d2_claude-haiku-5-5_opaque,syn-none-n5000-s1,XGB2,H1,2,opaque,RELEASED_REDUCED,off,draft,openai/gpt-6-luna,True,3,14,7,151,1,4,5,0,0,3,0,0,1,4,0,0,43,0
+syn-none-n5000-s1_XGB2_H1_d2_claude-haiku-5-5_opaque,syn-none-n5000-s1,XGB2,H1,2,opaque,RELEASED_REDUCED,on,LLM-written,openai/gpt-6-luna,True,3,7,4,92,0,0,1,1,0,2,0,0,0,0,0,0,20,0

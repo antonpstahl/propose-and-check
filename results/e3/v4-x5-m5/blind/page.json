@@ -1,0 +1,10 @@
+{
+ "url": "https://claude.ai/artifact/9b8oR9UfFf6EkYSA7bL78n",
+ "published": "2026-10-21T01:03:00+02:00",
+ "version": "1792537401-9cd9",
+ "file": "blind_page.html",
+ "capabilities": {"user": {}, "db": {"rules": [{"path": "raters", "read": "owner", "write": "owner"}, {"path": "raters/{self}", "read": "interact", "write": "interact"}]}},
+ "store": "raters/<rater id> (code, owner, item set, guide hash, start time); raters/<rater id>/labels/<item> (labels, reads, notes, whole, whole_note, at, guide, history of {at, by, field, from, to})",
+ "checked": "a probe under raters/ was readable by the owner and invisible at contributor level; a contributor's write into another rater's slot was refused; the probe was deleted",
+ "read back": "ArtifactData list raters, then raters/<id>/labels, into labels/<rater code>.json as {\"rater\": {...}, \"labels\": {...}} for e3_blind --score"
+}

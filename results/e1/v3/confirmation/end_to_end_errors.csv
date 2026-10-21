@@ -1,0 +1,17 @@
+model,scenario,n,kind,role,claim,label,verdict,oracle,outcome,layer
+EBM,syn-none-n5000-s2,5000,share,strong,"share(""n_delinquencies"") == approx(0.243)",true,false,undecidable,blocked_correct,model
+EBM,syn-none-n5000-s3,5000,share,moderate,"share(""income"") == approx(0.13)",true,false,undecidable,blocked_correct,model
+EBM,syn-weak-n5000-s2,5000,negligible,near_flat,"negligible(""age"")",true,false,undecidable,blocked_correct,model
+EBM,syn-weak-n5000-s2,5000,interaction,pair,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+EBM,syn-weak-n5000-s2,5000,interaction,pair,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",false,true,undecidable,released_wrong,model
+EBM,syn-weak-n5000-s2,5000,strength,near_flat,"strength(""age"") in (""weak"", ""moderate"")",false,true,undecidable,released_wrong,model
+EBM,syn-weak-n50000-s2,50000,interaction,pair,"interaction(""utilization"", ""n_delinquencies"", pattern=""amplification"")",true,false,undecidable,blocked_correct,model
+EBM,syn-weak-n50000-s2,50000,interaction,pair,"interaction(""utilization"", ""n_delinquencies"", pattern=""none"")",false,true,undecidable,released_wrong,model
+XGB2,syn-none-n5000-s2,5000,share,strong,"share(""n_delinquencies"") == approx(0.243)",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n5000-s3,5000,share,moderate,"share(""income"") == approx(0.13)",true,false,undecidable,blocked_correct,model
+XGB2,syn-none-n50000-s2,50000,share,strong,"share(""n_delinquencies"") == approx(0.24)",true,false,undecidable,blocked_correct,model
+XGB2,syn-weak-n5000-s2,5000,share,strong,"share(""n_delinquencies"") == approx(0.221)",true,false,undecidable,blocked_correct,model
+XGB2,syn-weak-n5000-s2,5000,interaction,pair,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,syn-weak-n5000-s3,5000,share,moderate,"share(""income"") == approx(0.118)",true,false,undecidable,blocked_correct,model
+XGB2,syn-dominant-n5000-s2,5000,interaction,pair,"interaction(""n_inquiries"", ""history_months"", pattern=""none"")",false,true,false,released_wrong,model
+XGB2,syn-dominant-n5000-s3,5000,peak,peak,"peak(""history_months"", at=36.0)",true,false,undecidable,blocked_correct,model

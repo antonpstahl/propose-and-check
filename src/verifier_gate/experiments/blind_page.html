@@ -1,0 +1,483 @@
+<title>E3 Blind Labels</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout: the reading desk of the earlier labelling pages. The text, one sentence per row with its label, on the left; the model's facts on the right; one column on phones. */
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --ink: #17202c; --ink-2: #485366; --ink-3: #6f7a8c; --rule: #dbe0e8;
+  --accent: #2a5b89; --accent-soft: #e3ecf5; --mark: #fff3c2;
+  --ok: #2c7a4d; --ok-soft: #e1f1e7; --err: #b3261e; --err-soft: #f9e3e1; --open: #a35a00; --open-soft: #f8ead8;
+  --mis: #5b4fb0; --mis-soft: #ebe8f8; --none: #6f7a8c; --none-soft: #eceff3; --unsure: #8f6200; --unsure-soft: #f6ecd6;
+  --zone-1: #eef1f5; --zone-2: #e5e9ef; --zone-3: #dbe0e8; --zone-4: #d0d7e1;
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-read: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --step--1: 0.8125rem; --step-0: 0.9375rem; --step-1: 1.0625rem; --step-2: 1.375rem;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --ink-2: #aeb6c3; --ink-3: #848d9d; --rule: #2b3340;
+  --accent: #82b2df; --accent-soft: #1f2d3d; --mark: #3a3216;
+  --ok: #6fcf97; --ok-soft: #17301f; --err: #f0877e; --err-soft: #3a1f1d; --open: #f2a65a; --open-soft: #3a2812;
+  --mis: #b2a8f0; --mis-soft: #26223f; --none: #a3acba; --none-soft: #232a34; --unsure: #e0b44f; --unsure-soft: #352a12;
+  --zone-1: #1e252f; --zone-2: #242c37; --zone-3: #2b3440; --zone-4: #333d4a; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --ink: #e5e9f0; --ink-2: #aeb6c3; --ink-3: #848d9d; --rule: #2b3340;
+  --accent: #82b2df; --accent-soft: #1f2d3d; --mark: #3a3216;
+  --ok: #6fcf97; --ok-soft: #17301f; --err: #f0877e; --err-soft: #3a1f1d; --open: #f2a65a; --open-soft: #3a2812;
+  --mis: #b2a8f0; --mis-soft: #26223f; --none: #a3acba; --none-soft: #232a34; --unsure: #e0b44f; --unsure-soft: #352a12;
+  --zone-1: #1e252f; --zone-2: #242c37; --zone-3: #2b3440; --zone-4: #333d4a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 var(--step-0)/1.5 var(--font-ui); }
+.wrap { max-width: 1280px; margin: 0 auto; padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 16px; }
+h1, h2 { margin: 0; text-wrap: balance; }
+h1 { font: 600 var(--step-2)/1.2 var(--font-ui); letter-spacing: -0.01em; }
+h2 { font: 600 var(--step--1)/1.3 var(--font-ui); text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); }
+button { font: inherit; color: inherit; cursor: pointer; }
+input, textarea { font: inherit; color: var(--ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+kbd { font: 500 0.75rem/1 var(--font-mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 2px 5px; background: var(--bg); color: var(--ink-2); }
+
+header.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
+.sub { color: var(--ink-2); max-width: 72ch; margin: 4px 0 0; }
+.tally { display: flex; flex-wrap: wrap; gap: 6px 16px; font-variant-numeric: tabular-nums; color: var(--ink-2); font-size: var(--step--1); align-items: baseline; }
+.tally b { color: var(--ink); font-weight: 600; }
+.chip { border: 1px solid var(--rule); border-radius: 999px; padding: 2px 10px; background: var(--surface); }
+
+.guide { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+.guide summary { padding: 10px 14px; font-weight: 600; cursor: pointer; }
+.guide .body { padding: 0 14px 14px; display: grid; gap: 8px; max-width: 80ch; color: var(--ink-2); }
+.guide .body h2, .guide .body h3, .guide .body h4 { color: var(--ink); text-transform: none; letter-spacing: 0; font: 600 var(--step-0)/1.3 var(--font-ui); margin: 6px 0 0; }
+.guide .body h2 { display: none; }
+.guide .body p, .guide .body ul { margin: 0; }
+.guide .body ul { padding-left: 1.2rem; display: grid; gap: 4px; }
+.guide .body b { color: var(--ink); }
+.guide .keys { color: var(--ink-3); font-size: var(--step--1); }
+
+.setup { background: var(--surface); border: 1px solid var(--accent); border-radius: 8px; padding: 16px; display: grid; gap: 12px; max-width: 640px; }
+.setup p { margin: 0; color: var(--ink-2); }
+.setup label { display: grid; gap: 4px; font-size: var(--step--1); color: var(--ink-2); }
+.setup input[type="text"] { border: 1px solid var(--rule); border-radius: 6px; padding: 8px; background: var(--bg); max-width: 14rem; }
+.setup .row { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.setup .check { display: flex; gap: 8px; align-items: flex-start; font-size: var(--step-0); color: var(--ink); }
+.setup .check input { margin-top: 4px; }
+
+.strip { display: flex; flex-wrap: wrap; gap: 3px; }
+.cell { min-width: 34px; height: 24px; border-radius: 4px; border: 1px solid var(--rule); background: var(--surface); padding: 0 4px;
+  font: 500 0.6875rem/1 var(--font-mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.cell[data-s="partial"] { background: linear-gradient(135deg, var(--accent-soft) 50%, var(--surface) 50%); color: var(--ink-2); }
+.cell[data-s="done"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.cell[aria-current="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+
+main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 940px) { main { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.item-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.item-id { font: 500 var(--step-1)/1 var(--font-mono); }
+.meta { color: var(--ink-3); font-size: var(--step--1); }
+
+ol.sents { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: s; }
+.sent { border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; display: grid; gap: 8px; counter-increment: s; }
+.sent.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.sent .said { font: 400 var(--step-1)/1.5 var(--font-read); display: flex; gap: 10px; }
+.sent .said::before { content: counter(s); font: 500 var(--step--1)/1.9 var(--font-mono); color: var(--ink-3); min-width: 1.2rem; }
+.sent.active .said span { background: var(--mark); border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.labels { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab { border: 1.5px solid var(--rule); background: var(--surface); border-radius: 6px; padding: 4px 9px; font-size: var(--step--1); font-weight: 500; display: inline-flex; gap: 6px; align-items: baseline; }
+.lab kbd { padding: 1px 4px; font-size: 0.6875rem; }
+.lab:hover { border-color: var(--ink-3); }
+.lab[aria-pressed="true"][data-v="supported"], .lab[aria-pressed="true"][data-v="no"] { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.lab[aria-pressed="true"][data-v="false"], .lab[aria-pressed="true"][data-v="yes"] { border-color: var(--err); background: var(--err-soft); color: var(--err); }
+.lab[aria-pressed="true"][data-v="unsettled"] { border-color: var(--open); background: var(--open-soft); color: var(--open); }
+.lab[aria-pressed="true"][data-v="misleading"] { border-color: var(--mis); background: var(--mis-soft); color: var(--mis); }
+.lab[aria-pressed="true"][data-v="nothing"] { border-color: var(--none); background: var(--none-soft); color: var(--none); }
+.lab[aria-pressed="true"][data-v="unsure"] { border-color: var(--unsure); background: var(--unsure-soft); color: var(--unsure); }
+.extras { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: var(--step--1); color: var(--ink-2); }
+.extras label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.linkish { background: none; border: 0; padding: 0; color: var(--accent); font-size: var(--step--1); font-weight: 500; }
+textarea { background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; min-height: 2.8rem; resize: vertical; width: 100%; font: 400 var(--step--1)/1.45 var(--font-ui); }
+.whole { border-top: 1px solid var(--rule); padding-top: 14px; display: grid; gap: 8px; }
+.whole.active .q { color: var(--accent); }
+.whole .q { font-weight: 600; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 1px solid var(--rule); background: var(--surface); border-radius: 6px; padding: 6px 12px; font-size: var(--step--1); }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+details.more > summary { cursor: pointer; color: var(--accent); font-size: var(--step--1); font-weight: 500; }
+details.more[open] > summary { margin-bottom: 8px; }
+.facts { display: grid; gap: 12px; }
+.block { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); min-width: 0; }
+.block:last-child { border-bottom: 0; padding-bottom: 0; }
+.fname { font: 500 var(--step-0)/1.35 var(--font-mono); overflow-wrap: anywhere; }
+.fdesc { color: var(--ink-2); font-size: var(--step--1); }
+.fline { font-size: var(--step--1); color: var(--ink); font-variant-numeric: tabular-nums; }
+.curve { font: 400 0.75rem/1.5 var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.band { width: 100%; max-width: 360px; height: auto; display: block; }
+.band .z1 { fill: var(--zone-1); } .band .z2 { fill: var(--zone-2); } .band .z3 { fill: var(--zone-3); } .band .z4 { fill: var(--zone-4); }
+.band text { fill: var(--ink-3); font: 500 8.5px var(--font-ui); }
+.band .bar { fill: var(--accent); } .band .pt { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+.head-note { color: var(--ink-2); font-size: var(--step--1); margin: 0; }
+.key { overflow-x: auto; }
+.key table { border-collapse: collapse; font-size: 0.8125rem; min-width: 480px; }
+.key th, .key td { text-align: left; vertical-align: top; padding: 5px 8px; border-bottom: 1px solid var(--rule); }
+.key th { color: var(--ink-3); font-weight: 600; }
+.key td:first-child { font-family: var(--font-read); }
+
+footer.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; font-size: var(--step--1); color: var(--ink-2); }
+.status::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--ink-3); vertical-align: 1px; }
+.status[data-s="saved"]::before { background: var(--ok); }
+.status[data-s="saving"]::before { background: var(--accent); }
+.status[data-s="local"]::before, .status[data-s="failed"]::before { background: var(--unsure); }
+#copybox { min-height: 6rem; font: 400 0.75rem/1.4 var(--font-mono); }
+@media (prefers-reduced-motion: no-preference) { .lab, .cell, .btn, .sent { transition: background-color .12s, border-color .12s, color .12s, box-shadow .12s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>E3 Blind Labels</h1>
+      <p class="sub">Explanations of fitted credit-risk models, each with the facts its writer had. For every sentence: does what it says about the model hold?</p>
+    </div>
+    <div class="tally" id="tally" aria-live="polite"></div>
+  </header>
+
+  <details class="guide" id="guide">
+    <summary>Labelling guide</summary>
+    <div class="body">
+      <div id="guide-body"></div>
+      <p class="keys">Keys: <kbd>S</kbd> supported, <kbd>F</kbd> false, <kbd>N</kbd> not settled, <kbd>M</kbd> misleading, <kbd>X</kbd> nothing to check, <kbd>U</kbd> unsure (each labels the highlighted sentence and moves on); <kbd>D</kbd> reads the words differently; <kbd>↑</kbd> <kbd>↓</kbd> sentence; <kbd>←</kbd> <kbd>→</kbd> item. On the whole-text question: <kbd>Y</kbd> yes, <kbd>N</kbd> no, <kbd>U</kbd> unsure.</p>
+      <p class="keys" id="guide-hash"></p>
+    </div>
+  </details>
+
+  <section class="setup" id="setup" hidden aria-labelledby="setup-title">
+    <h2 id="setup-title">Before the first label</h2>
+    <p>Read the labelling guide above. Your labels are stored under your own account; nobody but the page's owner can read them, and no other rater sees them.</p>
+    <label for="rater-code">Your rater code (initials, as you will sign the labels)
+      <input type="text" id="rater-code" maxlength="12" autocomplete="off" spellcheck="false">
+    </label>
+    <div class="row" id="set-choice" hidden>
+      <span>Items:</span>
+      <label class="check"><input type="radio" name="set" id="set-all" value="all" checked> all items (first rater)</label>
+      <label class="check"><input type="radio" name="set" id="set-overlap" value="overlap"> the items assigned to the second rater</label>
+    </div>
+    <label class="check" for="read-guide"><input type="checkbox" id="read-guide"> I have read the guide, and I have not seen which source any of these texts comes from or what a checker said about it.</label>
+    <div class="row"><button class="btn primary" id="start" disabled>Start labelling</button><span class="meta" id="setup-note"></span></div>
+  </section>
+
+  <nav class="strip" id="strip" aria-label="Items"></nav>
+
+  <main id="desk" hidden>
+    <section class="panel" aria-labelledby="item-id">
+      <div class="item-head">
+        <span class="item-id" id="item-id"></span>
+        <span class="meta" id="item-meta"></span>
+      </div>
+      <ol class="sents" id="sents"></ol>
+      <div class="whole" id="whole"></div>
+      <div class="nav">
+        <button class="btn" id="prev">← Previous</button>
+        <button class="btn" id="next">Next →</button>
+        <button class="btn primary" id="next-open">Next unfinished</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Facts">
+      <h2>Facts for the features the text names</h2>
+      <div class="facts" id="facts-named"></div>
+      <details class="more">
+        <summary>All other facts about this model</summary>
+        <div class="facts" id="facts-other"></div>
+      </details>
+      <details class="more">
+        <summary>About this model</summary>
+        <p class="head-note" id="head"></p>
+      </details>
+      <details class="more" open>
+        <summary>What the words mean</summary>
+        <div class="key"><table><thead><tr><th>Words in the text</th><th>Meaning</th></tr></thead><tbody id="words"></tbody></table></div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="bar">
+    <span class="status" id="status" data-s="connecting">Connecting to the label store…</span>
+    <span class="nav"><button class="btn" id="copy">Copy my labels as JSON</button></span>
+  </footer>
+  <textarea id="copybox" hidden readonly aria-label="Labels as JSON"></textarea>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const ALL = DATA.items, BY_ID = Object.fromEntries(ALL.map((it) => [it.id, it]));
+  const TAG = `e3-blind-${DATA.version}-${DATA.guide_sha.slice(0, 8)}`;
+  const LABELS = [["supported", "Supported", "s"], ["false", "False", "f"], ["unsettled", "Not settled", "n"],
+                  ["misleading", "Misleading", "m"], ["nothing", "Nothing to check", "x"], ["unsure", "Unsure", "u"]];
+  const WHOLE = [["yes", "Yes", "y"], ["no", "No", "n"], ["unsure", "Unsure", "u"]];
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const now = () => new Date().toISOString();
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(`${TAG}-${k}`); return v == null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(`${TAG}-${k}`, JSON.stringify(v)); } catch {} },
+  };
+  const state = { me: store.get("me", null), docs: store.get("docs", {}), idx: 0, active: 0, db: null, uid: null, owner: false, queue: {}, noteTimers: {} };
+
+  $("guide-body").innerHTML = DATA.guide;
+  $("guide-hash").textContent = `Guide ${DATA.version}, SHA-256 ${DATA.guide_sha.slice(0, 16)}…`;
+  $("words").innerHTML = DATA.words.map(([w, m]) => `<tr><td>${esc(w)}</td><td>${esc(m)}</td></tr>`).join("");
+  function setStatus(s, text) { const el = $("status"); el.dataset.s = s; el.textContent = text; }
+
+  // --- which items, and their state ---
+  const items = () => (state.me && state.me.set === "overlap" ? DATA.overlap.map((id) => BY_ID[id]) : ALL);
+  const doc = (id) => state.docs[id] || { labels: {}, reads: {}, notes: {}, whole: null, whole_note: "", history: [] };
+  function itemState(it) {
+    const d = doc(it.id), n = it.sentences.filter(([sid]) => d.labels[sid]).length + (d.whole ? 1 : 0);
+    return n === 0 ? null : n === it.sentences.length + 1 ? "done" : "partial";
+  }
+
+  // --- facts ---
+  const E = DATA.edges || { weak: 2, moderate: 5, strong: 15 };
+  const STOPS = [[0, 0], [E.weak, 60], [E.moderate, 120], [E.strong, 200], [Math.max(50, E.strong * 2), 300]];
+  function x(v) {
+    v = Math.max(0, Math.min(STOPS[4][0], v));
+    for (let k = 1; k < STOPS.length; k++) { const [v0, x0] = STOPS[k - 1], [v1, x1] = STOPS[k]; if (v <= v1) return x0 + (v - v0) / (v1 - v0) * (x1 - x0); }
+    return 300;
+  }
+  function bandSvg(pt, lo, hi) {
+    const zones = [["z1", 0, 60, "negligible"], ["z2", 60, 120, "weak"], ["z3", 120, 200, "moderate"], ["z4", 200, 300, "strong"]];
+    const z = zones.map(([c, a, b, t]) => `<rect class="${c}" x="${a}" y="0" width="${b - a - 1}" height="30" rx="2"/><text x="${a + 4}" y="10">${t}</text>`).join("");
+    const ticks = [[E.weak, 60], [E.moderate, 120], [E.strong, 200]].map(([v, px]) => `<text x="${px}" y="40" text-anchor="middle">${v}%</text>`).join("");
+    return `<svg class="band" viewBox="0 0 300 42" role="img" aria-label="Share ${pt}%, 95% band ${lo}% to ${hi}%"><title>Share ${pt}% (95% band ${lo}% to ${hi}%)</title>${z}${ticks}` +
+      `<rect class="bar" x="${x(lo)}" y="17" width="${Math.max(3, x(hi) - x(lo))}" height="6" rx="3"/><circle class="pt" cx="${x(pt)}" cy="20" r="4.5"/></svg>`;
+  }
+  const SHARE = /share of importance ([\d.]+)% \(95% band ([\d.]+)% to ([\d.]+)%\)/i;
+  function blockHtml(b) {
+    const [first, ...rest] = b.lines;
+    let out = "";
+    if (b.names.length) {
+      const m = first.match(/^`([^`]+)`:\s*(.*)$/);
+      out += `<div class="fname">${esc(m ? m[1] : first)}</div>`;
+      if (m && m[2]) {
+        const sm = m[2].match(SHARE);
+        out += sm ? `<div class="fline">${esc(m[2].replace(/`/g, ""))}</div>${bandSvg(+sm[1], +sm[2], +sm[3])}` : `<div class="fdesc">${esc(m[2].replace(/`/g, ""))}</div>`;
+      }
+    } else out += `<div class="fdesc">${esc(first.replace(/`/g, ""))}</div>`;
+    for (const line of rest) {
+      const clean = line.replace(/`/g, ""), sm = clean.match(SHARE);
+      out += (/^Curve/.test(clean) || /^Effect of/.test(clean)) ? `<div class="curve">${esc(clean)}</div>` : `<div class="fline">${esc(clean)}</div>` + (sm ? bandSvg(+sm[1], +sm[2], +sm[3]) : "");
+    }
+    return `<div class="block">${out}</div>`;
+  }
+
+  // --- rendering ---
+  function renderTally() {
+    const its = items(); let done = 0, sents = 0, labelled = 0;
+    its.forEach((it) => { const d = doc(it.id); if (itemState(it) === "done") done++; sents += it.sentences.length; labelled += it.sentences.filter(([sid]) => d.labels[sid]).length; });
+    const who = state.me ? `<span class="chip">Rater ${esc(state.me.code)}${state.me.set === "overlap" ? " · assigned items" : ""}</span>` : "";
+    $("tally").innerHTML = `${who}<span><b>${done}</b> / ${its.length} items done</span><span><b>${labelled}</b> / ${sents} sentences labelled</span>`;
+  }
+  function renderStrip() {
+    const its = items(), strip = $("strip");
+    if (strip.childElementCount !== its.length) {
+      strip.innerHTML = "";
+      its.forEach((it, k) => { const b = document.createElement("button"); b.className = "cell"; b.textContent = it.id; b.addEventListener("click", () => go(k)); strip.appendChild(b); });
+    }
+    its.forEach((it, k) => {
+      const b = strip.children[k], s = itemState(it);
+      if (s) b.dataset.s = s; else delete b.dataset.s;
+      b.setAttribute("aria-current", k === state.idx ? "true" : "false");
+      b.setAttribute("aria-label", `${it.id}, ${s === "done" ? "done" : s === "partial" ? "partly labelled" : "not labelled"}`);
+    });
+  }
+  function renderItem() {
+    const its = items(), it = its[state.idx], f = DATA.facts[it.facts], d = doc(it.id);
+    const n = (f.head.match(/\(([\d,]+) applicants\)/) || [])[1];
+    $("item-id").textContent = it.id;
+    $("item-meta").textContent = [it.model === "XGB2" ? "depth-2 XGBoost" : it.model, n ? `${n} applicants` : "", `${it.sentences.length} sentences`].filter(Boolean).join(" · ");
+    $("sents").innerHTML = it.sentences.map(([sid, s], k) => {
+      const v = d.labels[sid], note = d.notes[sid] || "";
+      return `<li class="sent${k === state.active ? " active" : ""}" data-k="${k}">
+        <div class="said"><span>${esc(s)}</span></div>
+        <div class="labels" role="group" aria-label="Label for sentence ${k + 1}">
+          ${LABELS.map(([val, name, key]) => `<button class="lab" data-v="${val}" data-sid="${sid}" aria-pressed="${v === val}"><span>${name}</span><kbd>${key.toUpperCase()}</kbd></button>`).join("")}
+        </div>
+        <div class="extras">
+          <label for="rd-${it.id}-${sid}"><input type="checkbox" id="rd-${it.id}-${sid}" data-sid="${sid}" class="reads" ${d.reads[sid] ? "checked" : ""}> I read the words differently</label>
+          <button class="linkish" data-sid="${sid}" data-note-toggle ${note ? "hidden" : ""}>Add a note</button>
+        </div>
+        <textarea id="note-${it.id}-${sid}" data-sid="${sid}" class="note" placeholder="Which fact contradicts it, which band leaves it open, how you read the words" ${note ? "" : "hidden"}>${esc(note)}</textarea>
+      </li>`;
+    }).join("");
+    const wActive = state.active === it.sentences.length;
+    $("whole").className = `whole${wActive ? " active" : ""}`;
+    $("whole").innerHTML = `<div class="q">Taken as a whole, would a reader come away with a wrong picture of the model?</div>
+      <div class="labels" role="group" aria-label="Whole text">${WHOLE.map(([val, name, key]) => `<button class="lab" data-v="${val}" data-whole aria-pressed="${d.whole === val}"><span>${name}</span><kbd>${key.toUpperCase()}</kbd></button>`).join("")}</div>
+      <textarea id="note-${it.id}-whole" class="note" data-sid="whole" placeholder="What is left out or turned around (optional)">${esc(d.whole_note || "")}</textarea>`;
+    document.querySelectorAll("#sents .lab").forEach((el) => el.addEventListener("click", () => { state.active = it.sentences.findIndex(([sid]) => String(sid) === el.dataset.sid); setLabel(el.dataset.sid, el.dataset.v); }));
+    document.querySelectorAll("#whole .lab").forEach((el) => el.addEventListener("click", () => setWhole(el.dataset.v)));
+    document.querySelectorAll(".reads").forEach((el) => el.addEventListener("change", () => setReads(el.dataset.sid, el.checked)));
+    document.querySelectorAll("[data-note-toggle]").forEach((el) => el.addEventListener("click", () => { el.hidden = true; const t = $(`note-${it.id}-${el.dataset.sid}`); t.hidden = false; t.focus(); }));
+    document.querySelectorAll(".note").forEach((el) => el.addEventListener("input", () => noteChanged(it.id, el.dataset.sid, el.value)));
+    document.querySelectorAll(".sent").forEach((el) => el.addEventListener("click", (e) => { if (e.target.closest("button, input, textarea, label")) return; state.active = +el.dataset.k; renderItem(); }));
+    const named = new Set(it.named);
+    const isNamed = (bl) => bl.names.length && (bl.names.length === 1 ? named.has(bl.names[0]) : bl.names.every((y) => named.has(y)));
+    const mine = f.blocks.filter(isNamed), other = f.blocks.filter((bl) => !isNamed(bl));
+    $("facts-named").innerHTML = mine.length ? mine.map(blockHtml).join("") : `<p class="head-note">No feature name was recognised in the text; see all facts below.</p>`;
+    $("facts-other").innerHTML = other.map(blockHtml).join("");
+    $("head").textContent = f.head;
+    renderStrip(); renderTally();
+  }
+
+  // --- changes, each kept in the item's history ---
+  function change(id, field, from, to, apply) {
+    if (from === to) return;
+    const d = JSON.parse(JSON.stringify(doc(id)));
+    apply(d);
+    d.history = [...(d.history || []), { at: now(), by: state.uid || "local", field, from: from ?? null, to: to ?? null }];
+    d.at = now();
+    d.guide = DATA.guide_sha;
+    state.docs[id] = d;
+    write(id);
+  }
+  function setLabel(sid, v) {
+    const it = items()[state.idx], d = doc(it.id);
+    change(it.id, `s${sid}`, d.labels[sid] || null, v, (x) => { x.labels[sid] = v; });
+    const next = it.sentences.findIndex(([s], k) => k > state.active && !doc(it.id).labels[s]);
+    state.active = next >= 0 ? next : (doc(it.id).whole ? Math.min(state.active + 1, it.sentences.length) : it.sentences.length);
+    renderItem();
+  }
+  function setWhole(v) {
+    const it = items()[state.idx];
+    change(it.id, "whole", doc(it.id).whole || null, v, (x) => { x.whole = v; });
+    state.active = it.sentences.length;
+    renderItem();
+    if (itemState(it) === "done") setTimeout(nextOpen, 260);
+  }
+  function setReads(sid, on) {
+    const it = items()[state.idx];
+    change(it.id, `s${sid}.reads`, !!doc(it.id).reads[sid], !!on, (x) => { if (on) x.reads[sid] = true; else delete x.reads[sid]; });
+    renderTally();
+  }
+  function noteChanged(id, sid, text) {
+    const key = `${id}:${sid}`;
+    clearTimeout(state.noteTimers[key]);
+    state.noteTimers[key] = setTimeout(() => flushNote(id, sid, text), 900);
+  }
+  function flushNote(id, sid, text) {
+    delete state.noteTimers[`${id}:${sid}`];
+    text = text.trim();
+    if (sid === "whole") change(id, "whole.note", doc(id).whole_note || "", text, (x) => { x.whole_note = text; });
+    else change(id, `s${sid}.note`, doc(id).notes[sid] || "", text, (x) => { if (text) x.notes[sid] = text; else delete x.notes[sid]; });
+  }
+  function flushAllNotes() {
+    document.querySelectorAll(".note").forEach((el) => { const key = `${items()[state.idx].id}:${el.dataset.sid}`; if (state.noteTimers[key]) { clearTimeout(state.noteTimers[key]); flushNote(items()[state.idx].id, el.dataset.sid, el.value); } });
+  }
+
+  function write(id) {
+    store.set("docs", state.docs);
+    if (!state.db) { renderTally(); return; }
+    setStatus("saving", "Saving…");
+    const body = JSON.parse(JSON.stringify(state.docs[id]));
+    const run = () => state.db.doc(`raters/${state.uid}/labels/${id}`).set(body).then(
+      () => setStatus("saved", `Saved (${id})`),
+      (e) => setStatus("failed", `Not saved to the store (${e && e.code ? e.code : "error"}); kept in this browser. Use Copy my labels as JSON.`));
+    state.queue[id] = (state.queue[id] || Promise.resolve()).then(run, run);
+  }
+
+  // --- navigation and keys ---
+  function go(k) { flushAllNotes(); const n = items().length; state.idx = (k + n) % n; state.active = firstOpen(items()[state.idx]); store.set("idx", state.idx); renderItem(); window.scrollTo({ top: 0 }); }
+  function firstOpen(it) { const d = doc(it.id), k = it.sentences.findIndex(([sid]) => !d.labels[sid]); return k >= 0 ? k : it.sentences.length; }
+  function nextOpen() { const its = items(); for (let s = 1; s <= its.length; s++) { const k = (state.idx + s) % its.length; if (itemState(its[k]) !== "done") return go(k); } go(state.idx + 1); }
+  $("prev").addEventListener("click", () => go(state.idx - 1));
+  $("next").addEventListener("click", () => go(state.idx + 1));
+  $("next-open").addEventListener("click", nextOpen);
+  document.addEventListener("keydown", (e) => {
+    if ($("desk").hidden || (e.target.closest && e.target.closest("textarea, input"))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const it = items()[state.idx], key = e.key.toLowerCase(), onWhole = state.active === it.sentences.length;
+    if (onWhole && WHOLE.some(([, , k]) => k === key)) setWhole(WHOLE.find(([, , k]) => k === key)[0]);
+    else if (!onWhole && LABELS.some(([, , k]) => k === key)) setLabel(String(it.sentences[state.active][0]), LABELS.find(([, , k]) => k === key)[0]);
+    else if (!onWhole && key === "d") { const sid = String(it.sentences[state.active][0]); setReads(sid, !doc(it.id).reads[sid]); renderItem(); }
+    else if (key === "arrowdown") { state.active = Math.min(state.active + 1, it.sentences.length); renderItem(); }
+    else if (key === "arrowup") { state.active = Math.max(state.active - 1, 0); renderItem(); }
+    else if (key === "arrowright") go(state.idx + 1);
+    else if (key === "arrowleft") go(state.idx - 1);
+    else return;
+    e.preventDefault();
+  });
+  $("copy").addEventListener("click", () => {
+    flushAllNotes();
+    const text = JSON.stringify({ rater: { id: state.uid || "local", ...(state.me || {}) }, labels: state.docs }, null, 1), box = $("copybox");
+    const show = () => { box.hidden = false; box.value = text; box.select(); };
+    try { navigator.clipboard.writeText(text).then(() => setStatus($("status").dataset.s, "Labels copied as JSON"), show); } catch { show(); }
+  });
+
+  // --- the rater, then the desk ---
+  function openDesk() {
+    $("setup").hidden = true; $("desk").hidden = false;
+    const saved = store.get("idx", 0);
+    state.idx = saved >= 0 && saved < items().length ? saved : 0;
+    const open = items().findIndex((it) => itemState(it) !== "done");
+    if (!store.get("idx", null) && open >= 0) state.idx = open;
+    state.active = firstOpen(items()[state.idx]);
+    renderItem();
+  }
+  function askRater(canChooseSet) {
+    $("setup").hidden = false; $("desk").hidden = true; $("guide").open = true;
+    $("set-choice").hidden = !canChooseSet;
+    $("setup-note").textContent = canChooseSet ? "Your labels stay in this browser; copy them as JSON when you are done." : (state.owner ? "You will label all items." : "You will label the items assigned to the second rater.");
+    const ready = () => { $("start").disabled = !($("rater-code").value.trim() && $("read-guide").checked); };
+    $("rater-code").addEventListener("input", ready); $("read-guide").addEventListener("change", ready);
+    $("start").addEventListener("click", async () => {
+      const set = canChooseSet ? (document.querySelector('input[name="set"]:checked') || {}).value || "all" : (state.owner ? "all" : "overlap");
+      state.me = { code: $("rater-code").value.trim(), owner: state.owner, set, guide: DATA.guide_sha, version: DATA.version, started: now() };
+      store.set("me", state.me);
+      if (state.db) {
+        try { await state.db.doc(`raters/${state.uid}`).set(state.me); setStatus("saved", `Rater ${state.me.code} registered`); }
+        catch (e) { state.db = null; setStatus("failed", `Could not register in the store (${e && e.code ? e.code : "error"}); labels stay in this browser.`); }
+      }
+      openDesk();
+    });
+  }
+
+  renderStrip();
+  (async () => {
+    const use = window.claude && window.claude.use;
+    const [db, user] = use ? await Promise.all([window.claude.use("db"), window.claude.use("user")]) : [null, null];
+    const uid = user ? await user.id() : null;
+    if (!db || !uid) {
+      setStatus("local", "Label store unavailable here: labels are kept in this browser. Use Copy my labels as JSON.");
+      if (state.me) openDesk(); else askRater(true);
+      return;
+    }
+    state.uid = uid; state.owner = await user.isOwner();
+    let me = null;
+    try { const snap = await db.doc(`raters/${uid}`).get(); me = snap.exists ? snap.data() : null; } catch (e) { me = null; }
+    state.db = db;
+    if (me) { state.me = { ...me }; store.set("me", state.me); }
+    let first = true;
+    db.collection(`raters/${uid}/labels`).onSnapshot((snap) => {
+      const remote = {};
+      snap.docs.forEach((d) => { const v = d.data(); if (v) remote[d.id] = JSON.parse(JSON.stringify(v)); });
+      const pending = first ? Object.keys(state.docs).filter((id) => BY_ID[id] && (!remote[id] || (state.docs[id].at || "") > (remote[id].at || ""))) : [];
+      for (const id of Object.keys(remote)) if (!state.docs[id] || (remote[id].at || "") >= (state.docs[id].at || "")) state.docs[id] = remote[id];
+      store.set("docs", state.docs);
+      if (first) {
+        first = false;
+        setStatus("saved", `Connected: ${Object.keys(remote).length} item(s) in your store`);
+        pending.forEach(write);
+        if (state.me) openDesk(); else askRater(false);
+      } else if (!$("desk").hidden && !(document.activeElement && document.activeElement.classList.contains("note"))) renderItem();
+    }, (e) => { state.db = null; setStatus("failed", `Label store stopped (${e.code}); labels are kept in this browser.`); });
+  })();
+})();
+</script>

@@ -1,0 +1,1003 @@
+{
+ "run_id": "syn-weak-n50000-s2_EBM_H1_d1_claude-haiku-5-5_opaque",
+ "budget": 16,
+ "calls": 5,
+ "rounds": 1,
+ "format_retry_used": false,
+ "pending": null,
+ "extracting": [],
+ "checking": null,
+ "checking_mode": "",
+ "readings": [],
+ "writer": {
+  "role": "repair 1",
+  "model": "claude-haiku-5-5",
+  "system": "You explain a fitted credit-risk model to a credit risk manager who is not a data scientist. You receive the facts about one model and write a short explanation of what the model predicts, together with a plan of claims that a verifier checks against the model before anything is released.\n\n# The text\n\n- Write 5 to 8 sentences in plain English, the model's most important features first.\n- Write about the model, not about the world: say what the model predicts (\"the model's predicted default risk rises with credit utilization\", \"credit utilization has a strong effect on the model's predictions\"). Do not call a feature a driver or a cause of default, and do not say what makes applicants risky.\n- Mention an interaction when it matters for the model's predictions.\n- Say only what the facts support. Do not round a weak effect up to a strong one, and do not add knowledge about credit risk that the facts do not show.\n- When the facts do not settle something, say so (\"the data do not settle whether ...\") or leave it out.\n- Describe the strength, the shape and the importance of a feature only with the words in the table below. Close synonyms are fine (\"rises\" or \"goes up\" for \"increases\").\n- Do not state a number, a threshold or a location that no claim covers. If no claim form fits a detail (\"risk rises steeply above about 0.7\"), leave the detail out.\n\n# Choosing the words\n\nThe facts give every estimate with its 95% band. A word is right only if the whole band supports it:\n\n- **Strength.** Use one class word only if the whole share band lies inside its class: weak 2% to 5%, moderate 5% to 15%, strong 15% or more, and the curve shows an effect (its band excludes zero on more than 5% of the data, or the net change's band excludes zero). If the band crosses 2%, 5% or 15%, use the two-class phrase (\"weak to moderate\", \"moderate to strong\"), or \"at most a weak effect\" if the whole band lies below 5%.\n- **\"Hardly matters\".** Only if the whole share band lies below 2%. A curve that shows no movement is not enough: if the band reaches 2%, say \"at most a weak effect\" when the whole band lies below 5%, or say that the data do not settle whether the feature matters.\n- **Rank and share.** A single rank only if the facts give a single rank (\"rank 3\"); for \"rank 3 to 4\" say \"third or fourth\". \"About x%\" only if the whole share band lies within 2 points (or 10%) of x.\n- **Direction.** Say \"generally increases\" (or \"generally decreases\") when the net change's band lies on one side of zero. Leave out \"generally\" only if, in addition, the curve's band rules out any fall larger than 5% of the curve's range anywhere on the data: that needs a narrow band, so use the plain word only when the certified statements give it. \"Mostly increases\" only if the band confirms a fall larger than 5% of the curve's range, on at most 10% of the data.\n- **Jumps and peaks.** \"Jumps at x\" only for one sharp step up, and \"drops at x\" only for one sharp step down, that makes up at least 50% of the curve's range. A curve described in several pieces moves gradually: describe it with a direction, without a jump. \"Peaks at x\" only if the highest piece lies in the middle of the curve, with clearly lower pieces on both sides.\n- **Interactions.** \"The effect of x grows with y\" only if both conditional effects of x have bands on the same side of zero, the one at high y is clearly larger, and the pair's share band lies at or above 2%. \"Reverses\" only if the two bands lie on opposite sides of zero. \"The model shows no interaction between x and y\" only if the model has no such pair, or the pair's whole share band lies below 2%. Otherwise leave the pair out, or say that the data do not settle whether they interact.\n- **Hedging.** Say \"the data do not settle whether ...\" only about what the bands leave open. When a band settles a question (a net change whose band excludes zero settles the direction; a share band inside a class settles the strength), state the answer; never hedge it.\n- **Certified statements.** If the facts list statements the verifier certifies, those are true at this sample size: build the text on them.\n\n# The claims\n\nFor every sentence that states something about the model, add at least one claim in the DSL below, with that sentence's id. A sentence that only frames the text (\"This summary covers the model's main features.\") needs no claim. Each claim must say exactly what its sentence says, no more and no less. Use the feature names exactly as they are written in the facts, in quotes.\n\n| Words in the text | DSL claim | Meaning |\n|---|---|---|\n| \"x has a strong effect on the model's predictions\" / \"x has a moderate effect on the model's predictions\" / \"x has a weak effect on the model's predictions\" | `strength(\"x\") == \"strong\"` / `strength(\"x\") == \"moderate\"` / `strength(\"x\") == \"weak\"` | share of the model's importance at least 15% / 5% to 15% / 2% to 5%, and an effect the data can detect |\n| \"x has a weak to moderate effect on the model's predictions\" / \"x has a moderate to strong effect on the model's predictions\" | `strength(\"x\") in (\"weak\", \"moderate\")` / `strength(\"x\") in (\"moderate\", \"strong\")` | the share lies somewhere in the classes named |\n| \"x has at most a weak effect on the model's predictions\" | `strength(\"x\") in (\"negligible\", \"weak\")` | share below 5% |\n| \"x hardly matters to the model's predictions\" | `negligible(\"x\")` | share below 2% |\n| \"x is the model's most important feature\" / \"x is the model's second most important feature\" | `rank(\"x\") == 1` / `rank(\"x\") == 2` | rank among the features by importance |\n| \"x is the model's second or third most important feature\" / \"x is among the model's three most important features\" | `rank(\"x\") in (2, 3)` / `rank(\"x\") in (1, 2, 3)` | one of consecutive ranks |\n| \"x accounts for about 30% of the model's importance\" | `share(\"x\") == approx(0.30)` | share of importance, within 2 points or 10% |\n| \"x matters more to the model than y\" | `effect(\"x\") > effect(\"y\")` | x's importance exceeds y's |\n| \"the model's predicted default risk increases with x\" / \"the model's predicted default risk decreases with x\" | `direction(\"x\") == \"increasing\"` / `direction(\"x\") == \"decreasing\"` | rises (falls) from the 5th to the 95th percentile, and the band rules out any move the other way larger than 5% of the curve's range |\n| \"the model's predicted default risk mostly increases with x\" / \"the model's predicted default risk mostly decreases with x\" | `direction(\"x\") == \"mostly_increasing\"` / `direction(\"x\") == \"mostly_decreasing\"` | rises (falls) overall, with a move the other way larger than 5% of the curve's range, confirmed by the band, on at most 10% of the data |\n| \"the model's predicted default risk generally increases with x\" | `direction(\"x\") in (\"increasing\", \"mostly_increasing\")` | either of the two above |\n| \"the model's predicted default risk jumps at x = 0.43\" | `threshold(\"x\", at=0.43)` | one sharp step up near that value, at least 50% of the curve's range |\n| \"the model's predicted default risk drops at x = 2,000\" | `drop(\"x\", at=2000)` | one sharp step down near that value, at least 50% of the curve's range |\n| \"the model's predicted default risk peaks at x = 36\" | `peak(\"x\", at=36)` | the highest point of the curve lies near that value, with lower values on both sides |\n| \"in the model, the effect of x grows with y\" | `interaction(\"x\", \"y\", pattern=\"amplification\")` | the effect of x is larger when y is high, and the pair's share band lies at or above 2% |\n| \"in the model, the effect of x reverses its sign as y changes\" | `interaction(\"x\", \"y\", pattern=\"sign_flip\")` | the effect of x has opposite signs at low and high y |\n| \"the model shows no interaction between x and y\" | `interaction(\"x\", \"y\", pattern=\"none\")` | the model has no such pair, or the pair's whole share band lies below 2% |\n| \"the data do not settle whether ...\" | `unsettled(<any claim above>)` | the facts leave that claim open at this sample size |\n\nRules of the DSL: one claim per line, exactly in the forms above; numbers as plain numbers; a set of values is a tuple of neighbouring values; `unsettled(...)` wraps one other claim. A pair of features can be named as \"x & y\" in `strength`, `share`, `negligible` and `effect`.\n\n# The answer\n\nReturn one JSON object with two lists: `sentences`, each with an `id` (1, 2, 3, ...) and its `text`, and `claims`, each with the `sentence_id` it belongs to and its `dsl` line.\n\nExample (other features than in your facts):\n\n{\"sentences\": [{\"id\": 1, \"text\": \"The number of missed payments is the model's most important feature, and the model's predicted default risk generally rises with it.\"}, {\"id\": 2, \"text\": \"Loan purpose hardly matters to the model's predictions.\"}], \"claims\": [{\"sentence_id\": 1, \"dsl\": \"rank(\\\"missed_payments\\\") == 1\"}, {\"sentence_id\": 1, \"dsl\": \"direction(\\\"missed_payments\\\") in (\\\"increasing\\\", \\\"mostly_increasing\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"negligible(\\\"loan_purpose\\\")\"}]}\n",
+  "messages": [
+   [
+    "user",
+    "These are the facts about the model.\n\nModel: an explainable boosting machine (EBM), fitted to predict whether a credit applicant defaults (50,000 applicants). Effects are on the log-odds scale: positive values raise the risk of default. Every band is a 95% band from 100 refits of the model on resampled data.\n\nFeatures, in the order of their share of the model's importance:\n- `utilization`: revolving credit utilization: the share of the credit limit in use (0 to 1).\n  Share of importance 36.1% (95% band 34.2% to 38.1%); rank 1 among 9 features.\n  Curve (logit contribution by value): x < 0.246: -0.72; 0.246 <= x < 0.414: -0.297445; 0.414 <= x < 0.584: -0.01; 0.584 <= x < 0.618: +0.39; 0.618 <= x < 0.668: +0.81; 0.668 <= x < 0.729: +1.52; 0.729 <= x < 0.782: +2.3; 0.782 <= x < 0.875: +3.36; x >= 0.875: +4 (net change from the 5th to the 95th percentile +2.90, 95% band [+2.76, +3.23]).\n- `n_delinquencies`: number of past delinquencies on the credit file (0 to 6).\n  Share of importance 21.1% (95% band 18.5% to 22.1%); rank 2 among 9 features.\n  Curve (logit contribution by value): 0: -0.4; 1: +0.2; >= 2: +0.6 (net change from the 5th to the 95th percentile +0.93, 95% band [+0.82, +1.00]).\n- `income`: annual income in US dollars.\n  Share of importance 12.1% (95% band 11.0% to 14.0%); rank 3 among 9 features.\n  Curve (logit contribution by value): x < 28,600: +0.4; 28,600 <= x < 49,700: +0.12; 49,700 <= x < 95,200: -0.14; x >= 95,200: -0.5 (net change from the 5th to the 95th percentile -0.96, 95% band [-1.12, -0.83]).\n- `history_months`: length of the credit history in months.\n  Share of importance 8.6% (95% band 7.2% to 9.8%); rank 4 to 5 among 9 features.\n  Curve (logit contribution by value): x < 66.3: +0.296; 66.3 <= x < 253: -0.01; x >= 253: -0.2 (net change from the 5th to the 95th percentile -0.67, 95% band [-0.77, -0.54]).\n- `dti`: debt-to-income ratio (0 to 0.6).\n  Share of importance 6.7% (95% band 5.3% to 7.9%); rank 4 to 5 among 9 features.\n  Curve (logit contribution by value): x < 0.444: -0.07; x >= 0.444: +0.2 (net change from the 5th to the 95th percentile +0.29, 95% band [+0.21, +0.39]).\n- `n_inquiries`: number of recent credit inquiries.\n  Share of importance 3.3% (95% band 2.5% to 4.2%); rank 6 to 7 among 9 features.\n  Curve (logit contribution by value): <= 2: -0.04; 3-4: +0.13; >= 5: +0.4 (net change from the 5th to the 95th percentile +0.35, 95% band [+0.21, +0.44]).\n- `feature_b`: an application attribute (standardised).\n  Share of importance 1.9% (95% band 0.5% to 3.1%); rank 6 to 9 among 9 features.\n  Curve (logit contribution by value): no movement resolved at this sample size (net change from the 5th to the 95th percentile -0.05, 95% band [-0.14, +0.03]).\n- `age`: age of the applicant in years.\n  Share of importance 1.7% (95% band 0.5% to 3.1%); rank 7 to 9 among 9 features.\n  Curve (logit contribution by value): no movement resolved at this sample size (net change from the 5th to the 95th percentile -0.04, 95% band [-0.16, +0.03]).\n- `feature_a`: an application attribute (standardised).\n  Share of importance 1.6% (95% band 0.6% to 3.3%); rank 6 to 9 among 9 features.\n  Curve (logit contribution by value): no movement resolved at this sample size (net change from the 5th to the 95th percentile +0.06, 95% band [-0.01, +0.15]).\n\nInteractions: the model has 5 pairs. The larger ones:\n- `history_months & n_inquiries`: share of importance 3.8% (95% band 2.3% to 4.6%).\n  Effect of `history_months` from 23.6 to 342: -0.32 (95% band -0.50 to -0.17) when `n_inquiries` = 0, -1.29 (95% band -1.47 to -1.02) when `n_inquiries` = 4.\n  Effect of `n_inquiries` from 0 to 4: +0.84 (95% band +0.60 to +0.98) when `history_months` = 23.6, -0.13 (95% band -0.30 to +0.09) when `history_months` = 342.\n- `age & feature_b`: share of importance 1.1% (95% band 0.0% to 1.6%).\n  Effect of `age` from 23.8 to 72.3: +0.19 (95% band -0.13 to +0.26) when `feature_b` = -1.64, -0.23 (95% band -0.38 to +0.02) when `feature_b` = 1.64.\n  Effect of `feature_b` from -1.64 to 1.64: +0.13 (95% band -0.13 to +0.22) when `age` = 23.8, -0.29 (95% band -0.39 to +0.02) when `age` = 72.3.\n- `utilization & feature_a`: share of importance 0.8% (95% band 0.0% to 1.5%).\n  Effect of `utilization` from 0.0965 to 0.749: +2.88 (95% band +2.73 to +3.23) when `feature_a` = -1.66, +3.06 (95% band +2.76 to +3.37) when `feature_a` = 1.65.\n  Effect of `feature_a` from -1.66 to 1.65: -0.07 (95% band -0.19 to +0.15) when `utilization` = 0.0965, +0.11 (95% band -0.01 to +0.24) when `utilization` = 0.749.\n- `utilization & n_delinquencies`: share of importance 0.8% (95% band 0.0% to 1.4%).\n  Effect of `utilization` from 0.0965 to 0.749: +2.85 (95% band +2.76 to +3.17) when `n_delinquencies` = 0, +2.97 (95% band +2.76 to +3.27) when `n_delinquencies` = 2.\n  Effect of `n_delinquencies` from 0 to 2: +0.91 (95% band +0.80 to +0.99) when `utilization` = 0.0965, +1.04 (95% band +0.82 to +1.14) when `utilization` = 0.749.\n- 1 further pairs with a share below 0.5% each, together 0.4%.\n\nWrite the explanation and its claims.\n"
+   ],
+   [
+    "assistant",
+    "{\"claims\":[{\"dsl\":\"rank(\\\"utilization\\\") == 1\",\"sentence_id\":1},{\"dsl\":\"direction(\\\"utilization\\\") == \\\"increasing\\\"\",\"sentence_id\":1},{\"dsl\":\"strength(\\\"utilization\\\") == \\\"strong\\\"\",\"sentence_id\":1},{\"dsl\":\"share(\\\"utilization\\\") == approx(0.36)\",\"sentence_id\":2},{\"dsl\":\"rank(\\\"n_delinquencies\\\") == 2\",\"sentence_id\":3},{\"dsl\":\"direction(\\\"n_delinquencies\\\") == \\\"increasing\\\"\",\"sentence_id\":3},{\"dsl\":\"strength(\\\"n_delinquencies\\\") == \\\"strong\\\"\",\"sentence_id\":3},{\"dsl\":\"rank(\\\"income\\\") == 3\",\"sentence_id\":4},{\"dsl\":\"direction(\\\"income\\\") == \\\"decreasing\\\"\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"income\\\") == \\\"moderate\\\"\",\"sentence_id\":4},{\"dsl\":\"rank(\\\"history_months\\\") in (4, 5)\",\"sentence_id\":5},{\"dsl\":\"direction(\\\"history_months\\\") == \\\"decreasing\\\"\",\"sentence_id\":5},{\"dsl\":\"strength(\\\"dti\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":6},{\"dsl\":\"direction(\\\"dti\\\") == \\\"increasing\\\"\",\"sentence_id\":6},{\"dsl\":\"interaction(\\\"history_months\\\", \\\"n_inquiries\\\", pattern=\\\"amplification\\\")\",\"sentence_id\":7},{\"dsl\":\"negligible(\\\"age\\\")\",\"sentence_id\":8},{\"dsl\":\"negligible(\\\"feature_a\\\")\",\"sentence_id\":8},{\"dsl\":\"unsettled(negligible(\\\"feature_b\\\"))\",\"sentence_id\":8},{\"dsl\":\"unsettled(interaction(\\\"utilization\\\", \\\"feature_a\\\", pattern=\\\"amplification\\\"))\",\"sentence_id\":9},{\"dsl\":\"interaction(\\\"utilization\\\", \\\"n_delinquencies\\\", pattern=\\\"none\\\")\",\"sentence_id\":10}],\"sentences\":[{\"id\":1,\"text\":\"Revolving credit utilization is the model's most important feature, and the model's predicted default risk strongly increases with it, rising steadily as utilization climbs toward high values.\"},{\"id\":2,\"text\":\"Utilization accounts for about 36% of the model's importance.\"},{\"id\":3,\"text\":\"The number of past delinquencies is the model's second most important feature, and the model's predicted default risk strongly increases with it, with the largest rise between no delinquencies and one or two.\"},{\"id\":4,\"text\":\"Annual income is the third most important feature, and the model's predicted default risk generally decreases as income rises, with a moderate effect.\"},{\"id\":5,\"text\":\"Length of credit history and debt-to-income ratio rank fourth or fifth in importance, with the model's predicted default risk generally decreasing as credit history lengthens.\"},{\"id\":6,\"text\":\"The debt-to-income ratio has a weak to moderate effect on the model's predictions, and the model's predicted default risk generally increases with it.\"},{\"id\":7,\"text\":\"In the model, the effect of credit history length grows with the number of recent credit inquiries, so the two features interact.\"},{\"id\":8,\"text\":\"Age and the two standardised application attributes hardly matter to the model's predictions, and the data do not settle whether the second standardised attribute matters.\"},{\"id\":9,\"text\":\"The data do not settle whether utilization and the first standardised application attribute interact.\"},{\"id\":10,\"text\":\"The model shows no interaction between utilization and the number of past delinquencies.\"}]}"
+   ],
+   [
+    "user",
+    "The verifier did not accept parts of your draft:\n\n- Sentence 1: `direction(\"utilization\") == \"increasing\"` is undecidable (the band does not rule out a reversal larger than the margin, nor confirm one (D63)). Evidence: net change 2.9; net change band 2.76 to 3.23; exception mass 0; margin 0.241; largest reversal the band allows 1.55. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 3: `direction(\"n_delinquencies\") == \"increasing\"` is undecidable (the band does not rule out a reversal larger than the margin, nor confirm one (D63)). Evidence: net change 0.932; net change band 0.822 to 0.998; exception mass 0; margin 0.0565; largest reversal the band allows 1.47. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 4: `direction(\"income\") == \"decreasing\"` is undecidable (the band does not rule out a reversal larger than the margin, nor confirm one (D63)). Evidence: net change -0.959; net change band -1.12 to -0.834; exception mass 0; margin 0.0596; largest reversal the band allows 0.95. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 5: `direction(\"history_months\") == \"decreasing\"` is undecidable (the band does not rule out a reversal larger than the margin, nor confirm one (D63)). Evidence: net change -0.668; net change band -0.772 to -0.544; exception mass 0; margin 0.0354; largest reversal the band allows 1.21. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 6: `direction(\"dti\") == \"increasing\"` is undecidable (the band does not rule out a reversal larger than the margin, nor confirm one (D63)). Evidence: net change 0.289; net change band 0.206 to 0.394; exception mass 0; margin 0.0209; largest reversal the band allows 0.994. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 8: `negligible(\"age\")` is undecidable (neither a detectable non-negligible effect nor a negligible one is shown). Evidence: share 0.0168; share band 0.00455 to 0.0305; detectable False; mass where the curve band excludes 0 0; net change -0.035. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 8: `negligible(\"feature_a\")` is undecidable (neither a detectable non-negligible effect nor a negligible one is shown). Evidence: share 0.0156; share band 0.00582 to 0.0331; detectable False; mass where the curve band excludes 0 0; net change 0.0557. The data do not settle it at this sample size. State it as a set of values, hedge it with unsettled(...), or drop it.\n- Sentence 9: `unsettled(interaction(\"utilization\", \"feature_a\", pattern=\"amplification\"))` is false (the claim is settled: it is false). Evidence: claim verdict false; claim code ; share 0.0085; share band 0 to 0.0147; detectable False. The data settle this: the claim inside the hedge is false. State what the facts show instead of hedging it.\n\nRewrite only the sentences named above, so that every claim is true of the facts; keep every other sentence and its claims exactly as they are. Return the whole draft again, all sentences and all claims, in the same JSON format.\n"
+   ]
+  ],
+  "schema": "{\"additionalProperties\": false, \"properties\": {\"claims\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"dsl\": {\"type\": \"string\"}, \"sentence_id\": {\"type\": \"integer\"}}, \"required\": [\"sentence_id\", \"dsl\"], \"type\": \"object\"}, \"type\": \"array\"}, \"sentences\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"id\": {\"type\": \"integer\"}, \"text\": {\"type\": \"string\"}}, \"required\": [\"id\", \"text\"], \"type\": \"object\"}, \"type\": \"array\"}}, \"required\": [\"sentences\", \"claims\"], \"type\": \"object\"}",
+  "effort": "medium",
+  "thinking": "off",
+  "max_tokens": 16000,
+  "draw": 1,
+  "attempt": 0,
+  "replica": 0
+ },
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [
+    [
+     1,
+     "Revolving credit utilization is the model's most important feature, and the model's predicted default risk strongly increases with it, rising steadily as utilization climbs toward high values."
+    ],
+    [
+     2,
+     "Utilization accounts for about 36% of the model's importance."
+    ],
+    [
+     3,
+     "The number of past delinquencies is the model's second most important feature, and the model's predicted default risk strongly increases with it, with the largest rise between no delinquencies and one or two."
+    ],
+    [
+     4,
+     "Annual income is the third most important feature, and the model's predicted default risk generally decreases as income rises, with a moderate effect."
+    ],
+    [
+     5,
+     "Length of credit history and debt-to-income ratio rank fourth or fifth in importance, with the model's predicted default risk generally decreasing as credit history lengthens."
+    ],
+    [
+     6,
+     "The debt-to-income ratio has a weak to moderate effect on the model's predictions, and the model's predicted default risk generally increases with it."
+    ],
+    [
+     7,
+     "In the model, the effect of credit history length grows with the number of recent credit inquiries, so the two features interact."
+    ],
+    [
+     8,
+     "Age and the two standardised application attributes hardly matter to the model's predictions, and the data do not settle whether the second standardised attribute matters."
+    ],
+    [
+     9,
+     "The data do not settle whether utilization and the first standardised application attribute interact."
+    ],
+    [
+     10,
+     "The model shows no interaction between utilization and the number of past delinquencies."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"utilization\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "direction(\"utilization\") == \"increasing\"",
+     "undecidable",
+     "insufficient_evidence",
+     "the band does not rule out a reversal larger than the margin, nor confirm one (D63)",
+     "net change 2.9; net change band 2.76 to 3.23; exception mass 0; margin 0.241; largest reversal the band allows 1.55"
+    ],
+    [
+     1,
+     "strength(\"utilization\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.361; share band 0.342 to 0.381; detectable True; mass where the curve band excludes 0 0.765; net change 2.9"
+    ],
+    [
+     2,
+     "share(\"utilization\") == approx(0.36)",
+     "true",
+     "",
+     "",
+     "share 0.361; share band 0.342 to 0.381; detectable True; mass where the curve band excludes 0 0.765; net change 2.9"
+    ],
+    [
+     3,
+     "rank(\"n_delinquencies\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 2; claimed 2"
+    ],
+    [
+     3,
+     "direction(\"n_delinquencies\") == \"increasing\"",
+     "undecidable",
+     "insufficient_evidence",
+     "the band does not rule out a reversal larger than the margin, nor confirm one (D63)",
+     "net change 0.932; net change band 0.822 to 0.998; exception mass 0; margin 0.0565; largest reversal the band allows 1.47"
+    ],
+    [
+     3,
+     "strength(\"n_delinquencies\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.211; share band 0.185 to 0.221; detectable True; mass where the curve band excludes 0 1; net change 0.932"
+    ],
+    [
+     4,
+     "rank(\"income\") == 3",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 3 to 3; claimed 3"
+    ],
+    [
+     4,
+     "direction(\"income\") == \"decreasing\"",
+     "undecidable",
+     "insufficient_evidence",
+     "the band does not rule out a reversal larger than the margin, nor confirm one (D63)",
+     "net change -0.959; net change band -1.12 to -0.834; exception mass 0; margin 0.0596; largest reversal the band allows 0.95"
+    ],
+    [
+     4,
+     "strength(\"income\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.121; share band 0.11 to 0.14; detectable True; mass where the curve band excludes 0 0.755; net change -0.959"
+    ],
+    [
+     5,
+     "rank(\"history_months\") in (4, 5)",
+     "true",
+     "",
+     "",
+     "rank 4; rank band 4 to 5; claimed 4 to 5"
+    ],
+    [
+     5,
+     "direction(\"history_months\") == \"decreasing\"",
+     "undecidable",
+     "insufficient_evidence",
+     "the band does not rule out a reversal larger than the margin, nor confirm one (D63)",
+     "net change -0.668; net change band -0.772 to -0.544; exception mass 0; margin 0.0354; largest reversal the band allows 1.21"
+    ],
+    [
+     6,
+     "strength(\"dti\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0668; share band 0.0534 to 0.079; detectable True; mass where the curve band excludes 0 0.859; net change 0.289"
+    ],
+    [
+     6,
+     "direction(\"dti\") == \"increasing\"",
+     "undecidable",
+     "insufficient_evidence",
+     "the band does not rule out a reversal larger than the margin, nor confirm one (D63)",
+     "net change 0.289; net change band 0.206 to 0.394; exception mass 0; margin 0.0209; largest reversal the band allows 0.994"
+    ],
+    [
+     7,
+     "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\")",
+     "true",
+     "",
+     "",
+     "share 0.038; share band 0.0233 to 0.0457; detectable True; interaction contrast -0.971; interaction contrast band -1.2 to -0.577"
+    ],
+    [
+     8,
+     "negligible(\"age\")",
+     "undecidable",
+     "insufficient_evidence",
+     "neither a detectable non-negligible effect nor a negligible one is shown",
+     "share 0.0168; share band 0.00455 to 0.0305; detectable False; mass where the curve band excludes 0 0; net change -0.035"
+    ],
+    [
+     8,
+     "negligible(\"noise_1\")",
+     "undecidable",
+     "insufficient_evidence",
+     "neither a detectable non-negligible effect nor a negligible one is shown",
+     "share 0.0156; share band 0.00582 to 0.0331; detectable False; mass where the curve band excludes 0 0; net change 0.0557"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"noise_2\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0185; share band 0.00495 to 0.0312; detectable False"
+    ],
+    [
+     9,
+     "unsettled(interaction(\"utilization\", \"noise_1\", pattern=\"amplification\"))",
+     "false",
+     "",
+     "the claim is settled: it is false",
+     "claim verdict false; claim code ; share 0.0085; share band 0 to 0.0147; detectable False"
+    ],
+    [
+     10,
+     "interaction(\"utilization\", \"n_delinquencies\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.00808; share band 0 to 0.014; detectable False; interaction contrast 0.122; interaction contrast band 0 to 0.25"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\":[{\"dsl\":\"rank(\\\"utilization\\\") == 1\",\"sentence_id\":1},{\"dsl\":\"direction(\\\"utilization\\\") == \\\"increasing\\\"\",\"sentence_id\":1},{\"dsl\":\"strength(\\\"utilization\\\") == \\\"strong\\\"\",\"sentence_id\":1},{\"dsl\":\"share(\\\"utilization\\\") == approx(0.36)\",\"sentence_id\":2},{\"dsl\":\"rank(\\\"n_delinquencies\\\") == 2\",\"sentence_id\":3},{\"dsl\":\"direction(\\\"n_delinquencies\\\") == \\\"increasing\\\"\",\"sentence_id\":3},{\"dsl\":\"strength(\\\"n_delinquencies\\\") == \\\"strong\\\"\",\"sentence_id\":3},{\"dsl\":\"rank(\\\"income\\\") == 3\",\"sentence_id\":4},{\"dsl\":\"direction(\\\"income\\\") == \\\"decreasing\\\"\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"income\\\") == \\\"moderate\\\"\",\"sentence_id\":4},{\"dsl\":\"rank(\\\"history_months\\\") in (4, 5)\",\"sentence_id\":5},{\"dsl\":\"direction(\\\"history_months\\\") == \\\"decreasing\\\"\",\"sentence_id\":5},{\"dsl\":\"strength(\\\"dti\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":6},{\"dsl\":\"direction(\\\"dti\\\") == \\\"increasing\\\"\",\"sentence_id\":6},{\"dsl\":\"interaction(\\\"history_months\\\", \\\"n_inquiries\\\", pattern=\\\"amplification\\\")\",\"sentence_id\":7},{\"dsl\":\"negligible(\\\"age\\\")\",\"sentence_id\":8},{\"dsl\":\"negligible(\\\"feature_a\\\")\",\"sentence_id\":8},{\"dsl\":\"unsettled(negligible(\\\"feature_b\\\"))\",\"sentence_id\":8},{\"dsl\":\"unsettled(interaction(\\\"utilization\\\", \\\"feature_a\\\", pattern=\\\"amplification\\\"))\",\"sentence_id\":9},{\"dsl\":\"interaction(\\\"utilization\\\", \\\"n_delinquencies\\\", pattern=\\\"none\\\")\",\"sentence_id\":10}],\"sentences\":[{\"id\":1,\"text\":\"Revolving credit utilization is the model's most important feature, and the model's predicted default risk strongly increases with it, rising steadily as utilization climbs toward high values.\"},{\"id\":2,\"text\":\"Utilization accounts for about 36% of the model's importance.\"},{\"id\":3,\"text\":\"The number of past delinquencies is the model's second most important feature, and the model's predicted default risk strongly increases with it, with the largest rise between no delinquencies and one or two.\"},{\"id\":4,\"text\":\"Annual income is the third most important feature, and the model's predicted default risk generally decreases as income rises, with a moderate effect.\"},{\"id\":5,\"text\":\"Length of credit history and debt-to-income ratio rank fourth or fifth in importance, with the model's predicted default risk generally decreasing as credit history lengthens.\"},{\"id\":6,\"text\":\"The debt-to-income ratio has a weak to moderate effect on the model's predictions, and the model's predicted default risk generally increases with it.\"},{\"id\":7,\"text\":\"In the model, the effect of credit history length grows with the number of recent credit inquiries, so the two features interact.\"},{\"id\":8,\"text\":\"Age and the two standardised application attributes hardly matter to the model's predictions, and the data do not settle whether the second standardised attribute matters.\"},{\"id\":9,\"text\":\"The data do not settle whether utilization and the first standardised application attribute interact.\"},{\"id\":10,\"text\":\"The model shows no interaction between utilization and the number of past delinquencies.\"}]}",
+   "roundtrip": null
+  },
+  {
+   "source": "repair 1",
+   "sentences": [
+    [
+     1,
+     "Revolving credit utilization is the model's most important feature, and the model's predicted default risk strongly increases with it, though the data do not settle whether it rises at every level of utilization."
+    ],
+    [
+     2,
+     "Utilization accounts for about 36% of the model's importance."
+    ],
+    [
+     3,
+     "The number of past delinquencies is the model's second most important feature, and the model's predicted default risk strongly increases with it, though the data do not settle whether the rise holds at every count."
+    ],
+    [
+     4,
+     "Annual income is the third most important feature, with a moderate effect on the model's predictions, and the data do not settle whether the predicted default risk falls at every income level."
+    ],
+    [
+     5,
+     "Length of credit history and debt-to-income ratio rank fourth or fifth in importance, and the data do not settle whether the model's predicted default risk decreases steadily as credit history lengthens."
+    ],
+    [
+     6,
+     "The debt-to-income ratio has a weak to moderate effect on the model's predictions, and the data do not settle whether the predicted default risk increases with it at every level."
+    ],
+    [
+     7,
+     "In the model, the effect of credit history length grows with the number of recent credit inquiries, so the two features interact."
+    ],
+    [
+     8,
+     "The data do not settle whether age or the two standardised application attributes matter to the model's predictions."
+    ],
+    [
+     9,
+     "The model shows no interaction between utilization and the first standardised application attribute."
+    ],
+    [
+     10,
+     "The model shows no interaction between utilization and the number of past delinquencies."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "rank(\"utilization\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; rank band 1 to 1; claimed 1"
+    ],
+    [
+     1,
+     "unsettled(direction(\"utilization\") == \"increasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change 2.9; net change band 2.76 to 3.23; exception mass 0"
+    ],
+    [
+     1,
+     "strength(\"utilization\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.361; share band 0.342 to 0.381; detectable True; mass where the curve band excludes 0 0.765; net change 2.9"
+    ],
+    [
+     2,
+     "share(\"utilization\") == approx(0.36)",
+     "true",
+     "",
+     "",
+     "share 0.361; share band 0.342 to 0.381; detectable True; mass where the curve band excludes 0 0.765; net change 2.9"
+    ],
+    [
+     3,
+     "rank(\"n_delinquencies\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; rank band 2 to 2; claimed 2"
+    ],
+    [
+     3,
+     "unsettled(direction(\"n_delinquencies\") == \"increasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change 0.932; net change band 0.822 to 0.998; exception mass 0"
+    ],
+    [
+     3,
+     "strength(\"n_delinquencies\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.211; share band 0.185 to 0.221; detectable True; mass where the curve band excludes 0 1; net change 0.932"
+    ],
+    [
+     4,
+     "rank(\"income\") == 3",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 3 to 3; claimed 3"
+    ],
+    [
+     4,
+     "unsettled(direction(\"income\") == \"decreasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change -0.959; net change band -1.12 to -0.834; exception mass 0"
+    ],
+    [
+     4,
+     "strength(\"income\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.121; share band 0.11 to 0.14; detectable True; mass where the curve band excludes 0 0.755; net change -0.959"
+    ],
+    [
+     5,
+     "rank(\"history_months\") in (4, 5)",
+     "true",
+     "",
+     "",
+     "rank 4; rank band 4 to 5; claimed 4 to 5"
+    ],
+    [
+     5,
+     "unsettled(direction(\"history_months\") == \"decreasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change -0.668; net change band -0.772 to -0.544; exception mass 0"
+    ],
+    [
+     6,
+     "strength(\"dti\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0668; share band 0.0534 to 0.079; detectable True; mass where the curve band excludes 0 0.859; net change 0.289"
+    ],
+    [
+     6,
+     "unsettled(direction(\"dti\") == \"increasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change 0.289; net change band 0.206 to 0.394; exception mass 0"
+    ],
+    [
+     7,
+     "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\")",
+     "true",
+     "",
+     "",
+     "share 0.038; share band 0.0233 to 0.0457; detectable True; interaction contrast -0.971; interaction contrast band -1.2 to -0.577"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"age\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0168; share band 0.00455 to 0.0305; detectable False"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"noise_1\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0156; share band 0.00582 to 0.0331; detectable False"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"noise_2\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0185; share band 0.00495 to 0.0312; detectable False"
+    ],
+    [
+     9,
+     "interaction(\"utilization\", \"noise_1\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.0085; share band 0 to 0.0147; detectable False; interaction contrast 0.179; interaction contrast band 0 to 0.374"
+    ],
+    [
+     10,
+     "interaction(\"utilization\", \"n_delinquencies\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.00808; share band 0 to 0.014; detectable False; interaction contrast 0.122; interaction contrast band 0 to 0.25"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\":[{\"dsl\":\"rank(\\\"utilization\\\") == 1\",\"sentence_id\":1},{\"dsl\":\"unsettled(direction(\\\"utilization\\\") == \\\"increasing\\\")\",\"sentence_id\":1},{\"dsl\":\"strength(\\\"utilization\\\") == \\\"strong\\\"\",\"sentence_id\":1},{\"dsl\":\"share(\\\"utilization\\\") == approx(0.36)\",\"sentence_id\":2},{\"dsl\":\"rank(\\\"n_delinquencies\\\") == 2\",\"sentence_id\":3},{\"dsl\":\"unsettled(direction(\\\"n_delinquencies\\\") == \\\"increasing\\\")\",\"sentence_id\":3},{\"dsl\":\"strength(\\\"n_delinquencies\\\") == \\\"strong\\\"\",\"sentence_id\":3},{\"dsl\":\"rank(\\\"income\\\") == 3\",\"sentence_id\":4},{\"dsl\":\"unsettled(direction(\\\"income\\\") == \\\"decreasing\\\")\",\"sentence_id\":4},{\"dsl\":\"strength(\\\"income\\\") == \\\"moderate\\\"\",\"sentence_id\":4},{\"dsl\":\"rank(\\\"history_months\\\") in (4, 5)\",\"sentence_id\":5},{\"dsl\":\"unsettled(direction(\\\"history_months\\\") == \\\"decreasing\\\")\",\"sentence_id\":5},{\"dsl\":\"strength(\\\"dti\\\") in (\\\"weak\\\", \\\"moderate\\\")\",\"sentence_id\":6},{\"dsl\":\"unsettled(direction(\\\"dti\\\") == \\\"increasing\\\")\",\"sentence_id\":6},{\"dsl\":\"interaction(\\\"history_months\\\", \\\"n_inquiries\\\", pattern=\\\"amplification\\\")\",\"sentence_id\":7},{\"dsl\":\"unsettled(negligible(\\\"age\\\"))\",\"sentence_id\":8},{\"dsl\":\"unsettled(negligible(\\\"feature_a\\\"))\",\"sentence_id\":8},{\"dsl\":\"unsettled(negligible(\\\"feature_b\\\"))\",\"sentence_id\":8},{\"dsl\":\"interaction(\\\"utilization\\\", \\\"feature_a\\\", pattern=\\\"none\\\")\",\"sentence_id\":9},{\"dsl\":\"interaction(\\\"utilization\\\", \\\"n_delinquencies\\\", pattern=\\\"none\\\")\",\"sentence_id\":10}],\"sentences\":[{\"id\":1,\"text\":\"Revolving credit utilization is the model's most important feature, and the model's predicted default risk strongly increases with it, though the data do not settle whether it rises at every level of utilization.\"},{\"id\":2,\"text\":\"Utilization accounts for about 36% of the model's importance.\"},{\"id\":3,\"text\":\"The number of past delinquencies is the model's second most important feature, and the model's predicted default risk strongly increases with it, though the data do not settle whether the rise holds at every count.\"},{\"id\":4,\"text\":\"Annual income is the third most important feature, with a moderate effect on the model's predictions, and the data do not settle whether the predicted default risk falls at every income level.\"},{\"id\":5,\"text\":\"Length of credit history and debt-to-income ratio rank fourth or fifth in importance, and the data do not settle whether the model's predicted default risk decreases steadily as credit history lengthens.\"},{\"id\":6,\"text\":\"The debt-to-income ratio has a weak to moderate effect on the model's predictions, and the data do not settle whether the predicted default risk increases with it at every level.\"},{\"id\":7,\"text\":\"In the model, the effect of credit history length grows with the number of recent credit inquiries, so the two features interact.\"},{\"id\":8,\"text\":\"The data do not settle whether age or the two standardised application attributes matter to the model's predictions.\"},{\"id\":9,\"text\":\"The model shows no interaction between utilization and the first standardised application attribute.\"},{\"id\":10,\"text\":\"The model shows no interaction between utilization and the number of past delinquencies.\"}]}",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "direction(\"utilization\") == \"increasing\"",
+      3
+     ],
+     [
+      1,
+      "rank(\"utilization\") == 1",
+      3
+     ],
+     [
+      1,
+      "unsettled(direction(\"utilization\") == \"increasing\")",
+      3
+     ],
+     [
+      2,
+      "share(\"utilization\") == approx(0.36)",
+      3
+     ],
+     [
+      3,
+      "direction(\"n_delinquencies\") == \"increasing\"",
+      3
+     ],
+     [
+      3,
+      "rank(\"n_delinquencies\") == 2",
+      3
+     ],
+     [
+      3,
+      "unsettled(direction(\"n_delinquencies\") == \"increasing\")",
+      3
+     ],
+     [
+      4,
+      "rank(\"income\") == 3",
+      3
+     ],
+     [
+      4,
+      "strength(\"income\") == \"moderate\"",
+      3
+     ],
+     [
+      4,
+      "unsettled(direction(\"income\") == \"decreasing\")",
+      3
+     ],
+     [
+      5,
+      "rank(\"dti\") in (4, 5)",
+      3
+     ],
+     [
+      5,
+      "rank(\"history_months\") in (4, 5)",
+      3
+     ],
+     [
+      5,
+      "unsettled(direction(\"history_months\") == \"decreasing\")",
+      3
+     ],
+     [
+      6,
+      "strength(\"dti\") in (\"weak\", \"moderate\")",
+      3
+     ],
+     [
+      6,
+      "unsettled(direction(\"dti\") == \"increasing\")",
+      3
+     ],
+     [
+      7,
+      "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\")",
+      3
+     ],
+     [
+      9,
+      "interaction(\"utilization\", \"noise_1\", pattern=\"none\")",
+      3
+     ],
+     [
+      10,
+      "interaction(\"utilization\", \"n_delinquencies\", pattern=\"none\")",
+      3
+     ]
+    ],
+    "unplanned": [
+     [
+      1,
+      "direction(\"utilization\") == \"increasing\"",
+      "undecidable",
+      "insufficient_evidence",
+      "the band does not rule out a reversal larger than the margin, nor confirm one (D63)",
+      "net change 2.9; net change band 2.76 to 3.23; exception mass 0; margin 0.241; largest reversal the band allows 1.55"
+     ],
+     [
+      3,
+      "direction(\"n_delinquencies\") == \"increasing\"",
+      "undecidable",
+      "insufficient_evidence",
+      "the band does not rule out a reversal larger than the margin, nor confirm one (D63)",
+      "net change 0.932; net change band 0.822 to 0.998; exception mass 0; margin 0.0565; largest reversal the band allows 1.47"
+     ],
+     [
+      5,
+      "rank(\"dti\") in (4, 5)",
+      "true",
+      "",
+      "",
+      "rank 5; rank band 4 to 5; claimed 4 to 5"
+     ]
+    ],
+    "plan_only": [
+     [
+      1,
+      "strength(\"utilization\") == \"strong\""
+     ],
+     [
+      3,
+      "strength(\"n_delinquencies\") == \"strong\""
+     ],
+     [
+      8,
+      "unsettled(negligible(\"age\"))"
+     ],
+     [
+      8,
+      "unsettled(negligible(\"noise_1\"))"
+     ],
+     [
+      8,
+      "unsettled(negligible(\"noise_2\"))"
+     ]
+    ],
+    "ambiguous": [],
+    "gap": [
+     [
+      1,
+      [
+       "the data do not settle whether utilization rises at every level",
+       "the rise holds at every level of utilization is left open"
+      ]
+     ],
+     [
+      3,
+      [
+       "the data do not settle whether the rise holds at every count",
+       "the rise holds at every count is left open"
+      ]
+     ],
+     [
+      5,
+      [
+       "the predicted default risk decreases steadily as credit history lengthens",
+       "the decrease is steady is left open",
+       "the decrease is steady as credit history lengthens"
+      ]
+     ]
+    ],
+    "numbers": [],
+    "hedged": [],
+    "missing": [],
+    "emphasis": [],
+    "format_errors": 9
+   }
+  },
+  {
+   "source": "reduced",
+   "sentences": [
+    [
+     2,
+     "Utilization accounts for about 36% of the model's importance."
+    ],
+    [
+     4,
+     "Annual income is the third most important feature, with a moderate effect on the model's predictions, and the data do not settle whether the predicted default risk falls at every income level."
+    ],
+    [
+     5,
+     "Length of credit history and debt-to-income ratio rank fourth or fifth in importance, and the data do not settle whether the model's predicted default risk decreases steadily as credit history lengthens."
+    ],
+    [
+     6,
+     "The debt-to-income ratio has a weak to moderate effect on the model's predictions, and the data do not settle whether the predicted default risk increases with it at every level."
+    ],
+    [
+     7,
+     "In the model, the effect of credit history length grows with the number of recent credit inquiries, so the two features interact."
+    ],
+    [
+     8,
+     "The data do not settle whether age or the two standardised application attributes matter to the model's predictions."
+    ],
+    [
+     9,
+     "The model shows no interaction between utilization and the first standardised application attribute."
+    ],
+    [
+     10,
+     "The model shows no interaction between utilization and the number of past delinquencies."
+    ]
+   ],
+   "claims": [
+    [
+     2,
+     "share(\"utilization\") == approx(0.36)",
+     "true",
+     "",
+     "",
+     "share 0.361; share band 0.342 to 0.381; detectable True; mass where the curve band excludes 0 0.765; net change 2.9"
+    ],
+    [
+     4,
+     "rank(\"income\") == 3",
+     "true",
+     "",
+     "",
+     "rank 3; rank band 3 to 3; claimed 3"
+    ],
+    [
+     4,
+     "unsettled(direction(\"income\") == \"decreasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change -0.959; net change band -1.12 to -0.834; exception mass 0"
+    ],
+    [
+     4,
+     "strength(\"income\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.121; share band 0.11 to 0.14; detectable True; mass where the curve band excludes 0 0.755; net change -0.959"
+    ],
+    [
+     5,
+     "rank(\"history_months\") in (4, 5)",
+     "true",
+     "",
+     "",
+     "rank 4; rank band 4 to 5; claimed 4 to 5"
+    ],
+    [
+     5,
+     "unsettled(direction(\"history_months\") == \"decreasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change -0.668; net change band -0.772 to -0.544; exception mass 0"
+    ],
+    [
+     6,
+     "strength(\"dti\") in (\"weak\", \"moderate\")",
+     "true",
+     "",
+     "share band inside [2%, 15%) and the effect is detectable",
+     "share 0.0668; share band 0.0534 to 0.079; detectable True; mass where the curve band excludes 0 0.859; net change 0.289"
+    ],
+    [
+     6,
+     "unsettled(direction(\"dti\") == \"increasing\")",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; net change 0.289; net change band 0.206 to 0.394; exception mass 0"
+    ],
+    [
+     7,
+     "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\")",
+     "true",
+     "",
+     "",
+     "share 0.038; share band 0.0233 to 0.0457; detectable True; interaction contrast -0.971; interaction contrast band -1.2 to -0.577"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"age\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0168; share band 0.00455 to 0.0305; detectable False"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"noise_1\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0156; share band 0.00582 to 0.0331; detectable False"
+    ],
+    [
+     8,
+     "unsettled(negligible(\"noise_2\"))",
+     "true",
+     "",
+     "the evidence does not settle the claim",
+     "claim verdict undecidable; claim code insufficient_evidence; share 0.0185; share band 0.00495 to 0.0312; detectable False"
+    ],
+    [
+     9,
+     "interaction(\"utilization\", \"noise_1\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.0085; share band 0 to 0.0147; detectable False; interaction contrast 0.179; interaction contrast band 0 to 0.374"
+    ],
+    [
+     10,
+     "interaction(\"utilization\", \"n_delinquencies\", pattern=\"none\")",
+     "true",
+     "",
+     "",
+     "share 0.00808; share band 0 to 0.014; detectable False; interaction contrast 0.122; interaction contrast band 0 to 0.25"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [
+    "n_delinquencies"
+   ],
+   "flagged": [],
+   "answer": "",
+   "roundtrip": null
+  },
+  {
+   "source": "template",
+   "sentences": [
+    [
+     1,
+     "Credit utilization has a strong effect on the model's predictions; the model's predicted default risk generally increases with credit utilization."
+    ],
+    [
+     2,
+     "The number of past delinquencies has a strong effect on the model's predictions; the model's predicted default risk generally increases with the number of past delinquencies."
+    ],
+    [
+     3,
+     "Income has a moderate effect on the model's predictions; the model's predicted default risk generally decreases with income."
+    ],
+    [
+     4,
+     "The length of credit history has a moderate effect on the model's predictions; the model's predicted default risk generally decreases with the length of credit history."
+    ],
+    [
+     5,
+     "The debt-to-income ratio has a moderate effect on the model's predictions; the model's predicted default risk generally increases with the debt-to-income ratio."
+    ],
+    [
+     6,
+     "The number of recent inquiries has a weak effect on the model's predictions; the model's predicted default risk generally increases with the number of recent inquiries."
+    ],
+    [
+     7,
+     "Feature b has at most a weak effect on the model's predictions."
+    ],
+    [
+     8,
+     "Age has at most a weak effect on the model's predictions."
+    ],
+    [
+     9,
+     "Feature a has at most a weak effect on the model's predictions."
+    ],
+    [
+     10,
+     "In the model, the effect of the length of credit history grows with the number of recent inquiries."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "strength(\"utilization\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.361; share band 0.342 to 0.381; detectable True; mass where the curve band excludes 0 0.765; net change 2.9"
+    ],
+    [
+     1,
+     "direction(\"utilization\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 2.9; net change band 2.76 to 3.23; exception mass 0; margin 0.241; largest reversal the band allows 1.55"
+    ],
+    [
+     2,
+     "strength(\"n_delinquencies\") == \"strong\"",
+     "true",
+     "",
+     "share band inside [15%, inf%) and the effect is detectable",
+     "share 0.211; share band 0.185 to 0.221; detectable True; mass where the curve band excludes 0 1; net change 0.932"
+    ],
+    [
+     2,
+     "direction(\"n_delinquencies\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.932; net change band 0.822 to 0.998; exception mass 0; margin 0.0565; largest reversal the band allows 1.47"
+    ],
+    [
+     3,
+     "strength(\"income\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.121; share band 0.11 to 0.14; detectable True; mass where the curve band excludes 0 0.755; net change -0.959"
+    ],
+    [
+     3,
+     "direction(\"income\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -0.959; net change band -1.12 to -0.834; exception mass 0; margin 0.0596; largest reversal the band allows 0.95"
+    ],
+    [
+     4,
+     "strength(\"history_months\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.0862; share band 0.0716 to 0.0976; detectable True; mass where the curve band excludes 0 0.442; net change -0.668"
+    ],
+    [
+     4,
+     "direction(\"history_months\") in (\"decreasing\", \"mostly_decreasing\")",
+     "true",
+     "",
+     "",
+     "net change -0.668; net change band -0.772 to -0.544; exception mass 0; margin 0.0354; largest reversal the band allows 1.21"
+    ],
+    [
+     5,
+     "strength(\"dti\") == \"moderate\"",
+     "true",
+     "",
+     "share band inside [5%, 15%) and the effect is detectable",
+     "share 0.0668; share band 0.0534 to 0.079; detectable True; mass where the curve band excludes 0 0.859; net change 0.289"
+    ],
+    [
+     5,
+     "direction(\"dti\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.289; net change band 0.206 to 0.394; exception mass 0; margin 0.0209; largest reversal the band allows 0.994"
+    ],
+    [
+     6,
+     "strength(\"n_inquiries\") == \"weak\"",
+     "true",
+     "",
+     "share band inside [2%, 5%) and the effect is detectable",
+     "share 0.0331; share band 0.0246 to 0.0418; detectable True; mass where the curve band excludes 0 0.41; net change 0.345"
+    ],
+    [
+     6,
+     "direction(\"n_inquiries\") in (\"increasing\", \"mostly_increasing\")",
+     "true",
+     "",
+     "",
+     "net change 0.345; net change band 0.215 to 0.436; exception mass 0; margin 0.0246; largest reversal the band allows 0.881"
+    ],
+    [
+     7,
+     "strength(\"noise_2\") in (\"negligible\", \"weak\")",
+     "true",
+     "",
+     "share band inside [0%, 5%)",
+     "share 0.0185; share band 0.00495 to 0.0312; detectable False; mass where the curve band excludes 0 0; net change -0.0527"
+    ],
+    [
+     8,
+     "strength(\"age\") in (\"negligible\", \"weak\")",
+     "true",
+     "",
+     "share band inside [0%, 5%)",
+     "share 0.0168; share band 0.00455 to 0.0305; detectable False; mass where the curve band excludes 0 0; net change -0.035"
+    ],
+    [
+     9,
+     "strength(\"noise_1\") in (\"negligible\", \"weak\")",
+     "true",
+     "",
+     "share band inside [0%, 5%)",
+     "share 0.0156; share band 0.00582 to 0.0331; detectable False; mass where the curve band excludes 0 0; net change 0.0557"
+    ],
+    [
+     10,
+     "interaction(\"history_months\", \"n_inquiries\", pattern=\"amplification\")",
+     "true",
+     "",
+     "",
+     "share 0.038; share band 0.0233 to 0.0457; detectable True; interaction contrast -0.971; interaction contrast band -1.2 to -0.577"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "",
+   "roundtrip": null
+  }
+ ],
+ "failed_before": [
+  "direction(\"dti\") == \"increasing\"",
+  "direction(\"history_months\") == \"decreasing\"",
+  "direction(\"income\") == \"decreasing\"",
+  "direction(\"n_delinquencies\") == \"increasing\"",
+  "direction(\"utilization\") == \"increasing\"",
+  "negligible(\"age\")",
+  "negligible(\"noise_1\")",
+  "unsettled(interaction(\"utilization\", \"noise_1\", pattern=\"amplification\"))"
+ ],
+ "exit": "TEMPLATE",
+ "reason": "template text from the certified facts",
+ "flagged": false,
+ "roundtrip": "not run",
+ "cost": 0.00177252,
+ "spent": 0.00177252,
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 17664,
+  "input_tokens": 9374,
+  "output_tokens": 4862
+ },
+ "events": [
+  "repair round 1: 8 problem(s)",
+  "round trip of the draft: 3 extractions",
+  "stop repairing: no progress: direction(\"n_delinquencies\") == \"increasing\" failed before",
+  "TEMPLATE: template text from the certified facts"
+ ]
+}

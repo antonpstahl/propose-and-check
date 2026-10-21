@@ -1,0 +1,40 @@
+set,measure,checker,k,n,value,95% low,95% high
+LLM-written errors (final labels),recall,gate (x4),93.0,95.0,0.9789,0.9265,0.9942
+LLM-written errors (author's first pass),recall,gate (x4),74.0,77.0,0.961,0.8916,0.9867
+scripted errors,recall,gate (x4),232.0,240.0,0.9667,0.9356,0.983
+LLM-written and scripted errors,recall,gate (x4),325.0,335.0,0.9701,0.9459,0.9837
+known-correct texts,specificity,gate (x4),56.0,58.0,0.9655,0.8827,0.9905
+LLM-written and scripted errors; known-correct texts,balanced accuracy,gate (x4),,,0.9678,,
+LLM-written errors (final labels),recall,critic c1,95.0,95.0,1.0,0.9611,1.0
+LLM-written errors (author's first pass),recall,critic c1,77.0,77.0,1.0,0.9525,1.0
+scripted errors,recall,critic c1,240.0,240.0,1.0,0.9842,1.0
+LLM-written and scripted errors,recall,critic c1,335.0,335.0,1.0,0.9887,1.0
+known-correct texts,specificity,critic c1,27.0,58.0,0.4655,0.3433,0.592
+LLM-written and scripted errors; known-correct texts,balanced accuracy,critic c1,,,0.7328,,
+LLM-written errors (final labels),recall,critic c2,95.0,95.0,1.0,0.9611,1.0
+LLM-written errors (author's first pass),recall,critic c2,76.0,77.0,0.987,0.93,0.9977
+scripted errors,recall,critic c2,238.0,240.0,0.9917,0.9701,0.9977
+LLM-written and scripted errors,recall,critic c2,333.0,335.0,0.994,0.9785,0.9984
+known-correct texts,specificity,critic c2,28.0,58.0,0.4828,0.3593,0.6084
+LLM-written and scripted errors; known-correct texts,balanced accuracy,critic c2,,,0.7384,,
+"E3's released texts, H1 and H2",blocked,critic c1,300.0,390.0,0.7692,0.7249,0.8083
+"E3's released texts, H1 and H2",blocked,critic c2,203.0,390.0,0.5205,0.471,0.5697
+"E3's released texts, H1 and H2",blocked,gate (x4),64.0,387.0,0.1654,0.1317,0.2056
+"E3's released texts, H1",blocked,critic c1,85.0,115.0,0.7391,0.6521,0.8107
+"E3's released texts, H1",blocked,critic c2,96.0,115.0,0.8348,0.7563,0.8916
+"E3's released texts, H1",blocked,gate (x4),31.0,114.0,0.2719,0.1987,0.36
+"E3's released texts, H2",blocked,critic c1,215.0,275.0,0.7818,0.7293,0.8266
+"E3's released texts, H2",blocked,critic c2,107.0,275.0,0.3891,0.3334,0.4479
+"E3's released texts, H2",blocked,gate (x4),33.0,273.0,0.1209,0.0874,0.1649
+"E3 texts c1 blocked, labelled real error by the author",blocked,critic c2,17.0,26.0,0.6538,0.4622,0.8059
+"E3 texts c1 blocked, labelled open by the author",blocked,critic c2,7.0,14.0,0.5,0.268,0.732
+control texts,kappa,critic c1 vs critic c2,,32.0,0.429,,
+e3 texts,kappa,critic c1 vs critic c2,,390.0,0.187,,
+llm texts,kappa,critic c1 vs critic c2,,100.0,0.39,,
+script texts,kappa,critic c1 vs critic c2,,261.0,0.622,,
+e3 texts,kappa,gate (x4) vs critic c1,,387.0,0.021,,
+e3 texts,kappa,gate (x4) vs critic c2,,387.0,0.149,,
+"flagged sentences of E3 texts, H1",state a certified statement,critic c1,110.0,127.0,0.8661,0.7961,0.9147
+"flagged sentences of E3 texts, H2",state a certified statement,critic c1,426.0,428.0,0.9953,0.9831,0.9987
+"flagged sentences of E3 texts, H1",state a certified statement,critic c2,137.0,156.0,0.8782,0.8176,0.9206
+"flagged sentences of E3 texts, H2",state a certified statement,critic c2,111.0,115.0,0.9652,0.914,0.9864

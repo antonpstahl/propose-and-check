@@ -1,0 +1,11 @@
+Threshold,Value
+strength classes (share of importance),negligible < 2% ≤ weak < 5% ≤ moderate < 15% ≤ strong
+detectable effect,"simultaneous band excludes 0 on more than 5% of the data, or a significant net change"
+"""hardly matters"", ""no interaction""","the whole share band (a pair's share band) below 2% (2%), or a pair the model lacks (v3)"
+"""about x%""",within 2 points or 10% of the share
+direction margin,"5% of the term's range between its 1st and 99th percentile; ""increases"" needs the band to rule out any fall larger than that (v3)"
+"""mostly"" (exception mass)","a fall larger than the margin, detected, on at most 10% of the data"
+jump / peak location (window w),"2% of the 5th-95th percentile range; on counts, the gap between observed values (v2)"
+jump size and sign,"at least 50% of the term's range, significant; ""jumps at"" a step up, ""drops at"" a step down (v3)"
+interaction present,pair share band at or above 2% and a significant interaction contrast
+band level,"95%, from 100 Poisson bootstrap refits; curves: simultaneous (sup-t) bands"

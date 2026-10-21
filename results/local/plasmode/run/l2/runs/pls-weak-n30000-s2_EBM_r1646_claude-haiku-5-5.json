@@ -1,0 +1,578 @@
+{
+ "run_id": "pls-weak-n30000-s2_EBM_r1646_claude-haiku-5-5",
+ "budget": 16,
+ "calls": 10,
+ "rounds": 2,
+ "format_retry_used": false,
+ "pending": null,
+ "extracting": [],
+ "checking": null,
+ "checking_mode": "",
+ "readings": [],
+ "writer": {
+  "role": "repair 2",
+  "model": "claude-haiku-5-5",
+  "system": "You write the reasons part of an adverse-action notice: a credit model has declined one applicant, and the applicant must be told the principal reasons for the decision. You receive the facts about this one decision and write the reasons in plain English, together with a plan of claims that a verifier checks against the model before anything is released.\n\n# The text\n\n- Write 2 to 6 sentences in plain English, addressed to the applicant, who is not a data scientist.\n- Give every principal reason for the decision, the most important first: the facts list them. A principal reason is a factor that pushes this applicant's score towards the decline by at least 10% of the gap between the applicant's score and the average score of comparable approved applicants, and is among the four largest such factors.\n- Name each reason by its factor, and describe the applicant's value in words that match the facts: \"high credit utilization\" only if the applicant's utilization is above that of comparable approved applicants; \"a short credit history\" only if it is below.\n- A combination of two factors (an interaction in the model) can be a reason: name both factors (\"the combination of your credit utilization and your past delinquencies\").\n- Say only what the facts support. Do not mention factors that are not principal reasons, do not add reasons from general knowledge about credit, and do not give advice.\n- Never hedge. The facts are the model's exact numbers for this decision, so they settle every reason: do not write \"the data do not settle whether ...\", \"possibly\", \"may have contributed\" or \"it is unclear whether\". State each principal reason as a reason.\n- Do not state numbers: no scores, probabilities, contributions or percentages.\n\n# Choosing the words\n\nThe facts give each factor's contribution to the gap, its share of the gap and its rank among the factors. They are the model's exact numbers for this decision, so every word is either right or wrong:\n\n- **Principal reason.** Only a factor the facts list as a principal reason: its share of the gap is 10% or above and its rank is 1 to 4.\n- **Order.** \"The main reason\" only for rank 1; \"the second reason\" only for rank 2, and so on.\n- **High and low.** \"High x\" or \"x is higher than for comparable approved applicants\" only if the applicant's value is above the median of the comparable approved applicants; \"low x\" (or \"short\", \"few\") only if it is below. If the two are equal, use neither, and do not compare the value at all: name the factor only.\n\n# The claims\n\nFor every sentence that states something about the decision, add at least one claim in the DSL below, with that sentence's id. A sentence that only frames the text (\"We have reviewed your application.\") needs no claim. Each claim must say exactly what its sentence says, no more and no less. Use the feature names exactly as they are written in the facts, in quotes.\n\n| Words in the text | DSL claim | Meaning |\n|---|---|---|\n| \"a principal reason\", \"a key reason for the decision\" | `principal_reason(\"x\")` | x pushes the score towards the decline by at least 10% of the gap to comparable approved applicants, and is among the four largest such factors |\n| \"the main reason\", \"the first reason\" | `reason_rank(\"x\") == 1` | x pushes the score towards the decline more than any other factor |\n| \"the second reason\", \"the third reason\" | `reason_rank(\"x\") == 2` (or 3, 4) | x is the second (third, fourth) largest factor pushing towards the decline |\n| \"one of the two main reasons\", \"the second or third reason\" | `reason_rank(\"x\") in (1, 2)`, `reason_rank(\"x\") in (2, 3)` | one of consecutive ranks |\n| \"high x\", \"x is higher than for approved applicants\" | `higher_than_reference(\"x\")` | the applicant's value is above the median of comparable approved applicants |\n| \"low x\", \"a short x\", \"few x\" | `lower_than_reference(\"x\")` | the applicant's value is below that median |\n\nRules of the DSL: one claim per line, exactly in the forms above; ranks as plain whole numbers; a set of ranks is a tuple of consecutive ranks. A combination of two factors is named as \"x & y\" in `principal_reason` and `reason_rank`; `higher_than_reference` and `lower_than_reference` take a single feature.\n\n# The answer\n\nReturn one JSON object with two lists: `sentences`, each with an `id` (1, 2, 3, ...) and its `text`, and `claims`, each with the `sentence_id` it belongs to and its `dsl` line.\n\nExample (other features than in your facts):\n\n{\"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the number of missed payments on your credit file, which is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"A short time in your current job is also a principal reason.\"}], \"claims\": [{\"sentence_id\": 1, \"dsl\": \"reason_rank(\\\"missed_payments\\\") == 1\"}, {\"sentence_id\": 1, \"dsl\": \"principal_reason(\\\"missed_payments\\\")\"}, {\"sentence_id\": 1, \"dsl\": \"higher_than_reference(\\\"missed_payments\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"principal_reason(\\\"months_in_job\\\")\"}, {\"sentence_id\": 2, \"dsl\": \"lower_than_reference(\\\"months_in_job\\\")\"}]}\n",
+  "messages": [
+   [
+    "user",
+    "These are the facts about one declined application.\n\nDecision: the credit model, an explainable boosting machine (EBM), declined this applicant. The lender declines the 20% of applicants with the highest predicted risk of default.\nThe applicant's predicted risk of default is 42.4%. Comparable approved applicants (the 500 approved applicants closest to the cutoff) have an average predicted risk of 25.2%.\nThe gap between the applicant's score and their average score is +0.78 on the log-odds scale. Each factor below adds to the gap or takes from it, and together they make it up exactly. These are the model's exact numbers for this decision.\nA factor is a principal reason if its share of the gap is at least 10% and it is among the 4 largest factors. The principal reasons for this decision: `PAY_0` (rank 1), `BILL_AMT1` (rank 2), `LIMIT_BAL` (rank 3).\n\nFactors that push towards the decline, largest first:\n- `PAY_0`: repayment status in September 2005, the latest month (-2 no consumption, -1 paid in full, 0 revolving credit used, 1 to 9 months of payment delay). `PAY_0` 1 (comparable approved applicants' median 0).\n  Contribution +0.67; share of the gap 86%; rank 1 among the 14 factors.\n- `BILL_AMT1`: amount of the bill statement in September 2005, the latest month, in NT dollars. `BILL_AMT1` 47,200 (comparable approved applicants' median 9,100).\n  Contribution +0.19; share of the gap 24%; rank 2 among the 14 factors.\n- `LIMIT_BAL`: amount of the given credit in NT dollars, individual and family (supplementary) credit. `LIMIT_BAL` 50,000 (comparable approved applicants' median 30,000).\n  Contribution +0.11; share of the gap 14%; rank 3 among the 14 factors.\n- `BILL_AMT1 & AGE`: the combination of BILL_AMT1 and AGE (an interaction in the model). `BILL_AMT1` 47,200 (comparable approved applicants' median 9,100); `AGE` 23 (comparable approved applicants' median 39).\n  Contribution +0.04; share of the gap 5.0%; rank 4 among the 14 factors.\n- `AGE & BILL_AMT2`: the combination of AGE and BILL_AMT2 (an interaction in the model). `AGE` 23 (comparable approved applicants' median 39); `BILL_AMT2` 47,500 (comparable approved applicants' median 8,100).\n  Contribution +0.02; share of the gap 3.1%; rank 5 among the 14 factors.\nSmaller factors pushing towards the decline (each under 2% of the gap): `PAY_AMT3`.\n\nFactors in the applicant's favour (they reduce the gap): `PAY_0 & AGE` -0.02, `AGE` -0.02, `PAY_AMT2` -0.02, `BILL_AMT2` -0.03, `EDUCATION` -0.04, `PAY_AMT1` -0.09.\nThe other 2 factors reduce the gap by less than 2% each.\n\nWrite the reasons for the decision and their claims.\n"
+   ],
+   [
+    "assistant",
+    "{\"claims\": [], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved.\"}, {\"id\": 3, \"text\": \"The third reason is your credit limit, which is lower than for applicants we approved.\"}, {\"id\": 4, \"text\": \"The combination of your most recent bill amount and your age is also a factor in our decision.\"}, {\"id\": 5, \"text\": \"A combination of your age and your second most recent bill amount is also a factor in our decision.\"}]}"
+   ],
+   [
+    "user",
+    "The verifier did not accept parts of your draft:\n\n- The text does not give `PAY_0` as a reason, although the facts make it a principal reason for this decision. Add a sentence that gives it as a reason, with its claims.\n- The text does not give `BILL_AMT1` as a reason, although the facts make it a principal reason for this decision. Add a sentence that gives it as a reason, with its claims.\n- The text does not give `LIMIT_BAL` as a reason, although the facts make it a principal reason for this decision. Add a sentence that gives it as a reason, with its claims.\n\nRewrite only the sentences named above, so that every claim is true of the facts; keep every other sentence and its claims exactly as they are. Return the whole draft again, all sentences and all claims, in the same JSON format.\n"
+   ],
+   [
+    "assistant",
+    "{\"claims\": [{\"dsl\": \"reason_rank(\\\"PAY_0\\\") == 1\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"PAY_0\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"PAY_0\\\")\", \"sentence_id\": 1}, {\"dsl\": \"reason_rank(\\\"BILL_AMT1\\\") == 2\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"BILL_AMT1\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"BILL_AMT1\\\")\", \"sentence_id\": 2}, {\"dsl\": \"reason_rank(\\\"LIMIT_BAL\\\") == 3\", \"sentence_id\": 3}, {\"dsl\": \"principal_reason(\\\"LIMIT_BAL\\\")\", \"sentence_id\": 3}, {\"dsl\": \"lower_than_reference(\\\"LIMIT_BAL\\\")\", \"sentence_id\": 3}, {\"dsl\": \"principal_reason(\\\"BILL_AMT1 & AGE\\\")\", \"sentence_id\": 4}, {\"dsl\": \"principal_reason(\\\"AGE & BILL_AMT2\\\")\", \"sentence_id\": 5}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved.\"}, {\"id\": 3, \"text\": \"The third reason is your credit limit, which is lower than for applicants we approved.\"}, {\"id\": 4, \"text\": \"The combination of your most recent bill amount and your age is also a factor in our decision.\"}, {\"id\": 5, \"text\": \"A combination of your age and your second most recent bill amount is also a factor in our decision.\"}]}"
+   ],
+   [
+    "user",
+    "The verifier did not accept parts of your draft:\n\n- Sentence 3: `lower_than_reference(\"LIMIT_BAL\")` is false. Evidence: applicant 5e+04; reference median 3e+04. The facts contradict it. Change the statement to what the facts show, or drop it.\n- Sentence 4: `principal_reason(\"BILL_AMT1 & AGE\")` is false. Evidence: fraction 0.0495; rank 4; materiality 0.1; max reasons 4. The facts contradict it. Change the statement to what the facts show, or drop it.\n- Sentence 5: `principal_reason(\"AGE & BILL_AMT2\")` is false. Evidence: fraction 0.0306; rank 5; materiality 0.1; max reasons 4. The facts contradict it. Change the statement to what the facts show, or drop it.\n\nRewrite only the sentences named above, so that every claim is true of the facts; keep every other sentence and its claims exactly as they are. Return the whole draft again, all sentences and all claims, in the same JSON format.\n"
+   ]
+  ],
+  "schema": "{\"additionalProperties\": false, \"properties\": {\"claims\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"dsl\": {\"type\": \"string\"}, \"sentence_id\": {\"type\": \"integer\"}}, \"required\": [\"sentence_id\", \"dsl\"], \"type\": \"object\"}, \"type\": \"array\"}, \"sentences\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"id\": {\"type\": \"integer\"}, \"text\": {\"type\": \"string\"}}, \"required\": [\"id\", \"text\"], \"type\": \"object\"}, \"type\": \"array\"}}, \"required\": [\"sentences\", \"claims\"], \"type\": \"object\"}",
+  "effort": "medium",
+  "thinking": "off",
+  "max_tokens": 16000,
+  "draw": 0,
+  "attempt": 0,
+  "replica": 0
+ },
+ "candidate": null,
+ "versions": [
+  {
+   "source": "proposer",
+   "sentences": [
+    [
+     1,
+     "The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved."
+    ],
+    [
+     2,
+     "The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved."
+    ],
+    [
+     3,
+     "The third reason is your credit limit, which is lower than for applicants we approved."
+    ],
+    [
+     4,
+     "The combination of your most recent bill amount and your age is also a factor in our decision."
+    ],
+    [
+     5,
+     "A combination of your age and your second most recent bill amount is also a factor in our decision."
+    ]
+   ],
+   "claims": [],
+   "format_errors": [],
+   "missing": [
+    "PAY_0",
+    "BILL_AMT1",
+    "LIMIT_BAL"
+   ],
+   "flagged": [],
+   "answer": "{\"claims\": [], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved.\"}, {\"id\": 3, \"text\": \"The third reason is your credit limit, which is lower than for applicants we approved.\"}, {\"id\": 4, \"text\": \"The combination of your most recent bill amount and your age is also a factor in our decision.\"}, {\"id\": 5, \"text\": \"A combination of your age and your second most recent bill amount is also a factor in our decision.\"}]}",
+   "roundtrip": null
+  },
+  {
+   "source": "repair 1",
+   "sentences": [
+    [
+     1,
+     "The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved."
+    ],
+    [
+     2,
+     "The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved."
+    ],
+    [
+     3,
+     "The third reason is your credit limit, which is lower than for applicants we approved."
+    ],
+    [
+     4,
+     "The combination of your most recent bill amount and your age is also a factor in our decision."
+    ],
+    [
+     5,
+     "A combination of your age and your second most recent bill amount is also a factor in our decision."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "reason_rank(\"PAY_0\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; contribution 0.671; claimed 1"
+    ],
+    [
+     1,
+     "principal_reason(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "fraction 0.855; rank 1; materiality 0.1; max reasons 4"
+    ],
+    [
+     1,
+     "higher_than_reference(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "applicant 1; reference median 0"
+    ],
+    [
+     2,
+     "reason_rank(\"BILL_AMT1\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; contribution 0.191; claimed 2"
+    ],
+    [
+     2,
+     "principal_reason(\"BILL_AMT1\")",
+     "true",
+     "",
+     "",
+     "fraction 0.244; rank 2; materiality 0.1; max reasons 4"
+    ],
+    [
+     2,
+     "higher_than_reference(\"BILL_AMT1\")",
+     "true",
+     "",
+     "",
+     "applicant 4.72e+04; reference median 9.1e+03"
+    ],
+    [
+     3,
+     "reason_rank(\"LIMIT_BAL\") == 3",
+     "true",
+     "",
+     "",
+     "rank 3; contribution 0.11; claimed 3"
+    ],
+    [
+     3,
+     "principal_reason(\"LIMIT_BAL\")",
+     "true",
+     "",
+     "",
+     "fraction 0.141; rank 3; materiality 0.1; max reasons 4"
+    ],
+    [
+     3,
+     "lower_than_reference(\"LIMIT_BAL\")",
+     "false",
+     "",
+     "",
+     "applicant 5e+04; reference median 3e+04"
+    ],
+    [
+     4,
+     "principal_reason(\"BILL_AMT1 & AGE\")",
+     "false",
+     "",
+     "",
+     "fraction 0.0495; rank 4; materiality 0.1; max reasons 4"
+    ],
+    [
+     5,
+     "principal_reason(\"AGE & BILL_AMT2\")",
+     "false",
+     "",
+     "",
+     "fraction 0.0306; rank 5; materiality 0.1; max reasons 4"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"reason_rank(\\\"PAY_0\\\") == 1\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"PAY_0\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"PAY_0\\\")\", \"sentence_id\": 1}, {\"dsl\": \"reason_rank(\\\"BILL_AMT1\\\") == 2\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"BILL_AMT1\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"BILL_AMT1\\\")\", \"sentence_id\": 2}, {\"dsl\": \"reason_rank(\\\"LIMIT_BAL\\\") == 3\", \"sentence_id\": 3}, {\"dsl\": \"principal_reason(\\\"LIMIT_BAL\\\")\", \"sentence_id\": 3}, {\"dsl\": \"lower_than_reference(\\\"LIMIT_BAL\\\")\", \"sentence_id\": 3}, {\"dsl\": \"principal_reason(\\\"BILL_AMT1 & AGE\\\")\", \"sentence_id\": 4}, {\"dsl\": \"principal_reason(\\\"AGE & BILL_AMT2\\\")\", \"sentence_id\": 5}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved.\"}, {\"id\": 3, \"text\": \"The third reason is your credit limit, which is lower than for applicants we approved.\"}, {\"id\": 4, \"text\": \"The combination of your most recent bill amount and your age is also a factor in our decision.\"}, {\"id\": 5, \"text\": \"A combination of your age and your second most recent bill amount is also a factor in our decision.\"}]}",
+   "roundtrip": null
+  },
+  {
+   "source": "repair 2",
+   "sentences": [
+    [
+     1,
+     "The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved."
+    ],
+    [
+     2,
+     "The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved."
+    ],
+    [
+     3,
+     "The third reason is your credit limit, which is higher than for applicants we approved."
+    ],
+    [
+     4,
+     "The combination of your most recent bill amount and your age is also a factor in our decision."
+    ],
+    [
+     5,
+     "A combination of your age and your second most recent bill amount is also a factor in our decision."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "reason_rank(\"PAY_0\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; contribution 0.671; claimed 1"
+    ],
+    [
+     1,
+     "principal_reason(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "fraction 0.855; rank 1; materiality 0.1; max reasons 4"
+    ],
+    [
+     1,
+     "higher_than_reference(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "applicant 1; reference median 0"
+    ],
+    [
+     2,
+     "reason_rank(\"BILL_AMT1\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; contribution 0.191; claimed 2"
+    ],
+    [
+     2,
+     "principal_reason(\"BILL_AMT1\")",
+     "true",
+     "",
+     "",
+     "fraction 0.244; rank 2; materiality 0.1; max reasons 4"
+    ],
+    [
+     2,
+     "higher_than_reference(\"BILL_AMT1\")",
+     "true",
+     "",
+     "",
+     "applicant 4.72e+04; reference median 9.1e+03"
+    ],
+    [
+     3,
+     "reason_rank(\"LIMIT_BAL\") == 3",
+     "true",
+     "",
+     "",
+     "rank 3; contribution 0.11; claimed 3"
+    ],
+    [
+     3,
+     "principal_reason(\"LIMIT_BAL\")",
+     "true",
+     "",
+     "",
+     "fraction 0.141; rank 3; materiality 0.1; max reasons 4"
+    ],
+    [
+     3,
+     "higher_than_reference(\"LIMIT_BAL\")",
+     "true",
+     "",
+     "",
+     "applicant 5e+04; reference median 3e+04"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "{\"claims\": [{\"dsl\": \"reason_rank(\\\"PAY_0\\\") == 1\", \"sentence_id\": 1}, {\"dsl\": \"principal_reason(\\\"PAY_0\\\")\", \"sentence_id\": 1}, {\"dsl\": \"higher_than_reference(\\\"PAY_0\\\")\", \"sentence_id\": 1}, {\"dsl\": \"reason_rank(\\\"BILL_AMT1\\\") == 2\", \"sentence_id\": 2}, {\"dsl\": \"principal_reason(\\\"BILL_AMT1\\\")\", \"sentence_id\": 2}, {\"dsl\": \"higher_than_reference(\\\"BILL_AMT1\\\")\", \"sentence_id\": 2}, {\"dsl\": \"reason_rank(\\\"LIMIT_BAL\\\") == 3\", \"sentence_id\": 3}, {\"dsl\": \"principal_reason(\\\"LIMIT_BAL\\\")\", \"sentence_id\": 3}, {\"dsl\": \"higher_than_reference(\\\"LIMIT_BAL\\\")\", \"sentence_id\": 3}], \"sentences\": [{\"id\": 1, \"text\": \"The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved.\"}, {\"id\": 2, \"text\": \"The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved.\"}, {\"id\": 3, \"text\": \"The third reason is your credit limit, which is higher than for applicants we approved.\"}, {\"id\": 4, \"text\": \"The combination of your most recent bill amount and your age is also a factor in our decision.\"}, {\"id\": 5, \"text\": \"A combination of your age and your second most recent bill amount is also a factor in our decision.\"}]}",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "higher_than_reference(\"PAY_0\")",
+      3
+     ],
+     [
+      1,
+      "reason_rank(\"PAY_0\") == 1",
+      3
+     ],
+     [
+      2,
+      "higher_than_reference(\"BILL_AMT1\")",
+      3
+     ],
+     [
+      2,
+      "reason_rank(\"BILL_AMT1\") == 2",
+      3
+     ],
+     [
+      3,
+      "higher_than_reference(\"LIMIT_BAL\")",
+      3
+     ],
+     [
+      3,
+      "reason_rank(\"LIMIT_BAL\") == 3",
+      3
+     ],
+     [
+      4,
+      "principal_reason(\"AGE & BILL_AMT1\")",
+      2
+     ],
+     [
+      5,
+      "principal_reason(\"AGE & BILL_AMT2\")",
+      2
+     ]
+    ],
+    "unplanned": [
+     [
+      4,
+      "principal_reason(\"AGE & BILL_AMT1\")",
+      "false",
+      "",
+      "",
+      "fraction 0.0495; rank 4; materiality 0.1; max reasons 4"
+     ],
+     [
+      5,
+      "principal_reason(\"AGE & BILL_AMT2\")",
+      "false",
+      "",
+      "",
+      "fraction 0.0306; rank 5; materiality 0.1; max reasons 4"
+     ]
+    ],
+    "plan_only": [
+     [
+      1,
+      "principal_reason(\"PAY_0\")"
+     ],
+     [
+      2,
+      "principal_reason(\"BILL_AMT1\")"
+     ],
+     [
+      3,
+      "principal_reason(\"LIMIT_BAL\")"
+     ]
+    ],
+    "ambiguous": [
+     [
+      4,
+      "unsettled(principal_reason(\"AGE & BILL_AMT1\"))"
+     ],
+     [
+      5,
+      "unsettled(principal_reason(\"AGE & BILL_AMT2\"))"
+     ]
+    ],
+    "gap": [],
+    "numbers": [],
+    "hedged": [],
+    "missing": [],
+    "emphasis": [],
+    "format_errors": 0
+   }
+  },
+  {
+   "source": "reduced",
+   "sentences": [
+    [
+     1,
+     "The main reason for our decision is the most recent repayment status on your account, which shows a payment delay and is higher than for applicants we approved."
+    ],
+    [
+     2,
+     "The second reason is the amount of your most recent bill statement, which is higher than for applicants we approved."
+    ],
+    [
+     3,
+     "The third reason is your credit limit, which is higher than for applicants we approved."
+    ]
+   ],
+   "claims": [
+    [
+     1,
+     "reason_rank(\"PAY_0\") == 1",
+     "true",
+     "",
+     "",
+     "rank 1; contribution 0.671; claimed 1"
+    ],
+    [
+     1,
+     "principal_reason(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "fraction 0.855; rank 1; materiality 0.1; max reasons 4"
+    ],
+    [
+     1,
+     "higher_than_reference(\"PAY_0\")",
+     "true",
+     "",
+     "",
+     "applicant 1; reference median 0"
+    ],
+    [
+     2,
+     "reason_rank(\"BILL_AMT1\") == 2",
+     "true",
+     "",
+     "",
+     "rank 2; contribution 0.191; claimed 2"
+    ],
+    [
+     2,
+     "principal_reason(\"BILL_AMT1\")",
+     "true",
+     "",
+     "",
+     "fraction 0.244; rank 2; materiality 0.1; max reasons 4"
+    ],
+    [
+     2,
+     "higher_than_reference(\"BILL_AMT1\")",
+     "true",
+     "",
+     "",
+     "applicant 4.72e+04; reference median 9.1e+03"
+    ],
+    [
+     3,
+     "reason_rank(\"LIMIT_BAL\") == 3",
+     "true",
+     "",
+     "",
+     "rank 3; contribution 0.11; claimed 3"
+    ],
+    [
+     3,
+     "principal_reason(\"LIMIT_BAL\")",
+     "true",
+     "",
+     "",
+     "fraction 0.141; rank 3; materiality 0.1; max reasons 4"
+    ],
+    [
+     3,
+     "higher_than_reference(\"LIMIT_BAL\")",
+     "true",
+     "",
+     "",
+     "applicant 5e+04; reference median 3e+04"
+    ]
+   ],
+   "format_errors": [],
+   "missing": [],
+   "flagged": [],
+   "answer": "",
+   "roundtrip": {
+    "readings": 3,
+    "extracted": [
+     [
+      1,
+      "higher_than_reference(\"PAY_0\")",
+      3
+     ],
+     [
+      1,
+      "reason_rank(\"PAY_0\") == 1",
+      3
+     ],
+     [
+      2,
+      "higher_than_reference(\"BILL_AMT1\")",
+      3
+     ],
+     [
+      2,
+      "reason_rank(\"BILL_AMT1\") == 2",
+      3
+     ],
+     [
+      3,
+      "higher_than_reference(\"LIMIT_BAL\")",
+      3
+     ],
+     [
+      3,
+      "reason_rank(\"LIMIT_BAL\") == 3",
+      3
+     ]
+    ],
+    "unplanned": [],
+    "plan_only": [
+     [
+      1,
+      "principal_reason(\"PAY_0\")"
+     ],
+     [
+      2,
+      "principal_reason(\"BILL_AMT1\")"
+     ],
+     [
+      3,
+      "principal_reason(\"LIMIT_BAL\")"
+     ]
+    ],
+    "ambiguous": [],
+    "gap": [],
+    "numbers": [],
+    "hedged": [],
+    "missing": [],
+    "emphasis": [],
+    "format_errors": 0
+   }
+  }
+ ],
+ "failed_before": [
+  "lower_than_reference(\"LIMIT_BAL\")",
+  "principal_reason(\"AGE & BILL_AMT2\")",
+  "principal_reason(\"BILL_AMT1 & AGE\")"
+ ],
+ "exit": "RELEASED_REDUCED",
+ "reason": "failing sentences dropped after 2 repair round(s)",
+ "flagged": false,
+ "roundtrip": "passed",
+ "cost": 0.0014432175,
+ "spent": 0.0014432175,
+ "usage": {
+  "cache_creation_input_tokens": 2207,
+  "cache_read_input_tokens": 19626,
+  "input_tokens": 8893,
+  "output_tokens": 3050
+ },
+ "events": [
+  "repair round 1: 0 problem(s)",
+  "repair round 2: 3 problem(s)",
+  "round trip of the draft: 3 extractions",
+  "extraction retry: 1 answer(s) not a reading",
+  "stop repairing: no progress: principal_reason(\"AGE & BILL_AMT2\") failed before",
+  "round trip of the reduced text: 3 extractions",
+  "RELEASED_REDUCED: failing sentences dropped after 2 repair round(s)"
+ ]
+}

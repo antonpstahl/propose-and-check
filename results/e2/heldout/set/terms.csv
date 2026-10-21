@@ -1,0 +1,32 @@
+tier,term,words,kind,neighbour,held out,seen,why,cue
+synthetic,revolving_balance,the revolving balance,near-synonym,utilization,True,,"an amount owed, in dollars; utilization is the share of the limit in use",revolving balance
+synthetic,months_since_last_delinquency,the months since the last delinquency,near-synonym,n_delinquencies,True,,"how recent the last delinquency is, not how many",(months|time) since the (last|most recent|latest) delinquen
+synthetic,co_applicants_income,the co-applicant's income,near-synonym,income,True,,another person's income,co-?applicant(?:'s)? (annual |yearly )?income|income of (the|a) co-?applicant|co-?applicant
+synthetic,age_of_newest_account,the age of the newest account,near-synonym,history_months,True,,"the time since the latest account was opened; the credit history runs from the oldest (and its words hold ""age"")",age of (the|their|an applicant's) newest account|newest account'?s age|newest account
+synthetic,loan_to_value_ratio,the loan-to-value ratio,near-synonym,dti,True,,"a loan against the value of the collateral, not debt against income",loan.to.value
+synthetic,number_of_declined_credit_applications,the number of declined credit applications,near-synonym,n_inquiries,True,,applications turned down; an inquiry counts whether or not credit was granted,declined
+synthetic,months_at_previous_address,the months at the previous address,near-synonym,noise_1,True,,the address before the current one,previous address
+synthetic,household_size,the household size,near-synonym,noise_2,True,,"every member, the applicant and other earners included",household
+synthetic,down_payment,the down payment,unrelated,,True,,,down.?payment
+synthetic,monthly_rent,the monthly rent,unrelated,,True,,,\brent\b
+synthetic,savings_balance,the savings balance,unrelated,,False,E2's M9 term in every script mutant; x4's first draft was checked live on three E2 texts with it,,savings
+synthetic,length_of_employment,the length of employment,near-synonym,history_months,False,x4's prompt gives it as the example of a related but different quantity; notebooks/04_x4_heldout.py,"time in the current job, not on the credit file",employ
+synthetic,fraction_of_the_credit_limit_in_use,the fraction of the credit limit in use,paraphrase,utilization,True,,,fraction of the credit limit
+synthetic,number_of_times_the_applicant_was_delinquent,the number of times the applicant was delinquent,paraphrase,n_delinquencies,True,,,times the applicant was delinquent
+synthetic,applicants_yearly_earnings,the applicant's yearly earnings,paraphrase,income,True,,,yearly earnings
+synthetic,age_of_the_credit_file,the age of the credit file,paraphrase,history_months,True,,,age of the credit file
+synthetic,ratio_of_debt_payments_to_income,the ratio of debt payments to income,paraphrase,dti,True,,,debt payments to income
+synthetic,number_of_recent_hard_credit_checks,the number of recent hard credit checks,paraphrase,n_inquiries,True,,,hard credit checks?
+synthetic,time_lived_at_the_current_address,the time lived at the current address,paraphrase,noise_1,True,,,lived at the current address
+synthetic,number_of_people_the_applicant_supports,the number of people the applicant supports,paraphrase,noise_2,True,,,people the applicant supports
+plasmode,repayment_status_of_the_month_before,the repayment status of the month before,near-synonym,PAY_0,True,,"August 2005's status (PAY_2, not in the model); the model has September's",repayment status (of|in) the month before
+plasmode,bill_amount_two_months_before,the bill amount two months before,near-synonym,BILL_AMT2,True,,"July 2005's bill (BILL_AMT3, not in the model); the model has August's and September's",bill amount two months before
+plasmode,payment_three_months_before,the payment three months before,near-synonym,PAY_AMT3,True,,"June 2005's payment (PAY_AMT4, not in the model); the model has July's to September's",payment three months before
+plasmode,available_credit,the available credit,near-synonym,LIMIT_BAL,True,,the limit minus what is owed; LIMIT_BAL is the limit,available credit
+plasmode,minimum_payment_due,the minimum payment due,near-synonym,PAY_AMT1,True,,"what the bank asks for, not what was paid",minimum payment
+plasmode,number_of_years_with_the_bank,the number of years with the bank,unrelated,,True,,,years with the bank
+plasmode,repayment_status_in_september_2005,the repayment status in September 2005,paraphrase,PAY_0,True,,,repayment status in september
+plasmode,bill_amount_in_august_2005,the bill amount in August 2005,paraphrase,BILL_AMT2,True,,,bill amount in august
+plasmode,amount_paid_in_july_2005,the amount paid in July 2005,paraphrase,PAY_AMT3,True,,,paid in july
+plasmode,amount_of_credit_given,the amount of credit given,paraphrase,LIMIT_BAL,True,,,credit given
+plasmode,amount_paid_in_september_2005,the amount paid in September 2005,paraphrase,PAY_AMT1,True,,,paid in september

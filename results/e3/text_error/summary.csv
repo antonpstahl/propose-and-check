@@ -1,0 +1,9 @@
+source,tier,arm,texts,wrong vs T,low,high,claims false vs T,claims per text
+"as run, v2",synthetic,off,639,0.962,0.934,0.984,0.116,18.1
+"as run, v2",synthetic,on,640,0.933,0.866,0.975,0.076,17.4
+"as run, v3",synthetic,off,639,0.962,0.934,0.984,0.116,18.1
+"as run, v3",synthetic,on,640,0.933,0.866,0.975,0.076,17.4
+"rerun, v3",plasmode,off,358,0.989,0.975,1.0,0.166,16.2
+"rerun, v3",plasmode,on,360,0.983,0.969,0.994,0.12,16.0
+"rerun, v3",synthetic,off,636,0.558,0.485,0.638,0.061,17.0
+"rerun, v3",synthetic,on,639,0.116,0.048,0.198,0.008,16.1

@@ -1,0 +1,219 @@
+{
+ "built": "2026-10-20",
+ "seed": 20261020,
+ "lexicon": "v2",
+ "code": {
+  "commit": "",
+  "sha256": {
+   "data/invented.py": "e8ce433a65a85f063af22f34c1bf8db7a0ebaf854d0cdf2f5704a2865eaad4e7",
+   "data/labels.py": "48395a7ec6b6174563285c82844e085bbdf54a1ad6a545f18e48787cef231086",
+   "experiments/e2_heldout.py": "b1d19ce90b37bcc7940312c29361b0cca638dd8ed8b6c2f5b661d1731faa9657",
+   "experiments/e2_text.py": "421f4fc2208965e482a959748e49cf131db662a299312c3912a73ed9d04c12fd",
+   "experiments/e2_mutation.py": "0f614c3ac72edbae1b4279fa710b0f165466413920f51cccce132084d93c6c6e",
+   "gate/template.py": "de7e99961108df5899506f81a3296186d5a12aaa050ff9d651c08a6fc3bb8e51",
+   "verifier/certified.py": "770a48fda788b1b5502262bee4adb52100dbed4929c56638706787fd5f32ab2d",
+   "lexicon/predicates.py": "b6276e8e37c7a8f5921985418d74df63d4c1e3af7090476b3dbb2011bd056e69",
+   "lexicon/lexicon.yaml": "111dfe3f08c57fcfed9edda7a10effbeb5f07295867a044a92b81e6548de1ab1",
+   "llm/prompts/mutate_invented.md": "1f6af60019ae6045ed58fe4871730b9bdb67d60f3740ce3f5dc03398d3459de5"
+  }
+ },
+ "sizes": {
+  "elsewhere": {
+   "synthetic": 24,
+   "plasmode": 12
+  },
+  "on the neighbour": {
+   "synthetic": 12,
+   "plasmode": 8
+  },
+  "llm elsewhere drawn": 8,
+  "llm per term and placement": 6
+ },
+ "mutator": {
+  "version": "i1",
+  "model": "claude-haiku-5-5",
+  "prompt sha256": "1f6af60019ae6045ed58fe4871730b9bdb67d60f3740ce3f5dc03398d3459de5"
+ },
+ "sha256": {
+  "terms.csv": "c8483c82813c6de08fd42d417e4f5a72972f6fd317b7ff5a551bbe5829f69527",
+  "template.jsonl": "de4338ead075cc94b07973acfac0eb41e05b45a5aa667083fade997ef9d4a3b1",
+  "llm.jsonl": "6b27a4149e9c6c8527bbaca7ad9614e8a80c80fff1d5345b35c9db10bfda2e6d"
+ },
+ "texts": [
+  {
+   "tier": "plasmode",
+   "source": "template",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 54
+  },
+  {
+   "tier": "plasmode",
+   "source": "template",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "on the neighbour",
+   "role": "error",
+   "texts": 40
+  },
+  {
+   "tier": "plasmode",
+   "source": "template",
+   "term kind": "paraphrase",
+   "held out": true,
+   "placement": "on the neighbour",
+   "role": "control",
+   "texts": 40
+  },
+  {
+   "tier": "plasmode",
+   "source": "template",
+   "term kind": "unrelated",
+   "held out": true,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 12
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "near-synonym",
+   "held out": false,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 6
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "near-synonym",
+   "held out": false,
+   "placement": "on the neighbour",
+   "role": "error",
+   "texts": 6
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 46
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "elsewhere",
+   "role": "not used",
+   "texts": 1
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "on the neighbour",
+   "role": "error",
+   "texts": 43
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "on the neighbour",
+   "role": "not used",
+   "texts": 5
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "unrelated",
+   "held out": false,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 6
+  },
+  {
+   "tier": "synthetic",
+   "source": "llm",
+   "term kind": "unrelated",
+   "held out": true,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 12
+  },
+  {
+   "tier": "synthetic",
+   "source": "template",
+   "term kind": "near-synonym",
+   "held out": false,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 20
+  },
+  {
+   "tier": "synthetic",
+   "source": "template",
+   "term kind": "near-synonym",
+   "held out": false,
+   "placement": "on the neighbour",
+   "role": "error",
+   "texts": 12
+  },
+  {
+   "tier": "synthetic",
+   "source": "template",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 169
+  },
+  {
+   "tier": "synthetic",
+   "source": "template",
+   "term kind": "near-synonym",
+   "held out": true,
+   "placement": "on the neighbour",
+   "role": "error",
+   "texts": 96
+  },
+  {
+   "tier": "synthetic",
+   "source": "template",
+   "term kind": "paraphrase",
+   "held out": true,
+   "placement": "on the neighbour",
+   "role": "control",
+   "texts": 96
+  },
+  {
+   "tier": "synthetic",
+   "source": "template",
+   "term kind": "unrelated",
+   "held out": false,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 24
+  },
+  {
+   "tier": "synthetic",
+   "source": "template",
+   "term kind": "unrelated",
+   "held out": true,
+   "placement": "elsewhere",
+   "role": "error",
+   "texts": 48
+  }
+ ],
+ "rewrites not used": {
+  "the feature is still named": 5,
+  "another feature is named": 1
+ }
+}

@@ -1,0 +1,102 @@
+source,tier,arm,form,texts with one,false claims,of all false claims
+"as run, v2",synthetic,off,"direction, strict",0.814,520,0.387
+"as run, v2",synthetic,off,threshold,0.372,271,0.202
+"as run, v2",synthetic,off,negligible,0.3,197,0.147
+"as run, v2",synthetic,off,"strength, set",0.166,119,0.089
+"as run, v2",synthetic,off,share,0.08,54,0.04
+"as run, v2",synthetic,off,"interaction, none",0.078,50,0.037
+"as run, v2",synthetic,off,"interaction, amplification",0.058,40,0.03
+"as run, v2",synthetic,off,strength,0.036,24,0.018
+"as run, v2",synthetic,off,"rank, set",0.02,17,0.013
+"as run, v2",synthetic,off,"direction, set (generally)",0.02,13,0.01
+"as run, v2",synthetic,off,"interaction, sign_flip",0.02,13,0.01
+"as run, v2",synthetic,off,peak,0.013,8,0.006
+"as run, v2",synthetic,off,comparison,0.006,7,0.005
+"as run, v2",synthetic,off,"direction, mostly",0.011,7,0.005
+"as run, v2",synthetic,off,rank,0.005,3,0.002
+"as run, v2",synthetic,on,"direction, strict",0.883,565,0.667
+"as run, v2",synthetic,on,negligible,0.297,190,0.224
+"as run, v2",synthetic,on,"interaction, none",0.041,26,0.031
+"as run, v2",synthetic,on,"strength, set",0.033,21,0.025
+"as run, v2",synthetic,on,share,0.022,16,0.019
+"as run, v2",synthetic,on,"interaction, amplification",0.017,11,0.013
+"as run, v2",synthetic,on,threshold,0.016,11,0.013
+"as run, v2",synthetic,on,"rank, set",0.005,3,0.004
+"as run, v2",synthetic,on,"direction, mostly",0.003,2,0.002
+"as run, v2",synthetic,on,"direction, set (generally)",0.002,1,0.001
+"as run, v2",synthetic,on,peak,0.002,1,0.001
+"as run, v3",synthetic,off,"direction, strict",0.814,520,0.387
+"as run, v3",synthetic,off,threshold,0.372,271,0.202
+"as run, v3",synthetic,off,negligible,0.3,197,0.147
+"as run, v3",synthetic,off,"strength, set",0.166,119,0.089
+"as run, v3",synthetic,off,share,0.08,54,0.04
+"as run, v3",synthetic,off,"interaction, none",0.078,50,0.037
+"as run, v3",synthetic,off,"interaction, amplification",0.058,40,0.03
+"as run, v3",synthetic,off,strength,0.036,24,0.018
+"as run, v3",synthetic,off,"rank, set",0.02,17,0.013
+"as run, v3",synthetic,off,"direction, set (generally)",0.02,13,0.01
+"as run, v3",synthetic,off,"interaction, sign_flip",0.02,13,0.01
+"as run, v3",synthetic,off,peak,0.013,8,0.006
+"as run, v3",synthetic,off,comparison,0.006,7,0.005
+"as run, v3",synthetic,off,"direction, mostly",0.011,7,0.005
+"as run, v3",synthetic,off,rank,0.005,3,0.002
+"as run, v3",synthetic,on,"direction, strict",0.883,565,0.667
+"as run, v3",synthetic,on,negligible,0.297,190,0.224
+"as run, v3",synthetic,on,"interaction, none",0.041,26,0.031
+"as run, v3",synthetic,on,"strength, set",0.033,21,0.025
+"as run, v3",synthetic,on,share,0.022,16,0.019
+"as run, v3",synthetic,on,"interaction, amplification",0.017,11,0.013
+"as run, v3",synthetic,on,threshold,0.016,11,0.013
+"as run, v3",synthetic,on,"rank, set",0.005,3,0.004
+"as run, v3",synthetic,on,"direction, mostly",0.003,2,0.002
+"as run, v3",synthetic,on,"direction, set (generally)",0.002,1,0.001
+"as run, v3",synthetic,on,peak,0.002,1,0.001
+"rerun, v3",plasmode,off,"direction, set (generally)",0.844,350,0.363
+"rerun, v3",plasmode,off,threshold,0.531,211,0.219
+"rerun, v3",plasmode,off,"strength, set",0.249,101,0.105
+"rerun, v3",plasmode,off,"direction, strict",0.187,68,0.071
+"rerun, v3",plasmode,off,"rank, set",0.137,62,0.064
+"rerun, v3",plasmode,off,negligible,0.128,60,0.062
+"rerun, v3",plasmode,off,"interaction, amplification",0.087,32,0.033
+"rerun, v3",plasmode,off,"interaction, none",0.061,22,0.023
+"rerun, v3",plasmode,off,drop,0.036,13,0.013
+"rerun, v3",plasmode,off,share,0.036,13,0.013
+"rerun, v3",plasmode,off,strength,0.025,9,0.009
+"rerun, v3",plasmode,off,comparison,0.022,8,0.008
+"rerun, v3",plasmode,off,"direction, mostly",0.017,6,0.006
+"rerun, v3",plasmode,off,peak,0.014,5,0.005
+"rerun, v3",plasmode,off,"interaction, sign_flip",0.008,3,0.003
+"rerun, v3",plasmode,off,rank,0.003,1,0.001
+"rerun, v3",plasmode,on,"direction, set (generally)",0.878,407,0.587
+"rerun, v3",plasmode,on,threshold,0.431,157,0.227
+"rerun, v3",plasmode,on,"strength, set",0.1,36,0.052
+"rerun, v3",plasmode,on,"rank, set",0.069,34,0.049
+"rerun, v3",plasmode,on,strength,0.028,20,0.029
+"rerun, v3",plasmode,on,"direction, mostly",0.039,14,0.02
+"rerun, v3",plasmode,on,"direction, strict",0.033,12,0.017
+"rerun, v3",plasmode,on,comparison,0.019,7,0.01
+"rerun, v3",plasmode,on,"interaction, none",0.017,6,0.009
+"rerun, v3",synthetic,off,threshold,0.252,166,0.253
+"rerun, v3",synthetic,off,"strength, set",0.182,143,0.218
+"rerun, v3",synthetic,off,negligible,0.112,75,0.115
+"rerun, v3",synthetic,off,"direction, strict",0.112,71,0.108
+"rerun, v3",synthetic,off,strength,0.066,45,0.069
+"rerun, v3",synthetic,off,share,0.055,38,0.058
+"rerun, v3",synthetic,off,"interaction, amplification",0.042,28,0.043
+"rerun, v3",synthetic,off,"interaction, none",0.038,24,0.037
+"rerun, v3",synthetic,off,"rank, set",0.033,23,0.035
+"rerun, v3",synthetic,off,"interaction, sign_flip",0.027,17,0.026
+"rerun, v3",synthetic,off,peak,0.02,13,0.02
+"rerun, v3",synthetic,off,drop,0.011,7,0.011
+"rerun, v3",synthetic,off,comparison,0.005,3,0.005
+"rerun, v3",synthetic,off,"direction, mostly",0.003,2,0.003
+"rerun, v3",synthetic,on,"strength, set",0.028,20,0.25
+"rerun, v3",synthetic,on,negligible,0.03,19,0.237
+"rerun, v3",synthetic,on,"interaction, none",0.019,12,0.15
+"rerun, v3",synthetic,on,share,0.011,10,0.125
+"rerun, v3",synthetic,on,"interaction, amplification",0.013,8,0.1
+"rerun, v3",synthetic,on,peak,0.005,3,0.037
+"rerun, v3",synthetic,on,threshold,0.005,3,0.037
+"rerun, v3",synthetic,on,comparison,0.003,2,0.025
+"rerun, v3",synthetic,on,"rank, set",0.003,2,0.025
+"rerun, v3",synthetic,on,"direction, mostly",0.002,1,0.013
