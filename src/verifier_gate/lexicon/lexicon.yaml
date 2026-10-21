@@ -7,8 +7,16 @@
 # v2, 14 Oct 2026 (D42, plan §14.14; formed after the pilot): the thresholds are unchanged; a jump or peak location
 # is judged against the gap between neighbouring observed values (Facts keep them for features with few distinct
 # values), so a count step cut at 0.5 (EBM) or at 1.0 (XGB2) gets the same verdict. Fine-grained features are
-# judged as in v1.
-version: v2
+# judged as in v1. Kept as lexicon_v2.yaml, byte for byte (tag lexicon-v2); VERIFIER_GATE_LEXICON=v2 makes it the
+# default, for every result that ran under it.
+# v3, 20 Oct 2026 (D63-D65, M1 and M10 of the 20 Oct review), fixed before any v3 verdict on a fitted model: the
+# thresholds are unchanged. Three words that v2 certified when contrary evidence was merely not detected now need
+# an equivalence margin fixed here: a strict direction word needs the band to rule out any movement against it
+# larger than direction.margin of the term's range; "hardly matters" and "do not interact" need the whole share band
+# below the weak edge (pair_share for a pair). Jumps are signed: "jumps at" is a step up, "drops at" a step down.
+# The words section is the one source of the writer's rules and DSL table (llm/prompts/system.md), Table 1 and the
+# template's phrases (lexicon/words.py), with the model-referencing wording of M10.
+version: v3
 level: 0.95  # every band (stored in the Facts or derived from the refit draws)
 
 strength:  # lower edge of each class; below the first: negligible
@@ -26,11 +34,146 @@ share:  # "about v": |v - actual| <= max(absolute, relative * actual)
 
 direction:
   exception_mass: 0.10  # "mostly": movement against the direction on at most this share of the data mass
+  # v3 (D63): movement against the direction counts only if it is larger than this fraction of the term's range
+  # (M's own curve between the search quantiles; T's for T). "increases" needs the band to rule it out everywhere;
+  # "mostly increases" needs it detected, on at most exception_mass of the data. 5% keeps both planted reversals
+  # material (PAY_0's codes -2/-1 above code 0: 16% of its range; the bump at 36 months: 38%).
+  margin: 0.05
+
+negligible:  # v3 (D63): "hardly matters" and "do not interact" are true only on a share band below the weak edge
+  undetected: false  # v2 (key absent): also true on no detectable effect, a share below 2% and a band below 5%
 
 location:  # threshold and peak
   window: 0.02  # fraction of the 5th-95th percentile range: tolerance, and the width of a jump
   search: [0.01, 0.99]  # quantiles: where peaks and jumps are searched (the EBM's edge bins spike)
   jump_fraction: 0.5  # a threshold's jump is at least this fraction of the term's range in the search region
+  signed: true  # v3 (D64): "jumps at" is a step up, "drops at" a step down; v2 (key absent): either
 
 interaction:
   pair_share: 0.02  # "amplifies" needs a pair share band at or above this
+
+# The words (D65). {name} placeholders are the numbers above (lexicon/words.py NUMBERS); no threshold is written
+# by hand. A table row's words are the template's phrases of its example claims, so the writer, the extractor, the
+# template and Table 1 read every word the same way.
+words:
+  rules:  # the writer's rules for choosing words ("# Choosing the words" in system.md)
+    - name: Strength
+      text: >-
+        Use one class word only if the whole share band lies inside its class: weak {weak} to {moderate}, moderate
+        {moderate} to {strong}, strong {strong} or more, and the curve shows an effect (its band excludes zero on more
+        than {detectable} of the data, or the net change's band excludes zero). If the band crosses {weak}, {moderate}
+        or {strong}, use the two-class phrase ("weak to moderate", "moderate to strong"), or "at most a weak effect"
+        if the whole band lies below {moderate}.
+    - name: '"Hardly matters"'
+      text: >-
+        Only if the whole share band lies below {weak}. A curve that shows no movement is not enough: if the band
+        reaches {weak}, say "at most a weak effect" when the whole band lies below {moderate}, or say that the data
+        do not settle whether the feature matters.
+    - name: Rank and share
+      text: >-
+        A single rank only if the facts give a single rank ("rank 3"); for "rank 3 to 4" say "third or fourth".
+        "About x%" only if the whole share band lies within {share_points} points (or {share_relative}) of x.
+    - name: Direction
+      text: >-
+        Say "generally increases" (or "generally decreases") when the net change's band lies on one side of zero.
+        Leave out "generally" only if, in addition, the curve's band rules out any fall larger than {margin} of the
+        curve's range anywhere on the data: that needs a narrow band, so use the plain word only when the certified
+        statements give it. "Mostly increases" only if the band confirms a fall larger than {margin} of the curve's
+        range, on at most {exception} of the data.
+    - name: Jumps and peaks
+      text: >-
+        "Jumps at x" only for one sharp step up, and "drops at x" only for one sharp step down, that makes up at least
+        {jump} of the curve's range. A curve described in several pieces moves gradually: describe it with a
+        direction, without a jump. "Peaks at x" only if the highest piece lies in the middle of the curve, with
+        clearly lower pieces on both sides.
+    - name: Interactions
+      text: >-
+        "The effect of x grows with y" only if both conditional effects of x have bands on the same side of zero, the
+        one at high y is clearly larger, and the pair's share band lies at or above {pair_share}. "Reverses" only if
+        the two bands lie on opposite sides of zero. "The model shows no interaction between x and y" only if the
+        model has no such pair, or the pair's whole share band lies below {pair_share}. Otherwise leave the pair out,
+        or say that the data do not settle whether they interact.
+    - name: Hedging
+      text: >-
+        Say "the data do not settle whether ..." only about what the bands leave open. When a band settles a
+        question (a net change whose band excludes zero settles the direction; a share band inside a class settles
+        the strength), state the answer; never hedge it.
+    - name: Certified statements
+      text: >-
+        If the facts list statements the verifier certifies, those are true at this sample size: build the text on
+        them.
+  table:  # the DSL table: one row per claim form; words = the phrases of the example claims, x and y as terms
+    - claims: ['strength("x") == "strong"', 'strength("x") == "moderate"', 'strength("x") == "weak"']
+      meaning: >-
+        share of the model's importance at least {strong} / {moderate} to {strong} / {weak} to {moderate}, and an
+        effect the data can detect
+    - claims: ['strength("x") in ("weak", "moderate")', 'strength("x") in ("moderate", "strong")']
+      meaning: the share lies somewhere in the classes named
+    - claims: ['strength("x") in ("negligible", "weak")']
+      meaning: share below {moderate}
+    - claims: ['negligible("x")']
+      meaning: share below {weak}
+    - claims: ['rank("x") == 1', 'rank("x") == 2']
+      meaning: rank among the features by importance
+    - claims: ['rank("x") in (2, 3)', 'rank("x") in (1, 2, 3)']
+      meaning: one of consecutive ranks
+    - claims: ['share("x") == approx(0.30)']
+      meaning: share of importance, within {share_points} points or {share_relative}
+    - claims: ['effect("x") > effect("y")']
+      meaning: x's importance exceeds y's
+    - claims: ['direction("x") == "increasing"', 'direction("x") == "decreasing"']
+      meaning: >-
+        rises (falls) from the 5th to the 95th percentile, and the band rules out any move the other way larger than
+        {margin} of the curve's range
+    - claims: ['direction("x") == "mostly_increasing"', 'direction("x") == "mostly_decreasing"']
+      meaning: >-
+        rises (falls) overall, with a move the other way larger than {margin} of the curve's range, confirmed by the
+        band, on at most {exception} of the data
+    - claims: ['direction("x") in ("increasing", "mostly_increasing")']
+      meaning: either of the two above
+    - claims: ['threshold("x", at=0.43)']
+      meaning: one sharp step up near that value, at least {jump} of the curve's range
+    - claims: ['drop("x", at=2000)']
+      meaning: one sharp step down near that value, at least {jump} of the curve's range
+    - claims: ['peak("x", at=36)']
+      meaning: the highest point of the curve lies near that value, with lower values on both sides
+    - claims: ['interaction("x", "y", pattern="amplification")']
+      meaning: the effect of x is larger when y is high, and the pair's share band lies at or above {pair_share}
+    - claims: ['interaction("x", "y", pattern="sign_flip")']
+      meaning: the effect of x has opposite signs at low and high y
+    - claims: ['interaction("x", "y", pattern="none")']
+      meaning: the model has no such pair, or the pair's whole share band lies below {pair_share}
+    - words: '"the data do not settle whether ..."'
+      dsl: '`unsettled(<any claim above>)`'
+      meaning: the facts leave that claim open at this sample size
+  phrases:  # the template's clause for each claim form; {x}, {y}: the terms in words
+    strength: "{x} has a {value} effect on the model's predictions"
+    strength_set: "{x} has {value} on the model's predictions"
+    negligible: "{x} hardly matters to the model's predictions"
+    rank_first: "{x} is the model's most important feature"
+    rank: "{x} is the model's {value} most important feature"
+    rank_top: "{x} is among the model's {last} most important features"
+    rank_set: "{x} is the model's {value} most important feature"
+    share: "{x} accounts for about {value} of the model's importance"
+    more: "{x} matters more to the model than {y}"
+    less: "{x} matters less to the model than {y}"
+    direction: "the model's predicted default risk {value} with {x}"
+    direction_set: "the model's predicted default risk generally {value} with {x}"
+    threshold: "the model's predicted default risk jumps at {x} = {value}"
+    drop: "the model's predicted default risk drops at {x} = {value}"
+    peak: "the model's predicted default risk peaks at {x} = {value}"
+    amplification: "in the model, the effect of {x} grows with {y}"
+    sign_flip: "in the model, the effect of {x} reverses its sign as {y} changes"
+    none: "the model shows no interaction between {x} and {y}"
+    hedge: "the data do not settle whether {inner}"
+  strength_sets:  # a set of neighbouring classes in words
+    negligible weak: at most a weak effect
+    negligible weak moderate: at most a moderate effect
+    weak moderate: a weak to moderate effect
+    moderate strong: a moderate to strong effect
+    weak moderate strong: at least a weak effect
+  directions:
+    increasing: increases
+    decreasing: decreases
+    mostly_increasing: mostly increases
+    mostly_decreasing: mostly decreases

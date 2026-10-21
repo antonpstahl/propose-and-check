@@ -1,18 +1,27 @@
-"""The local spot check (D47, D49, D53): the principal reasons of 54 adverse-action notices, written by Claude Haiku
+"""The local spot check (D47, D49, D53, D68): the principal reasons of 54 adverse-action notices, written by Claude Haiku
 5.5 from each notice's handover (llm/handover_local.py) and checked by the same gate as E3 (plan check, round trip
 with the local extractor, repair, template), then scored like E3.
 
 Sample (experiments/local_facts.py): seed 2 at n = 50,000, the three interaction levels, EBM and XGB2, 9 declined
-applicants each. One draw per notice, plausible names (D41), prompts l1 (llm/prompts, LOCAL_NAMES). The pilot
-notices (PILOT) shaped the prompts and are reported apart.
+applicants each. One draw per notice, plausible names (D41), prompts LOCAL_VERSION (llm/prompts, LOCAL_NAMES; l1
+ran 16 Oct with bands and hedges, l2 on M's exact contributions, D68). The pilot notices (PILOT) shaped the
+prompts and are reported apart.
 
 Scoring as in E3 (D36; §14.14 review item 6): the first draft (gate off) and the released text (gate on) are each
 read three times apart from the gate's readings (replicas 3 to 5); a claim counts if two readings find it, and is
-verified against M (the notice's facts with bands) and against T (lexicon/local.truth_view; a global claim against
-T's Facts). A hedge gets no verdict against T: it is a statement about the evidence in one sample, not about T
-(data/planted.py), and T, without bands, would refute every hedge. P_U = the share of notices with a claim false against M; E_U = 1 - P_U(on) / P_U(off). Also per
-notice: the reasons it states (a reason claim, not hedged), how many of them are principal reasons under T, and
-T's principal reasons it leaves out; a notice M declines and T does not (T's gap <= 0) has no true principal reason.
+verified against M (the notice's facts, lexicon/local.py) and against T (lexicon/local.truth_view; a global claim
+against T's Facts). Under l2 a hedge is false against M (a notice never hedges, D68) and gets no verdict against T,
+so "false T" counts statements about the decision only. P_U = the share of notices with a claim false against M;
+E_U = 1 - P_U(on) / P_U(off). Also per notice: the reasons it states (a reason claim, not hedged), recall against M
+(M's principal reasons it states and leaves out) and against T (how many stated reasons are principal under T,
+and T's principal reasons it leaves out; a notice M declines and T does not, T's gap <= 0, has no true principal
+reason), and sentences with hedged wording (gate/roundtrip.HEDGED). Per notice, from the facts alone: the internal
+flag of the bands (lexicon/local.second_look), never part of the notice.
+
+The plasmode tier (D67): `--tier plasmode`, the notices of local_facts --tier plasmode (seed 2 at n = 30,000), under
+the column codes with their descriptions and plain words in the template, lexicon v3 and the round trip's rule on
+unknown terms; written to results/local/plasmode/. The synthetic notices are replayed as they ran (l1, l2: lexicon
+v2 and no rule on unknown terms, D68), with VERIFIER_GATE_LEXICON=v2.
 
 Run (cached and resumable, as E3):
   uv run python -m verifier_gate.experiments.local_run --dry        # stub writer and extractor, no network, $0
@@ -30,16 +39,17 @@ from pathlib import Path
 
 import pandas as pd
 
-from verifier_gate.data import labels
+from verifier_gate.data import labels, tiers
 from verifier_gate.dsl.parse import parse
 from verifier_gate.experiments import build_facts
 from verifier_gate.experiments.e3_end_to_end import PER_RUN, RATES, SCORING_REPLICAS, readings_of, texts_of
-from verifier_gate.experiments.local_facts import OUT as FACTS
-from verifier_gate.experiments.local_refits import MODELS, SCENARIOS
+from verifier_gate.experiments.local_facts import TIER_OUT as FACTS
+from verifier_gate.experiments.local_refits import MODELS, TIER_SCENARIOS
 from verifier_gate.experiments.pilot import stub_writer
 from verifier_gate.facts.local import LocalFacts
 from verifier_gate.gate import gate as g
 from verifier_gate.gate import roundtrip as rt
+from verifier_gate.gate.template import plasmode_label
 from verifier_gate.lexicon import local as lp
 from verifier_gate.lexicon.predicates import TRUE
 from verifier_gate.llm import batch, extract, prompts, settings
@@ -51,6 +61,8 @@ from verifier_gate.verifier.verify import verify
 RESULTS = Path(__file__).parents[3] / "results" / "local"
 PILOT = (("syn-dominant-n50000-s2", "EBM", 0), ("syn-weak-n50000-s2", "XGB2", 0))  # (scenario, model, notice index)
 NAMES = labels.SYNTHETIC_NAMES
+TIER_NAMES = {"synthetic": NAMES, "plasmode": {}}  # plasmode: the column codes, shown as they are (D54)
+DESCRIPTIONS = {"synthetic": labels.SYNTHETIC_DESCRIPTIONS, "plasmode": labels.PLASMODE_DESCRIPTIONS}
 
 
 @dataclass(frozen=True)
@@ -79,19 +91,24 @@ class Notice:
     handover: str
 
 
-def notices() -> dict[Spec, Notice]:
+def notices(tier: str = "synthetic") -> dict[Spec, Notice]:
+    """The notices of a tier. Synthetic: as l1 and l2 ran, without the round trip's rule on unknown terms (D68);
+    plasmode (D67): with it, the column codes and their descriptions."""
     out = {}
-    for scenario in SCENARIOS:
+    names, descriptions = TIER_NAMES[tier], DESCRIPTIONS[tier]
+    label = plasmode_label if tier == "plasmode" else None
+    for scenario in TIER_SCENARIOS[tier]:
         truth_facts = build_facts.load(scenario, "T")
         for kind in MODELS:
-            path = FACTS / f"{scenario.id}_{kind}.json"
+            path = FACTS[tier] / f"{scenario.id}_{kind}.json"
             if not path.exists():
                 raise SystemExit(f"{path} is missing: run experiments/local_refits and experiments/local_facts first")
             model_facts = build_facts.load(scenario, kind)
             for i, d in enumerate(json.loads(path.read_text())):
                 lf = replace(LocalFacts.from_json(d), model_facts=model_facts)
                 spec = Spec(scenario.id, kind, i, lf.model["row"])
-                out[spec] = Notice(lf, lp.truth_view(lf, truth_facts), g.Context(lf, certified_local(lf), NAMES), notice_handover(lf, NAMES))
+                ctx = g.Context(lf, certified_local(lf), names, label=label, descriptions=descriptions, unknown_terms=tier == "plasmode")
+                out[spec] = Notice(lf, lp.truth_view(lf, truth_facts), ctx, notice_handover(lf, names, descriptions))
     return out
 
 
@@ -112,19 +129,22 @@ def score(sentences: list, readings: list, notice: Notice) -> dict:
     if len(readings) < rt.EXTRACTED:
         return {"scored": False, "readings": len(readings)}
     ctx = notice.ctx
-    trip = rt.compare(readings, [], [i for i, _ in sentences], ctx.facts, ctx.certified)
+    trip = rt.compare(readings, [], [i for i, _ in sentences], ctx.facts, ctx.certified, texts=dict((i, t) for i, t in sentences),
+                      unknown_terms=ctx.unknown_terms)  # fmt: skip
     lines = [(line, value) for _, line, value, *_ in trip.unplanned]
     on_t = [verify(line, notice.truth).value for line, _ in lines if not line.startswith("unsettled(")]
     stated = _reason_terms(parse(line) for line, _ in lines)  # a hedged reason is no reason stated
     true_reasons = {rt.term_key(r.term) for r in notice.truth.reasons if lp.principal_reason(notice.truth, r.term).value == TRUE}
+    m_reasons = set(rt.required_terms(ctx.facts))
     return {
         "scored": True, "readings": len(readings), "claims": len(lines), "sentences": len(sentences),
         "words": sum(len(t.split()) for _, t in sentences),
         "false M": sum(v == "false" for _, v in lines), "undecidable M": sum(v == "undecidable" for _, v in lines),
         "false T": sum(v == "false" for v in on_t), "hedges": sum(line.startswith("unsettled(") for line, _ in lines),
         "unchecked numbers": len(trip.numbers), "no DSL form": len(trip.gap), "not covered": len(trip.missing),
-        "ambiguous": len(trip.ambiguous), "reasons stated": len(stated), "reasons true vs T": len(stated & true_reasons),
-        "true reasons missed": len(true_reasons - stated),
+        "ambiguous": len(trip.ambiguous), "hedged wording": len(trip.hedged), "reasons stated": len(stated),
+        "M's reasons stated": len(stated & m_reasons), "M's reasons missed": len(m_reasons - stated),
+        "reasons true vs T": len(stated & true_reasons), "true reasons missed": len(true_reasons - stated),
     }  # fmt: skip
 
 
@@ -150,11 +170,15 @@ def score_runs(runs: dict[str, g.Run], by_id: dict[str, Spec], found: dict[Spec,
 
 
 def row(spec: Spec, notice: Notice, run: g.Run, scores: dict) -> dict:
-    principal = sum(c.kind == "principal_reason" for c in notice.ctx.certified)
+    lf = notice.facts
+    principal = lp.principal_reasons(lf)
+    flag = lp.second_look(lf)
     out = {"run": spec.run_id, "scenario": spec.scenario, "model": spec.model, "row": spec.row, "pilot notice": spec.pilot,
-           "declined by M only": notice.truth.model["declined_by_m_only"], "gap": round(notice.facts.gap.value, 4),
-           "certified principal reasons": principal, "writer": spec.writer, "exit": run.exit, "rounds": run.rounds,
-           "calls": run.calls, "cost": round(run.cost, 6), "spent": round(run.spent, 6)}  # fmt: skip
+           "declined by M only": notice.truth.model["declined_by_m_only"], "gap": round(lf.gap.value, 4),
+           "principal reasons": len(principal),
+           "band-certified principal reasons": sum(lp.band_principal_reason(lf, t).value == TRUE for t in principal),
+           "second look": bool(flag), "second look why": "; ".join(flag), "writer": spec.writer, "exit": run.exit,
+           "rounds": run.rounds, "calls": run.calls, "cost": round(run.cost, 6), "spent": round(run.spent, 6)}  # fmt: skip
     for arm in ("off", "on"):
         for k, v in scores.get((spec.run_id, arm), {"scored": False}).items():
             out[f"{arm} {k}"] = v
@@ -174,10 +198,17 @@ def summarise(table: pd.DataFrame) -> pd.DataFrame:
             "P_U off": round(p_off, 3), "P_U on": round(p_on, 3), "E_U": round(1 - p_on / p_off, 3) if p_off else float("nan"),
             "P_U off vs T": round(float((off["off false T"] > 0).mean()), 3) if len(off) else float("nan"),
             "P_U on vs T": round(float((on["on false T"] > 0).mean()), 3) if len(on) else float("nan"),
+            "hedges on": int(on["on hedges"].sum()) if len(on) else 0,
+            "hedged wording on": int(on["on hedged wording"].sum()) if len(on) else 0,
             "reasons stated on": int(on["on reasons stated"].sum()) if len(on) else 0,
+            "M's principal reasons": int(part["principal reasons"].sum()),
+            "M's reasons stated on": int(on["on M's reasons stated"].sum()) if len(on) else 0,
+            "M's reasons missed on": int(on["on M's reasons missed"].sum()) if len(on) else 0,
+            "notices missing one of M's on": int((on["on M's reasons missed"] > 0).sum()) if len(on) else 0,
             "of them true vs T": int(on["on reasons true vs T"].sum()) if len(on) else 0,
             "true reasons missed on": int(on["on true reasons missed"].sum()) if len(on) else 0,
             "declined by M only": int(part["declined by M only"].sum()),
+            "second look": int(part["second look"].sum()),
             "cost per notice": round(float(part.cost.mean()), 5),
         })  # fmt: skip
     return pd.DataFrame(rows)
@@ -195,8 +226,9 @@ def main() -> None:
     parser.add_argument("--pilot", action="store_true", help="the pilot notices, synchronous calls")
     parser.add_argument("--dry", action="store_true", help="stub writer and extractor, no network")
     parser.add_argument("--estimate", action="store_true", help="print the runs and the estimated cost, no network")
+    parser.add_argument("--tier", default="synthetic", choices=tuple(TIER_SCENARIOS), help="plasmode: D67's notices")
     args = parser.parse_args()
-    found = notices()
+    found = notices(args.tier)
     specs = [s for s in found if s.pilot] if args.pilot else list(found)
     if args.estimate:
         sync = estimate(specs) / settings.BATCH_DISCOUNT
@@ -206,6 +238,7 @@ def main() -> None:
     by_id = {s.run_id: s for s in specs}
     version = f"{prompts.LOCAL_VERSION}"
     texts = {s.run_id: found[s].handover for s in specs}
+    waves = None  # the batch waves' folder: the client's, or the plasmode run's own (D67)
     if args.dry:
         scratch = Path(tempfile.mkdtemp(prefix="local_dry_"))
         ctxs = {rid: found[by_id[rid]].ctx for rid in by_id}
@@ -214,7 +247,8 @@ def main() -> None:
         out = scratch / "results"
     else:
         client, api, poll = Client("sync" if args.pilot else "batch"), batch.BatchAPI(), batch.POLL_SECONDS
-        out = RESULTS / ("pilot" if args.pilot else "run") / version
+        out = (RESULTS if args.tier == "synthetic" else RESULTS / args.tier) / ("pilot" if args.pilot else "run") / version
+        waves = None if args.tier == "synthetic" else client.cache_dir / "batches" / f"local_{args.tier}"
     print(f"local spot check{' (pilot)' if args.pilot else ''}{' (no network)' if args.dry else ''}: {len(specs)} notices; "
           f"prompts {version}")  # fmt: skip
     if args.pilot:
@@ -226,8 +260,8 @@ def main() -> None:
     else:
         jobs = {rid: batch.Job(g.start(rid, texts[rid], spec.writer, spec.draw, local=True), found[spec].ctx, out / "runs" / f"{rid}.json")
                 for rid, spec in by_id.items()}  # fmt: skip
-        runs = batch.run_waves(jobs, client, api, poll=poll)
-        answer = lambda requests: batch.resolve(requests, client, api, poll=poll)  # noqa: E731
+        runs = batch.run_waves(jobs, client, api, waves, poll=poll)
+        answer = lambda requests: batch.resolve(requests, client, api, waves, poll=poll)  # noqa: E731
     scores = score_runs(runs, by_id, found, answer)
     table = pd.DataFrame([row(by_id[rid], found[by_id[rid]], run, scores) for rid, run in runs.items()])
     out.mkdir(parents=True, exist_ok=True)

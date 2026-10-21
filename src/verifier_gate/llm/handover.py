@@ -62,7 +62,9 @@ def _x(value: float) -> str:
 
 def handover(facts: Facts, X: pd.DataFrame, variant: str = "H1", certified: list[Claim] | None = None,
              names: Mapping[str, str] = labels.SYNTHETIC_NAMES,
-             descriptions: Mapping[str, str] = labels.SYNTHETIC_DESCRIPTIONS) -> Handover:  # fmt: skip
+             descriptions: Mapping[str, str] = labels.SYNTHETIC_DESCRIPTIONS, naming_bug: bool = False) -> Handover:  # fmt: skip
+    """naming_bug: the handover as E3 ran it (results/e3/v3-x3), whose H2 listed the certified statements under the
+    plausible names whatever the naming (M5 of the 20 Oct review); only to replay those runs from the cache."""
     if variant not in ("H1", "H2"):
         raise ValueError(f"variant is H1 or H2, not {variant!r}")
     if variant == "H2" and certified is None:
@@ -114,5 +116,5 @@ def handover(facts: Facts, X: pd.DataFrame, variant: str = "H1", certified: list
         ]  # fmt: skip
         lines += ["", "Statements the verifier certifies for this model (true at this sample size), as DSL and in words:"]
         for c in statements:
-            lines.append(f"- {labels.external(c)}  ({phrase(c, label)})")
+            lines.append(f"- {labels.external(c, labels.SYNTHETIC_NAMES if naming_bug else names)}  ({phrase(c, label)})")
     return Handover(variant, "\n".join(lines), checks)

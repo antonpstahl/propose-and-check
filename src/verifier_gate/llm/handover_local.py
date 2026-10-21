@@ -1,25 +1,24 @@
-"""The handover for one notice of the local spot check (L1, D49): what the writer reads about one declined
+"""The handover for one notice of the local spot check (D49, D68): what the writer reads about one declined
 applicant (facts/local.LocalFacts).
 
 The decision and its scale: the model, the decision rule (the riskiest 20% declined), the applicant's predicted
 default risk and the average of the comparable approved applicants (the reference), and the score gap between
-them with its band. Then every factor that pushes towards the decline, largest first: its name in the DSL and a
-short description, the applicant's value and the reference's median (both, for a pair), its contribution to the
-gap, its share of the gap and its rank among the factors, each with its 95% band (rank bands rounded outward to
-whole ranks, as the verifier reads them). Factors whose share of the gap is below SMALL go in one line; the
-factors in the applicant's favour that take at least SMALL of the gap in another, and the rest are counted. Terms of T the model does not have are not shown: the writer sees
-the model, never the planted truth.
+them. Then M's principal reasons by name (lexicon/local.principal_reasons), and every factor that pushes towards
+the decline, largest first: its name in the DSL and a short description, the applicant's value and the
+reference's median (both, for a pair), its contribution to the gap, its share of the gap and its rank among the
+factors. All of it is M's exact numbers for this decision: no bands (D68; the bands are the lender's internal
+flag, lexicon/local.second_look). Factors whose share of the gap is below SMALL go in one line; the factors in
+the applicant's favour that take at least SMALL of the gap in another, and the rest are counted. Terms of T the
+model does not have are not shown: the writer sees the model, never the planted truth.
 """
 
 from collections.abc import Mapping
-
-import numpy as np
 
 from verifier_gate.data import labels
 from verifier_gate.facts import readable
 from verifier_gate.facts.local import DECLINE_SHARE, MATERIALITY, MAX_REASONS, LocalFacts, Reason
 from verifier_gate.facts.steps import PAIR_SEPARATOR
-from verifier_gate.lexicon import predicates as p
+from verifier_gate.lexicon import local as lp
 from verifier_gate.llm.handover import MODEL_NAMES
 
 SMALL = 0.02  # share of the gap below which a factor is listed in one line
@@ -29,15 +28,8 @@ def _pct(x: float) -> str:
     return f"{x:.0%}" if abs(x) >= 0.095 else f"{x:.1%}"
 
 
-def _band(estimate, fmt) -> str:
-    lo, hi = p.interval(estimate)
-    return f"{fmt(estimate.value)} (95% band {fmt(lo)} to {fmt(hi)})"
-
-
 def _rank(r: Reason) -> str:
-    lo, hi = p.interval(r.rank)
-    lo, hi = int(np.floor(lo)), int(np.ceil(hi))
-    return f"rank {lo}" if lo == hi else f"rank {lo} to {hi}"
+    return f"rank {int(r.rank.value)}"
 
 
 def _values(lf: LocalFacts, term: str, names: Mapping[str, str]) -> str:
@@ -60,18 +52,18 @@ def _description(term: str, names: Mapping[str, str], descriptions: Mapping[str,
 def notice_handover(lf: LocalFacts, names: Mapping[str, str] = labels.SYNTHETIC_NAMES,
                     descriptions: Mapping[str, str] = labels.SYNTHETIC_DESCRIPTIONS) -> str:  # fmt: skip
     kind = lf.model.get("kind", "")
-    refits = lf.model.get("refits", 0)
+    principal = ", ".join(f"`{labels.shown(t, names)}` ({_rank(lf.reason(t))})" for t in lp.principal_reasons(lf))
     lines = [
         f"Decision: the credit model, {MODEL_NAMES.get(kind, 'a fitted model')}, declined this applicant. The lender "
         f"declines the {DECLINE_SHARE:.0%} of applicants with the highest predicted risk of default.",
         f"The applicant's predicted risk of default is {lf.risk:.1%}. Comparable approved applicants (the "
         f"{lf.model.get('reference_size', 0)} approved applicants closest to the cutoff) have an average predicted risk of "
         f"{lf.reference_risk:.1%}.",
-        f"The gap between the applicant's score and their average score is {_band(lf.gap, lambda v: f'{v:+.2f}')} on the "
-        f"log-odds scale. Each factor below adds to the gap or takes from it, and together they make it up exactly. "
-        f"Every band is a 95% band from {refits} refits of the model on resampled data.",
+        f"The gap between the applicant's score and their average score is {lf.gap.value:+.2f} on the log-odds scale. "
+        f"Each factor below adds to the gap or takes from it, and together they make it up exactly. These are the "
+        f"model's exact numbers for this decision.",
         f"A factor is a principal reason if its share of the gap is at least {MATERIALITY:.0%} and it is among the "
-        f"{MAX_REASONS} largest factors.",
+        f"{MAX_REASONS} largest factors. The principal reasons for this decision: {principal or 'none'}.",
         "",
         "Factors that push towards the decline, largest first:",
     ]  # fmt: skip
@@ -85,7 +77,7 @@ def notice_handover(lf: LocalFacts, names: Mapping[str, str] = labels.SYNTHETIC_
         name = labels.shown(r.term, names)
         lines += [
             f"- `{name}`: {_description(r.term, names, descriptions)}. {_values(lf, r.term, names)}.",
-            f"  Contribution {_band(r.contribution, lambda v: f'{v:+.2f}')}; share of the gap {_band(r.fraction, _pct)}; "
+            f"  Contribution {r.contribution.value:+.2f}; share of the gap {_pct(r.fraction.value)}; "
             f"{_rank(r)} among the {len(model_terms)} factors.",
         ]  # fmt: skip
     if small:

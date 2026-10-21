@@ -12,8 +12,13 @@ affected.
 Run: `uv run python -m verifier_gate.experiments.e3_truth`. Writes results/e3/v3-x3/truth_without_hedges.csv
 (per writer, naming and pilot datasets apart, as E3's summary), truth_rows.csv (per run and arm) and claims.csv
 (per claim a text states: its DSL line and its verdicts against M and T; the data of Fig. 4).
+
+`--source v4-x5-m5` does the same for the rerun after the 20 Oct review (D66; both tiers, extractor x5, the round
+trip's rule on unknown terms), under the default lexicon (v3); E3 as run is read with x3 and without the rule, under
+the lexicon it ran with (VERIFIER_GATE_LEXICON=v2). experiments/e3_text_error.py reports both by claim form.
 """
 
+import argparse
 import json
 import tempfile
 from collections import Counter
@@ -21,12 +26,12 @@ from pathlib import Path
 
 import pandas as pd
 
-from verifier_gate.data import dgp
+from verifier_gate.data import tiers
 from verifier_gate.experiments import e2_text
 from verifier_gate.experiments.build_facts import load
 from verifier_gate.experiments.e2_false_alarms import readings, requests_for, x3_system
-from verifier_gate.experiments.e3_end_to_end import RESULTS, texts_of
-from verifier_gate.experiments.pilot import NAMINGS
+from verifier_gate.experiments.e3_end_to_end import DESCRIPTIONS, NAMES, RESULTS, texts_of
+from verifier_gate.gate.template import plasmode_label
 from verifier_gate.gate import gate as g
 from verifier_gate.gate import roundtrip as rt
 from verifier_gate.lexicon.predicates import FALSE
@@ -34,8 +39,8 @@ from verifier_gate.llm.client import Client
 from verifier_gate.verifier.certified import certified_plan
 from verifier_gate.verifier.verify import verify
 
-SOURCE = RESULTS / e2_text.E3_SOURCE
-WRITERS = ("haiku", "sonnet", "qwen3.8-27b")  # folder names under SOURCE; also the "writer" label in the output
+SOURCE = RESULTS / e2_text.E3_SOURCE  # E3 as run; --source names another folder of results/e3/
+WRITERS = ("haiku", "sonnet", "qwen3.8-27b")  # folder names under a source, where present; also the "writer" label
 CHECKED = ("claims", "false M", "false T", "hedges")
 
 
@@ -49,7 +54,7 @@ def score_text(sentences: list, ctx: g.Context, truth, run_id: str, system: str,
     good += readings(text, ctx, again, answers)[0]
     if len(good) < rt.EXTRACTED:
         return {"scored": False}
-    trip = rt.compare(good, [], [i for i, _ in sentences], ctx.facts, ctx.certified)
+    trip = rt.compare(good, [], [i for i, _ in sentences], ctx.facts, ctx.certified, unknown_terms=ctx.unknown_terms)
     lines = [(line, value) for _, line, value, *_ in trip.unplanned]
     hedge = [line.startswith("unsettled(") for line, _ in lines]
     on_t = [verify(line, truth).value for line, _ in lines]
@@ -62,18 +67,20 @@ def score_text(sentences: list, ctx: g.Context, truth, run_id: str, system: str,
     }  # fmt: skip
 
 
-def rescore(client: Client) -> tuple[pd.DataFrame, pd.DataFrame]:
-    system, ctxs, truths, out, claims = x3_system(), {}, {}, [], []
-    for writer in WRITERS:
-        rows = pd.read_csv(SOURCE / writer / "rows.csv").set_index("run")
-        for path in sorted((SOURCE / writer / "runs").glob("*.json")):
+def rescore(client: Client, source: Path = SOURCE) -> tuple[pd.DataFrame, pd.DataFrame]:
+    as_run = source == SOURCE  # E3 as run: extractor x3, no rule on unknown terms (gate/roundtrip.py)
+    system, ctxs, truths, out, claims = x3_system() if as_run else None, {}, {}, [], []
+    for writer in (w for w in WRITERS if (source / w / "rows.csv").exists()):
+        rows = pd.read_csv(source / writer / "rows.csv").set_index("run")
+        for path in sorted((source / writer / "runs").glob("*.json")):
             run = g.Run(**json.loads(path.read_text()))
             scenario, model, _, _, _, naming = run.run_id.split("_")
             key = (scenario, model, naming)
             if key not in ctxs:
-                s = next(x for x in dgp.SCENARIOS if x.id == scenario)
-                f = load(s, model)
-                ctxs[key] = g.Context(f, certified_plan(f), NAMINGS[naming])
+                s = tiers.scenario(scenario)
+                f, tier = load(s, model), tiers.name(s)
+                ctxs[key] = g.Context(f, certified_plan(f), NAMES[naming], label=plasmode_label if tier == "plasmode" else None,
+                                      descriptions=DESCRIPTIONS[tier], unknown_terms=not as_run)  # fmt: skip
                 truths.setdefault(scenario, load(s, "T"))
             for arm, sentences in zip(("off", "on"), texts_of(run)):
                 if not sentences:
@@ -109,12 +116,15 @@ def summarise(table: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--source", default=e2_text.E3_SOURCE, help="a folder of results/e3/ (default: E3 as run)")
+    source = RESULTS / parser.parse_args().source
     log = Path(tempfile.mkdtemp(prefix="e3_truth_")) / "lookups.jsonl"  # cache lookups only: not the call log
-    table, claims = rescore(Client("batch", log_path=log))
-    table.to_csv(SOURCE / "truth_rows.csv", index=False)
-    claims.to_csv(SOURCE / "claims.csv", index=False)
+    table, claims = rescore(Client("batch", log_path=log), source)
+    table.to_csv(source / "truth_rows.csv", index=False)
+    claims.to_csv(source / "claims.csv", index=False)
     summary = summarise(table)
-    summary.to_csv(SOURCE / "truth_without_hedges.csv", index=False)
+    summary.to_csv(source / "truth_without_hedges.csv", index=False)
     print(f"{len(table)} texts rebuilt from the cache; every scored text reproduces E3's counts ({', '.join(CHECKED)})")
     print(Counter(zip(table.writer, table.arm, table.scored)))
     pd.set_option("display.width", 250)

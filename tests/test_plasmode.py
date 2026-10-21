@@ -12,6 +12,7 @@ from verifier_gate.data import dgp, plasmode, tiers
 from verifier_gate.data.planted import planted_claims
 from verifier_gate.facts.build import build_facts
 from verifier_gate.facts.reference import reference_steps
+from verifier_gate.lexicon import predicates as p
 from verifier_gate.lexicon.predicates import FALSE, TRUE
 from verifier_gate.models.fit_oracle import fit_oracle
 from verifier_gate.verifier.verify import verify
@@ -21,7 +22,8 @@ needs_data = pytest.mark.skipif(not plasmode.XLS.exists(), reason="TaiwanCredit 
 
 
 def test_the_synthetic_label_set_is_still_the_frozen_one():
-    rows = [[s.id, str(c), label] for s in dgp.SCENARIOS for c, label in planted_claims(dgp.generate(s))]
+    v2 = p.load(p.VERSIONS["v2"])  # v3 adds the other sign of the planted step (D64)
+    rows = [[s.id, str(c), label] for s in dgp.SCENARIOS for c, label in planted_claims(dgp.generate(s), v2)]
     assert len(rows) == 3042
     assert hashlib.sha256(json.dumps(rows).encode()).hexdigest() == FROZEN_LABELS
 
@@ -78,15 +80,20 @@ def test_shares_and_the_default_rate_are_on_target():
 
 
 @needs_data
+@pytest.mark.parametrize("version", ("v2", "v3"))
 @pytest.mark.parametrize("scenario", plasmode.SCENARIOS, ids=lambda s: s.id)
-def test_scorer_test_lexicon_on_t_reproduces_every_planted_label(scenario):
+def test_scorer_test_lexicon_on_t_reproduces_every_planted_label(scenario, version):
+    """Under v3 too (D63, D64): the direction margin keeps PAY_0's dip at codes -2/-1 a reversal, and the step at
+    PAY_AMT2 = 2,000 is a drop."""
+    lex = p.load(p.VERSIONS[version])
     data = plasmode.generate(scenario)
     facts = build_facts(reference_steps(data.truth, data.X), data.X)
-    claims = planted_claims(data)
-    wrong = [(str(c), label, verify(c, facts).value) for c, label in claims if verify(c, facts).value != label]
+    claims = planted_claims(data, lex)
+    wrong = [(str(c), label, verify(c, facts, lex).value) for c, label in claims if verify(c, facts, lex).value != label]
     assert not wrong
-    assert len(claims) == 168 and {label for _, label in claims} == {TRUE, FALSE}
-    assert {c.kind for c, _ in claims} == {"rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction"}
+    assert len(claims) == 168 + lex.signed_jumps and {label for _, label in claims} == {TRUE, FALSE}
+    kinds = {"rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction"}
+    assert {c.kind for c, _ in claims} == kinds | ({"drop"} if lex.signed_jumps else set())
 
 
 @needs_data

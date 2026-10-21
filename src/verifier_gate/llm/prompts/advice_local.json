@@ -1,5 +1,8 @@
 {
  "missing_term": "- The text does not give {names} as a reason, although the facts make it a principal reason for this decision. Add a sentence that gives it as a reason, with its claims.",
  "missing_in_text": "- The text does not give {names} as a reason in words a reader can find, although the facts make it a principal reason for this decision: your claims about it are not in the sentences. Say it in a sentence, with its claims.",
- "unexpressed": "- Sentence {sentence} states a number that no claim form can check: {statements}. Leave the number out and describe the reason in words."
+ "unexpressed": "- Sentence {sentence} states a number that no claim form can check: {statements}. Leave the number out and describe the reason in words.",
+ "hedge_in_notice": "A notice never hedges: the facts are the model's exact numbers for this decision and settle every reason. If the facts list the factor as a principal reason, state it as a reason; otherwise leave it out.",
+ "hedged_wording": "- Sentence {sentence} hedges (\"{words}\"). A notice never hedges: state each principal reason the facts list as a reason, and leave out every other factor.",
+ "insufficient_evidence": "The data do not settle it at this sample size. Leave it out: a notice states the principal reasons for the decision, not open questions about the model."
 }

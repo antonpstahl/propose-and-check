@@ -7,6 +7,10 @@ the Facts and refits in cache/facts and the TaiwanCredit file in data/raw. Unpac
 (experiments/facts_archive.py), they make the run offline; otherwise the first steps refit every model from the fixed
 seeds (about six hours) and download TaiwanCredit from UCI.
 
+Lexicon versions (D63-D66): every step replays a result run under lexicon v2, with VERIFIER_GATE_LEXICON=v2 set (the
+writer's prompts v3, extractor x3 or x4, the template's v2 wording), except the steps in V3_STEPS, which run under
+the current lexicon, v3.
+
 Every step runs with VERIFIER_GATE_OFFLINE set: a request that is not in the LLM cache raises instead of calling the
 API, so a reproduction costs $0 or stops. At the end, `git status` over results/ and paper/ lists every output that
 differs from the committed one; none should. Two differences are not results and are handled: a file that differs only in
@@ -28,18 +32,24 @@ from pathlib import Path
 
 import pandas as pd
 
+from verifier_gate.lexicon.predicates import PIN
 from verifier_gate.llm.client import OFFLINE
 
 REPO = Path(__file__).parents[3]
 LABELS = "results/e2/v2/text/false_alarms/labels.json"
 DRAFT_LABELS = "results/e2/v2/text/false_alarms/drafts/labels.json"
 CRITIC_LABELS = "results/e2/v2/text/critic/gpt-6-luna/c1/labels/labels.json"
+V3_STEPS = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "table1-v3", "e3-rerun", "e3-rerun-truth", "e3-text-error",
+             "local-refits-plasmode", "local-facts-plasmode", "local-run-plasmode"}  # under lexicon v3 (D63-D67); every other step replays a result run under v2 (PIN=v2)
 STEPS = [  # name, module, arguments
     ("facts", "build_facts", []),
     ("facts-plasmode", "build_facts", ["--tier", "plasmode"]),
     ("e1-discovery", "e1_lexicon", []),
     ("e1-confirmation", "e1_lexicon", ["--seeds", "2,3"]),
     ("e1-plasmode", "e1_lexicon", ["--tier", "plasmode"]),
+    ("e1-v3-discovery", "e1_lexicon", []),  # lexicon v3 (D63, D64): results/e1/v3/
+    ("e1-v3-confirmation", "e1_lexicon", ["--seeds", "2,3"]),
+    ("e1-v3-plasmode", "e1_lexicon", ["--tier", "plasmode"]),
     ("e2-plan-discovery", "e2_mutation", []),
     ("e2-plan-confirmation", "e2_mutation", ["--seeds", "2,3"]),
     ("e2-plan-plasmode", "e2_mutation", ["--tier", "plasmode"]),
@@ -51,21 +61,32 @@ STEPS = [  # name, module, arguments
     ("e3-sonnet", "e3_end_to_end", ["--sonnet"]),
     ("e3-qwen", "e3_end_to_end", ["--writer", "ollama/qwen3.8:27b"]),  # the self-hosted writer subset (D55), every call from the cache ($0)
     ("e3-check-and-truth", "e3_truth", []),
+    ("e3-rerun", "e3_end_to_end", ["--revised", "--tier", "both"]),  # the rerun on both tiers (D66), every call from the cache
+    ("e3-rerun-truth", "e3_truth", ["--source", "v4-x5-m5"]),
+    ("e3-text-error", "e3_text_error", []),  # the text-level error against T by claim form, as run and rerun
+    ("e3-baselines", "e3_baselines", []),  # the template-only and plain-prompt arms (D71), scored as E3, from texts.json and the cache
     ("false-alarms", "e2_false_alarms", ["--score", LABELS]),
     ("e3-residual", "e2_false_alarms", ["--e3", LABELS]),
     ("e3-effect", "e2_false_alarms", ["--effect", LABELS, DRAFT_LABELS]),
-    ("e2-critic", "e2_critic", []),  # the LLM critic (D56), every call from the cache
-    ("e2-critic-sol", "e2_critic", ["--model", "openai/gpt-6.1-sol", "--sources", "llm,control"]),
-    ("e2-critic-e3-labels", "e2_critic", ["--score", CRITIC_LABELS]),  # the author's labels of Luna's E3 flags
+    ("e3-independent", "e3_independent", ["--tables"]),  # E3 read by GPT-6 Luna, the release rule (D69), every call from the cache
+    ("e2-critic", "e2_critic", ["--critic", "c1"]),  # the LLM critic (D56), every call from the cache
+    ("e2-critic-sol", "e2_critic", ["--critic", "c1", "--model", "openai/gpt-6.1-sol", "--sources", "llm,control"]),
+    ("e2-critic-e3-labels", "e2_critic", ["--critic", "c1", "--score", CRITIC_LABELS]),  # the author's labels of Luna's E3 flags
+    ("e2-critic-c2", "e2_critic", ["--critic", "c2"]),  # the critic with the writer's inputs (D72), every call from the cache
+    ("e2-critic-compare", "e2_critic", ["--compare"]),  # c2 beside c1 and the gate
     ("local-refits", "local_refits", []),
     ("local-facts", "local_facts", []),
     ("local-pilot", "local_run", ["--pilot"]),
     ("local-run", "local_run", []),
+    ("local-refits-plasmode", "local_refits", ["--tier", "plasmode"]),  # the spot check on the plasmode tier (D67)
+    ("local-facts-plasmode", "local_facts", ["--tier", "plasmode"]),
+    ("local-run-plasmode", "local_run", ["--tier", "plasmode"]),
     ("fig1", "fig1", []),
     ("fig2", "fig2", []),
     ("fig3", "fig3", []),
     ("fig4", "fig4", []),
     ("tables", "tables", []),
+    ("table1-v3", "tables", ["--only", "tab1"]),  # Tab. 1 from lexicon v3 (D65): tab1_dsl_lexicon_v3
     ("worked-example", "worked_example", []),
     ("spend", "spend", []),  # what the live calls cost, from the call log
 ]
@@ -117,7 +138,8 @@ def main() -> None:
     for name, module, arguments in steps:
         t0 = time.perf_counter()
         print(f"[{name}] python -m verifier_gate.experiments.{module} {' '.join(arguments)}", flush=True)
-        result = subprocess.run([sys.executable, "-m", f"verifier_gate.experiments.{module}", *arguments], cwd=REPO, env=env,
+        pinned = env if name in V3_STEPS else {**env, PIN: "v2"}
+        result = subprocess.run([sys.executable, "-m", f"verifier_gate.experiments.{module}", *arguments], cwd=REPO, env=pinned,
                                 capture_output=True, text=True)  # fmt: skip
         if result.returncode != 0:
             print(result.stdout[-2000:], result.stderr[-4000:], sep="\n")

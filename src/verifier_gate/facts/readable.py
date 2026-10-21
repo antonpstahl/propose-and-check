@@ -201,7 +201,7 @@ def check(r: Readable, facts: Facts, certified: list[Claim], lex: p.Lexicon | No
                 result.direction_hidden.append(str(c))
     w = lex.window * (f.low_high[1] - f.low_high[0])
     for c in mine:
-        if c.kind == "threshold":
+        if c.kind in ("threshold", "drop"):
             at = _jump_location(r)
             if at is None or abs(at - c.value) > w:
                 result.location_off.append(str(c))

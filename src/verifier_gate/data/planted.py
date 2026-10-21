@@ -17,6 +17,10 @@ Each tier gives its specification (Spec): the planted direction of each shaped f
 non-monotone one: every direction word is false), the planted threshold and peak if any, with false locations, a
 smooth feature for false jump and peak claims at its median, and the features of each planted pair. The synthetic
 claims are the label set frozen with lexicon v1 (tag e1-frozen); the plasmode spec adds claims only for its tier.
+
+Signed jumps (lexicon v3, D64): the planted step is stated with its sign ("jumps at" for dti's step up, "drops at"
+for PAY_AMT2's step down), and the other sign at the same location is a false near miss. Under v2 the label set
+is as frozen.
 """
 
 from collections.abc import Mapping
@@ -49,18 +53,20 @@ class Spec:
     features: tuple[str, ...]
     directions: Mapping[str, str]  # "none": non-monotone, every direction word false
     threshold: tuple[str, float, float]  # feature, planted location, a false location
+    step: int  # the planted step's sign: +1 up ("jumps at"), -1 down ("drops at")
     peak: tuple[str, float, float] | None  # feature, planted location, a false location
     smooth: tuple[str, ...]  # features without a jump or a peak: claims at their median are false
     pattern_claims: Mapping[str, tuple[str, str]]  # pair: (the feature whose effect changes, the moderator)
     pair_patterns: Mapping[str, str]
 
 
-SYNTHETIC = Spec(dgp.FEATURES, DIRECTION, (*THRESHOLD, 0.25), (*PEAK, 200.0), ("income",), PATTERN_CLAIMS, dgp.PAIR_PATTERNS)
+SYNTHETIC = Spec(dgp.FEATURES, DIRECTION, (*THRESHOLD, 0.25), 1, (*PEAK, 200.0), ("income",), PATTERN_CLAIMS, dgp.PAIR_PATTERNS)
 PLASMODE = Spec(
     plasmode.FEATURES,
     {"PAY_0": "none", "LIMIT_BAL": "decreasing", "BILL_AMT1": "increasing", "PAY_AMT1": "decreasing",
      "PAY_AMT2": "decreasing", "AGE": "increasing", "EDUCATION": "increasing"},  # plasmode_shapes.json
     ("PAY_AMT2", plasmode.STEP_AT, 15_000.0),
+    -1,
     None,
     ("LIMIT_BAL", "AGE"),
     {plasmode.AMPLIFICATION: ("PAY_0", "EDUCATION"), plasmode.SIGN_FLIP: ("AGE", "BILL_AMT1")},
@@ -121,8 +127,11 @@ def planted_claims(data: dgp.Dataset, lex: predicates.Lexicon | None = None) -> 
         add(Claim("direction", (f,), "decreasing"), FALSE)
 
     feature, at, elsewhere = spec.threshold
-    add(Claim("threshold", (feature,), at), TRUE)
-    add(Claim("threshold", (feature,), elsewhere), FALSE)
+    step = "drop" if lex.signed_jumps and spec.step < 0 else "threshold"
+    add(Claim(step, (feature,), at), TRUE)
+    add(Claim(step, (feature,), elsewhere), FALSE)
+    if lex.signed_jumps:  # the other sign at the planted location
+        add(Claim("threshold" if step == "drop" else "drop", (feature,), at), FALSE)
     for smooth in spec.smooth[:1]:
         add(Claim("threshold", (smooth,), float(np.median(data.X[smooth]))), FALSE)
     if spec.peak is not None:

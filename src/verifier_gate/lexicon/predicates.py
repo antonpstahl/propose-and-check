@@ -23,11 +23,25 @@ detectable, the model's own share is below the weak class and the share band rul
 false if an effect is detectable and the share band lies at or above the weak class. Requiring the band below
 2% alone is a valid equivalence test but almost never passes; requiring only a non-significant effect would
 certify "hardly matters" for a real 4% effect whose share is estimated at 3.5% (absence of evidence).
+Lexicon v3 (D63) keeps only the equivalence test: the second branch certified on evidence merely not detected,
+and in E3 it certified "hardly matters" for a planted 3-4% effect. "Do not interact" follows it.
 
 "Mostly" (D29, §14.7) asserts an exception, so it needs a detected one: with bands, a curve without a detected
 exception leaves "mostly" undecidable, because the bands do not rule a small exception out. The strict word
 ("increases") is certified when no exception is detected: true at the resolution the sample allows. Without
 bands (T) the curve is exact, and no exception means none.
+Lexicon v3 (D63) replaces "not refuted" by an equivalence test with a margin fixed in advance: movement against
+the direction counts only if larger than `direction_margin` of the term's range, and "increases" is true only if
+the band rules out any such movement (equivalence testing, Lakens 2017; a region of practical equivalence,
+Kruschke 2018). "Mostly" needs such a movement detected, and is false where the band rules it out; "generally"
+counts only such movements as exceptions. Without bands both reduce to the exact curve's largest reversal.
+
+Jumps (D64, lexicon v3) are signed: "jumps at" (threshold) is a step up, "drops at" (drop) a step down, judged on
+the sign of the largest step's band. Lexicon v2 judged both as either.
+
+Versions. load() reads lexicon.yaml (v3); VERSIONS["v2"] is v2's file, byte for byte, and every v3 rule switches on
+a key the v2 file lacks, so load(VERSIONS["v2"]) gives v2's verdicts. The environment variable PIN
+(VERIFIER_GATE_LEXICON=v2) makes v2 the default, for the steps that replay results run under it.
 
 Reason codes (D30). An undecidable verdict says why: the evidence does not settle the claim
 (INSUFFICIENT_EVIDENCE), the claim names a term the model does not have (UNKNOWN_TERM), or the claim type does
@@ -40,6 +54,7 @@ outside. So a set is confidently wrong only on a term where the claim of the ter
 wrong too: sets add no new failure cases, they turn abstentions into certified, coarser statements.
 """
 
+import os
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from functools import cache
@@ -56,6 +71,9 @@ TRUE, FALSE, UNDECIDABLE = "true", "false", "undecidable"
 INSUFFICIENT_EVIDENCE, UNKNOWN_TERM, NOT_APPLICABLE = "insufficient_evidence", "unknown_term", "not_applicable"
 CODES = (INSUFFICIENT_EVIDENCE, UNKNOWN_TERM, NOT_APPLICABLE)  # why a verdict is undecidable (D30)
 LEXICON_PATH = Path(__file__).with_name("lexicon.yaml")
+VERSIONS = {"v2": LEXICON_PATH.with_name("lexicon_v2.yaml"), "v3": LEXICON_PATH}
+CURRENT = "v3"
+PIN = "VERIFIER_GATE_LEXICON"  # the default version, for replaying results that ran under an earlier one
 DIRECTIONS = {"increasing": (1, False), "decreasing": (-1, False), "mostly_increasing": (1, True), "mostly_decreasing": (-1, True)}
 STRENGTHS = ("weak", "moderate", "strong")
 CLASSES = ("negligible", *STRENGTHS)  # the classes of a share, from below; a strength set spans neighbours (D33)
@@ -91,6 +109,10 @@ class Lexicon:
     search: tuple[float, float]
     jump_fraction: float
     pair_share: float
+    direction_margin: float | None = None  # v3 (D63); None: v2's strict word, certified when no reversal is detected
+    undetected_negligible: bool = True  # v2: "hardly matters" / "do not interact" also on an undetected small effect
+    signed_jumps: bool = False  # v3 (D64): "jumps at" up, "drops at" down
+    source: Path | None = None  # the file, for its words (lexicon/words.py)
 
     def strength_class(self, label: str) -> tuple[float, float]:
         edges = [self.strength[s] for s in STRENGTHS] + [np.inf]
@@ -98,15 +120,30 @@ class Lexicon:
         return edges[i], edges[i + 1]
 
 
+def pinned() -> str:
+    """The default version: PIN's, else the current one."""
+    version = os.environ.get(PIN) or CURRENT
+    if version not in VERSIONS:
+        raise ValueError(f"{PIN}={version}: the lexicon versions are {sorted(VERSIONS)}")
+    return version
+
+
+def load(path: Path | str | None = None) -> Lexicon:
+    """The lexicon in `path`, or the default version's (pinned)."""
+    return _read(Path(path) if path is not None else VERSIONS[pinned()])
+
+
 @cache
-def load(path: Path = LEXICON_PATH) -> Lexicon:
-    d = yaml.safe_load(Path(path).read_text())
+def _read(path: Path) -> Lexicon:
+    d = yaml.safe_load(path.read_text())
     if d["level"] != build.LEVEL:
         raise ValueError(f"lexicon level {d['level']} differs from the level of the stored bands, {build.LEVEL}")
     return Lexicon(
         d["version"], d["level"], dict(d["strength"]), d["detectable_mass"], d["share"]["absolute"],
         d["share"]["relative"], d["direction"]["exception_mass"], d["location"]["window"],
         tuple(d["location"]["search"]), d["location"]["jump_fraction"], d["interaction"]["pair_share"],
+        d["direction"].get("margin"), d.get("negligible", {}).get("undetected", True), d["location"].get("signed", False),
+        path,
     )  # fmt: skip
 
 
@@ -268,7 +305,7 @@ def negligible(facts: Facts, name: str, lex: Lexicon | None = None) -> Verdict:
     edge, moderate = lex.strength["weak"], lex.strength["moderate"]
     lo, hi = interval(t.share)
     below = hi < edge
-    small_and_undetected = not t.detectable and t.share.value < edge and hi < moderate
+    small_and_undetected = lex.undetected_negligible and not t.detectable and t.share.value < edge and hi < moderate
     value = _judge(below or small_and_undetected, lo >= edge and t.detectable)
     reason = {
         TRUE: "share band below the weak class" if below else "no detectable effect, share below the weak class, a moderate effect ruled out",
@@ -345,18 +382,19 @@ def comparison(facts: Facts, a: str, b: str, relation: str, lex: Lexicon | None 
 # --- shape words: direction, threshold, peak ---------------------------------------------------------------
 
 
-def exception_mass(lower: np.ndarray, upper: np.ndarray, mass: np.ndarray, sign: int) -> float:
+def exception_mass(lower: np.ndarray, upper: np.ndarray, mass: np.ndarray, sign: int, margin: float = 0.0) -> float:
     """Smallest data mass to leave out so that the rest of the curve shows no significant movement against
-    `sign`: for sign +1, no kept steps i < j whose bands show a decrease (upper[j] < lower[i]); for -1, no
-    increase. With the simultaneous band, a decrease found this way is real with 95% confidence for the whole
-    family of comparisons. Without bands, it is the mass outside the heaviest monotone subsequence.
+    `sign` larger than `margin`: for sign +1, no kept steps i < j whose bands show a decrease of more than the
+    margin (upper[j] < lower[i] - margin); for -1, no such increase. With the simultaneous band, a decrease found
+    this way is real with 95% confidence for the whole family of comparisons. Without bands, it is the mass outside
+    the heaviest subsequence that never falls by more than the margin.
 
-    Dynamic programme over the steps with data: the state is the largest lower bound among the steps kept so
-    far (-inf before any), and step j can be kept iff its upper bound reaches that state."""
+    Dynamic programme over the steps with data: the state is the largest lower bound (less the margin) among the
+    steps kept so far (-inf before any), and step j can be kept iff its upper bound reaches that state."""
     if sign < 0:
         lower, upper = -upper, -lower
     used = mass > 0
-    lo, hi, w = lower[used], upper[used], mass[used]
+    lo, hi, w = lower[used] - margin, upper[used], mass[used]
     states = np.concatenate([[-np.inf], lo])  # state 0: nothing kept; state i + 1: largest lower bound lo[i]
     best = np.full(len(states), -np.inf)
     best[0] = 0.0
@@ -370,39 +408,73 @@ def exception_mass(lower: np.ndarray, upper: np.ndarray, mass: np.ndarray, sign:
     return float(max(w.sum() - best.max(), 0.0))
 
 
-def _movement(f: FeatureFacts, sign: int) -> tuple[float, bool, bool, dict]:
+def largest_reversal(lower: np.ndarray, upper: np.ndarray, mass: np.ndarray, sign: int) -> float:
+    """The largest movement against `sign` that the band allows: for sign +1, the largest upper[i] - lower[j] over
+    steps i < j with data (a fall from i to j); for -1, the largest rise. At most `margin` means the band rules out
+    any reversal larger than the margin (D63). Without bands: the exact curve's largest reversal. 0 if none."""
+    if sign < 0:
+        lower, upper = -upper, -lower
+    used = mass > 0
+    lo, hi = lower[used], upper[used]
+    if len(lo) < 2:
+        return 0.0
+    return float(max((np.maximum.accumulate(hi)[:-1] - lo[1:]).max(), 0.0))
+
+
+def term_range(f: FeatureFacts, lex: Lexicon) -> float:
+    """The range of the facts' own curve between the search quantiles (as for a jump's size): M's for a fitted
+    model, T's for T. A fraction of it is the direction margin (D63)."""
+    on = f.scores[_search(f, lex)]
+    return float(on.max() - on.min()) if on.size else 0.0
+
+
+def _movement(f: FeatureFacts, sign: int, lex: Lexicon) -> tuple[float, bool, bool, dict, bool]:
     """Exception mass against `sign`, whether the net change is significantly with it or (at least weakly)
-    against it, and the evidence."""
+    against it, the evidence, and whether the band rules out any reversal beyond the margin. v2 (no margin):
+    every detected movement counts, and nothing is ruled out with bands (D29)."""
     lower, upper = curve_band(f)
-    exception = exception_mass(lower, upper, f.mass, sign)
+    margin = lex.direction_margin * term_range(f, lex) if lex.direction_margin is not None else 0.0
+    exception = exception_mass(lower, upper, f.mass, sign, margin)
     exception = 0.0 if exception < ZERO_MASS else exception
     net = interval(f.net_change)
     net_with = net[0] > 0 if sign > 0 else net[1] < 0
     net_against = net[1] <= 0 if sign > 0 else net[0] >= 0
     evidence = {"term": f.name, "net change": f.net_change.value, "net change band": net, "exception mass": exception}
-    return exception, net_with, net_against, evidence
+    if lex.direction_margin is None:
+        return exception, net_with, net_against, evidence, False
+    reversal = largest_reversal(lower, upper, f.mass, sign)
+    evidence |= {"margin": margin, "largest reversal the band allows": reversal}
+    return exception, net_with, net_against, evidence, reversal <= margin
 
 
 def direction(facts: Facts, name: str, label: str, lex: Lexicon | None = None) -> Verdict:
     """"increases": the net change (5th to 95th percentile) is significantly positive and no significant
     decrease remains anywhere (exception mass 0). "mostly increases": the net change is significantly positive
     and a significant decrease exists, on at most `exception_mass` of the data; with bands and no detected
-    decrease it is undecidable (D29). Mirrored for decreases."""
+    decrease it is undecidable (D29). Mirrored for decreases.
+
+    v3 (D63): a decrease counts only if larger than the margin. "increases" is true if the net change is
+    significantly positive and the band rules out any decrease beyond the margin, false if the net change is not
+    positive or such a decrease is detected. "mostly increases" is also false where the band rules it out."""
     lex = lex or load()
     f = _feature(facts, name, lex, "directions")
     if isinstance(f, Verdict):
         return f
     sign, mostly = DIRECTIONS[label]
-    exception, net_with, net_against, evidence = _movement(f, sign)
+    exception, net_with, net_against, evidence, ruled_out = _movement(f, sign, lex)
     reason = ""
     if mostly:
         exact = f.simultaneous is None  # T: without bands, no exception means none
         true = net_with and 0 < exception <= lex.exception_mass
-        value = _judge(true, net_against or exception > lex.exception_mass or (exception == 0 and exact))
+        value = _judge(true, net_against or exception > lex.exception_mass or (exception == 0 and exact) or ruled_out)
         if value == UNDECIDABLE:  # with a significant net change, only D29's case is left open
             reason = "no exception detected, and the bands do not rule a small one out (D29)" if net_with else "no significant net change"
-    else:
+    elif lex.direction_margin is None:
         value = _judge(net_with and exception == 0, net_against or exception > 0)
+    else:
+        value = _judge(net_with and ruled_out, net_against or exception > 0)
+        if value == UNDECIDABLE and net_with:
+            reason = "the band does not rule out a reversal larger than the margin, nor confirm one (D63)"
     return Verdict(value, evidence, reason)
 
 
@@ -414,7 +486,7 @@ def direction_in(facts: Facts, name: str, labels: tuple[str, str], lex: Lexicon 
     f = _feature(facts, name, lex, "directions")
     if isinstance(f, Verdict):
         return f
-    exception, net_with, net_against, evidence = _movement(f, DIRECTIONS[labels[0]][0])
+    exception, net_with, net_against, evidence, _ = _movement(f, DIRECTIONS[labels[0]][0], lex)
     value = _judge(net_with and exception <= lex.exception_mass, net_against or exception > lex.exception_mass)
     return Verdict(value, evidence | {"claimed": list(labels)})
 
@@ -466,10 +538,13 @@ def _location_verdict(at: float, w: float, band: tuple[float, float], f: Feature
     return near, far
 
 
-def threshold(facts: Facts, name: str, at: float, lex: Lexicon | None = None) -> Verdict:
+def threshold(facts: Facts, name: str, at: float, lex: Lexicon | None = None, sign: int = 1) -> Verdict:
     """"jumps at x": the largest jump over a window w (a `window` fraction of the 5th-95th percentile range)
     is significant (sup-t band over all locations), lies within w of x across refits, and is at least
-    `jump_fraction` of the term's range in the search region across refits."""
+    `jump_fraction` of the term's range in the search region across refits.
+
+    Signed (v3, D64): sign +1 is "jumps at" (a step up), -1 "drops at" (a step down). The largest jump must be
+    significant in the claimed direction; one significant the other way refutes the claim. v2: either sign."""
     lex = lex or load()
     f = _feature(facts, name, lex, "thresholds")
     if isinstance(f, Verdict):
@@ -494,22 +569,29 @@ def threshold(facts: Facts, name: str, at: float, lex: Lexicon | None = None) ->
     ratio = float(np.abs(jump).max() / spread(f.scores)) if spread(f.scores) > 0 else 0.0
     draws = draws_of(facts)
     if draws is None:
-        significant = bool(jump[at_max] != 0)
+        up, down = bool(jump[at_max] > 0), bool(jump[at_max] < 0)
         location_band, ratio_band = (location, location), (ratio, ratio)
     else:
         refit_jumps = jumps(draws.curves[name])
         _, simultaneous, _ = build.curve_bands(jump, refit_jumps, np.ones(len(x)))
-        significant = bool(simultaneous[0, at_max] > 0 or simultaneous[1, at_max] < 0)
+        up, down = bool(simultaneous[0, at_max] > 0), bool(simultaneous[1, at_max] < 0)
         location_band = build.percentile_band(np.array([_argmax_centre(x, np.abs(j)) for j in refit_jumps]))
         refit_spread = spread(draws.curves[name])
         ratio_band = build.percentile_band(np.abs(refit_jumps).max(axis=1) / np.where(refit_spread > 0, refit_spread, np.inf))
+    significant = up or down
     near, far = _location_verdict(at, w, location_band, f)
     large, small = ratio_band[0] >= lex.jump_fraction, ratio_band[1] < lex.jump_fraction
-    value = _judge(significant and near and large, far or small or (draws is None and not significant))
+    if lex.signed_jumps:
+        with_sign, against = (up, down) if sign > 0 else (down, up)
+        value = _judge(with_sign and near and large, far or small or against or (draws is None and not with_sign))
+    else:
+        value = _judge(significant and near and large, far or small or (draws is None and not significant))
     evidence = {
         "term": name, "largest jump at": location, "location band": location_band, "tolerance": w,
         "jump": float(jump[at_max]), "jump significant": significant, "jump / range": ratio, "jump / range band": ratio_band,
     }  # fmt: skip
+    if lex.signed_jumps:
+        evidence["claimed"] = "a step up" if sign > 0 else "a step down"
     return Verdict(value, evidence)
 
 
@@ -570,7 +652,8 @@ def interaction(facts: Facts, a: str, b: str, pattern: str, lex: Lexicon | None 
     amplification: both effects significantly of one sign, the effect significantly larger in size at high b,
                    and a pair share band at or above `pair_share`.
     sign_flip:     the two effects are significant and of opposite signs.
-    none:          as "negligible" for the pair (module docstring); a pair the model lacks is none."""
+    none:          as "negligible" for the pair (module docstring); a pair the model lacks is none: the model
+                   contains no interaction of a and b (in v3 worded so, M10)."""
     lex = lex or load()
     t = term(facts, f"{a}{PAIR_SEPARATOR}{b}", lex)
     if t is None:
@@ -594,7 +677,8 @@ def interaction(facts: Facts, a: str, b: str, pattern: str, lex: Lexicon | None 
         value = _judge(flips, same)
     else:
         edge, moderate = lex.pair_share, lex.strength["moderate"]
-        small = share_band[1] < edge or (not t.detectable and t.share.value < edge and share_band[1] < moderate)
+        undetected = lex.undetected_negligible and not t.detectable and t.share.value < edge and share_band[1] < moderate
+        small = share_band[1] < edge or undetected
         value = _judge(small, share_band[0] >= edge and t.detectable)
     evidence = _share_evidence(t) | {
         "effect of": a, "moderator": b, "moderator values": c.moderator_values,

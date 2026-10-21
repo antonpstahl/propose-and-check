@@ -29,6 +29,10 @@ uv run python -m verifier_gate.experiments.reproduce
   the run instead of calling an API: a reproduction costs $0. At the end it compares every output under `results/`
   and `paper/` with the committed one; all should be equal. `--list` prints each step's command, `--only` and
   `--from` run a part.
+- **Lexicon versions.** The default lexicon is v3 (D63–D65), with the writer's prompts v4 and extractor x5 rendered
+  from it. Results run under v2 replay with `VERIFIER_GATE_LEXICON=v2` (lexicon v2, prompts v3, extractor x3/x4,
+  the template's v2 wording). `reproduce` sets it on every step except the v3 ones (`V3_STEPS`); set it yourself to
+  run any earlier experiment by hand.
 - **Without the archive** the same command first refits every model from the fixed seeds (about 3–4 hours for the
   synthetic tier and 2 hours for the plasmode tier) and downloads TaiwanCredit from UCI (hash-checked). Whether
   refits are bit-identical on another platform has not been tested; `facts_archive --check` compares the Facts on
@@ -95,23 +99,30 @@ uv run python notebooks/02_root_cause.py                       # about 1.5 hours
 ```
 src/verifier_gate/
   data/          dgp.py (synthetic tier), plasmode.py (TaiwanCredit features, planted y), tiers.py (both tiers behind
-                 one interface), planted.py (planted claims with labels), labels.py (the names the writer sees)
+                 one interface), planted.py (planted claims with labels), labels.py (the names the writer sees),
+                 invented.py (held-out invented features: near-synonyms, unrelated terms, paraphrases)
   models/        fit_ebm.py, fit_xgb2.py, fit_oracle.py (all take Poisson weights for bootstrap refits)
   facts/         steps.py (exact step terms, purification), ebm.py, xgb2.py (exact decomposition), reference.py (T and
                  the oracle), schema.py (the Facts format), build.py and bootstrap.py (bands), refits.py and local.py
                  (local facts for adverse-action reasons), readable.py (the handover's curves, checked against M),
                  symbolic.py (SymPy export)
-  lexicon/       lexicon.yaml (thresholds, v2), predicates.py (three-valued verdicts with reason codes), local.py
+  lexicon/       lexicon.yaml (v3: thresholds, equivalence margins, and the words the prompts, Table 1 and the template are
+                 generated from), lexicon_v2.yaml (v2, as frozen), words.py (renders the words), predicates.py
+                 (three-valued verdicts with reason codes), local.py
   dsl/           grammar.py (the claim forms), parse.py (ast against a whitelist; nothing is executed)
   verifier/      verify.py (verdict and evidence per claim), certified.py (the most specific certified statements)
   llm/           client.py (cache, call log, offline switch, retries, the local Ollama transport), batch.py (Batch API),
                  settings.py (models and prices), handover.py, handover_local.py, propose.py, extract.py (the round
-                 trip's readings), prompts/ (frozen and hash-tested)
+                 trip's readings), critique.py (the LLM critic), plain.py (the plain-prompt writer), prompts/ (frozen
+                 and hash-tested)
   gate/          gate.py (repair loop, stop rules, exit states), roundtrip.py, advice.py, draft.py, template.py
   experiments/   reproduce.py (every number, offline), facts_archive.py, spend.py;
                  E1: calibrate.py, e1_lexicon.py; E2: e2_mutation.py (plan level), e2_text.py (text level),
-                 e2_labels.py and e2_false_alarms.py (labeling pages, false alarms, labeled re-scores);
-                 E3: e3_end_to_end.py, e3_truth.py; local spot check: local_refits.py, local_facts.py, local_run.py;
+                 e2_labels.py and e2_false_alarms.py (labeling pages, false alarms, labeled re-scores), e2_heldout.py
+                 (invented features held out from the extractor's development);
+                 E3: e3_end_to_end.py, e3_truth.py, e3_text_error.py (the error against T by claim form), e3_baselines.py
+                 (template-only and plain-prompt arms); local spot
+                 check: local_refits.py, local_facts.py, local_run.py;
                  fig1.py to fig4.py, tables.py, worked_example.py; acceptance, recheck, smoothing, null check, pilot
 tests/           one file per module; conftest.py clears the offline switch
 notebooks/       01 recovery check, 02 root causes of the week-1 failures, 03 what the bands can decide,

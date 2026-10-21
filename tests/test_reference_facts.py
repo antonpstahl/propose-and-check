@@ -9,6 +9,7 @@ from verifier_gate.data.planted import planted_claims
 from verifier_gate.facts import bootstrap
 from verifier_gate.facts.build import Frame, build_facts
 from verifier_gate.facts.reference import max_error, reference_steps
+from verifier_gate.lexicon import predicates as p
 from verifier_gate.lexicon.predicates import FALSE, TRUE
 from verifier_gate.models.fit_oracle import fit_oracle
 from verifier_gate.verifier.verify import verify
@@ -64,15 +65,20 @@ def test_oracle_refits_share_m_s_grid(dominant):
     assert max_error(oracle, reference, data.X[np.abs(data.X["dti"] - 0.43) > 0.002]) < 0.02
 
 
+@pytest.mark.parametrize("version", ("v2", "v3"))
 @pytest.mark.parametrize("scenario", dgp.SCENARIOS, ids=lambda s: s.id)
-def test_scorer_test_lexicon_on_t_reproduces_every_planted_label(scenario):
+def test_scorer_test_lexicon_on_t_reproduces_every_planted_label(scenario, version):
+    """Under v3 too (D63, D64): the direction margin keeps the bump at 36 months a reversal ("mostly decreases"),
+    and the step at dti = 0.43 is a jump, not a drop."""
+    lex = p.load(p.VERSIONS[version])
     data = dgp.generate(scenario)
     facts = build_facts(reference_steps(data.truth, data.X), data.X)
-    claims = planted_claims(data)
-    wrong = [(str(c), label, verify(c, facts).value) for c, label in claims if verify(c, facts).value != label]
+    claims = planted_claims(data, lex)
+    wrong = [(str(c), label, verify(c, facts, lex).value) for c, label in claims if verify(c, facts, lex).value != label]
     assert not wrong
     kinds = {c.kind for c, _ in claims}
-    assert kinds == {"rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction"}
+    expected = {"rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction"}
+    assert kinds == expected | ({"drop"} if lex.signed_jumps else set())
     assert {label for _, label in claims} == {TRUE, FALSE}
     sets = [(c.kind, label) for c, label in claims if isinstance(c.value, tuple)]  # D33
     assert set(sets) == {(kind, label) for kind in ("rank", "direction", "strength") for label in (TRUE, FALSE)}

@@ -30,6 +30,7 @@ cache/facts/
 piml_check/data/
 piml_check/results/**/*.npz
 cache/llm/batches/.lock
+cache/llm/batches/*/.lock
 
 # Cache lookups of a reproduction (experiments/reproduce.py): not calls, not committed
 cache/llm/offline_lookups.jsonl

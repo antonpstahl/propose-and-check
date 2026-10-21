@@ -1,6 +1,6 @@
 """Whitelist of DSL function names, keyword names and literal types (§5.2), and the Claim they parse into.
 
-The eight claim types, one line each:
+The nine claim types, one line each:
 
 | kind        | form                                                         | value                              |
 |-------------|--------------------------------------------------------------|------------------------------------|
@@ -10,7 +10,7 @@ The eight claim types, one line each:
 | strength    | strength("t") == "weak"                                      | one of STRENGTHS                   |
 | negligible  | negligible("t")                                              |                                    |
 | comparison  | effect("a") > effect("b")                                    | relation, ">" or "<"               |
-| threshold   | threshold("t", at=x)  /  peak("t", at=x)                     | x, a number                        |
+| threshold   | threshold("t", at=x)  /  drop("t", at=x)  /  peak("t", at=x) | x, a number                        |
 | interaction | interaction("a", "b", pattern="amplification")               | one of PATTERNS                    |
 
 Local claims, about one declined applicant (the spot check, D49; verified on facts/local.LocalFacts by
@@ -35,23 +35,25 @@ Sets of values (D33): a tuple after `in`, stored in the order below.
 The hedge (D30): unsettled(<claim>), where <claim> is any form above; it covers the terms of its claim.
 
 Terms are strings: a feature, or a pair "a & b" where the claim type allows it (share, strength, negligible,
-comparison). Nothing outside these tables parses.
+comparison). Nothing outside these tables parses. `drop` (D64, lexicon v3) is a jump down: "jumps at" is
+threshold, "drops at" is drop.
 """
 
 from dataclasses import dataclass
 
 from verifier_gate.lexicon.predicates import CLASSES, DIRECTIONS, PATTERNS, STRENGTHS
 
-__all__ = ["CALLS", "CLASSES", "COMPARED", "DIRECTIONS", "HEDGE", "KINDS", "LOCAL_CALLS", "LOCAL_KINDS", "PATTERNS", "RANKS", "RELATIONS",
-           "SETS", "STRENGTHS", "Claim"]
+__all__ = ["CALLS", "CLASSES", "COMPARED", "DIRECTIONS", "HEDGE", "KINDS", "LOCAL_CALLS", "LOCAL_KINDS", "LOCATED", "PATTERNS", "RANKS",
+           "RELATIONS", "SETS", "STRENGTHS", "Claim"]
 
 LOCAL_CALLS = ("principal_reason", "higher_than_reference", "lower_than_reference")  # f("t"), no value
 LOCAL_KINDS = ("reason_rank", *LOCAL_CALLS)
-KINDS = ("rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "peak", "interaction", *LOCAL_KINDS, "unsettled")
+KINDS = ("rank", "share", "direction", "strength", "negligible", "comparison", "threshold", "drop", "peak", "interaction", *LOCAL_KINDS, "unsettled")
 COMPARED = {"rank": int, "share": float, "direction": DIRECTIONS, "strength": STRENGTHS, "reason_rank": int}  # f("t") == value
 SETS = ("rank", "direction", "strength", "reason_rank")  # f("t") in (values)
 RANKS = ("rank", "reason_rank")  # compared with whole numbers >= 1
-CALLS = {"negligible": (1, ()), "threshold": (1, ("at",)), "peak": (1, ("at",)), "interaction": (2, ("pattern",))}
+CALLS = {"negligible": (1, ()), "threshold": (1, ("at",)), "drop": (1, ("at",)), "peak": (1, ("at",)), "interaction": (2, ("pattern",))}
+LOCATED = ("threshold", "drop", "peak")  # claims of a location
 CALLS |= {kind: (1, ()) for kind in LOCAL_CALLS}
 HEDGE = "unsettled"
 RELATIONS = (">", "<")
@@ -83,6 +85,6 @@ class Claim:
             return f"{self.kind}({t[0]})"
         if self.kind == "comparison":
             return f"effect({t[0]}) {self.relation} effect({t[1]})"
-        if self.kind in ("threshold", "peak"):
+        if self.kind in LOCATED:
             return f"{self.kind}({t[0]}, at={self.value})"
         return f'interaction({t[0]}, {t[1]}, pattern="{self.value}")'

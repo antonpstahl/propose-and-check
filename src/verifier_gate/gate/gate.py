@@ -18,12 +18,15 @@ After dropping sentences the reduced text gets one round trip (emphasis not chec
 if it fails, the template. An extraction that is not a reading (no valid JSON, or a sentence left out) is retried
 once; fewer than two readings after that is a round trip that could not run: the template.
 The template is not round-tripped: its sentences are fixed phrases of its claims. `Context.roundtrip` False skips
-the round trip (the first-draft checks of the pilot, whose budget is one call).
+the round trip (the first-draft checks of the pilot, whose budget is one call). `Context.unknown_terms` False
+drops the round trip's rule on unknown terms (M5 of the 20 Oct review), to replay E2 and E3 as they ran.
 
-A notice of the local spot check (D49): `Context.facts` is the notice's facts (facts/local.LocalFacts), the
-certified plan is verifier/certified.certified_local, the writer and the extractor get the local prompts (l1), and
-coverage, emphasis and the template follow the notice (gate/roundtrip.py, gate/template.py). A template with no
-sentence (no principal reason certified) ends the run as ESCALATE: there is nothing certified to state.
+A notice of the local spot check (D49, D68): `Context.facts` is the notice's facts (facts/local.LocalFacts), the
+certified plan is verifier/certified.certified_local (M's principal reasons on its exact contributions), the
+writer and the extractor get the local prompts (llm/prompts LOCAL_VERSION), and coverage, emphasis, hedged
+wording and the template follow the notice (gate/roundtrip.py, gate/template.py). A hedge never passes in a
+notice. A template with no sentence (no principal reason under M) ends the run as ESCALATE: there is nothing to
+state. The refit bands' flag (lexicon/local.second_look) is the lender's, not the gate's: it changes no text.
 
 Stop rules (§5.8): at most 2 repair rounds; no progress (a problem that failed in an earlier version fails again,
 compared by gate/advice.problem_key: the claim's line, or one key for a jump or peak on a curve that has none)
@@ -68,6 +71,7 @@ class Context:
     label: Callable[[str], str] | None = None
     descriptions: Mapping[str, str] = field(default_factory=lambda: labels.SYNTHETIC_DESCRIPTIONS)
     roundtrip: bool = True
+    unknown_terms: bool = True  # the round trip's rule on unknown terms (gate/roundtrip.py)
 
 
 @dataclass
@@ -174,7 +178,7 @@ def _shown(line: str, ctx: Context) -> str:
 
 def _advice(line: str, ctx: Context) -> str:
     claim = parse(line)
-    return advising.explain(claim, verify(claim, ctx.facts))
+    return advising.explain(claim, verify(claim, ctx.facts), local=isinstance(ctx.facts, LocalFacts))
 
 
 def problem_keys(lines: list[str], ctx: Context) -> set[str]:
@@ -219,6 +223,8 @@ def text_problems(trip: rt.RoundTrip, ctx: Context) -> str:
                                                        evidence=evidence, advice=_advice(line, ctx)))  # fmt: skip
     for sentence_id, statements in trip.numbers:
         lines.append(text["unexpressed"].format(sentence=sentence_id, statements="; ".join(f'"{s}"' for s in statements)))
+    for sentence_id, words in trip.hedged:
+        lines.append(text["hedged_wording"].format(sentence=sentence_id, words=words))
     for term in trip.missing:
         names = " & ".join(f"`{labels.shown(t.strip(), ctx.names)}`" for t in term.split("&"))
         lines.append(text["missing_in_text"].format(names=names))
@@ -317,7 +323,8 @@ def _round_trip_answered(run: Run, responses: list[Response], ctx: Context) -> R
         run.events.append(f"round trip could not run: {len(readings)} readable extraction(s)")
         return _template(run, ctx)
     plan = [parse(line, sentence_id=sid) for sid, line, *_ in version.claims]
-    trip = rt.compare(readings, plan, [i for i, _ in version.sentences], ctx.facts, ctx.certified, check_emphasis=mode == "draft")
+    trip = rt.compare(readings, plan, [i for i, _ in version.sentences], ctx.facts, ctx.certified, check_emphasis=mode == "draft",
+                      texts=dict((i, t) for i, t in version.sentences), unknown_terms=ctx.unknown_terms)  # fmt: skip
     version.roundtrip = asdict(trip)
     if trip.passed:
         return _release(run, version, mode)
@@ -326,7 +333,7 @@ def _round_trip_answered(run: Run, responses: list[Response], ctx: Context) -> R
         run.events.append("the reduced text failed its round trip")
         return _template(run, ctx)
     failing = problem_keys([line for _, line, value, *_ in trip.unplanned if value != TRUE], ctx)
-    failing |= {key for key in trip.failures() if key.split(":")[0] in ("emphasis", "unchecked number", "not covered by the text")}
+    failing |= {key for key in trip.failures() if key.split(":")[0] in ("emphasis", "unchecked number", "not covered by the text", "hedged wording")}
     repeated = failing & set(run.failed_before)
     drop = trip.failing_sentences()
     if repeated:

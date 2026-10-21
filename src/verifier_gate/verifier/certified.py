@@ -6,13 +6,14 @@ returned is true by its verdict, so the list is a correct plan: the source of E2
 a) and, from week 5, of H2's statements and the template.
 
 Candidates per feature: strength (or negligible), direction, rank, share (M's share to 3 decimals), "jumps at"
-the largest jump and "peaks at" the highest steps (both located on M, kept only if certified), and the
+(or, under lexicon v3, "drops at", by the sign of M's step; D64) the largest jump and "peaks at" the highest steps
+(both located on M, kept only if certified), and the
 comparison with the next feature in M's ranking. Per pair of the model: its pattern, for either feature as the
 one whose effect changes, and "none". Nothing here reads T or the oracle.
 
-For one notice of the local spot check (`certified_local`, D49): per term of M with a contribution above zero, that
-it is a principal reason, its reason rank (single, else the narrowest set of two or three), and for a feature
-that is a certified principal reason, how its value compares with the reference.
+For one notice of the local spot check (`certified_local`, D49, D68): per term of M with a contribution above zero,
+that it is a principal reason (on M's exact contributions, lexicon/local.py), its reason rank, and for a feature
+that is a principal reason, how its value compares with the reference.
 """
 
 from collections.abc import Iterable
@@ -60,20 +61,15 @@ def point_class(facts: Facts, feature: str, lex: p.Lexicon) -> Claim:
 
 def certified_local(lf: LocalFacts, lex: p.Lexicon | None = None) -> list[Claim]:
     lex = lex or p.load()
-    reasons = [r for r in lf.reasons if r.rank is not None]
-    ranks = tuple(range(1, len(reasons) + 1))
     plan: list[Claim] = []
-    for r in reasons:
-        if p.interval(r.contribution)[0] <= 0:
+    for r in lf.reasons:
+        if r.rank is None or r.contribution.value <= 0:
             continue  # no reason at any rank: nothing to certify
         principal = Claim("principal_reason", (r.term,))
         is_principal = verify(principal, lf, lex).value == TRUE
         if is_principal:
             plan.append(principal)
-        ladder = [Claim("reason_rank", (r.term,), k) for k in ranks]
-        rank = first_certified(ladder + [Claim("reason_rank", (r.term,), run) for k in (2, 3) for run in _runs(ranks, k)], lf, lex)
-        if rank is not None:
-            plan.append(rank)
+        plan.append(Claim("reason_rank", (r.term,), int(r.rank.value)))  # exact ranks: the single rank is true
         if is_principal and len(r.term.split(" & ")) == 1:
             plan += [c for kind in ("higher_than_reference", "lower_than_reference")
                      if verify(c := Claim(kind, (r.term,)), lf, lex).value == TRUE]  # fmt: skip
@@ -97,8 +93,9 @@ def certified_plan(facts: Facts, lex: p.Lexicon | None = None) -> list[Claim]:
         for ladder in (strength_ladder(name), direction_ladder(name), rank_ladder(name, len(names))):
             keep(first_certified(ladder, facts, lex))
         keep(Claim("share", (name,), round(float(facts.feature(name).share.value), 3)))
-        jump = p.threshold(facts, name, 0.0, lex).evidence["largest jump at"]
-        keep(Claim("threshold", (name,), round(float(jump), 3)))
+        jump = p.threshold(facts, name, 0.0, lex).evidence
+        kind = "drop" if lex.signed_jumps and jump["jump"] < 0 else "threshold"
+        keep(Claim(kind, (name,), round(float(jump["largest jump at"]), 3)))
         span = p.peak(facts, name, 0.0, lex).evidence["highest steps"]
         keep(Claim("peak", (name,), round(float(sum(span) / 2), 3)))
         if len(plan) == before:  # nothing certified: the hedge of M's own class, if the evidence leaves it open

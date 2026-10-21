@@ -7,6 +7,8 @@ hedge unsettled(<claim>) (D30) is judged on the verdict of its claim.
 The local spot check (D49): given one notice's facts (facts/local.LocalFacts) instead of a model's Facts, the
 local claims go to lexicon/local.py, and a global claim goes to the model's Facts the notice carries
 (`model_facts`), or is not applicable if it carries none. A local claim on a model's Facts is not applicable.
+A hedge in a notice is false whatever it hedges (D68): a notice states the principal reasons for a decision M has
+made, on M's exact contributions, and never hedges them.
 """
 
 from collections.abc import Iterable, Mapping
@@ -18,11 +20,16 @@ from verifier_gate.facts.schema import Facts
 from verifier_gate.lexicon import local as lp
 from verifier_gate.lexicon import predicates as p
 
+NOTICE_HEDGE = "a notice states its principal reasons and never hedges them"
+
 
 def verify(claim: Claim | str, facts: Facts | LocalFacts, lex: p.Lexicon | None = None) -> p.Verdict:
     claim = parse(claim) if isinstance(claim, str) else claim
     lex = lex or p.load()
     t = claim.terms
+    if claim.kind == HEDGE and isinstance(facts, LocalFacts):
+        inner = verify(claim.inner, facts, lex)
+        return p.Verdict(p.FALSE, {"claim": str(claim.inner), "claim verdict": inner.value}, NOTICE_HEDGE)
     if claim.kind == HEDGE:
         verdict = p.unsettled(verify(claim.inner, facts, lex))
         return p.Verdict(verdict.value, {"claim": str(claim.inner)} | verdict.evidence, verdict.reason)
@@ -52,8 +59,8 @@ def verify(claim: Claim | str, facts: Facts | LocalFacts, lex: p.Lexicon | None 
             return p.negligible(facts, t[0], lex)
         case "comparison":
             return p.comparison(facts, t[0], t[1], claim.relation, lex)
-        case "threshold":
-            return p.threshold(facts, t[0], claim.value, lex)
+        case "threshold" | "drop":
+            return p.threshold(facts, t[0], claim.value, lex, sign=1 if claim.kind == "threshold" else -1)
         case "peak":
             return p.peak(facts, t[0], claim.value, lex)
         case "interaction":

@@ -32,7 +32,6 @@
 | "one of the two main reasons", "the second or third reason" | `reason_rank("x") in (1, 2)`, `reason_rank("x") in (2, 3)` | one of consecutive ranks |
 | "high x", "x is higher than for approved applicants" | `higher_than_reference("x")` | the applicant's value is above the median of comparable approved applicants |
 | "low x", "a short x", "few x" | `lower_than_reference("x")` | the applicant's value is below that median |
-| "the data do not settle whether ..." | `unsettled(<any claim above>)` | the facts leave that claim open |
 
 **The lexicon's thresholds**
 

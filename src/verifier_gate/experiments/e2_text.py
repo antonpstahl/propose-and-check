@@ -103,9 +103,11 @@ def _same(a: Claim, b: Claim) -> bool:
     return (a.kind, a.terms, a.value, a.relation, a.inner) == (b.kind, b.terms, b.value, b.relation, b.inner)
 
 
-def render(draft, original: Claim | None, mutant: Claim | None, omitted: frozenset | None, tier: str = "synthetic") -> tuple[list, int | None]:
-    """The template text with one claim's clause changed; the changed sentence's id."""
-    label = lambda term: _label(term, tier)  # noqa: E731
+def render(draft, original: Claim | None, mutant: Claim | None, omitted: frozenset | None, tier: str = "synthetic",
+           label=None) -> tuple[list, int | None]:  # fmt: skip
+    """The template text with one claim's clause changed; the changed sentence's id. label: a term's words in a
+    sentence (default: the tier's, and "the savings balance" for M9's term)."""
+    label = label or (lambda term: _label(term, tier))
     groups = {sid: [c for c in draft.claims if c.sentence_id == sid] for sid in draft.ids()}
     changed = None
     if omitted is not None:  # M8 omission: drop the pair's clauses
@@ -209,7 +211,8 @@ def context(case: Case, cache: dict) -> g.Context:
     if key not in cache:
         scenario = tiers.scenario(case.scenario)
         facts = load(scenario, case.model)
-        cache[key] = g.Context(facts, certified_plan(facts), NAMES[case.naming], descriptions=DESCRIPTIONS[tiers.name(scenario)])
+        cache[key] = g.Context(facts, certified_plan(facts), NAMES[case.naming], descriptions=DESCRIPTIONS[tiers.name(scenario)],
+                               unknown_terms=False)  # E2 as run: without the rule on unknown terms (gate/roundtrip.py)
     return cache[key]
 
 
@@ -233,8 +236,10 @@ def outcome(case: Case, trip: rt.RoundTrip | None) -> dict:
             "number": how["number"] > 0, "not covered": how["not covered"] > 0, "failures": "; ".join(trip.failures())}  # fmt: skip
 
 
-def score(cases: list[Case], client: Client, api, poll: float, log=print) -> pd.DataFrame:
-    ctxs: dict = {}
+def read(cases: list[Case], client: Client, api, poll: float, log=print, ctxs: dict | None = None) -> dict[str, list]:
+    """Each case's readings that could be read (llm/extract.Extraction), by case id; an answer that is not a reading
+    is retried once. A case without a mutation is not read."""
+    ctxs = {} if ctxs is None else ctxs
     requests = {c.case_id: reading_requests(c, context(c, ctxs)) for c in cases if c.info.get("role") != "no mutation"}
     answers = batch.resolve([r for rs in requests.values() for r in rs], client, api, poll=poll, log=log)
     readings, retry = {}, {}
@@ -259,11 +264,17 @@ def score(cases: list[Case], client: Client, api, poll: float, log=print) -> pd.
                     readings[case.case_id].append(extract.extraction_from(answers[r.key], {i for i, _ in case.sentences}, context(case, ctxs).names))
                 except (ValueError, KeyError, TypeError):
                     pass
+    return readings
+
+
+def score(cases: list[Case], client: Client, api, poll: float, log=print) -> pd.DataFrame:
+    ctxs: dict = {}
+    readings = read(cases, client, api, poll, log, ctxs)
     rows = []
     for case in cases:
         ctx = context(case, ctxs)
         good = readings.get(case.case_id, [])
-        trip = rt.compare(good, case.plan, [i for i, _ in case.sentences], ctx.facts, ctx.certified) if len(good) >= rt.EXTRACTED else None
+        trip = rt.compare(good, case.plan, [i for i, _ in case.sentences], ctx.facts, ctx.certified, unknown_terms=ctx.unknown_terms) if len(good) >= rt.EXTRACTED else None
         scenario = tiers.scenario(case.scenario)
         rows.append({"case": case.case_id, "source": case.source, "scenario": case.scenario, "n": scenario.n, "interaction": scenario.interaction,
                      "pilot dataset": case.scenario in PILOT, "model": case.model, **case.info, **outcome(case, trip)})  # fmt: skip

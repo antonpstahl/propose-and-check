@@ -7,15 +7,17 @@ import re
 import numpy as np
 import pytest
 
-from verifier_gate.data import dgp
+from verifier_gate.data import dgp, labels
 from verifier_gate.dsl.grammar import Claim
 from verifier_gate.dsl.parse import parse
 from verifier_gate.facts import bootstrap
 from verifier_gate.facts.build import Frame, build_facts
+from verifier_gate.lexicon.predicates import TRUE
 from verifier_gate.llm import prompts, propose
 from verifier_gate.llm.client import Response
 from verifier_gate.llm.handover import handover
 from verifier_gate.verifier.certified import certified_plan
+from verifier_gate.verifier.verify import verify
 
 
 def test_every_dsl_example_in_the_system_prompt_parses():
@@ -30,7 +32,7 @@ def test_every_dsl_example_in_the_system_prompt_parses():
 
 
 def test_prompt_hashes_are_frozen_after_the_pilot():
-    frozen = prompts.frozen()
+    frozen = prompts.expected()  # the hashes of the version the lexicon gives (frozen.json: v3, frozen_v4.json: v4)
     if frozen is None:
         pytest.skip("prompts not frozen yet (the pilot freezes them)")
     assert prompts.hashes() == frozen
@@ -38,7 +40,7 @@ def test_prompt_hashes_are_frozen_after_the_pilot():
 
 def test_extractor_prompt_hashes_are_frozen_after_the_pilot():
     """The assembled extractor prompt includes the writer's DSL table, so a change there shows here too."""
-    frozen = prompts.frozen(prompts.FROZEN_EXTRACTOR)
+    frozen = prompts.expected(prompts.EXTRACTOR_NAMES)
     if frozen is None:
         pytest.skip("extractor prompts not frozen yet (the round-trip pilot freezes them)")
     assert prompts.hashes(prompts.EXTRACTOR_NAMES) == frozen
@@ -95,6 +97,27 @@ def test_the_handover_shows_every_feature_under_its_writer_name_and_passes_its_c
     assert h2.text.startswith(h1.text)
     assert 'rank("utilization") == 1' in h2.text
     assert np.isclose(len(h1.text), len(handover(facts, X, "H1", plan).text))  # deterministic
+
+
+@pytest.mark.parametrize("naming", ["plausible", "opaque"])
+def test_h2_lists_the_certified_statements_under_the_writer_names_and_each_verifies(oracle_facts, naming):
+    """The H2 naming bug (M5 of the 20 Oct review): under opaque names, H2 listed the certified statements under the
+    plausible ones, which the verifier then found unknown. naming_bug rebuilds that handover, to replay E3 as run."""
+    facts, X = oracle_facts
+    plan = certified_plan(facts)
+    names, other = (labels.SYNTHETIC_NAMES, labels.OPAQUE_NAMES) if naming == "plausible" else (labels.OPAQUE_NAMES, labels.SYNTHETIC_NAMES)
+    h2 = handover(facts, X, "H2", plan, names=names)
+    for name in other.values():
+        assert not re.search(rf"\b(?:{name}|{labels.SYNTHETIC_LABELS[name]})\b", h2.text), name
+    shown = {labels.shown(f.name, names) for f in facts.features}
+    listed = h2.text.split("Statements the verifier certifies")[1].splitlines()[1:]
+    assert listed
+    for line in listed:
+        claim = parse(line.removeprefix("- ").split("  (")[0])
+        assert {s.strip() for t in (claim.inner or claim).terms for s in t.split("&")} <= shown, line
+        assert verify(labels.internal(claim, names), facts).value == TRUE, line
+    as_run = handover(facts, X, "H2", plan, names=names, naming_bug=True)
+    assert (as_run.text == h2.text) == (naming == "plausible")
 
 
 def test_each_extractor_version_in_the_history_differs_from_the_current_one():

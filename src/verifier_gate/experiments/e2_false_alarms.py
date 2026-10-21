@@ -104,7 +104,7 @@ def run(version: str, client: Client, api, poll: float, log=print) -> tuple[pd.D
         if len(good) < rt.EXTRACTED:
             rows.append(base | {"readings": len(good), "scored": False})
             continue
-        trip = rt.compare(good, t["plan"], [i for i, _ in t["sentences"]], ctx.facts, ctx.certified)
+        trip = rt.compare(good, t["plan"], [i for i, _ in t["sentences"]], ctx.facts, ctx.certified, unknown_terms=ctx.unknown_terms)
         rows.append(base | {"readings": len(good), "scored": True, "blocked": not trip.passed, "failures": "; ".join(trip.failures())})
         text_of = dict((i, s) for i, s in t["sentences"])
         for sid, line, value, code, reason, evidence in trip.unplanned:
@@ -267,7 +267,7 @@ def drafts(out: Path, client: Client) -> pd.DataFrame:
         good += readings(text, ctx, again, answers)[0]
         if len(good) < rt.EXTRACTED:
             continue
-        trip = rt.compare(good, [], [i for i, _ in first["sentences"]], ctx.facts, ctx.certified)
+        trip = rt.compare(good, [], [i for i, _ in first["sentences"]], ctx.facts, ctx.certified, unknown_terms=ctx.unknown_terms)
         found[run["run_id"]] = (scenario, model, naming, first["sentences"], [(sid, line, reason, evidence) for sid, line, value, code, reason, evidence in trip.unplanned if value == p.FALSE])  # fmt: skip
     rows_ = pd.read_csv(E3_RESULTS / e2_text.E3_SOURCE / "haiku" / "rows.csv")
     off = rows_[(rows_["off scored"] == True) & (~rows_["pilot dataset"])].set_index("run")  # noqa: E712

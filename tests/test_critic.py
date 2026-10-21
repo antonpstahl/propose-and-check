@@ -1,6 +1,7 @@
 """The LLM critic (D56): OpenAI's answers in the Messages API's shape, the critic's request and answer, and the
 comparison with the gate (experiments/e2_critic.py). No network."""
 
+import hashlib
 import json
 import math
 
@@ -43,22 +44,53 @@ def test_an_openai_request_goes_nowhere_under_the_offline_switch(tmp_path, monke
 
 
 def test_the_critic_gets_the_writers_rules_the_facts_and_the_text():
-    request = critique.critic_request("FACTS HERE", [[1, "Risk rises with utilization."], [2, "Age hardly matters."]])
+    request = critique.critic_request("FACTS HERE", [[1, "Risk rises with utilization."], [2, "Age hardly matters."]], version="c1")
     assert request.role == "critic" and request.model == settings.CRITIC and request.effort == settings.CRITIC_EFFORT
-    assert prompts.word_rules() in request.system and "{rules}" not in request.system
-    assert prompts.word_rules().startswith("# Choosing the words") and "# The claims" not in prompts.word_rules()
+    assert prompts.word_rules("v3") in request.system and "{rules}" not in request.system
+    assert prompts.word_rules("v3").startswith("# Choosing the words") and "# The claims" not in prompts.word_rules("v3")
     user = request.messages[0][1]
     assert user.index("FACTS HERE") < user.index("1. Risk rises with utilization.\n2. Age hardly matters.")  # facts first: a shared prefix
     assert json.loads(request.schema)["required"] == ["problems", "p_error"]
     assert critique.critic_request("FACTS HERE", [[1, "x"]], model=settings.CRITIC_STRONG).key != critique.critic_request("FACTS HERE", [[1, "x"]]).key
 
 
-def test_critic_prompt_hashes_are_frozen_after_the_pilot():
+def test_c2_gets_the_writers_whole_set_of_rules_with_the_dsl_table():
+    c1, c2 = (critique.critic_request("FACTS", [[1, "x"]], version=v) for v in ("c1", "c2"))
+    rules = prompts.writer_rules("v3")
+    assert rules in c2.system and prompts.word_rules("v3") in rules and rules not in c1.system
+    assert rules.startswith("# The text") and "| Words in the text | DSL claim | Meaning |" in rules and "# The claims" not in rules
+    assert "Return one JSON object with two lists" not in rules  # the writer's answer format is not a rule for the critic
+    assert c1.messages == c2.messages and c1.key != c2.key  # the same facts and text give another request
+
+
+def test_both_critic_versions_read_e3s_writer_prompt_v3():
+    assert hashlib.sha256(prompts.writer_system("v3").encode()).hexdigest() == prompts.WRITER_SYSTEM["v3"]
+    assert prompts.critic_system("c1") == prompts.load("critic_system").replace("{rules}", prompts.word_rules("v3"))
+
+
+@pytest.mark.parametrize("version", sorted(prompts.CRITIC_NAMES))
+def test_critic_prompt_hashes_are_frozen_after_the_pilot(version):
     """The assembled critic prompt includes the writer's rules, so a change there shows here too."""
-    frozen = prompts.frozen(prompts.FROZEN_CRITIC)
+    frozen = prompts.frozen(prompts.FROZEN_CRITIC[version])
     if frozen is None:
-        pytest.skip("critic prompts not frozen yet (the critic's pilot freezes them)")
-    assert prompts.hashes(prompts.CRITIC_NAMES) == frozen
+        pytest.skip(f"critic prompts {version} not frozen yet")
+    assert prompts.hashes(prompts.CRITIC_NAMES[version]) == frozen
+
+
+def test_c2_gets_the_handover_each_writer_saw_from_e3s_run_traces():
+    h1, h2 = (f"syn-dominant-n5000-s2_EBM_{v}_d0_claude-haiku-5-5_opaque" for v in ("H1", "H2"))
+    texts = [e2_critic.writer_handover(run) for run in (h1, h2)]
+    assert all(t.startswith("Model: ") for t in texts) and not any("Write the explanation" in t for t in texts)
+    assert "Statements the verifier certifies" in texts[1] and "Statements the verifier certifies" not in texts[0]
+    assert texts[1].startswith(texts[0])  # H2 is H1 and the certified statements
+    case = lambda source, info=None: e2_critic.Case("L001" if source == "llm" else h2, source, "syn-dominant-n5000-s2", "EBM", "opaque", [], [], None, info or {})  # noqa: E731
+    assert e2_critic.written_by(case("e3")) == h2 and e2_critic.written_by(case("llm", {"gate case": h1})) == h1
+    assert e2_critic.written_by(case("control")) == h1  # a template text: the H1 of its cell
+
+
+def test_kappa_of_two_checkers():
+    a, b = pd.Series([True, True, False, False]), pd.Series([True, False, False, False])
+    assert e2_critic.kappa(a, a) == 1.0 and e2_critic.kappa(a, b) == pytest.approx(0.5)
 
 
 def response(data) -> c.Response:

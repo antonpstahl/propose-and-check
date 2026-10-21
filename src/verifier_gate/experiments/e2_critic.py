@@ -16,17 +16,27 @@ for e3 it is false_alarms/texts_x4.csv with its labels. Recall is the share of e
 needs a problem at the changed sentence (for an omission: at the whole text). The critic's probability is checked
 against the labels: its Brier score, and how often it is confident and wrong (CONFIDENT).
 
+Versions (llm/prompts): c1 got the H1 facts for every text and the writer's rules for choosing words. c2 (M4 of the
+20 Oct review) gets what the writer got: the writer's whole set of rules with the DSL table, and the handover each
+writer saw, read from its E3 run trace (`writer_handover`): H2, with the certified statements, for an H2 text and
+for the LLM mutant of one; a template text, written from the certified statements without a writer, gets the H1 of
+its cell. c2 was frozen before its first call, with no pilot: it changes only the inputs. `--compare` sets c2
+beside c1 and the gate (compare.csv in c2's folder): blocked shares, recall and specificity with 95% intervals,
+balanced accuracy, agreement between the versions, what c2 does with the E3 texts whose c1 flags the author
+labelled, and how many flagged sentences state a statement the verifier certifies.
+
 Calls run in parallel (WORKERS), synchronously; every answer is cached and logged like any other. `--estimate`
 prices a run from the prompts' length and the pilot's measured output (OUT_TOKENS) before anything is sent, and a
 run that would exceed `--budget` does not start; a running one stops calling once its spend reaches the budget.
 
-Run: `uv run python -m verifier_gate.experiments.e2_critic [--pilot | --estimate] [--model openai/gpt-6.1-sol]
-[--sources llm,control] [--budget 2.0]`. Writes results/e2/<lexicon>/text/critic/<model>/<prompt version>/:
-cases.csv, e3.csv, summary.csv. Labels of the e3 flags: `--page` writes critic/labels/ (items.json, key.csv and the
+Run: `uv run python -m verifier_gate.experiments.e2_critic [--pilot | --estimate | --compare] [--critic c1]
+[--model openai/gpt-6.1-sol] [--sources llm,control] [--budget 2.0]`. Writes results/e2/<lexicon>/text/critic/<model>/<prompt
+version>/: cases.csv, summary.csv. Labels of the e3 flags: `--page` writes critic/labels/ (items.json, key.csv and the
 labelling page critic_page.html, from critic_page.html next to this file); `--score labels.json` scores them.
 """
 
 import argparse
+import functools
 import json
 import math
 import tempfile
@@ -39,7 +49,9 @@ import numpy as np
 import pandas as pd
 
 from verifier_gate.data import dgp
+from verifier_gate.dsl.grammar import Claim
 from verifier_gate.experiments import e2_labels, e2_text
+from verifier_gate.experiments.e2_false_alarms import wilson
 from verifier_gate.experiments.e2_text import PILOT, RESULTS, Case
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.llm import prompts, settings
@@ -127,7 +139,29 @@ def pilot_cases() -> list[Case]:
 # --- calls ------------------------------------------------------------------------------------------------
 
 
-def facts_text(case: Case, cache: dict) -> str:
+@functools.cache
+def writer_handover(run_id: str) -> str:
+    """The handover in an E3 run's writer request, as the writer read it (propose.md wraps it in one line before and
+    one after)."""
+    run = json.loads((e2_text.E3_RESULTS / e2_text.E3_SOURCE / "haiku" / "runs" / f"{run_id}.json").read_text())
+    user = run["writer"]["messages"][0][1]
+    return user[user.index("\n\n") + 2 : user.rindex("\n\nWrite the explanation")]
+
+
+def written_by(case: Case) -> str:
+    """The E3 run whose writer request carries the facts for a case: its own run (an E3 text), the run it was mutated
+    from (an LLM mutant), or, for a template text, the H1 run of its cell at draw 0."""
+    if case.source == "e3":
+        return case.case_id
+    if case.source == "llm":
+        return case.info["gate case"]
+    return f"{case.scenario}_{case.model}_H1_d0_{settings.WRITER}_{case.naming}"
+
+
+def facts_text(case: Case, cache: dict, version: str = "c1") -> str:
+    """c1: the handover H1, built from the Facts; c2: the handover the writer saw (writer_handover)."""
+    if version != "c1":
+        return writer_handover(written_by(case))
     key = (case.scenario, case.model, case.naming)
     if key not in cache:
         ctx = e2_text.context(case, {})
@@ -136,9 +170,9 @@ def facts_text(case: Case, cache: dict) -> str:
     return cache[key]
 
 
-def requests(cases: list[Case], model: str) -> dict[str, Request]:
+def requests(cases: list[Case], model: str, version: str) -> dict[str, Request]:
     texts: dict = {}
-    return {c.case_id: critic_request(facts_text(c, texts), c.sentences, model) for c in cases}
+    return {c.case_id: critic_request(facts_text(c, texts, version), c.sentences, model, version=version) for c in cases}
 
 
 def estimate(reqs: list[Request], client: Client) -> tuple[int, float]:
@@ -265,7 +299,7 @@ def summarise(table: pd.DataFrame) -> pd.DataFrame:
 # --- labels of the e3 flags -------------------------------------------------------------------------------
 
 
-def page(table: pd.DataFrame, out: Path) -> None:
+def page(table: pd.DataFrame, out: Path, version: str = "c1") -> None:
     """One item per flagged sentence of the e3 texts the critic blocks (a sample of FA_SAMPLE texts if there are more),
     with the facts the critic saw; key.csv maps items to texts. The labeller never sees the gate's verdict."""
     flagged = table[(table.source == "e3") & (table.blocked == True)]  # noqa: E712
@@ -277,7 +311,7 @@ def page(table: pd.DataFrame, out: Path) -> None:
         t = texts[row.case]
         ctx_id = f"{t['scenario']}_{t['model']}_{t['naming']}"
         if ctx_id not in facts:
-            head, parts = e2_labels.blocks(facts_text(Case(row.case, "e3", t["scenario"], t["model"], t["naming"], [], [], None, {}), cache))
+            head, parts = e2_labels.blocks(facts_text(Case(row.case, "e3", t["scenario"], t["model"], t["naming"], [], [], None, {}), cache, version))
             facts[ctx_id] = {"head": head, "blocks": parts}
         shown = [n for b in facts[ctx_id]["blocks"] for n in b["names"] if len(b["names"]) == 1]
         for sid, problems in sorted(json.loads(row.problems).items(), key=lambda x: int(x[0])):
@@ -297,17 +331,23 @@ def page(table: pd.DataFrame, out: Path) -> None:
     print(f"{len(items)} flagged sentence(s) in {len(flagged)} text(s) to label; written to {out}")
 
 
-def score_e3(table: pd.DataFrame, out: Path, labels_path: Path, gate_score: Path | None = None) -> pd.DataFrame:
-    """The critic's flags on E3's released texts against the labels, beside the gate's (false_alarms/score.csv): a
-    blocked text is a real error if a flag is right, a false alarm if every flag is wrong, open otherwise; the
-    false-alarm rate is per correct text, as for the gate."""
+def label_kinds(out: Path, labels_path: Path) -> dict[str, str]:
+    """Each labelled blocked text's kind: a real error if a flag is right, a false alarm if every flag is wrong, open
+    otherwise."""
     labels = json.loads(labels_path.read_text())
     key = pd.read_csv(out / "key.csv")
     verdicts = {}
     for row in key.itertuples():
         values = list((labels.get(row.item, {}).get("labels") or {}).values())
         verdicts.setdefault(row.case, []).extend(values or ["open"])
-    kinds = {case: "real error" if "error" in v else "false alarm" if v and all(x == "misreading" for x in v) else "open" for case, v in verdicts.items()}
+    return {case: "real error" if "error" in v else "false alarm" if v and all(x == "misreading" for x in v) else "open" for case, v in verdicts.items()}
+
+
+def score_e3(table: pd.DataFrame, out: Path, labels_path: Path, gate_score: Path | None = None) -> pd.DataFrame:
+    """The critic's flags on E3's released texts against the labels, beside the gate's (false_alarms/score.csv): a
+    blocked text is a real error if a flag is right, a false alarm if every flag is wrong, open otherwise; the
+    false-alarm rate is per correct text, as for the gate."""
+    kinds = label_kinds(out, labels_path)
     e3 = table[(table.source == "e3") & (table.critiqued == True)]  # noqa: E712
     blocked = int(e3.blocked.astype(bool).sum())
     labelled = len(kinds)
@@ -328,6 +368,92 @@ def score_e3(table: pd.DataFrame, out: Path, labels_path: Path, gate_score: Path
     return result
 
 
+# --- c2 beside c1 and the gate ----------------------------------------------------------------------------
+
+
+def kappa(a: pd.Series, b: pd.Series) -> float:
+    """Cohen's kappa of two checkers' blocks on the same texts."""
+    a, b = a.astype(bool).to_numpy(), b.astype(bool).to_numpy()
+    po, pe = float((a == b).mean()), float(a.mean() * b.mean() + (1 - a.mean()) * (1 - b.mean()))
+    return round((po - pe) / (1 - pe), 3) if pe < 1 else math.nan
+
+
+def _share(rows: list, set_: str, measure: str, checker: str, k: int, n: int) -> None:
+    lo, hi = wilson(k, n) if n else (math.nan, math.nan)
+    rows.append({"set": set_, "measure": measure, "checker": checker, "k": k, "n": n, "value": round(k / n, 4) if n else math.nan,
+                 "95% low": round(lo, 4), "95% high": round(hi, 4)})  # fmt: skip
+
+
+def certified_flags(table: pd.DataFrame) -> pd.DataFrame:
+    """Per flagged sentence of an E3 text: whether it states a statement the verifier certifies (a claim of its plan
+    is in the certified plan, verbatim); sentence 0 (the whole text) left out."""
+    texts, cache, rows = {t["run"]: t for t in e2_text.released_texts()}, {}, []
+    for row in table[(table.source == "e3") & (table.blocked == True)].itertuples():  # noqa: E712
+        t = texts[row.case]
+        ctx = e2_text.context(Case(row.case, "e3", t["scenario"], t["model"], t["naming"], [], [], None, {}), cache)
+        certified = {str(c) for c in ctx.certified}
+        for sid in (int(x) for x in str(row.flagged).split() if int(x) != WHOLE_TEXT):
+            stated = [str(Claim(c.kind, c.terms, c.value, c.relation, None, c.inner)) for c in t["plan"] if c.sentence_id == sid]
+            rows.append({"case": row.case, "handover": row.case.split("_")[2], "sentence": sid, "certified": any(c in certified for c in stated)})
+    return pd.DataFrame(rows, columns=["case", "handover", "sentence", "certified"])
+
+
+def compare_versions(model: str = settings.CRITIC, old: str = "c1", new: str = "c2") -> pd.DataFrame:
+    """The critic before (c1) and after (c2) its inputs were matched, beside the gate (x4), in one long table:
+    - recall on the errors (the labelled LLM-written ones, final and first-pass labels, and the scripted ones),
+      specificity on the known-correct texts (the unchanged templates, the control mutants and the LLM-written
+      sentences judged correct, final labels) and the balanced accuracy of the two (errors pooled: LLM-written with
+      final labels and scripted), with 95% Wilson intervals;
+    - on E3's released texts, the blocked share by handover, and what c2 does with the texts whose c1 flags the
+      author labelled (by kind);
+    - agreement (Cohen's kappa) of c1 and c2 per set of texts, and of each with the gate on E3's texts;
+    - flagged sentences of E3 texts that state a certified statement, by handover."""
+    a, b = (pd.read_csv(folder(model, v) / "cases.csv") for v in (old, new))
+    t = a.merge(b, on=["case", "source"], suffixes=(" " + old, " " + new))
+    t = t[(t[f"critiqued {old}"] == True) & (t[f"critiqued {new}"] == True)]  # noqa: E712
+    rows: list = []
+    checkers = {"gate (x4)": f"gate caught {old}", f"critic {old}": f"blocked {old}", f"critic {new}": f"blocked {new}"}
+    labelled = t[t.source != "e3"]
+    errors = {"LLM-written errors (final labels)": labelled[(labelled.source == "llm") & (labelled[f"role {old}"] == "error")],
+              "LLM-written errors (author's first pass)": labelled[(labelled.source == "llm") & (labelled[f"first pass {old}"] == "error")],
+              "scripted errors": labelled[(labelled.source == "script") & (labelled[f"role {old}"] == "error")]}  # fmt: skip
+    pooled = pd.concat([errors["LLM-written errors (final labels)"], errors["scripted errors"]])
+    correct = labelled[labelled[f"role {old}"].isin(CORRECT)]
+    for checker, column in checkers.items():
+        for name, part in [*errors.items(), ("LLM-written and scripted errors", pooled)]:
+            _share(rows, name, "recall", checker, int(part[column].astype(bool).sum()), len(part))
+        _share(rows, "known-correct texts", "specificity", checker, int((~correct[column].astype(bool)).sum()), len(correct))
+        recall, specificity = pooled[column].astype(bool).mean(), (~correct[column].astype(bool)).mean()
+        rows.append({"set": "LLM-written and scripted errors; known-correct texts", "measure": "balanced accuracy", "checker": checker,
+                     "value": round((recall + specificity) / 2, 4)})  # fmt: skip
+    e3 = t[t.source == "e3"].assign(handover=lambda d: d.case.str.split("_").str[2])
+    gate = pd.read_csv(RESULTS / p.load().version / "text" / "false_alarms" / f"texts_{GATE_VERSION}.csv")
+    gate = gate[gate.scored == True].set_index("run").blocked  # noqa: E712
+    for variant, part in [("H1 and H2", e3)] + list(e3.groupby("handover")):
+        for v in (old, new):
+            _share(rows, f"E3's released texts, {variant}", "blocked", f"critic {v}", int(part[f"blocked {v}"].astype(bool).sum()), len(part))
+        g = gate.reindex(part.case).dropna().astype(bool)
+        _share(rows, f"E3's released texts, {variant}", "blocked", "gate (x4)", int(g.sum()), len(g))
+    kinds = label_kinds(folder(model, old) / "labels", folder(model, old) / "labels" / "labels.json")
+    for kind in ("real error", "open", "false alarm"):
+        cases = [c for c, k in kinds.items() if k == kind]
+        part = e3[e3.case.isin(cases)]
+        if len(part):
+            _share(rows, f"E3 texts {old} blocked, labelled {kind} by the author", "blocked", f"critic {new}", int(part[f"blocked {new}"].astype(bool).sum()), len(part))
+    for source, part in t.groupby("source"):
+        rows.append({"set": f"{source} texts", "measure": "kappa", "checker": f"critic {old} vs critic {new}", "n": len(part),
+                     "value": kappa(part[f"blocked {old}"], part[f"blocked {new}"])})  # fmt: skip
+    for v in (old, new):
+        both = e3[e3.case.isin(gate.index)]
+        rows.append({"set": "e3 texts", "measure": "kappa", "checker": f"gate (x4) vs critic {v}", "n": len(both),
+                     "value": kappa(gate.loc[both.case], both[f"blocked {v}"])})  # fmt: skip
+    for v in (old, new):
+        flags = certified_flags(pd.read_csv(folder(model, v) / "cases.csv"))
+        for variant, part in flags.groupby("handover"):
+            _share(rows, f"flagged sentences of E3 texts, {variant}", "state a certified statement", f"critic {v}", int(part.certified.sum()), len(part))
+    return pd.DataFrame(rows)
+
+
 # --- running ----------------------------------------------------------------------------------------------
 
 
@@ -342,6 +468,8 @@ def stub_responder(request: Request) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default=settings.CRITIC)
+    parser.add_argument("--critic", default=prompts.CRITIC_VERSION, choices=sorted(prompts.CRITIC_NAMES), help="the critic's prompt version")
+    parser.add_argument("--compare", action="store_true", help="c2 beside c1 and the gate, from both versions' cases.csv (no calls)")
     parser.add_argument("--sources", default=",".join(SOURCES), help=f"comma-separated, of {SOURCES}")
     parser.add_argument("--pilot", action="store_true", help="the prompt's trial on the pilot datasets (each round written to <out>/pilot/r<n>)")
     parser.add_argument("--estimate", action="store_true", help="count and price the uncached calls, no network")
@@ -350,22 +478,29 @@ def main() -> None:
     parser.add_argument("--page", action="store_true", help="the labelling page for the critic's e3 flags")
     parser.add_argument("--score", type=Path, help="labels.json of the e3 flags")
     args = parser.parse_args()
-    out = folder(args.model)
+    out = folder(args.model, args.critic)
     labels_dir = out / "labels"
+    if args.compare:
+        table = compare_versions(args.model)
+        table.to_csv(folder(args.model, "c2") / "compare.csv", index=False)
+        pd.set_option("display.width", 250)
+        print(table.to_string(index=False))
+        return
     if args.page or args.score:
         table = pd.read_csv(out / "cases.csv")
         if args.page:
-            page(table, labels_dir)
+            page(table, labels_dir, args.critic)
         if args.score:
             pd.set_option("display.width", 250)
             print(score_e3(table, labels_dir, args.score).to_string(index=False))
         return
-    if not args.pilot and prompts.frozen(prompts.FROZEN_CRITIC) != prompts.hashes(prompts.CRITIC_NAMES):
-        raise SystemExit("the critic's prompts are not frozen as they are now: run --pilot, then freeze them (prompts.freeze)")
+    names = prompts.CRITIC_NAMES[args.critic]
+    if not args.pilot and prompts.frozen(prompts.FROZEN_CRITIC[args.critic]) != prompts.hashes(names):
+        raise SystemExit(f"the critic's prompts {args.critic} are not frozen as they are now: run --pilot, then freeze them (prompts.freeze)")
     cases = pilot_cases() if args.pilot else build(tuple(args.sources.split(",")))
     if args.dry:
         cases = cases[:6]
-    reqs = requests(cases, args.model)
+    reqs = requests(cases, args.model, args.critic)
     client = Client("stub", stub_responder, cache_dir=Path(tempfile.mkdtemp(prefix="e2_critic_dry_"))) if args.dry else Client("sync")
     calls, dollars = estimate(list(reqs.values()), client)
     print(f"{len(cases)} case(s) ({pd.Series([c.source for c in cases]).value_counts().to_dict()}); {calls} uncached call(s) to {args.model}, "
@@ -385,13 +520,13 @@ def main() -> None:
         old = pd.read_csv(target / "cases.csv")
         table = pd.concat([old[~old.case.isin(table.case)], table], ignore_index=True)
     table.to_csv(target / "cases.csv", index=False)
-    (target / "prompts.json").write_text(json.dumps(prompts.hashes(prompts.CRITIC_NAMES), indent=1) + "\n")  # which prompt answered
+    (target / "prompts.json").write_text(json.dumps(prompts.hashes(names), indent=1) + "\n")  # which prompt answered
     summary = summarise(table)
     summary.to_csv(target / "summary.csv", index=False)
     pd.set_option("display.width", 250)
     print(summary.to_string(index=False))
     spent = table["cost"].sum() if "cost" in table else 0.0
-    print(f"\ncritic {args.model}, prompts {prompts.CRITIC_VERSION}; {time.time() - start:.0f}s; cases' cost ${spent:.3f}; results in {target}")
+    print(f"\ncritic {args.model}, prompts {args.critic}; {time.time() - start:.0f}s; cases' cost ${spent:.3f}; results in {target}")
 
 
 if __name__ == "__main__":

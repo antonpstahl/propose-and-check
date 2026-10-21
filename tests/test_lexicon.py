@@ -58,6 +58,7 @@ def per_step(sd):
 
 
 BASE = [main("ramp", np.linspace(0, 2, 20))]  # a large term, so the toy shares are on a familiar scale
+V2 = p.load(p.VERSIONS["v2"])  # the rules these tests were written for; tests/test_lexicon_v3.py has v3's
 UP, DOWN = ("increasing", "mostly_increasing"), ("decreasing", "mostly_decreasing")
 
 
@@ -71,14 +72,14 @@ def test_ramp_increases(X):
 
 
 def test_mostly_needs_a_detected_exception(X):
-    """D29: no exception detected on a curve with bands leaves "mostly" open, since the bands do not rule a
-    small one out; on an exact curve (T) no exception means none, and "mostly" is false."""
-    verdict = verify('direction("ramp") == "mostly_increasing"', toy_facts(X, BASE))
+    """D29 (lexicon v2): no exception detected on a curve with bands leaves "mostly" open, since the bands do not
+    rule a small one out; on an exact curve (T) no exception means none, and "mostly" is false."""
+    verdict = verify('direction("ramp") == "mostly_increasing"', toy_facts(X, BASE), V2)
     assert verdict.value == p.UNDECIDABLE and verdict.code == p.INSUFFICIENT_EVIDENCE
     assert verdict.evidence["exception mass"] == 0
     exact = exact_facts(X, BASE)
-    assert verify('direction("ramp") == "mostly_increasing"', exact).value == p.FALSE
-    assert verify('direction("ramp") == "increasing"', exact).value == p.TRUE
+    assert verify('direction("ramp") == "mostly_increasing"', exact, V2).value == p.FALSE
+    assert verify('direction("ramp") == "increasing"', exact, V2).value == p.TRUE
 
 
 def test_a_significant_dip_on_one_step_makes_it_mostly_increasing(X):
@@ -95,7 +96,7 @@ def test_the_same_dip_inside_wide_bands_is_not_an_exception(X):
     dip = np.linspace(0, 2, 20)
     dip[10] -= 0.6
     facts = toy_facts(X, BASE + [main("dip", dip)], perturb={"dip": per_step(0.3)})
-    assert verify('direction("dip") == "increasing"', facts).value == p.TRUE  # net change still clear
+    assert verify('direction("dip") == "increasing"', facts, V2).value == p.TRUE  # v2: net change still clear
 
 
 def test_step_threshold(X):

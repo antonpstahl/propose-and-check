@@ -9,11 +9,13 @@ from verifier_gate.facts.build import build_facts
 from verifier_gate.facts.reference import reference_steps
 from verifier_gate.gate.roundtrip import coverage
 from verifier_gate.gate.template import phrase, synthetic_label, template
+from verifier_gate.lexicon import predicates as p
 from verifier_gate.lexicon.predicates import TRUE
 from verifier_gate.verifier.certified import certified_plan
 from verifier_gate.verifier.verify import verify
 
 LABEL = synthetic_label()
+V2 = p.load(p.VERSIONS["v2"])  # PHRASES are v2's, kept word for word; tests/test_lexicon_v3.py has v3's
 
 PHRASES = {
     'strength("utilization") == "strong"': "credit utilization has a strong effect on default risk",
@@ -41,7 +43,7 @@ PHRASES = {
 
 @pytest.mark.parametrize("line", PHRASES)
 def test_every_claim_form_has_one_fixed_phrase(line):
-    assert phrase(parse(line), LABEL) == PHRASES[line]
+    assert phrase(parse(line), LABEL, V2) == PHRASES[line]
 
 
 def test_the_writer_never_sees_the_noise_names_and_its_claims_map_back():

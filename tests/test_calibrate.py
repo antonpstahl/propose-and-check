@@ -64,7 +64,8 @@ def test_the_grid_only_moves_up_and_stays_above_t_s_history_exception():
 
 
 def test_the_sweep_covers_every_threshold_but_the_level_and_the_search_region():
-    names = {f.name for f in fields(p.Lexicon)} - {"version", "level", "search", "strength"} | set(p.STRENGTHS)
+    v3 = {"direction_margin", "undetected_negligible", "signed_jumps", "source"}  # fixed in advance with v3 (D63, D64), not swept
+    names = {f.name for f in fields(p.Lexicon)} - {"version", "level", "search", "strength"} - v3 | set(p.STRENGTHS)
     assert set(c.SWEEP) == names
 
 

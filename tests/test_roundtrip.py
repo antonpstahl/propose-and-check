@@ -125,6 +125,44 @@ def test_an_opening_sentence_that_leads_with_a_minor_term_fails_emphasis(ctx):
     assert not rt.compare([reading([(1, str(c)) for c in both])] * 3, both, [1], ctx.facts).emphasis
 
 
+# --- unknown terms (M5 of the 20 Oct review) --------------------------------------------------------------
+
+
+def test_a_feature_name_the_model_lacks_is_compared_in_its_normal_form_or_as_the_feature_it_spells():
+    features = {"income", "utilization", "PAY_0"}
+    assert rt.normal_name(" The savings-balance ") == rt.normal_name("savings _balance") == "savings_balance"
+    assert str(rt.normalised(parse('direction("Income") == "increasing"'), features)) == 'direction("income") == "increasing"'
+    assert str(rt.normalised(parse('negligible("pay 0")'), features)) == 'negligible("PAY_0")'
+    hedge = parse('unsettled(negligible("Utilization & the Savings Balance"))')
+    assert str(rt.normalised(hedge, features)) == 'unsettled(negligible("utilization & savings_balance"))'
+    assert rt.unknown(rt.normalised(hedge, features), features) and not rt.unknown(parse('rank("income") == 1'), features)
+
+
+def test_a_claim_on_a_feature_the_model_lacks_fails_if_one_reading_finds_it(ctx, draft):
+    lines = [(c.sentence_id, str(c)) for c in draft.claims]
+    invented = (2, 'direction("the savings balance") == "decreasing"')
+    readings = [reading(lines + [invented]), reading(lines), reading(lines)]
+    trip = rt.compare(readings, draft.claims, draft.ids(), ctx.facts)
+    line = 'direction("savings_balance") == "decreasing"'
+    assert trip.failures() == [line] and trip.failing_sentences() == {2} and not trip.ambiguous
+    assert trip.unplanned[0][:4] == [2, line, UNDECIDABLE, p.UNKNOWN_TERM]
+    message = g.text_problems(trip, ctx)
+    assert f"Sentence 2 says more than its claims: a reader takes it to state `{line}`" in message and "no such term" in message
+    as_run = rt.compare(readings, draft.claims, draft.ids(), ctx.facts, unknown_terms=False)
+    assert as_run.passed and as_run.ambiguous == [[2, invented[1]]]
+
+
+def test_readings_that_spell_a_feature_name_differently_agree_on_it(ctx, draft):
+    lines = [(c.sentence_id, str(c)) for c in draft.claims]
+    spelled = [(2, 'direction("Savings Balance") == "decreasing"'), (2, 'direction("savings-balance") == "decreasing"')]
+    trip = rt.compare([reading(lines + [spelled[0]]), reading(lines + [spelled[1]]), reading(lines)], draft.claims, draft.ids(), ctx.facts)
+    assert [2, 'direction("savings_balance") == "decreasing"', 2] in trip.extracted and not trip.passed
+    true = next(c for c in ctx.certified if c.kind == "direction")
+    shouted = (1, str(true).replace(f'"{true.terms[0]}"', f'"{true.terms[0].upper()}"'))
+    assert rt.compare([reading(lines + [shouted])] * EXTRACTIONS, draft.claims, draft.ids(), ctx.facts).passed
+    assert not rt.compare([reading(lines + [shouted])] * EXTRACTIONS, draft.claims, draft.ids(), ctx.facts, unknown_terms=False).passed
+
+
 # --- the gate's round trip --------------------------------------------------------------------------------
 
 

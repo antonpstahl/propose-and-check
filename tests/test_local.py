@@ -203,12 +203,27 @@ def test_the_truth_view_judges_against_t_and_gives_no_principal_reason_without_a
     assert all(lp.principal_reason(tn, r.term).value == FALSE for r in f.reasons)
 
 
-def test_a_band_that_straddles_the_materiality_edge_is_undecidable(notices):
+def test_the_verdict_is_on_m_exact_contributions_and_the_bands_only_flag_the_notice(notices):
+    """D68: a band that straddles the materiality edge leaves the notice's reason as it is and flags the notice."""
     f = notices[0]
     r = f.reasons[0]
     edge = replace(r, fraction=Estimate(local.MATERIALITY, (local.MATERIALITY / 2, 2 * local.MATERIALITY)))
     g = replace(f, reasons=(edge, *f.reasons[1:]))
-    assert lp.principal_reason(g, r.term).value == UNDECIDABLE
+    assert lp.principal_reason(g, r.term).value == TRUE
+    assert lp.band_principal_reason(g, r.term).value == UNDECIDABLE
+    assert r.term in lp.principal_reasons(g)
+    assert any(r.term in why for why in lp.second_look(g)) and not lp.second_look(f)
+    narrow = replace(f, gap=Estimate(f.gap.value, (-0.1, 2 * f.gap.value)))
+    assert lp.second_look(narrow)[0].startswith("the gap band reaches zero")
+    assert lp.principal_reasons(narrow) == lp.principal_reasons(f)
+
+
+def test_principal_reasons_are_the_material_terms_among_the_first_four(notices):
+    for f in notices:
+        expected = [r.term for r in f.reasons if r.rank is not None and r.fraction.value >= local.MATERIALITY
+                    and r.rank.value <= local.MAX_REASONS]  # fmt: skip
+        assert list(lp.principal_reasons(f)) == expected
+        assert all(lp.principal_reason(f, r.term).value in (TRUE, FALSE) for r in f.reasons)
 
 
 # --- the gate on a notice (verifier/verify.py, verifier/certified.py, gate/roundtrip.py, gate/template.py) -------
@@ -245,15 +260,31 @@ def test_a_global_claim_in_a_notice_is_verified_on_the_model_facts_it_carries(no
         assert verify(line, notice).value == verify(line, global_facts).value
 
 
-def test_the_hedge_works_on_local_claims(notice):
+def test_a_notice_never_hedges(notice):
+    """D68: a hedge in a notice is false, whatever it hedges: a local claim, an unknown term, a global claim."""
     top = notice.reasons[0].term
-    assert verify(f'unsettled(principal_reason("{top}"))', notice).value == FALSE  # settled: the hedge is refuted
+    for inner in (f'principal_reason("{top}")', 'principal_reason("savings_balance")', 'rank("utilization") == 1'):
+        assert verify(f"unsettled({inner})", notice).value == FALSE
+
+
+def test_hedged_wording_fails_the_round_trip_of_a_notice_and_only_of_a_notice(notice, global_facts):
+    from verifier_gate.llm.extract import Extraction
+
+    required = rt.required_terms(notice)
+    lines = [Claim("principal_reason", (" & ".join(sorted(k)),), sentence_id=1) for k in required]
+    texts = {1: "These are the principal reasons.", 2: "The data do not settle whether your income is a principal reason."}
+    reading = Extraction(lines, {}, [])
+    trip = rt.compare([reading] * 3, lines, [1, 2], notice, certified_local(notice), texts=texts)
+    assert trip.hedged == [[2, "do not settle"]] and not trip.passed and trip.failing_sentences() == {2}
+    assert rt.compare([reading] * 3, lines, [1, 2], notice, certified_local(notice), texts={1: texts[1]}).passed
+    assert not rt.compare([Extraction([], {}, [])] * 3, [], [1, 2], global_facts, texts=texts).hedged
 
 
 def test_everything_certified_about_a_notice_is_true(notice):
     plan = certified_local(notice)
     assert plan and all(verify(c, notice).value == TRUE for c in plan)
     assert {rt.term_key(c.terms[0]) for c in plan if c.kind == "principal_reason"} == set(rt.required_terms(notice))
+    assert rt.required_terms(notice) == tuple(rt.term_key(t) for t in lp.principal_reasons(notice))
 
 
 def test_a_notice_is_covered_by_its_reasons_not_by_wording_alone(notice):
@@ -271,6 +302,28 @@ def test_the_notice_template_passes_the_plan_check(notice):
     assert len(draft.sentences) == len(rt.required_terms(notice))
     assert g.check(draft, ctx).passed
     assert "principal reason" in draft.text
+
+
+def test_the_handover_gives_exact_numbers_and_the_principal_reasons_without_bands(notices):
+    from verifier_gate.llm.handover_local import notice_handover
+
+    text = notice_handover(notices[0])
+    assert "band" not in text and "refit" not in text
+    listed = next(line for line in text.splitlines() if "The principal reasons for this decision:" in line)
+    assert lp.principal_reasons(notices[0]) and all(f"`{t}` (rank" in listed for t in lp.principal_reasons(notices[0]))
+
+
+def test_the_notice_prompts_offer_no_hedge(notice):
+    from verifier_gate.dsl.parse import parse
+    from verifier_gate.gate.advice import explain
+    from verifier_gate.llm import prompts
+
+    writer = prompts.load("system_local")
+    assert "unsettled" not in writer and "band" not in writer
+    assert "do not settle" in writer and "Never hedge" in writer  # only in the ban
+    assert "unsettled" not in prompts.dsl_reference("system_local")
+    hedge = parse(f'unsettled(principal_reason("{notice.reasons[0].term}"))')
+    assert explain(hedge, verify(hedge, notice), local=True) == prompts.advice(local=True)["hedge_in_notice"]
 
 
 def test_local_prompt_hashes_are_frozen_after_the_pilot():

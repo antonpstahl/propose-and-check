@@ -7,6 +7,10 @@ text sentence by sentence. It answers with the sentences it finds unsupported, e
 probability that the text states something the facts do not support. A text is blocked if the critic names a
 problem; the probability is kept for the question whether its confidence means anything (a confident critic that
 is wrong). It is another vendor's model (settings.CRITIC), so it does not share the writer's model family.
+
+Versions (llm/prompts): c1 gets the writer's rules for choosing words; c2 the writer's whole set of rules with the
+DSL table. Which facts it gets is the caller's choice (experiments/e2_critic.py: H1 for c1, the writer's own handover
+for c2).
 """
 
 import json
@@ -48,10 +52,11 @@ class Critique:
         return bool(self.problems)
 
 
-def critic_request(facts_text: str, sentences: list[tuple[int, str]] | list[list], model: str = settings.CRITIC, draw: int = 0) -> Request:
+def critic_request(facts_text: str, sentences: list[tuple[int, str]] | list[list], model: str = settings.CRITIC, draw: int = 0,
+                   version: str = prompts.CRITIC_VERSION) -> Request:  # fmt: skip
     text = "\n".join(f"{i}. {t}" for i, t in sentences)
-    user = prompts.load("critic").replace("{facts}", facts_text).replace("{sentences}", text)
-    return Request("critic", model, prompts.critic_system(), (("user", user),), CRITIQUE_SCHEMA, effort=settings.CRITIC_EFFORT,
+    user = prompts.load(prompts.CRITIC_NAMES[version][1]).replace("{facts}", facts_text).replace("{sentences}", text)
+    return Request("critic", model, prompts.critic_system(version), (("user", user),), CRITIQUE_SCHEMA, effort=settings.CRITIC_EFFORT,
                    max_tokens=settings.CRITIC_MAX_TOKENS, draw=draw)  # fmt: skip
 
 

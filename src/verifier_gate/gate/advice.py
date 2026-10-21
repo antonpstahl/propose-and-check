@@ -4,8 +4,9 @@ Advice (plan §14.14, review item 13; decided 15 Oct): each failing claim gets a
 its verdict's evidence: for a strength word, the classes the share band spans, in percentages; for "about x%",
 the band and the shares the claim fits; for "jumps at" and "peaks at", either where the jump or peak lies, or that
 the curve has none, so that no location (and no hedge of one) can make the claim true. Other claims get the advice
-of their reason code (D30). The texts are prompts: they live in llm/prompts/advice.json, frozen with the writer's
-prompts.
+of their reason code (D30). A hedge in a notice of the local spot check gets one advice whatever it hedges: leave
+it out (D68). The texts are prompts: they live in llm/prompts/advice.json (advice_local.json for a notice), frozen
+with the writer's prompts.
 
 The same problem (review item 12): the no-progress rule compares failing claims by their DSL line, except a jump
 or peak claim on a curve that has no jump or no peak: whatever its location, hedged or not, it is one problem.
@@ -38,7 +39,7 @@ def impossible(kind: str, evidence: dict, lex: p.Lexicon) -> str:
     """For a jump or peak claim: 'jump' or 'peak' if the curve has none, so that no location can make it true;
     else ''. A jump is judged true only if the curve's largest step is significant and at least `jump_fraction` of
     its range; a peak only if the maximum is interior. Neither depends on the location claimed."""
-    if kind == "threshold" and "jump significant" in evidence:
+    if kind in ("threshold", "drop") and "jump significant" in evidence:
         small = evidence["jump / range band"][1] < lex.jump_fraction
         return "jump" if small or not evidence["jump significant"] else ""
     if kind == "peak" and "interior maximum" in evidence:
@@ -46,10 +47,10 @@ def impossible(kind: str, evidence: dict, lex: p.Lexicon) -> str:
     return ""
 
 
-def explain(claim: Claim, verdict: Verdict, lex: p.Lexicon | None = None) -> str:
-    """The advice for a failing claim."""
+def explain(claim: Claim, verdict: Verdict, lex: p.Lexicon | None = None, local: bool = False) -> str:
+    """The advice for a failing claim; local: in a notice of the local spot check (advice_local.json's lines)."""
     lex = lex or p.load()
-    text = prompts.advice()
+    text = prompts.advice(local=local)
     e = verdict.evidence
     inner = claim.inner if claim.kind == HEDGE else claim
     missing = impossible(inner.kind, e, lex)
@@ -59,6 +60,8 @@ def explain(claim: Claim, verdict: Verdict, lex: p.Lexicon | None = None) -> str
         return text["no_jump"].format(at=_x(e["largest jump at"]), why=why)
     if missing == "peak":
         return text["no_peak"]
+    if claim.kind == HEDGE and local:
+        return text["hedge_in_notice"]
     if claim.kind == HEDGE and verdict.value == FALSE:
         return text["hedge_settled_true" if e.get("claim verdict") == "true" else "hedge_settled_false"]
     if verdict.code in (p.UNKNOWN_TERM, p.NOT_APPLICABLE):
@@ -75,7 +78,9 @@ def explain(claim: Claim, verdict: Verdict, lex: p.Lexicon | None = None) -> str
     if inner.kind == "rank" and "rank band" in e:
         low, high = e["rank band"]
         return text["rank"].format(rank=int(e["rank"]), low=int(low), high=int(high))
-    if inner.kind == "threshold" and "location band" in e:
+    if inner.kind in ("threshold", "drop") and "location band" in e:
+        if lex.signed_jumps and "jump" in e and e["jump significant"] and (e["jump"] > 0) != (inner.kind == "threshold"):
+            return text["jump_sign"].format(at=_x(e["largest jump at"]), word="jumps" if e["jump"] > 0 else "drops")
         low, high = e["location band"]
         return text["jump_elsewhere"].format(at=_x(e["largest jump at"]), low=_x(low), high=_x(high))
     if inner.kind == "peak" and "highest steps" in e:

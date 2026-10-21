@@ -10,6 +10,7 @@ from contextvars import ContextVar
 from dataclasses import replace
 
 from verifier_gate.dsl.grammar import CALLS, CLASSES, COMPARED, HEDGE, LOCAL_CALLS, LOCAL_KINDS, PATTERNS, RANKS, SETS, Claim
+from verifier_gate.lexicon import predicates
 
 COMPARISONS = {ast.Gt: ">", ast.Lt: "<"}
 # Set while the gate handles a notice of the local spot check (gate/gate.py): error messages then list the local forms
@@ -20,6 +21,12 @@ LOCAL_SCOPE: ContextVar[bool] = ContextVar("local_dsl_scope", default=False)
 
 class DSLError(ValueError):
     pass
+
+
+def _calls() -> set[str]:
+    """The call forms: `drop` exists from lexicon v3 (D64). Under v2 it does not parse, and error messages list the
+    forms as before, so a run of v2 replays from the cache."""
+    return set(CALLS) | {HEDGE} if predicates.load().signed_jumps else (set(CALLS) - {"drop"}) | {HEDGE}
 
 
 def _string(node: ast.AST, what: str) -> str:
@@ -128,7 +135,7 @@ def _claim(node: ast.AST, hedge: bool = True) -> Claim:
         if len(node.ops) != 1:
             raise DSLError("one comparison per claim")
         return _compared(node)
-    call = _call(node, set(CALLS) | {HEDGE})
+    call = _call(node, _calls())
     kind = call.func.id
     if kind == HEDGE:
         if not hedge:

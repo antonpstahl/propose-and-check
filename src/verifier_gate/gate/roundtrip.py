@@ -23,21 +23,33 @@ edge (weak or negligible) unless it also mentions a strong term (share at the st
 model has one. Shares are M's point estimates: emphasis is about prominence, not certification. A stronger word
 for a weak term needs no rule of its own: its claim is false.
 
-A notice of the local spot check (facts/local.LocalFacts; D49, D53): the required terms are the principal reasons
-the verifier certifies under M, all of them (Regulation B asks for the principal reasons), and a term is covered
-by a reason claim (principal_reason, reason_rank), not by a wording claim alone. Emphasis is not checked: the
-order of the reasons is what reason_rank claims state, and those are verified.
+Unknown terms (M5 of the 20 Oct review; `unknown_terms`): a feature name the model does not have is compared in a
+normal form (lower case, no leading "the", spaces, hyphens and underscores as one underscore), and becomes the
+model's feature whose name has that form, if one does, so that readings which spell a name differently agree on
+it. A claim on a feature the model still does not have then fails if one reading finds it: x4 mostly writes an
+invented feature as a claim in one reading and as content without a DSL form in the others. Re-scored offline from
+the cached x4 readings, the rule caught 91% of E2's invented-feature mutants instead of 85% (plasmode 87% instead
+of 75%) and blocked none of the template texts. E2 and E3 ran without it; the experiments that replay them turn it
+off.
+
+A notice of the local spot check (facts/local.LocalFacts; D49, D53, D68): the required terms are M's principal
+reasons on its exact contributions, all of them (Regulation B asks for the principal reasons), and a term is
+covered by a reason claim (principal_reason, reason_rank), not by a wording claim alone; a hedge covers nothing.
+Emphasis is not checked: the order of the reasons is what reason_rank claims state, and those are verified. A
+sentence with hedged wording ("the data do not settle whether ...", HEDGED) fails, whatever the readings say: the
+verifier refutes every hedge in a notice, and this catches the wording without the extractor.
 """
 
 import re
 from collections import Counter, defaultdict
-from collections.abc import Iterable, Sequence
-from dataclasses import dataclass, field
+from collections.abc import Iterable, Mapping, Sequence
+from dataclasses import dataclass, field, replace
 
 from verifier_gate.dsl.grammar import HEDGE, Claim
 from verifier_gate.facts.local import LocalFacts
 from verifier_gate.facts.schema import Facts
 from verifier_gate.facts.steps import PAIR_SEPARATOR
+from verifier_gate.lexicon import local as lp
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.lexicon.predicates import TRUE
 from verifier_gate.verifier.verify import evidence_text, verify
@@ -47,6 +59,7 @@ PAIR_SHARE = 0.10
 EXTRACTED = 2  # of llm/extract.EXTRACTIONS readings
 REASON_KINDS = ("principal_reason", "reason_rank")  # the claims that state a reason in a notice
 NUMBER = re.compile(r"\d")  # a statement with a number: digits, a percentage, an amount (the extractor keeps them as written)
+HEDGED = re.compile(r"\b(?:do|does|did) not settle\b|\bunsettled\b", re.IGNORECASE)  # banned in a notice (D68)
 
 
 @dataclass(frozen=True)
@@ -78,14 +91,9 @@ def claim_terms(claim: Claim) -> set[frozenset]:
     return {term_key(t) for t in claim.terms}
 
 
-def _states_a_reason(claim: Claim) -> bool:
-    return (claim.inner if claim.kind == HEDGE else claim).kind in REASON_KINDS
-
-
 def required_terms(facts: Facts | LocalFacts) -> tuple[frozenset, ...]:
-    if isinstance(facts, LocalFacts):  # every certified principal reason, in the order of M's contributions
-        principal = (r.term for r in facts.reasons if r.rank is not None)
-        return tuple(term_key(t) for t in principal if verify(Claim("principal_reason", (t,)), facts).value == TRUE)
+    if isinstance(facts, LocalFacts):  # every principal reason under M, in the order of M's contributions
+        return tuple(term_key(t) for t in lp.principal_reasons(facts))
     shares = {frozenset([f.name]): f.share.value for f in facts.features}
     shares |= {frozenset(q.features): q.share.value for q in facts.pairs}
     top = sorted(shares, key=lambda k: -shares[k])[:TOP_TERMS]
@@ -98,7 +106,8 @@ def coverage(claims: Iterable[Claim], facts: Facts, certified: Iterable[Claim]) 
     may cover a term."""
     claims = list(claims)
     if isinstance(facts, LocalFacts):
-        claims, certified = [c for c in claims if _states_a_reason(c)], [c for c in certified if _states_a_reason(c)]
+        claims = [c for c in claims if c.kind in REASON_KINDS]
+        certified = [c for c in certified if c.kind in REASON_KINDS]
     stated = set().union(*(claim_terms(c) for c in claims if c.kind != HEDGE))
     hedged = set().union(*(claim_terms(c) for c in claims if c.kind == HEDGE))
     settled = set().union(*(claim_terms(c) for c in certified if c.kind != HEDGE))
@@ -121,15 +130,46 @@ def canonical(claim: Claim) -> str:
     return str(Claim(claim.kind, terms, claim.value, claim.relation))
 
 
+def feature_names(facts: Facts | LocalFacts) -> set[str]:
+    return {v.feature for v in facts.values} if isinstance(facts, LocalFacts) else {f.name for f in facts.features}
+
+
+def normal_name(name: str) -> str:
+    """A feature name in its normal form: "The savings-balance" -> "savings_balance"."""
+    return re.sub(r"[\s_-]+", "_", re.sub(r"^the[\s_-]+", "", name.strip().lower()))
+
+
+def _parts(term: str) -> list[str]:
+    return [s.strip() for s in term.split(PAIR_SEPARATOR.strip())]
+
+
+def normalised(claim: Claim, features: set[str]) -> Claim:
+    """The claim with each feature name the model does not have in its normal form, or as the model's feature
+    whose name has that form (module docstring, unknown terms)."""
+    if claim.kind == HEDGE:
+        return replace(claim, inner=normalised(claim.inner, features))
+    by_form = {normal_name(f): f for f in features}
+    one = lambda s: s if s in features else by_form.get(normal_name(s), normal_name(s))  # noqa: E731
+    terms = tuple(t if all(s in features for s in _parts(t)) else PAIR_SEPARATOR.join(map(one, _parts(t))) for t in claim.terms)
+    return replace(claim, terms=terms)
+
+
+def unknown(claim: Claim, features: set[str]) -> bool:
+    """The claim names a feature the model does not have."""
+    inner = claim.inner if claim.kind == HEDGE else claim
+    return any(s not in features for t in inner.terms for s in _parts(t))
+
+
 @dataclass
 class RoundTrip:
     readings: int  # extractions that could be read
     extracted: list = field(default_factory=list)  # [sentence id, line, readings that found it], at least EXTRACTED
-    unplanned: list = field(default_factory=list)  # [sentence id, line, verdict, code, reason, evidence]: extracted, not planned
+    unplanned: list = field(default_factory=list)  # [sentence id, line, verdict, code, reason, evidence]: extracted, or on an unknown term, not planned
     plan_only: list = field(default_factory=list)  # [sentence id, line]: planned, not extracted
     ambiguous: list = field(default_factory=list)  # [sentence id, line]: found by one reading only
     gap: list = field(default_factory=list)  # [sentence id, statements no DSL form expresses]
     numbers: list = field(default_factory=list)  # [sentence id, such statements with a number]: these fail
+    hedged: list = field(default_factory=list)  # [sentence id, the hedged words]: a notice's sentences that hedge; these fail
     missing: list = field(default_factory=list)  # required terms the text does not cover
     emphasis: list = field(default_factory=list)  # [sentence id, minor terms, strong terms]
     format_errors: int = 0  # DSL lines of the readings that did not parse
@@ -139,6 +179,7 @@ class RoundTrip:
         a claim and comes back in the text without one is no progress) and the emphasis problem."""
         keys = [line for _, line, value, *_ in self.unplanned if value != TRUE]
         keys += [f"unchecked number: sentence {sid}" for sid, _ in self.numbers] + [f"not covered by the text: {term}" for term in self.missing]
+        keys += [f"hedged wording: sentence {sid}" for sid, _ in self.hedged]
         return keys + [f"emphasis: sentence {sid}" for sid, *_ in self.emphasis]
 
     @property
@@ -148,6 +189,7 @@ class RoundTrip:
     def failing_sentences(self) -> set[int]:
         """The sentences to drop if repairs end: a missing term is in no sentence."""
         failing = {sid for sid, _, value, *_ in self.unplanned if value != TRUE} | {sid for sid, _ in self.numbers}
+        failing |= {sid for sid, _ in self.hedged}
         return failing | {sid for sid, *_ in self.emphasis}
 
 
@@ -172,16 +214,20 @@ def emphasis(order: Sequence[int], mentions: dict[int, set[frozenset]], facts: F
 
 
 def compare(readings: Sequence, plan: Iterable[Claim], order: Sequence[int], facts: Facts, certified: Iterable[Claim] = (),
-            check_emphasis: bool = True, lex: p.Lexicon | None = None) -> RoundTrip:  # fmt: skip
+            check_emphasis: bool = True, lex: p.Lexicon | None = None, texts: Mapping[int, str] | None = None,
+            unknown_terms: bool = True) -> RoundTrip:  # fmt: skip
     """readings: the extractions that could be read (llm/extract.Extraction); plan: the text's certified claims,
     each with its sentence id; order: the text's sentence ids in order; certified: what the verifier certifies
-    about the model (for the hedge rule of coverage)."""
+    about the model (for the hedge rule of coverage); texts: the sentences by id, for a notice's hedged wording;
+    unknown_terms: the rule on unknown terms (module docstring), off to replay E2 and E3 as they ran."""
     lex = lex or p.load()
+    features = feature_names(facts)
     found, where, claims = Counter(), defaultdict(Counter), {}
     gap_votes, gap_words, number_votes = Counter(), defaultdict(list), Counter()
     for reading in readings:
         keys = set()
         for c in reading.claims:
+            c = normalised(c, features) if unknown_terms else c
             key = canonical(c)
             where[key][c.sentence_id] += 1
             claims.setdefault(key, c)
@@ -197,16 +243,19 @@ def compare(readings: Sequence, plan: Iterable[Claim], order: Sequence[int], fac
     sentence = {key: where[key].most_common(1)[0][0] for key in where}
     rt = RoundTrip(len(readings), format_errors=sum(len(r.format_errors) for r in readings))
     for key, n in sorted(found.items(), key=lambda kv: (sentence[kv[0]], kv[0])):
-        if n < EXTRACTED:
+        if n < EXTRACTED and not (unknown_terms and unknown(claims[key], features)):  # an unknown term: one reading is enough
             rt.ambiguous.append([sentence[key], key])
             continue
-        rt.extracted.append([sentence[key], key, n])
+        if n >= EXTRACTED:
+            rt.extracted.append([sentence[key], key, n])
         if key not in planned:
             verdict = verify(claims[key], facts, lex)
             rt.unplanned.append([sentence[key], key, verdict.value, verdict.code, verdict.reason, evidence_text(verdict.evidence)])
     rt.plan_only = [[c.sentence_id, key] for key, c in planned.items() if found[key] < EXTRACTED]
     rt.gap = [[sid, gap_words[sid]] for sid in order if gap_votes[sid] >= EXTRACTED]
     rt.numbers = [[sid, [w for w in gap_words[sid] if NUMBER.search(w)]] for sid in order if number_votes[sid] >= EXTRACTED]
+    if isinstance(facts, LocalFacts) and texts:
+        rt.hedged = [[sid, m.group(0)] for sid in order if (m := HEDGED.search(texts.get(sid, "")))]
     true = {key for _, key, value, *_ in rt.unplanned if value == TRUE}
     stated = [claims[key] for _, key, _ in rt.extracted if key in planned or key in true]
     cover = coverage(stated, facts, certified)

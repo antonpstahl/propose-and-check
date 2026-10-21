@@ -10,6 +10,10 @@ check by construction; the gate verifies it anyway, and if it fails there is a b
 For a notice of the local spot check (`notice_template`, D49): one sentence per certified principal reason, in the
 order of M's contributions, with its certified reason rank and, for a feature, how its value compares with the
 comparable approved applicants. A pair is "the combination of a and b".
+
+Wording: under lexicon v3 a global claim's phrase comes from the lexicon's words (lexicon/words.py, D65), worded
+about the model (M10). Under v2 the phrases below stay as they were, word for word, so that the texts of runs
+under v2 (templates, H2's statements, text-level E2) are rebuilt exactly. A notice's phrases are the same in both.
 """
 
 from collections.abc import Callable, Mapping
@@ -21,6 +25,8 @@ from verifier_gate.facts.schema import Facts
 from verifier_gate.facts.steps import PAIR_SEPARATOR
 from verifier_gate.gate.draft import Draft
 from verifier_gate.gate.roundtrip import PAIR_SHARE
+from verifier_gate.lexicon import predicates as p
+from verifier_gate.lexicon import words
 
 STRENGTH_SETS = {
     ("negligible", "weak"): "at most a weak effect",
@@ -47,10 +53,14 @@ def _share(v: float) -> str:
     return f"{v:.0%}" if v >= 0.095 else f"{v:.1%}"
 
 
-def phrase(c: Claim, label: Callable[[str], str]) -> str:
-    """One claim as a clause (no capital, no full stop). label: the feature's words in a sentence."""
+def phrase(c: Claim, label: Callable[[str], str], lex: p.Lexicon | None = None) -> str:
+    """One claim as a clause (no capital, no full stop). label: the feature's words in a sentence. A global claim
+    under a lexicon with words (v3) is phrased by lexicon/words.py."""
+    inner = c.inner if c.kind == HEDGE else c
+    if inner.kind not in LOCAL_KINDS and words.section(lex) is not None:
+        return words.phrase(c, label, lex)
     if c.kind == HEDGE:
-        return f"the data do not settle whether {phrase(c.inner, label)}"
+        return f"the data do not settle whether {phrase(c.inner, label, lex)}"
     t = [label(term) for term in c.terms]
     match c.kind:
         case "strength" if isinstance(c.value, tuple):
@@ -157,7 +167,7 @@ def template(facts: Facts | LocalFacts, certified: list[Claim], label: Callable[
         group = about((name,), ("strength", "negligible")) + about((name,), ("direction",))
         group = group or about((name,), ("rank",))[:1] or about((name,), ("share",))[:1] or about((name,), (HEDGE,))
         add(group)
-        add(about((name,), ("threshold", "peak")))
+        add(about((name,), ("threshold", "drop", "peak")))
     dominant = [pair.features for pair in facts.pairs if pair.share.value >= PAIR_SHARE]
     for c in certified:
         if c.kind == "interaction" and c.value != "none":
