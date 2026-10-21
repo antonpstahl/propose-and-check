@@ -20,6 +20,11 @@ plain prompt was tried on them before it was frozen (`--pilot`).
 
 Its batch waves have their own folder (cache/llm/batches/e3_baselines/), so it runs beside another batch experiment.
 
+`--source v4-x5-m5-d74` (D76) puts the same two arms beside the rerun with D74's fixes: its H1 cells on both tiers
+(360 synthetic, 180 plasmode with the column codes), scored as that run (extractor x5, the round trip's rule on
+unknown terms, lexicon v3 with D74's fixes), its waves in cache/llm/batches/e3_baselines_<source>/, and compare.csv
+per tier. The plain prompts are p1 as frozen; a synthetic cell's plain draft is the same request as for E3 as run.
+
 texts.json is the record of what was scored, as E3's run traces are: once it exists, a rerun scores its texts (every
 reading from the cache) and rebuilds none, so a later change to the template's wording or to the handover does not
 change these arms.
@@ -55,21 +60,26 @@ from verifier_gate.llm.client import Client, Request, Response, stub_message
 from verifier_gate.llm.extract import faithful_reading
 from verifier_gate.verifier.verify import verify
 
+KINDS = ("strength", "negligible", "rank", "share", "comparison", "direction", "threshold", "peak", "interaction", "unsettled")
+KINDS_V3 = ("strength", "negligible", "rank", "share", "comparison", "direction", "threshold", "drop", "peak", "interaction", "unsettled")  # D64: drop
+SOURCES = {  # the E3 run the arms sit beside: its lexicon, scoring extractor, tiers and M5's revision (e3_end_to_end --revised)
+    "v3-x3": {"lexicon": "v2", "extractor": "x3", "tier": "synthetic", "revised": False, "d74": False, "kinds": KINDS},  # E3 as run (D71)
+    "v4-x5-m5-d74": {"lexicon": "v3", "extractor": "x5", "tier": "both", "revised": True, "d74": True, "kinds": KINDS_V3},  # D74's rerun (D76)
+}
 SOURCE = e3.RESULTS / "v3-x3"
 E3_LEXICON = "v2"
 ARMS = {"template": "template only", "plain": "plain prompt", "off": "gate off (first draft)", "on": "gate on (released)"}
-KINDS = ("strength", "negligible", "rank", "share", "comparison", "direction", "threshold", "peak", "interaction", "unsettled")
 KIND_GROUPS = {"strength": ("strength", "negligible"), "rank": ("rank",), "share": ("share",), "comparison": ("comparison",),
-               "direction": ("direction",), "jump or peak": ("threshold", "peak"), "interaction": ("interaction",), "hedge": ("unsettled",)}  # fmt: skip
+               "direction": ("direction",), "jump or peak": ("threshold", "drop", "peak"), "interaction": ("interaction",), "hedge": ("unsettled",)}  # fmt: skip
 SCORED = ("claims", "sentences", "words", "false M", "undecidable M", "false T", "false T, no hedges", "hedges", "unchecked numbers",
           "no DSL form", "not covered", "emphasis", "ambiguous")  # fmt: skip
 
 
-def plan(pilot: bool = False, dry: bool = False) -> list[e3.Spec]:
+def plan(pilot: bool = False, dry: bool = False, tier: str = "synthetic") -> list[e3.Spec]:
     """E3's Haiku runs with the facts-only handover (the pilot: draw 0 of the pilot datasets, plausible names)."""
     if pilot:
         return [s for s in e3.plan() if s.variant == "H1" and s.scenario in e3.PILOT and s.draw == 0 and s.naming == "plausible"]
-    return [s for s in e3.plan(dry=dry) if s.variant == "H1"]
+    return [s for s in e3.plan(dry=dry, tier=tier) if s.variant == "H1"]
 
 
 def template_text(ctx: g.Context) -> list[list]:
@@ -121,13 +131,13 @@ def cell(spec: e3.Spec) -> dict:
             "handover": variant, "pilot dataset": scenario in e3.PILOT}  # fmt: skip
 
 
-def gate_rows(runs: set[str]) -> list[dict]:
+def gate_rows(runs: set[str], source: Path = SOURCE) -> list[dict]:
     """E3's gate off and gate on for the given Haiku runs, as rows of the same form: E3's scores, with the claims by
     kind (claims.csv) and the claims other than hedges false against T (truth_rows.csv) from e3_truth."""
-    table = pd.read_csv(SOURCE / "haiku" / "rows.csv")
-    truth = pd.read_csv(SOURCE / "truth_rows.csv")
+    table = pd.read_csv(source / "haiku" / "rows.csv")
+    truth = pd.read_csv(source / "truth_rows.csv")
     truth = truth[truth.writer == "haiku"].set_index(["run", "arm"])["false T, no hedges"]
-    claims = pd.read_csv(SOURCE / "claims.csv")
+    claims = pd.read_csv(source / "claims.csv")
     claims = claims[claims.writer == "haiku"]
     kinds = claims.assign(kind=claims.dsl.map(lambda line: parse(line).kind)).groupby(["run", "arm", "kind"]).size()
     rows = []
@@ -161,7 +171,7 @@ def stats(part: pd.DataFrame) -> dict:
         "claims false vs T, no hedges": round(float(s["false T, no hedges"].sum() / (claims - s.hedges.sum())), 4) if claims else float("nan"),
         "claims per text": round(float(s.claims.mean()), 2), "words per text": round(float(s.words.mean()), 1),
         "sentences per text": round(float(s.sentences.mean()), 2),
-        **{f"{name} claims per text": round(float(sum(s[f"kind {k}"].sum() for k in kinds) / n), 2) if n else float("nan") for name, kinds in KIND_GROUPS.items()},
+        **{f"{name} claims per text": round(float(sum(s[f"kind {k}"].sum() for k in kinds if k in KINDS) / n), 2) if n else float("nan") for name, kinds in KIND_GROUPS.items()},
         "hedge share of claims": round(float(s.hedges.sum() / claims), 4) if claims else float("nan"),
         "undecidable claims per text": round(float(s["undecidable M"].mean()), 2),
         "texts covering every required term": round(float((s["not covered"] == 0).mean()), 4) if n else float("nan"),
@@ -179,6 +189,17 @@ def summarise(rows: pd.DataFrame) -> pd.DataFrame:
 
 
 def compare(rows: pd.DataFrame) -> pd.DataFrame:
+    """compare_tier on the source's one tier; with both tiers, per tier, synthetic first (a column `tier`)."""
+    if "scenario" not in rows:
+        return compare_tier(rows)
+    tiers = rows.scenario.str.startswith("pls").map({True: "plasmode", False: "synthetic"})
+    if tiers.nunique() == 1:
+        return compare_tier(rows)
+    parts = [compare_tier(rows[tiers == t]) for t in ("synthetic", "plasmode") if (tiers == t).any()]
+    return pd.concat([part.insert(0, "tier", t) or part for t, part in zip(("synthetic", "plasmode"), parts)], ignore_index=True)
+
+
+def compare_tier(rows: pd.DataFrame) -> pd.DataFrame:
     """The arms on the same cells (H1, outside the pilot datasets, both namings), gate on also by exit state, and
     E3's gate off and on over all its runs (H1 and H2) for reference; E_U against gate off and the plain prompt."""
     main = rows[~rows["pilot dataset"]]
@@ -234,16 +255,22 @@ def main() -> None:
     parser.add_argument("--pilot", action="store_true", help="the plain prompt's trial on the pilot datasets: 4 synchronous calls, texts only")
     parser.add_argument("--estimate", action="store_true", help="the cost at batch prices, no network")
     parser.add_argument("--dry", action="store_true", help="stub writer and extractor on E3's dry cells, no network")
+    parser.add_argument("--source", default="v3-x3", choices=sorted(SOURCES), help="the E3 run beside which (D76: v4-x5-m5-d74)")
     args = parser.parse_args()
-    if p.load().version != E3_LEXICON:
-        raise SystemExit(f"E3 was scored under lexicon {E3_LEXICON}, not {p.load().version}: pin it (VERIFIER_GATE_LEXICON={E3_LEXICON})")
-    prompts.pin_extractor("x3")  # E3's scoring readings
+    run = SOURCES[args.source]
+    global KINDS  # the claim kinds of the run's lexicon: the columns of rows.csv (v3 adds drop, D64)
+    KINDS = run["kinds"]
+    if p.load().version != run["lexicon"] or p.d74_fixes() != run["d74"]:
+        pin = f"VERIFIER_GATE_LEXICON={run['lexicon']}" if run["lexicon"] == "v2" else "no pin, VERIFIER_GATE_D74 unset"
+        raise SystemExit(f"{args.source} was scored under lexicon {run['lexicon']}{' with D74' if run['d74'] else ''}: run with {pin}")
+    prompts.pin_extractor(run["extractor"])  # the run's scoring readings
     if not args.pilot and not args.dry and prompts.frozen(prompts.FROZEN_PLAIN) != prompts.hashes(prompts.PLAIN_NAMES):
         raise SystemExit("the plain prompts are not frozen as they are now: run --pilot, then freeze them (prompts.freeze)")
-    specs = plan(args.pilot, args.dry)
+    specs = plan(args.pilot, args.dry, run["tier"])
     by_id = {s.run_id: s for s in specs}
-    ctxs, handovers = e3.contexts(specs)
-    out = SOURCE / "baselines" / prompts.PLAIN_VERSION
+    ctxs, handovers = e3.contexts(specs, run["revised"])
+    source = e3.RESULTS / args.source
+    out = source / "baselines" / prompts.PLAIN_VERSION
     if args.dry:
         scratch = Path(tempfile.mkdtemp(prefix="e3_baselines_dry_"))
         client, api, poll, out = Client("batch", cache_dir=scratch / "cache"), batch.StubBatchAPI(stub_responder(ctxs)), 0, scratch / "results"
@@ -270,7 +297,7 @@ def main() -> None:
     if args.estimate:
         print(f"estimated cost at batch prices: ${estimate(specs, ctxs, client, record):.2f}")
         return
-    waves = client.cache_dir / "batches" / "e3_baselines"
+    waves = client.cache_dir / "batches" / ("e3_baselines" if args.source == "v3-x3" else f"e3_baselines_{args.source}")
     if record is None:
         written = write_plain(specs, handovers, lambda reqs: batch.resolve(reqs, client, api, waves, poll=poll))
         record = {"plain prompts": prompts.PLAIN_VERSION, "prompts": prompts.hashes(prompts.PLAIN_NAMES), "writer": settings.WRITER,
@@ -285,7 +312,7 @@ def main() -> None:
         for arm in ("template", "plain"):
             cost = 0.0 if arm == "template" else c["plain cost"]
             rows.append(cell(by_id[rid]) | {"arm": arm, "exit": "", "cost": cost} | scores.get((rid, arm), {"scored": False}))
-    rows += gate_rows({rid for rid in by_id} | {rid.replace("_H1_", "_H2_") for rid in by_id})
+    rows += gate_rows({rid for rid in by_id} | {rid.replace("_H1_", "_H2_") for rid in by_id}, source)
     table = pd.DataFrame(rows).drop(columns=["readings"], errors="ignore")
     out.mkdir(parents=True, exist_ok=True)
     table.to_csv(out / "rows.csv", index=False)

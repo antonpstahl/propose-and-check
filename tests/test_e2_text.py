@@ -67,3 +67,16 @@ def test_plasmode_texts_use_the_columns_words_and_the_data_dictionary():
     assert '"BILL_AMT2": amount of the bill statement in August 2005' in listed
     assert set(labels.PLASMODE_DESCRIPTIONS) == set(plasmode.FEATURES) == set(labels.PLASMODE_LABELS)
     assert tiers.name(scenario) == "plasmode"
+
+
+def test_the_labelled_llm_mutants_are_read_again_as_labelled():
+    """D78: x5 reads the 100 LLM mutants the author labelled, each as the labeller saw it, with its E3 text's plan;
+    an unread text counts as caught, not at the change (D32), and is counted apart."""
+    import pandas as pd
+
+    cases = e2_text.labelled_cases()
+    assert len(cases) == 100 and all(c.plan and dict(c.sentences)[c.changed] == c.info["after"] for c in cases)
+    first, second = cases[0].info["item"], cases[1].info["item"]
+    table = pd.DataFrame({"item": [first, second], "read": [True, False], "caught": [False, None], "caught at the change": [False, None]})
+    score = e2_text.labelled_score(table, "x5").set_index("labels")
+    assert score.loc["final", "unread"] == 1 and score.loc["final", "labelled"] + score.loc["final", "unsure"] >= 1

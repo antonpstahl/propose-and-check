@@ -60,7 +60,7 @@ from verifier_gate.gate import gate as g
 from verifier_gate.gate import roundtrip as rt
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.llm import extract, prompts, settings
-from verifier_gate.llm.client import Client, Request, sha
+from verifier_gate.llm.client import Client, Request, log_records, sha
 from verifier_gate.verifier.certified import certified_plan
 from verifier_gate.verifier.verify import verify
 
@@ -400,9 +400,8 @@ def estimate(items: list[dict], model: str, client: Client, lex: p.Lexicon, syst
     ctxs = {}
     reqs = list({r.key: r for t in items for r in requests_for(t, context(t, ctxs, lex), model, system)}.values())
     todo = [r for r in reqs if not (client.cache_dir / f"{r.key}.json").exists()]
-    log = client.cache_dir / "calls.jsonl"
-    paid = [c["cost"] for line in (log.read_text().splitlines() if log.exists() else [])
-            if (c := json.loads(line))["model"] == model and c["role"] == "scorer" and not c["cached"] and not c["error"]]  # fmt: skip
+    paid = [c["cost"] for c in log_records(client.cache_dir)  # the call log's closed parts and open file (D80)
+            if c["model"] == model and c["role"] == "scorer" and not c["cached"] and not c["error"]]  # fmt: skip
     if paid:
         return len(todo), len(todo) * float(np.mean(paid))
     price_in, price_out, _ = settings.PRICES[model]

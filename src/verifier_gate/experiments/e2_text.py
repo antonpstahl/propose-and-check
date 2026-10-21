@@ -27,6 +27,13 @@ texts (the LLM mutants start from E3's synthetic texts and are not built), with 
 names, their data-dictionary descriptions and plain words in the sentences (data/labels.py); `--seeds` limits the
 datasets (D54: seed 1). Results go to results/e2/<lexicon version>/text_plasmode/<extractor version>/.
 
+Under lexicon v3 (D78), E2 runs in D75's configuration: extractor x5, the round trip's rule on unknown terms, and
+D74's fixes, into results/e2/v3-d74/ (`-d74` as the other runs with D74's fixes). Under VERIFIER_GATE_LEXICON=v2 it
+replays E2 as run, without the rule. `--labelled` reads the 100 labelled LLM mutants (e2_labels: the texts x3 and
+x4 read, with the author's labels) with the current extractor and scores them against those labels
+(llm_labelled.csv, labelled_score.csv); under v3 the LLM mutants are not built anew, since v3's handover gives the
+mutator other requests, so other mutations.
+
 Run: `uv run python -m verifier_gate.experiments.e2_text [--dry | --estimate] [--script | --llm] [--tier plasmode
 --seeds 1]`. Batched; stopping is safe, the same command resumes. Writes results/e2/<lexicon version>/text/<extractor version>/: script.csv,
 llm.csv, summary.csv. `--compare` puts the summaries of all extractor versions on disk side by side
@@ -66,6 +73,7 @@ MUTATION_SCHEMA = json.dumps(
      "required": ["sentence_id", "sentence", "claim"], "additionalProperties": False}, sort_keys=True)  # fmt: skip
 RESULTS = Path(__file__).parents[3] / "results" / "e2"
 E3_SOURCE = "v3-x3"  # E3 as run: writer prompts v3, extractor x3 (plan §14.16)
+LABELS = Path(__file__).parents[3] / "results" / "e2" / "v2" / "text" / "labels"  # the labelled LLM mutants (e2_labels)
 PILOT = ("syn-dominant-n50000-s1", "syn-none-n5000-s1")
 COST = {"extractor": 0.00038, "mutator": 0.00097}  # synchronous USD per call, measured in the pilot (§14.15)
 
@@ -203,6 +211,41 @@ def llm_cases(texts: list[dict], answers: dict[str, Response], requests: dict[st
     return cases
 
 
+def labelled_cases() -> list[Case]:
+    """The labelled LLM mutants as the labeller saw them (e2_labels' items: the E3 text with its changed sentence),
+    each with the plan of the E3 text it came from, for another extractor to read (D78)."""
+    items = json.loads((LABELS / "items.json").read_text())["items"]
+    key = pd.read_csv(LABELS / "key.csv").set_index("item")
+    texts = {t["run"]: t for t in released_texts()}
+    out = []
+    for it in items:
+        t = texts[key.at[it["id"], "case"]]
+        out.append(Case(t["run"], "llm", t["scenario"], t["model"], t["naming"], it["sentences"], t["plan"], it["changed"],
+                        {"run": t["run"], "writer": t["writer"], "item": it["id"], "role": key.at[it["id"], "mutator role"],
+                         "mutant": key.at[it["id"], "mutator claim"], "before": it["before"], "after": it["after"]}))  # fmt: skip
+    return out
+
+
+def labelled_score(table: pd.DataFrame, version: str) -> pd.DataFrame:
+    """Recall and false alarms on the labelled LLM mutants against the author's final labels and first pass, in the
+    columns of e2_labels' score_final.csv and score_pass1.csv. A text with fewer than two readable extractions is
+    not released (D32): caught, not at the change, and counted apart (unread)."""
+    rows = []
+    for name in ("final", "pass1"):
+        labels = {k: v["label"] for k, v in json.loads((LABELS / f"labels_{name}.json").read_text()).items()}
+        human = table["item"].map(labels)
+        t = table[human.isin(["error", "ok"])].assign(human=human)
+        read = t["read"].astype(bool)
+        caught = t["caught"].where(read, True).astype(bool)
+        at = t["caught at the change"].where(read, False).astype(bool)
+        err, ok = t.human == "error", t.human == "ok"
+        rows.append({"labels": name, "extractor": version, "labelled": int(human.notna().sum()), "unsure": int((human == "unsure").sum()),
+                     "errors": int(err.sum()), "recall": round(caught[err].mean(), 3), "recall at the change": round(at[err].mean(), 3),
+                     "no error": int(ok.sum()), "false alarms": int(caught[ok].sum()), "false-alarm rate": round(caught[ok].mean(), 3),
+                     "unread": int((~read).sum())})  # fmt: skip
+    return pd.DataFrame(rows)
+
+
 # --- reading and scoring ----------------------------------------------------------------------------------
 
 
@@ -212,7 +255,7 @@ def context(case: Case, cache: dict) -> g.Context:
         scenario = tiers.scenario(case.scenario)
         facts = load(scenario, case.model)
         cache[key] = g.Context(facts, certified_plan(facts), NAMES[case.naming], descriptions=DESCRIPTIONS[tiers.name(scenario)],
-                               unknown_terms=False)  # E2 as run: without the rule on unknown terms (gate/roundtrip.py)
+                               unknown_terms=p.load().version != "v2")  # D78: the rule under v3 (D75); E2 as run (v2) without it
     return cache[key]
 
 
@@ -344,14 +387,30 @@ def main() -> None:
     parser.add_argument("--compare", action="store_true", help="the extractor versions on disk side by side, no network")
     parser.add_argument("--tier", default="synthetic", choices=tuple(tiers.TIERS), help="plasmode: script mutants only (D54)")
     parser.add_argument("--seeds", default=None, help="comma-separated, e.g. 1 (default: all)")
+    parser.add_argument("--labelled", action="store_true", help="the 100 labelled LLM mutants, read by the current extractor (D78)")
     args = parser.parse_args()
     lex = p.load()
+    version = lex.version + ("-d74" if p.d74_fixes(lex) else "")  # D74's fixes: a folder of their own
     folder = "text" if args.tier == "synthetic" else f"text_{args.tier}"
     if args.compare:
-        table = compare_versions(RESULTS / lex.version / folder)
-        table.to_csv(RESULTS / lex.version / folder / "by_extractor.csv", index=False)
+        table = compare_versions(RESULTS / version / folder)
+        table.to_csv(RESULTS / version / folder / "by_extractor.csv", index=False)
         pd.set_option("display.width", 250)
         print(table[table.source != "llm"].to_string(index=False))
+        return
+    if args.labelled:
+        cases = labelled_cases()
+        if args.estimate:
+            print(f"{len(cases)} labelled LLM mutants; {3 * len(cases)} extractor calls; about ${3 * len(cases) * COST['extractor'] * settings.BATCH_DISCOUNT:.2f}")
+            return
+        out = RESULTS / version / folder / prompts.EXTRACTOR_VERSION
+        table = score(cases, Client("batch"), batch.BatchAPI(), batch.POLL_SECONDS)
+        out.mkdir(parents=True, exist_ok=True)
+        table.to_csv(out / "llm_labelled.csv", index=False)
+        result = labelled_score(table, prompts.EXTRACTOR_VERSION)
+        result.to_csv(out / "labelled_score.csv", index=False)
+        print(result.to_string(index=False))
+        print(f"\nextractor {prompts.EXTRACTOR_VERSION}; results in {out}")
         return
     if args.tier != "synthetic":  # the LLM mutants start from E3's synthetic texts
         args.script, args.llm = True, False
@@ -384,7 +443,7 @@ def main() -> None:
         out = scratch / "results"
     else:
         client, api, poll = Client("batch"), batch.BatchAPI(), batch.POLL_SECONDS
-        out = RESULTS / lex.version / folder / prompts.EXTRACTOR_VERSION
+        out = RESULTS / version / folder / prompts.EXTRACTOR_VERSION
     cases = list(script)
     if texts:
         ctxs: dict = {}

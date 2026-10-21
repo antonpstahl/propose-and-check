@@ -95,6 +95,12 @@ def test_two_raters_are_compared_on_the_overlap():
     assert table.loc[("sentence", "release rule"), "agreement"] == 1.0 and table.loc[("text", "refuted"), "agreement"] == 0.5
 
 
+def test_a_reduced_text_shows_no_gap_in_its_sentence_numbers():
+    """A text the gate reduced keeps the ids of the sentences it kept; shown as they are, the gaps would tell the
+    exit state and which sentences failed (D77)."""
+    assert b.shown([[1, "a"], [3, "b"], [7, "c"]]) == [[1, "a"], [2, "b"], [3, "c"]]
+
+
 def test_the_guide_renders_with_its_lists_and_bold_words():
     out = b.guide_html(b.GUIDE.read_text())
     assert "<h2>Labelling guide (b1)</h2>" in out and "<li><b>Supported</b>:" in out and "**" not in out
@@ -113,6 +119,7 @@ def test_the_page_shows_nothing_about_the_source_of_a_text(tmp_path):
     out = b.build("v3-x3", tmp_path / "blind")
     data = json.loads((out / "items.json").read_text())
     assert all(set(it) == {"id", "facts", "model", "named", "sentences"} for it in data["items"])
+    assert all([s for s, _ in it["sentences"]] == list(range(1, len(it["sentences"]) + 1)) for it in data["items"])  # D77
     text = (out / "blind_page.html").read_text()
     key = pd.read_csv(out / "key.csv")
     assert not any(run in text for run in key.run) and "RELEASED" not in text and "TEMPLATE" not in text

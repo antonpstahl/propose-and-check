@@ -32,7 +32,11 @@ round trip's (gate/roundtrip.py); and critic.md (the facts and the text). c1 ran
 after the critic's pilot). c2 (M4 of the 20 Oct review) gets what the writer got: critic_system_c2.md, whose rules
 section is the writer's whole set of rules ("# The text" and "# Choosing the words" from system.md, then the DSL
 table with what each phrase claims), and, from experiments/e2_critic.py, the handover each writer saw (H2 for an H2
-text). critic.md is shared. CRITIC_VERSION is the current one; CRITIC_NAMES and FROZEN_CRITIC are per version.
+text). c3 (D79) is c2 in D75's configuration: critic_system_c3.md is critic_system_c2.md, whose rules section is the
+same set of rules from writer prompt v4 as D74's writer got it (system_v4.md rendered from lexicon v3's words, checked
+against frozen_v4.json), so it is built under lexicon v3 only. critic.md is shared. CRITIC_VERSION is the default
+(c3 is chosen by name); CRITIC_NAMES, FROZEN_CRITIC and CRITIC_WRITERS (the writer prompt whose rules a version
+reads) are per version.
 
 The plain-prompt arm of E3 (e3_baselines, M4): plain_system.md (the writer's role and the bullets of its "# The text"
 that do not refer to the word table or the claims; no lexicon rules, no DSL, no plan) and plain.md (wraps the
@@ -88,8 +92,9 @@ LOCAL_HISTORY = {
     },
 }
 CRITIC_VERSION = "c2"
-CRITIC_NAMES = {"c1": ("critic_system", "critic"), "c2": ("critic_system_c2", "critic")}
-FROZEN_CRITIC = {"c1": HERE / "frozen_critic.json", "c2": HERE / "frozen_critic_c2.json"}
+CRITIC_NAMES = {"c1": ("critic_system", "critic"), "c2": ("critic_system_c2", "critic"), "c3": ("critic_system_c3", "critic")}
+FROZEN_CRITIC = {"c1": HERE / "frozen_critic.json", "c2": HERE / "frozen_critic_c2.json", "c3": HERE / "frozen_critic_c3.json"}
+CRITIC_WRITERS = {"c1": "v3", "c2": "v3", "c3": "v4"}  # the writer prompt whose rules a critic version reads: E3's (v3), D74's (v4)
 PLAIN_NAMES = ("plain_system", "plain")
 FROZEN_PLAIN = HERE / "frozen_plain.json"
 PLAIN_VERSION = "p1"
@@ -146,7 +151,17 @@ def advice(local: bool = False) -> dict[str, str]:
 
 def writer_system(version: str = "v3") -> str:
     """system.md as the writer of a version saw it, checked against its hash: the stored copy in history/<version>/,
-    else system.md if it is that version, else from git. The critic's rules (c1, c2) are E3's writer's, v3."""
+    else system.md if it is that version, else from git. v4's (WRITER_FILES) is its template rendered from the words of
+    its lexicon, v3, as its writer got it, checked against frozen_v4.json; only under lexicon v3, whose DSL parses the
+    table's claims. The critic's rules are E3's writer's, v3 (c1, c2), and D74's, v4 (c3)."""
+    if version in WRITER_FILES:
+        lexicon = next(lex for lex, writer in WRITER_VERSIONS.items() if writer == version)
+        if predicates.pinned() != lexicon:
+            raise ValueError(f"the writer's system prompt {version} is rendered under lexicon {lexicon}; {predicates.PIN} pins {predicates.pinned()}")
+        text = render((HERE / WRITER_FILES[version]["system"]).read_text())
+        if hashlib.sha256(text.encode()).hexdigest() != frozen(FROZEN_VERSIONS[version])["system"]:
+            raise ValueError(f"the writer's system prompt {version}, as rendered, does not match its frozen hash")
+        return text
     stored = HERE / "history" / version / "system.md"
     candidates = [lambda: stored.read_text() if stored.exists() else "", lambda: (HERE / "system.md").read_text(),
                   lambda: subprocess.run(["git", "show", f"{WRITER_COMMITS[version]}:src/verifier_gate/llm/prompts/system.md"],
@@ -175,18 +190,18 @@ def word_rules(version: str | None = None) -> str:
 
 
 def writer_rules(version: str | None = None) -> str:
-    """The writer's whole set of rules (critic c2): "# The text" and "# Choosing the words", then the DSL table, which
-    says what each phrase claims; from system.md or from the writer prompt of `version`."""
+    """The writer's whole set of rules (critics c2 and c3): "# The text" and "# Choosing the words", then the DSL
+    table, which says what each phrase claims; from system.md or from the writer prompt of `version`."""
     text = writer_system(version) if version else load("system")
     table = [line for line in dsl_reference(version=version).splitlines() if line.startswith("|")]
     return text[text.index("# The text") : text.index("# The claims")].strip() + "\n\n# What each phrase claims\n\n" + "\n".join(table)
 
 
 def critic_system(version: str = CRITIC_VERSION) -> str:
-    """c1: the rules section is the writer's "Choosing the words"; c2: the writer's whole set of rules. Both are E3's
-    writer's, v3, whatever the current writer prompt is."""
-    name = CRITIC_NAMES[version][0]
-    return load(name).replace("{rules}", word_rules("v3") if version == "c1" else writer_rules("v3"))
+    """c1: the rules section is the writer's "Choosing the words"; c2 and c3: the writer's whole set of rules. c1's and
+    c2's are E3's writer's, v3, and c3's D74's writer's, v4 (CRITIC_WRITERS), whatever the current writer prompt is."""
+    name, writer = CRITIC_NAMES[version][0], CRITIC_WRITERS[version]
+    return load(name).replace("{rules}", word_rules(writer) if version == "c1" else writer_rules(writer))
 
 
 def historical_extractor_system(version: str) -> str:

@@ -8,7 +8,8 @@ import math
 import pandas as pd
 import pytest
 
-from verifier_gate.experiments import e2_critic
+from verifier_gate.experiments import e2_critic, e2_text
+from verifier_gate.lexicon import predicates as p
 from verifier_gate.llm import client as c
 from verifier_gate.llm import critique, prompts, settings
 
@@ -69,8 +70,11 @@ def test_both_critic_versions_read_e3s_writer_prompt_v3():
 
 
 @pytest.mark.parametrize("version", sorted(prompts.CRITIC_NAMES))
-def test_critic_prompt_hashes_are_frozen_after_the_pilot(version):
-    """The assembled critic prompt includes the writer's rules, so a change there shows here too."""
+def test_critic_prompt_hashes_are_frozen_after_the_pilot(version, monkeypatch):
+    """The assembled critic prompt includes the writer's rules, so a change there shows here too. c3's are writer
+    prompt v4's, rendered under lexicon v3 only, so the pin is lifted for it."""
+    if prompts.CRITIC_WRITERS[version] == "v4":
+        monkeypatch.delenv(p.PIN, raising=False)
     frozen = prompts.frozen(prompts.FROZEN_CRITIC[version])
     if frozen is None:
         pytest.skip(f"critic prompts {version} not frozen yet")
@@ -86,6 +90,24 @@ def test_c2_gets_the_handover_each_writer_saw_from_e3s_run_traces():
     case = lambda source, info=None: e2_critic.Case("L001" if source == "llm" else h2, source, "syn-dominant-n5000-s2", "EBM", "opaque", [], [], None, info or {})  # noqa: E731
     assert e2_critic.written_by(case("e3")) == h2 and e2_critic.written_by(case("llm", {"gate case": h1})) == h1
     assert e2_critic.written_by(case("control")) == h1  # a template text: the H1 of its cell
+
+
+def test_c1_and_c2_keep_their_folders_gate_sources_and_handovers():
+    """c3 (tests/test_critic_c3.py) moved none of them, under whatever lexicon the environment pins: the default
+    lexicon's E2 results, the gate with x4, read when scoring, e3 among the sources, and E3 as run's handovers."""
+    lexicon = p.load().version
+    for version in ("c1", "c2"):
+        assert e2_critic.folder(settings.CRITIC, version) == e2_critic.RESULTS / lexicon / "text" / "critic" / "gpt-6-luna" / version
+        assert e2_critic.gate_folder(version) == e2_critic.RESULTS / lexicon / "text" / "x4" and e2_critic.GATE_FILES[version] == ("script.csv", "llm.csv")
+        assert e2_critic.VERSION_SOURCES[version] == e2_critic.SOURCES == ("llm", "script", "control", "e3")
+        assert e2_critic.gate_for([], version) is None
+    h1, h2 = (f"syn-dominant-n5000-s2_EBM_{v}_d0_claude-haiku-5-5_opaque" for v in ("H1", "H2"))
+    as_run = lambda run: json.loads((e2_text.E3_RESULTS / "v3-x3" / "haiku" / "runs" / f"{run}.json").read_text())["writer"]["messages"][0][1]  # noqa: E731
+    case = lambda source, info=None: e2_critic.Case("L001" if source == "llm" else h2, source, "syn-dominant-n5000-s2", "EBM", "opaque", [], [], None, info or {})  # noqa: E731
+    assert e2_critic.facts_text(case("e3"), {}, "c2") in as_run(h2) and "Statements the verifier certifies" in e2_critic.facts_text(case("e3"), {}, "c2")
+    assert e2_critic.facts_text(case("llm", {"gate case": h1}), {}, "c2") in as_run(h1)
+    assert e2_critic.facts_text(case("control"), {}, "c2") == e2_critic.writer_handover(h1, "v3-x3")
+    assert prompts.critic_system("c2") == prompts.load("critic_system_c2").replace("{rules}", prompts.writer_rules("v3"))
 
 
 def test_kappa_of_two_checkers():

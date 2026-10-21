@@ -9,8 +9,8 @@ problem; the probability is kept for the question whether its confidence means a
 is wrong). It is another vendor's model (settings.CRITIC), so it does not share the writer's model family.
 
 Versions (llm/prompts): c1 gets the writer's rules for choosing words; c2 the writer's whole set of rules with the
-DSL table. Which facts it gets is the caller's choice (experiments/e2_critic.py: H1 for c1, the writer's own handover
-for c2).
+DSL table; c3 (D79) the same from writer prompt v4, as D74's writer got it. Which facts it gets is the caller's choice
+(experiments/e2_critic.py: H1 for c1, the writer's own handover for c2 and c3).
 """
 
 import json

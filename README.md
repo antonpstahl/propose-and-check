@@ -48,7 +48,7 @@ Which file backs which number of the paper: `results/README.md`. What D-numbers 
 ## Running live
 
 Every LLM call goes through `llm/client.py`, which caches each answer under its request key in `cache/llm/` and logs
-every call in `cache/llm/calls.jsonl`. A run whose answers are cached costs nothing; a new model, prompt or draw is a
+every call in the call log (`cache/llm/calls/*.jsonl.gz`, its closed parts, and `cache/llm/calls.jsonl`, D80). A run whose answers are cached costs nothing; a new model, prompt or draw is a
 new request and is paid.
 
 - **API key:** copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY` (`.env` is git-ignored), and make sure

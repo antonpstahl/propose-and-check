@@ -25,14 +25,26 @@ beside c1 and the gate (compare.csv in c2's folder): blocked shares, recall and 
 balanced accuracy, agreement between the versions, what c2 does with the E3 texts whose c1 flags the author
 labelled, and how many flagged sentences state a statement the verifier certifies.
 
+c3 (D79) is c2 moved to the paper's configuration (D75), and runs only under lexicon v3 with D74's fixes: c2's
+prompt with the rules of writer prompt v4 as D74's writer got them, beside E2 at text level with extractor x5 in
+D78's run (GATE_FILES: script.csv, and llm_labelled.csv, x5's reading of the labelled LLM mutants), into
+results/e2/v3-d74/text/critic/<model>/c3/. Its sources (VERSION_SOURCES): the same 100 labelled LLM mutants (labels
+in LABELS, the handover of the E3 run each was mutated from), the script sample and the unchanged template texts
+under v3 with D74's fixes (case ids as in D78's script.csv; a template text gets the H1 of its cell in D74's run),
+and, in place of e3, blind: the 78 texts of D76's blind sample as a rater sees them (BLIND/items.json, sentences
+numbered 1 to n, D77), each with the handover its writer saw in D74's run (the run of its first entry in key.csv; a
+template text, the H1 of its cell). The blind texts are unlabelled here; the blind labels score them later. A c3
+run stops before its first call if D78's outcomes are not on disk or miss a case.
+
 Calls run in parallel (WORKERS), synchronously; every answer is cached and logged like any other. `--estimate`
 prices a run from the prompts' length and the pilot's measured output (OUT_TOKENS) before anything is sent, and a
 run that would exceed `--budget` does not start; a running one stops calling once its spend reaches the budget.
 
-Run: `uv run python -m verifier_gate.experiments.e2_critic [--pilot | --estimate | --compare] [--critic c1]
+Run: `uv run python -m verifier_gate.experiments.e2_critic [--pilot | --estimate | --compare] [--critic c1 | c3]
 [--model openai/gpt-6.1-sol] [--sources llm,control] [--budget 2.0]`. Writes results/e2/<lexicon>/text/critic/<model>/<prompt
-version>/: cases.csv, summary.csv. Labels of the e3 flags: `--page` writes critic/labels/ (items.json, key.csv and the
-labelling page critic_page.html, from critic_page.html next to this file); `--score labels.json` scores them.
+version>/ (c3: results/e2/v3-d74/...): cases.csv, summary.csv. Labels of the e3 flags: `--page` writes critic/labels/
+(items.json, key.csv and the labelling page critic_page.html, from critic_page.html next to this file); `--score
+labels.json` scores them.
 """
 
 import argparse
@@ -62,7 +74,14 @@ from verifier_gate.llm.handover import handover
 SCRIPT_SAMPLE = 30
 SEED = 20261020
 GATE_VERSION = "x4"
+GATE_VERSIONS = {"c1": GATE_VERSION, "c2": GATE_VERSION, "c3": "x5"}  # the extractor of the text-level E2 run a version is compared with
+GATE_FILES = {"c1": ("script.csv", "llm.csv"), "c2": ("script.csv", "llm.csv"), "c3": ("script.csv", "llm_labelled.csv")}  # c3: D78, e2_text --labelled
 SOURCES = ("llm", "script", "control", "e3")
+VERSION_SOURCES = {"c1": SOURCES, "c2": SOURCES, "c3": ("llm", "script", "control", "blind")}
+RUNS = {"c3": "v3-d74"}  # the E2 results a version belongs to (D78's for c3); c1, c2: the default lexicon's
+HANDOVERS = {"c2": e2_text.E3_SOURCE, "c3": "v4-x5-m5-d74"}  # the E3 run whose traces give the writers' handovers (an LLM mutant: E3 as run)
+LABELS = RESULTS / "v2" / "text" / "labels"  # the labelled LLM mutants (e2_labels), made under v2; c3 reads them here
+BLIND = e2_text.E3_RESULTS / HANDOVERS["c3"] / "blind"  # D76's blind sample (e3_blind)
 WORKERS = 16  # a critique takes about a minute (the pilot: 9 calls in 153 s with 6 workers)
 CONFIDENT = 0.1  # confident and wrong: an error passed with p_error <= 0.1, or a correct text blocked with p_error >= 0.9
 OUT_TOKENS = {settings.CRITIC: 1800, settings.CRITIC_STRONG: 300}  # output per call, reasoning included: about the pilots' means
@@ -70,8 +89,26 @@ PAGE = Path(__file__).with_name("critic_page.html")
 FA_SAMPLE = 40  # flagged e3 texts to label if there are more
 
 
+def results(version: str = prompts.CRITIC_VERSION) -> Path:
+    """The text-level E2 results a critic version belongs to: the default lexicon's for c1 and c2 (E2 as run, under
+    v2), D78's run for c3 (RUNS)."""
+    return RESULTS / RUNS.get(version, p.load().version) / "text"
+
+
 def folder(model: str, version: str = prompts.CRITIC_VERSION) -> Path:
-    return RESULTS / p.load().version / "text" / "critic" / model.removeprefix("openai/") / version
+    return results(version) / "critic" / model.removeprefix("openai/") / version
+
+
+def gate_folder(version: str = prompts.CRITIC_VERSION) -> Path:
+    return results(version) / GATE_VERSIONS[version]
+
+
+def configuration(version: str) -> None:
+    """c3 runs only in D75's configuration, lexicon v3 with D74's fixes; c1 and c2 under any lexicon, as before."""
+    lex = p.load()
+    if version == "c3" and not (lex.version == "v3" and p.d74_fixes(lex)):
+        raise SystemExit(f"critic c3 runs under lexicon v3 with D74's fixes (D75); here lexicon {lex.version}, D74's fixes "
+                         f"{'on' if p.d74_fixes(lex) else 'off'}: unset {p.PIN} and {p.D74}")  # fmt: skip
 
 
 # --- cases ------------------------------------------------------------------------------------------------
@@ -80,11 +117,12 @@ def folder(model: str, version: str = prompts.CRITIC_VERSION) -> Path:
 ROLES = {"error": "error", "ok": "correct"}  # a label on the page; anything else ("unsure") is no role
 
 
-def llm_cases() -> list[Case]:
+def llm_cases(base: Path | None = None) -> list[Case]:
     """The labelled LLM mutants, as the labeller saw them (the whole text with the changed sentence), with both label
     passes: the final one (reviewed against the lexicon with the assistant's reading of each sentence) and the
-    author's first pass, made alone and without the gate's verdicts, so free of any LLM's or the lexicon's reading."""
-    base = RESULTS / p.load().version / "text" / "labels"
+    author's first pass, made alone and without the gate's verdicts, so free of any LLM's or the lexicon's reading.
+    From `base`, else the default lexicon's labels (c3 reads them from LABELS, where they were made)."""
+    base = base or RESULTS / p.load().version / "text" / "labels"
     items = json.loads((base / "items.json").read_text())["items"]
     final, first = ({k: v["label"] for k, v in json.loads((base / name).read_text()).items()} for name in ("labels_final.json", "labels_pass1.json"))
     key = pd.read_csv(base / "key.csv").set_index("item")
@@ -115,15 +153,33 @@ def e3_cases() -> list[Case]:
             for t in e2_text.released_texts()]  # fmt: skip
 
 
-def build(sources: tuple[str, ...]) -> list[Case]:
+def blind_cases(out: Path = BLIND) -> list[Case]:
+    """c3: the texts of D76's blind sample as a rater sees them (items.json: sentences numbered 1 to n, D77), by item
+    id, with the run of each item's first entry in key.csv and its kind (written_by). Unlabelled here: the blind
+    labels score them later. Nothing of key.csv is shown."""
+    items = json.loads((out / "items.json").read_text())["items"]
+    key = pd.read_csv(out / "key.csv").drop_duplicates("item").set_index("item")
+    cases = []
+    for it in items:
+        scenario, model, naming = it["facts"].rsplit("_", 2)
+        run, kind = key.at[it["id"], "run"], key.at[it["id"], "kind"]
+        if run.split("_")[:2] + run.split("_")[-1:] != [scenario, model, naming]:
+            raise ValueError(f"item {it['id']}: its entry in key.csv is about another model than its facts")
+        cases.append(Case(it["id"], "blind", scenario, model, naming, it["sentences"], [], None, {"role": "unlabelled", "run": run, "kind": kind}))
+    return cases
+
+
+def build(sources: tuple[str, ...], version: str = prompts.CRITIC_VERSION) -> list[Case]:
     lex = p.load()
     out = []
     if "llm" in sources:
-        out += llm_cases()
+        out += llm_cases(LABELS if version == "c3" else None)
     if "script" in sources or "control" in sources:
         out += [c for c in script_sample(lex) if c.source in sources]
     if "e3" in sources:
         out += e3_cases()
+    if "blind" in sources:
+        out += blind_cases()
     return out
 
 
@@ -140,28 +196,33 @@ def pilot_cases() -> list[Case]:
 
 
 @functools.cache
-def writer_handover(run_id: str) -> str:
-    """The handover in an E3 run's writer request, as the writer read it (propose.md wraps it in one line before and
-    one after)."""
-    run = json.loads((e2_text.E3_RESULTS / e2_text.E3_SOURCE / "haiku" / "runs" / f"{run_id}.json").read_text())
+def writer_handover(run_id: str, source: str = e2_text.E3_SOURCE) -> str:
+    """The handover in the writer request of a run of E3 (`source`: E3 as run by default), as the writer read it
+    (propose.md wraps it in one line before and one after)."""
+    run = json.loads((e2_text.E3_RESULTS / source / "haiku" / "runs" / f"{run_id}.json").read_text())
     user = run["writer"]["messages"][0][1]
     return user[user.index("\n\n") + 2 : user.rindex("\n\nWrite the explanation")]
 
 
 def written_by(case: Case) -> str:
     """The E3 run whose writer request carries the facts for a case: its own run (an E3 text), the run it was mutated
-    from (an LLM mutant), or, for a template text, the H1 run of its cell at draw 0."""
+    from (an LLM mutant), the run of its first entry in key.csv (a blind text), or, for a template text (a script or
+    control case, or a blind text of that kind), the H1 run of its cell at draw 0."""
     if case.source == "e3":
         return case.case_id
     if case.source == "llm":
         return case.info["gate case"]
+    if case.source == "blind" and case.info["kind"] != "template":
+        return case.info["run"]
     return f"{case.scenario}_{case.model}_H1_d0_{settings.WRITER}_{case.naming}"
 
 
 def facts_text(case: Case, cache: dict, version: str = "c1") -> str:
-    """c1: the handover H1, built from the Facts; c2: the handover the writer saw (writer_handover)."""
+    """c1: the handover H1, built from the Facts; c2 and c3: the handover the writer saw (writer_handover), in the
+    version's E3 run (HANDOVERS: E3 as run for c2, D74's for c3), or for an LLM mutant in the run it was mutated from
+    (E3 as run)."""
     if version != "c1":
-        return writer_handover(written_by(case))
+        return writer_handover(written_by(case), e2_text.E3_SOURCE if case.source == "llm" else HANDOVERS[version])
     key = (case.scenario, case.model, case.naming)
     if key not in cache:
         ctx = e2_text.context(case, {})
@@ -215,22 +276,50 @@ def resolve(reqs: list[Request], client: Client, budget: float, workers: int = W
 # --- scoring ----------------------------------------------------------------------------------------------
 
 
-def gate_outcomes() -> dict[str, dict]:
-    """The gate's outcome per case: text-level E2 with extractor x4 (script and control cases by case id, the
-    labelled LLM mutants by the case they came from). A text with fewer than two readable extractions is not
-    released (the gate falls back to the template, gate/gate.py), so it counts as caught (D32), not at the change;
-    `gate read` keeps it apart. The labelled LLM mutants' published recall (e2_labels, 93 of 95) counts it the same way."""
-    base = RESULTS / p.load().version / "text" / GATE_VERSION
+def gate_outcomes(version: str = prompts.CRITIC_VERSION) -> dict[str, dict]:
+    """The gate's outcome per case: text-level E2 with the version's extractor (GATE_VERSIONS: x4 for c1 and c2, x5 in
+    D78's run for c3, GATE_FILES), script and control cases by case id, the labelled LLM mutants by the case they came
+    from (c3: as x5 read them again, llm_labelled.csv). A text with fewer than two readable extractions is not released
+    (the gate falls back to the template, gate/gate.py), so it counts as caught (D32), not at the change; `gate read`
+    keeps it apart. The labelled LLM mutants' published recall (e2_labels, 93 of 95) counts it the same way.
+    FileNotFoundError if the run is not on disk (yet)."""
+    base = gate_folder(version)
     out = {}
-    for name in ("script.csv", "llm.csv"):
+    for name in GATE_FILES[version]:
+        if not (base / name).exists():
+            raise FileNotFoundError(f"no {name} in {base}: the text-level E2 run that critic {version} is compared with is not on disk (yet)")
         table = pd.read_csv(base / name)
         for case, read, caught, at in zip(table.case, table.read, table.caught, table["caught at the change"]):
             out[case] = {"gate read": bool(read), "gate caught": bool(caught) if read else True, "gate at the change": bool(at) if read else False}
     return out
 
 
-def score(cases: list[Case], reqs: dict[str, Request], answers: dict[str, Response]) -> pd.DataFrame:
-    gate = gate_outcomes()
+def gate_for(cases: list[Case], version: str, dry: bool = False) -> dict[str, dict] | None:
+    """c3: the gate's outcomes (D78's run), read before anything is sent. A run stops if they are not on disk yet or a
+    case has none (its id or text would not be D78's); a dry run goes on without them, and blind texts need none.
+    None for c1 and c2, whose outcomes are read when scoring, as before."""
+    if version != "c3":
+        return None
+    gated = [c for c in cases if c.source != "blind"]
+    if not gated:
+        return {}
+    try:
+        gate = gate_outcomes(version)
+    except FileNotFoundError as e:
+        if not dry:
+            raise SystemExit(f"{e}: nothing sent") from None
+        print(f"{e}: the dry run scores the critic alone")
+        return {}
+    missing = [c.case_id for c in gated if c.info.get("gate case", c.case_id) not in gate]
+    if missing:
+        raise SystemExit(f"{len(missing)} case(s) without an outcome in {gate_folder(version)}, e.g. {missing[:3]}: not D78's cases, nothing sent")
+    return gate
+
+
+def score(cases: list[Case], reqs: dict[str, Request], answers: dict[str, Response], gate: dict[str, dict] | None = None) -> pd.DataFrame:
+    """One row per case: the critic's critique, its cost, and the gate's outcome (`gate`: read with gate_outcomes if
+    not given)."""
+    gate = gate_outcomes() if gate is None else gate
     rows = []
     for c in cases:
         r = reqs[c.case_id]
@@ -252,7 +341,7 @@ def score(cases: list[Case], reqs: dict[str, Request], answers: dict[str, Respon
             row |= {"input tokens": answer.usage.get("input_tokens", 0) + answer.usage.get("cache_read_input_tokens", 0),
                     "output tokens": answer.usage.get("output_tokens", 0), "reasoning tokens": answer.usage.get("reasoning_tokens", 0),
                     "cost": answer.cost}  # fmt: skip
-        if c.source != "e3":  # an e3 text's id is also the id of its LLM mutant in llm.csv; the gate's e3 outcome is in score.csv
+        if c.source not in ("e3", "blind"):  # an e3 text's id is also its LLM mutant's in llm.csv (its own outcome: score.csv); a blind text has none
             row |= gate.get(c.info.get("gate case", c.case_id), {})
         rows.append(row)
     return pd.DataFrame(rows)
@@ -271,7 +360,10 @@ def _rates(part: pd.DataFrame, who: str) -> dict:
 
 
 def summarise(table: pd.DataFrame) -> pd.DataFrame:
-    """Critic and gate on the same cases, per source and operator; the critic's confidence against the labels."""
+    """Critic and gate on the same cases, per source and operator; the critic's confidence against the labels. Empty
+    if no case has a gate outcome (c3's blind texts alone, or its dry run before D78's run is on disk)."""
+    if "gate caught" not in table:
+        return pd.DataFrame()
     t = table[(table.critiqued == True) & table["gate caught"].notna()]  # noqa: E712  (both have an outcome)
     t = t[t.source != "e3"]
     llm = t[t.source == "llm"]
@@ -470,7 +562,7 @@ def main() -> None:
     parser.add_argument("--model", default=settings.CRITIC)
     parser.add_argument("--critic", default=prompts.CRITIC_VERSION, choices=sorted(prompts.CRITIC_NAMES), help="the critic's prompt version")
     parser.add_argument("--compare", action="store_true", help="c2 beside c1 and the gate, from both versions' cases.csv (no calls)")
-    parser.add_argument("--sources", default=",".join(SOURCES), help=f"comma-separated, of {SOURCES}")
+    parser.add_argument("--sources", help=f"comma-separated, of {SOURCES} for c1 and c2, of {VERSION_SOURCES['c3']} for c3 (default: all)")
     parser.add_argument("--pilot", action="store_true", help="the prompt's trial on the pilot datasets (each round written to <out>/pilot/r<n>)")
     parser.add_argument("--estimate", action="store_true", help="count and price the uncached calls, no network")
     parser.add_argument("--dry", action="store_true", help="stubs, no network, a few cases")
@@ -478,6 +570,7 @@ def main() -> None:
     parser.add_argument("--page", action="store_true", help="the labelling page for the critic's e3 flags")
     parser.add_argument("--score", type=Path, help="labels.json of the e3 flags")
     args = parser.parse_args()
+    configuration(args.critic)
     out = folder(args.model, args.critic)
     labels_dir = out / "labels"
     if args.compare:
@@ -497,7 +590,10 @@ def main() -> None:
     names = prompts.CRITIC_NAMES[args.critic]
     if not args.pilot and prompts.frozen(prompts.FROZEN_CRITIC[args.critic]) != prompts.hashes(names):
         raise SystemExit(f"the critic's prompts {args.critic} are not frozen as they are now: run --pilot, then freeze them (prompts.freeze)")
-    cases = pilot_cases() if args.pilot else build(tuple(args.sources.split(",")))
+    sources = tuple(args.sources.split(",")) if args.sources else VERSION_SOURCES[args.critic]
+    if not set(sources) <= set(VERSION_SOURCES[args.critic]):
+        raise SystemExit(f"critic {args.critic}'s sources are {VERSION_SOURCES[args.critic]}")
+    cases = pilot_cases() if args.pilot else build(sources, args.critic)
     if args.dry:
         cases = cases[:6]
     reqs = requests(cases, args.model, args.critic)
@@ -509,9 +605,10 @@ def main() -> None:
         return
     if dollars > args.budget:
         raise SystemExit(f"the estimate ${dollars:.2f} is above the budget ${args.budget:.2f}: nothing sent")
+    gate = gate_for(cases, args.critic, args.dry)
     start = time.time()
     answers = resolve(list(reqs.values()), client, args.budget)
-    table = score(cases, reqs, answers)
+    table = score(cases, reqs, answers, gate)
     target = out / "pilot" / f"r{len(list((out / 'pilot').glob('r*'))) + 1}" if args.pilot else out  # each pilot round kept
     if args.dry:
         target = Path(tempfile.mkdtemp(prefix="e2_critic_dry_out_"))

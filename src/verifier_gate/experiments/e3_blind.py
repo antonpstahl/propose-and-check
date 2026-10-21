@@ -15,12 +15,14 @@ A rater sees each text sentence by sentence, the model's facts as the H1 handove
 text about that model: an H2 writer also saw the certified statements, which would show what the verifier
 certifies), and the words table of the run's extractor prompt (the writer's table). Nothing about the text's
 source, the gate, the readers or the critic is shown. Templates read like templates, so their source cannot be hidden: a limit, reported.
+The sentences are shown numbered 1 to n (D77): a text the gate reduced keeps its sentences' ids, so their gaps
+would show the exit state and which sentences failed; the run's ids are kept in key.csv.
 
 Written to results/e3/<source>/blind/:
 - protocol.json: seed, populations, sizes, the hashes of the guide, the items and the key, the counting rules;
 - guide.md: the guide as fixed;
 - items.json: what the page shows;
-- key.csv: item to run, arm, kind, tier and exit, not for raters;
+- key.csv: item to run, arm, kind, tier and exit, and the run's sentence ids in the order shown, not for raters;
 - blind_page.html: the page, from blind_page.html with the items and the guide embedded.
 The page is published as an artifact whose store keeps each rater's labels under raters/<their id>/, readable by
 the page's owner only (so the second rater never sees the first's), with each label's history: who set it, when,
@@ -102,6 +104,11 @@ def shown_texts(sample: list[dict], seed: int = SEED) -> tuple[list[list], dict[
     return [json.loads(keys[i]) for i in order], {keys[i]: by_text[keys[i]] for i in order}
 
 
+def shown(sentences: list[list]) -> list[list]:
+    """A text's sentences as shown: numbered 1 to n in their order (D77), the run's ids dropped."""
+    return [[k, text] for k, (_, text) in enumerate(sentences, 1)]
+
+
 def named(sentences: list[str], shown: list[str]) -> list[str]:
     """The features a text names: the synthetic tier by e2_labels.MENTIONS, other names (column codes) as words."""
     text = " ".join(sentences).lower()
@@ -175,20 +182,20 @@ def build(source: str = ind.SOURCE, out: Path | None = None, tier: str | None = 
     items = [t for t in ind.texts(source=source) if tier is None or t["tier"] == tier]
     sample = draw(items)
     order, entries = shown_texts(sample)
-    facts, shown, key = {}, [], []
+    facts, texts, key = {}, [], []
     for k, sentences in enumerate(order, 1):
         item, behind = f"B{k:02d}", entries[json.dumps(sentences)]
         fid = facts_of(behind[0], facts)
         names = [n for b in facts[fid]["blocks"] for n in b["names"] if len(b["names"]) == 1]
-        shown.append({"id": item, "facts": fid, "model": behind[0]["model"], "named": named([s for _, s in sentences], names), "sentences": sentences})
+        texts.append({"id": item, "facts": fid, "model": behind[0]["model"], "named": named([s for _, s in sentences], names), "sentences": shown(sentences)})
         key += [{"item": item, "run": t["run"], "arm": t["arm"], "kind": t["kind"], "tier": t["tier"], "scenario": t["scenario"],
-                 "exit": t["exit"], "second rater": k <= OVERLAP} for t in behind]  # fmt: skip
+                 "exit": t["exit"], "second rater": k <= OVERLAP, "sentence ids": json.dumps([sid for sid, _ in sentences])} for t in behind]  # fmt: skip
     out.mkdir(parents=True, exist_ok=True)
     guide = GUIDE.read_text()
     (out / "guide.md").write_text(guide)
     data = {"version": VERSION, "source": source, "guide": guide_html(guide), "guide_sha": hashlib.sha256(guide.encode()).hexdigest(),
             "words": word_table(source), "edges": {k: round(v * 100, 3) for k, v in ind.lexicon(source).strength.items()},
-            "facts": facts, "items": shown, "overlap": [it["id"] for it in shown[:OVERLAP]]}  # fmt: skip
+            "facts": facts, "items": texts, "overlap": [it["id"] for it in texts[:OVERLAP]]}  # fmt: skip
     (out / "items.json").write_text(json.dumps(data, indent=1))
     pd.DataFrame(key).to_csv(out / "key.csv", index=False)
     page(out)
@@ -197,7 +204,7 @@ def build(source: str = ind.SOURCE, out: Path | None = None, tier: str | None = 
         "version": VERSION, "source": source, "tier": tier or "all", "built": time.strftime("%Y-%m-%dT%H:%M:%S"), "seed": SEED,
         "population": {"texts outside the pilot datasets, by kind": population,
                        "by tier and kind": {f"{tier} {kind}": n for (tier, kind), n in pd.DataFrame(items).groupby(["tier", "kind"]).size().items()}},
-        "sizes": SIZES, "sampled entries": len(key), "texts shown": len(shown), "second rater": f"the first {OVERLAP} items in the shown order",
+        "sizes": SIZES, "sampled entries": len(key), "texts shown": len(texts), "sentence ids": "shown 1 to n; the run's ids in key.csv (D77)", "second rater": f"the first {OVERLAP} items in the shown order",
         "sha256": {"guide.md": digest(out / "guide.md"), "items.json": digest(out / "items.json"), "key.csv": digest(out / "key.csv")},
         "labels": {"sentence": list(LABELS), "whole text": list(WHOLE), "reads the words differently": "a flag per sentence"},
         "standards": {name: f"a sentence labelled {' or '.join(kinds)}" + (", or the whole text a wrong picture" if name == "broad" else "")
@@ -213,7 +220,7 @@ def build(source: str = ind.SOURCE, out: Path | None = None, tier: str | None = 
                       "value); labels are set only through the page",
     }  # fmt: skip
     (out / "protocol.json").write_text(json.dumps(protocol, indent=1) + "\n")
-    print(f"{len(key)} sampled entries, {len(shown)} texts shown, {OVERLAP} for the second rater; {len(facts)} fact sets; written to {out}")
+    print(f"{len(key)} sampled entries, {len(texts)} texts shown, {OVERLAP} for the second rater; {len(facts)} fact sets; written to {out}")
     return out
 
 

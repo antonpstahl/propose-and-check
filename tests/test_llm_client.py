@@ -138,3 +138,18 @@ def test_a_local_model_answers_in_the_api_shape_and_costs_nothing(monkeypatch):
     response = c.interpret(request, raw, latency=1.0, cached=False)
     assert response.ok and response.data == {"sentences": [], "claims": []} and response.cost == 0.0
     assert response.usage == {"input_tokens": 4800, "output_tokens": 700}
+
+
+def test_the_call_log_is_read_across_its_closed_parts_in_order(tmp_path):
+    """D80: closing the log moves it, byte for byte, into a gzipped part; the reader sees every record in the order
+    written, the closed parts first; the same log closes to the same bytes; an empty log is not closed."""
+    log = tmp_path / "calls.jsonl"
+    log.write_text("".join(json.dumps({"n": k}) + "\n" for k in range(3)))
+    first = c.close_log(tmp_path)
+    assert first.name == "calls-0001.jsonl.gz" and log.read_text() == "" and c.close_log(tmp_path) is None
+    log.write_text(json.dumps({"n": 3}) + "\n")
+    assert [r["n"] for r in c.log_records(tmp_path)] == [0, 1, 2, 3]
+    again = tmp_path / "again"
+    again.mkdir()
+    (again / "calls.jsonl").write_text("".join(json.dumps({"n": k}) + "\n" for k in range(3)))
+    assert c.close_log(again).read_bytes() == first.read_bytes()

@@ -1,4 +1,4 @@
-"""What the pre-study's live LLM calls cost, from the call log (cache/llm/calls.jsonl, committed).
+"""What the pre-study's live LLM calls cost, from the call log (cache/llm/calls/*.jsonl.gz and calls.jsonl, committed; D80).
 
 The client logs every request, also those served from its cache (`cached` true). A request is paid once, so the
 spend counts each request key once among the rows with `cached` false and a transport other than the stub (a batch
@@ -13,10 +13,11 @@ Run: `uv run python -m verifier_gate.experiments.spend` (seconds, $0).
 """
 
 import argparse
-import json
 from pathlib import Path
 
 import pandas as pd
+
+from verifier_gate.llm.client import log_records
 
 ROOT = Path(__file__).parents[3]
 LOG = ROOT / "cache" / "llm" / "calls.jsonl"
@@ -26,11 +27,9 @@ OUT = ROOT / "results" / "spend.csv"
 def paid() -> pd.DataFrame:
     """One row per paid request: its first live answer in the log."""
     first = {}
-    with LOG.open() as f:
-        for line in f:
-            row = json.loads(line)
-            if row["cached"] is False and row["transport"] != "stub":
-                first.setdefault(row["key"], row)
+    for row in log_records(LOG.parent, LOG.name):  # the closed parts, then the open log (D80)
+        if row["cached"] is False and row["transport"] != "stub":
+            first.setdefault(row["key"], row)
     frame = pd.DataFrame([{"time": r["time"], "model": r["model"], "transport": r["transport"],
                            "role": r["role"].split()[0], "cost": r["cost"]} for r in first.values()])  # fmt: skip
     frame["day"] = frame.time.str[:10]

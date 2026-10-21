@@ -45,7 +45,7 @@ V3_STEPS = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "table1-v
              "local-refits-plasmode", "local-facts-plasmode", "local-run-plasmode",
              "e1-d74-discovery", "e1-d74-confirmation", "e1-d74-plasmode", "snap-check", "e2-plan-d74-discovery",
              "e2-plan-d74-confirmation", "e2-plan-d74-plasmode", "e3-rerun-d74", "e3-rerun-d74-truth",
-             "local-run-plasmode-d74"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
+             "local-run-plasmode-d74", "e2-text-x5", "e2-text-x5-plasmode", "e2-text-x5-labelled", "e3-baselines-d74"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
 BEFORE_D74 = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "e3-rerun", "e3-rerun-truth", "local-run-plasmode"}  # v3, as run before D74's fixes
 STEPS = [  # name, module, arguments
     ("facts", "build_facts", []),
@@ -70,6 +70,10 @@ STEPS = [  # name, module, arguments
     ("e2-text-llm", "e2_text", ["--llm"]),
     ("e2-text-plasmode", "e2_text", ["--tier", "plasmode", "--seeds", "1"]),
     ("e2-text-compare", "e2_text", ["--compare"]),
+    ("e2-heldout", "e2_heldout", []),  # the held-out invented features, read as built: lexicon v2, extractor x4 (D76)
+    ("e2-text-x5", "e2_text", ["--script"]),  # E2 at text level in D75's configuration (D78): results/e2/v3-d74/
+    ("e2-text-x5-plasmode", "e2_text", ["--tier", "plasmode", "--seeds", "1"]),
+    ("e2-text-x5-labelled", "e2_text", ["--labelled"]),  # the 100 labelled LLM mutants read by x5 (D78)
     ("e3-haiku", "e3_end_to_end", []),  # E3 as run (extractor x3 pinned), every call from the cache
     ("e3-sonnet", "e3_end_to_end", ["--sonnet"]),
     ("e3-qwen", "e3_end_to_end", ["--writer", "ollama/qwen3.8:27b"]),  # the self-hosted writer subset (D55), every call from the cache ($0)
@@ -79,6 +83,7 @@ STEPS = [  # name, module, arguments
     ("e3-rerun-d74", "e3_end_to_end", ["--revised", "--tier", "both"]),  # the rerun with D74's fixes, every call from the cache
     ("e3-rerun-d74-truth", "e3_truth", ["--source", "v4-x5-m5-d74"]),
     ("e3-text-error", "e3_text_error", []),  # the text-level error against T by claim form, as run and rerun
+    ("e3-baselines-d74", "e3_baselines", ["--source", "v4-x5-m5-d74"]),  # the baselines beside D74 (D76), from texts.json and the cache
     ("e3-baselines", "e3_baselines", []),  # the template-only and plain-prompt arms (D71), scored as E3, from texts.json and the cache
     ("false-alarms", "e2_false_alarms", ["--score", LABELS]),
     ("e3-residual", "e2_false_alarms", ["--e3", LABELS]),

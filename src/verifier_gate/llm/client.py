@@ -19,6 +19,7 @@ API failed after the SDK's retries; not cached, so a rerun tries again; the gate
 A rejected request (400, 401, 403, 404) is a bug in our code, not a run outcome, and raises.
 """
 
+import gzip
 import hashlib
 import json
 import os
@@ -32,6 +33,7 @@ from pathlib import Path
 from verifier_gate.llm import settings
 
 CACHE = Path(__file__).parents[3] / "cache" / "llm"
+LOG_PARTS = "calls"  # D80: the call log's closed parts, gzipped (cache/llm/calls/calls-0001.jsonl.gz, ...); GitHub refuses a file over 100 MB
 OFFLINE = "VERIFIER_GATE_OFFLINE"
 LOCAL_PREFIX = "ollama/"  # a model named ollama/<tag> runs on the local Ollama server (D55): synchronous, $0
 OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
@@ -43,6 +45,34 @@ DOTENV = Path(__file__).parents[3] / ".env"  # git-ignored; .env.example is the 
 EFFORTS_WITHOUT_THINKING = ("low", "medium", "high")
 _LOG_LOCK = threading.Lock()
 THINKING_OFF = {"claude-haiku-5-5": {"type": "disabled"}, "claude-sonnet-5-5": {"type": "between_tools"}}
+
+
+def log_records(cache_dir: Path = CACHE, name: str = "calls.jsonl"):
+    """Every record of the call log in the order written: its closed parts (LOG_PARTS, D80), then the open file."""
+    for part in sorted((cache_dir / LOG_PARTS).glob("*.jsonl.gz")):
+        with gzip.open(part, "rt") as f:
+            yield from (json.loads(line) for line in f if line.strip())
+    if (cache_dir / name).exists():
+        with (cache_dir / name).open() as f:
+            yield from (json.loads(line) for line in f if line.strip())
+
+
+def close_log(cache_dir: Path = CACHE, name: str = "calls.jsonl") -> Path | None:
+    """The open call log moved, byte for byte, into its next closed part (gzip without a timestamp, so the same log
+    gives the same bytes) and started empty (D80). Only while no process writes to it."""
+    active = cache_dir / name
+    if not active.exists() or active.stat().st_size == 0:
+        return None
+    parts = cache_dir / LOG_PARTS
+    parts.mkdir(parents=True, exist_ok=True)
+    target = parts / f"calls-{len(list(parts.glob('*.jsonl.gz'))) + 1:04d}.jsonl.gz"
+    data = active.read_bytes()
+    target.write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
+    if gzip.decompress(target.read_bytes()) != data:
+        target.unlink()
+        raise RuntimeError(f"{target} does not hold the log as written; nothing changed")
+    active.write_text("")
+    return target
 
 
 def load_dotenv(path: Path = DOTENV) -> list[str]:
