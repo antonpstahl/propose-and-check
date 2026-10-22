@@ -45,7 +45,7 @@ V3_STEPS = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "table1-v
              "local-refits-plasmode", "local-facts-plasmode", "local-run-plasmode",
              "e1-d74-discovery", "e1-d74-confirmation", "e1-d74-plasmode", "snap-check", "e2-plan-d74-discovery",
              "e2-plan-d74-confirmation", "e2-plan-d74-plasmode", "e3-rerun-d74", "e3-rerun-d74-truth",
-             "local-run-plasmode-d74", "e2-text-x5", "e2-text-x5-plasmode", "e2-text-x5-labelled", "e3-baselines-d74"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
+             "local-run-plasmode-d74", "e2-text-x5", "e2-text-x5-plasmode", "e2-text-x5-labelled", "e3-baselines-d74", "e3-independent-d74", "e2-critic-c3"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
 BEFORE_D74 = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "e3-rerun", "e3-rerun-truth", "local-run-plasmode"}  # v3, as run before D74's fixes
 STEPS = [  # name, module, arguments
     ("facts", "build_facts", []),
@@ -88,12 +88,14 @@ STEPS = [  # name, module, arguments
     ("false-alarms", "e2_false_alarms", ["--score", LABELS]),
     ("e3-residual", "e2_false_alarms", ["--e3", LABELS]),
     ("e3-effect", "e2_false_alarms", ["--effect", LABELS, DRAFT_LABELS]),
+    ("e3-independent-d74", "e3_independent", ["--source", "v4-x5-m5-d74", "--tables"]),  # Luna reading D74 (D76), from the cache
     ("e3-independent", "e3_independent", ["--tables"]),  # E3 read by GPT-6 Luna, the release rule (D69), every call from the cache
     ("e2-critic", "e2_critic", ["--critic", "c1"]),  # the LLM critic (D56), every call from the cache
     ("e2-critic-sol", "e2_critic", ["--critic", "c1", "--model", "openai/gpt-6.1-sol", "--sources", "llm,control"]),
     ("e2-critic-e3-labels", "e2_critic", ["--critic", "c1", "--score", CRITIC_LABELS]),  # the author's labels of Luna's E3 flags
     ("e2-critic-c2", "e2_critic", ["--critic", "c2"]),  # the critic with the writer's inputs (D72), every call from the cache
-    ("e2-critic-compare", "e2_critic", ["--compare"]),  # c2 beside c1 and the gate
+    ("e2-critic-compare", "e2_critic", ["--compare"]),
+    ("e2-critic-c3", "e2_critic", ["--critic", "c3"]),  # c3 in D75's configuration (D79), every call from the cache  # c2 beside c1 and the gate
     ("local-refits", "local_refits", []),
     ("local-facts", "local_facts", []),
     ("local-pilot", "local_run", ["--pilot"]),

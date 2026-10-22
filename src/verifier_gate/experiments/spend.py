@@ -25,11 +25,12 @@ OUT = ROOT / "results" / "spend.csv"
 
 
 def paid() -> pd.DataFrame:
-    """One row per paid request: its first live answer in the log."""
+    """One row per paid request: its costliest live answer in the log (D81). A failed attempt costs nothing and a
+    batch collected twice logs the same answer twice, so the costliest is the one paid; on a tie, the first."""
     first = {}
     for row in log_records(LOG.parent, LOG.name):  # the closed parts, then the open log (D80)
-        if row["cached"] is False and row["transport"] != "stub":
-            first.setdefault(row["key"], row)
+        if row["cached"] is False and row["transport"] != "stub" and row["cost"] > first.get(row["key"], {"cost": -1})["cost"]:
+            first[row["key"]] = row
     frame = pd.DataFrame([{"time": r["time"], "model": r["model"], "transport": r["transport"],
                            "role": r["role"].split()[0], "cost": r["cost"]} for r in first.values()])  # fmt: skip
     frame["day"] = frame.time.str[:10]
