@@ -1,13 +1,13 @@
 # feasibility-symb-verific-gate-llm-explanation
 
-Code, data and results of the working paper *Propose and Prove: A Symbolic Gate for LLM Explanations of Glass-Box
-Credit Models* (draft of 20 October 2026; the manuscript itself is not in this repository). An LLM writes an explanation of a fitted EBM or depth-2
+Code, data and results of the working paper *Propose and Check: A Symbolic Gate for LLM Explanations of Glass-Box
+Credit Models* (draft of 26 October 2026; the manuscript itself is not in this repository). An LLM writes an explanation of a fitted EBM or depth-2
 XGBoost (XGB2) together with a plan of claims in a small DSL. A deterministic verifier checks every claim against the
 fitted model and its bootstrap bands through a lexicon of truth conditions; a round trip reads the finished text back
 into claims; and a gate repairs, reduces or replaces text that fails. The benchmark has a planted truth: a synthetic
 tier and a plasmode tier on real credit features.
 
-## Quick start: every number of the paper, offline, in about seven minutes
+## Quick start: every number of the paper, offline, in about 35 minutes
 
 Developed and run on macOS (Apple silicon) with Python 3.13; needs Python 3.11 or later and
 [uv](https://docs.astral.sh/uv/).
@@ -24,7 +24,7 @@ uv run python -m verifier_gate.experiments.reproduce
 - **The Facts archive** holds what git does not: the fitted models' Facts and bootstrap draws (`cache/facts/`, 484 MB
   unpacked) and the TaiwanCredit file (`data/raw/`). `--unpack` checks every file against `cache/facts_manifest.csv`
   (size and SHA-256) before it writes anything.
-- **`reproduce`** runs 30 steps, from E1 to the figures, tables and worked example, with every LLM answer read from
+- **`reproduce`** runs 66 steps, from E1 to the figures, tables and worked example, with every LLM answer read from
   the committed cache (`cache/llm/`). It sets `VERIFIER_GATE_OFFLINE`, so a request that is not in the cache stops
   the run instead of calling an API: a reproduction costs $0. At the end it compares every output under `results/`
   and `paper/` with the committed one; all should be equal. `--list` prints each step's command, `--only` and
@@ -39,7 +39,7 @@ uv run python -m verifier_gate.experiments.reproduce
   disk with the archived ones.
 - **The paper's figures and tables** are generated into `paper/figures/` and `paper/tables/` (and the worked example
   into `paper/worked_example.md`); the manuscript that includes them is kept outside the repository.
-- **Tests:** `uv run pytest` (448 tests, about 30 seconds). The tests that read the Facts are skipped without them,
+- **Tests:** `uv run pytest` (596 tests, about a minute). The tests that read the Facts are skipped without them,
   and the plasmode tests without TaiwanCredit in `data/raw/`; no test calls an API or downloads anything.
 
 Which file backs which number of the paper: `results/README.md`. What D-numbers and "plan §" in the code mean:
