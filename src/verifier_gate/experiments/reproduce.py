@@ -16,9 +16,11 @@ results/e3/v4-x5-m5-d74, results/local/plasmode/run/l2-d74) and the check behind
 
 Every step runs with VERIFIER_GATE_OFFLINE set: a request that is not in the LLM cache raises instead of calling the
 API, so a reproduction costs $0 or stops. At the end, `git status` over results/ and paper/ lists every output that
-differs from the committed one; none should. Two differences are not results and are handled: a file that differs only in
-`spent` (what an execution paid: $0 on a rerun from the cache) is restored, so the record of what was paid stays; a PDF
-whose PNG is unchanged differs only in metadata (PDFs written before 17 Oct carry a creation date).
+differs from the committed one; none should. Differences that are not results are handled: a file that differs only in
+bookkeeping is restored, so the record of the run stays: `spent` (what an execution paid: $0 on a rerun from the cache),
+the date a replay read its answers (`read`, e2_heldout), and round-trip fields the code writes since a run was made
+(ADDED_SINCE: `hedged`, since 21 Oct, absent from E3's first run); a PDF whose PNG is unchanged differs only in
+metadata (PDFs written before 17 Oct carry a creation date).
 
 Run: `uv run python -m verifier_gate.experiments.reproduce` (30 steps, about seven minutes with the Facts on disk).
 Options: --list, --only <step names, comma-separated>, --from <step name>.
@@ -28,6 +30,7 @@ import argparse
 import io
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -48,7 +51,7 @@ V3_STEPS = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "table1-v
              "e1-d74-discovery", "e1-d74-confirmation", "e1-d74-plasmode", "snap-check", "e2-plan-d74-discovery",
              "e2-plan-d74-confirmation", "e2-plan-d74-plasmode", "e3-rerun-d74", "e3-rerun-d74-truth",
              "local-run-plasmode-d74", "e2-text-x5", "e2-text-x5-plasmode", "e2-text-x5-labelled", "e3-baselines-d74", "e3-independent-d74", "e2-critic-c3",
-             "e3-blind-score", "deferred"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
+             "e3-blind-score", "deferred", "fig4"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
 BEFORE_D74 = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "e3-rerun", "e3-rerun-truth", "local-run-plasmode"}  # v3, as run before D74's fixes
 STEPS = [  # name, module, arguments
     ("facts", "build_facts", []),
@@ -124,11 +127,35 @@ def committed(path: str) -> str:
     return subprocess.run(["git", "show", f"HEAD:{path}"], cwd=REPO, capture_output=True, text=True, check=True).stdout
 
 
+ADDED_SINCE = {"hedged"}  # round-trip fields the code writes since c07a64e9 (21 Oct, D68), absent from traces written before
+DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def _bookkeeping(old: dict, new: dict) -> tuple[dict, dict]:
+    """Both versions without what a replay changes and no result depends on: what the execution paid (`spent`), the
+    date a replay read its answers (`read`, e2_heldout), and round-trip fields added after the run was made."""
+    drop = lambda d: {k: v for k, v in d.items() if k != "spent" and not (k == "read" and isinstance(v, str) and DATE.fullmatch(v))}  # noqa: E731
+    old, new = drop(old), drop(new)
+    if isinstance(old.get("versions"), list) and isinstance(new.get("versions"), list) and len(old["versions"]) == len(new["versions"]):
+        versions = []
+        for o, n in zip(old["versions"], new["versions"]):
+            trip_o, trip_n = (o or {}).get("roundtrip"), (n or {}).get("roundtrip")
+            if isinstance(trip_o, dict) and isinstance(trip_n, dict):
+                n = {**n, "roundtrip": {k: v for k, v in trip_n.items() if k in trip_o or k not in ADDED_SINCE}}
+            versions.append(n)
+        new = {**new, "versions": versions}
+    return old, new
+
+
 def only_spent(path: str) -> bool:
-    """The file equals its committed version apart from what the execution paid."""
+    """The file equals its committed version apart from bookkeeping (_bookkeeping): what the execution paid, a
+    replay's date, round-trip fields added after the run."""
     if path.endswith(".json"):
         old, new = json.loads(committed(path)), json.loads((REPO / path).read_text())
-        return isinstance(old, dict) and {k: v for k, v in old.items() if k != "spent"} == {k: v for k, v in new.items() if k != "spent"}
+        if not (isinstance(old, dict) and isinstance(new, dict)):
+            return False
+        old, new = _bookkeeping(old, new)
+        return old == new
     if path.endswith(".csv"):
         old, new = pd.read_csv(io.StringIO(committed(path))), pd.read_csv(REPO / path)
         cols = [c for c in old.columns if c != "spent"]
@@ -182,7 +209,7 @@ def main() -> None:
     metadata = [line for line in after if line[3:].endswith(".pdf") and line[3:].replace(".pdf", ".png") not in pngs]
     after = [line for line in after if line not in restored and line not in metadata]
     if restored:
-        print(f"{len(restored)} file(s) differed only in 'spent' (paid by the original run, $0 now) and were restored")
+        print(f"{len(restored)} file(s) differed only in bookkeeping ('spent', paid by the original run and $0 now; a replay's date; round-trip fields added since) and were restored")
     if metadata:
         print(f"{len(metadata)} PDF(s) differ only in metadata (their PNGs are unchanged): " + ", ".join(m[3:] for m in metadata))
     modified, new = [x for x in after if not x.startswith("??")], [x for x in after if x.startswith("??")]
