@@ -1,0 +1,7 @@
+tier,reader or writer,answers,lines,parse: accepted,parse: DSLError,parse: other error,rank sets,repeated keyword,"repeated keyword, accepted",non-finite number,"non-finite number, accepted",nan or inf as a word,"nan or inf as a word, accepted",vacuous rank set,"vacuous rank set, accepted"
+synthetic,writer,1467,25101,24992,109,0,1735,0,0,0,0,0,0,0,0
+synthetic,gate reader,3017,49275,47623,1652,0,3221,0,0,0,0,0,0,1,1
+synthetic,scoring reader,3642,58484,57320,1164,0,3166,0,0,0,0,0,0,0,0
+plasmode,writer,896,15245,15151,94,0,1556,0,0,0,0,0,0,0,0
+plasmode,gate reader,1634,27937,27056,881,0,2963,0,0,0,0,0,0,3,3
+plasmode,scoring reader,1966,31551,30900,651,0,2384,0,0,0,0,0,0,1,1

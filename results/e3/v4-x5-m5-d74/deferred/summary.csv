@@ -1,0 +1,219 @@
+item,tier,quantity,count,denominator,share,note
+1 stop rules,synthetic,runs,640,640,1.0,
+1 stop rules,synthetic,exit RELEASED,383,640,0.5984,
+1 stop rules,synthetic,exit RELEASED_REDUCED,69,640,0.1078,
+1 stop rules,synthetic,exit TEMPLATE,188,640,0.2938,
+1 stop rules,synthetic,exit ESCALATE,0,640,0.0,
+1 stop rules,synthetic,path: released after 0 repair round(s),154,640,0.2406,
+1 stop rules,synthetic,path: released after 1 repair round(s),141,640,0.2203,
+1 stop rules,synthetic,path: released after 2 repair round(s),88,640,0.1375,
+1 stop rules,synthetic,path: sentences dropped after: no progress,43,640,0.0672,
+1 stop rules,synthetic,path: sentences dropped after: repair rounds exhausted,26,640,0.0406,
+1 stop rules,synthetic,path: template after: no progress; no calls left for the reduced text's round trip,1,640,0.0016,
+1 stop rules,synthetic,path: template after: no progress; no sentence left,1,640,0.0016,
+1 stop rules,synthetic,path: template after: no progress; nothing to drop,1,640,0.0016,
+1 stop rules,synthetic,path: template after: no progress; the reduced text failed its round trip,30,640,0.0469,
+1 stop rules,synthetic,path: template after: no progress; the reduced text no longer covers a required term,87,640,0.1359,
+1 stop rules,synthetic,path: template after: no progress; too few readings of the reduced text,2,640,0.0031,
+1 stop rules,synthetic,path: template after: repair rounds exhausted; nothing to drop,6,640,0.0094,
+1 stop rules,synthetic,path: template after: repair rounds exhausted; the reduced text failed its round trip,6,640,0.0094,
+1 stop rules,synthetic,path: template after: repair rounds exhausted; the reduced text no longer covers a required term,49,640,0.0766,
+1 stop rules,synthetic,path: template: no draft after the format-only retry,2,640,0.0031,
+1 stop rules,synthetic,path: template: too few readings of a draft,3,640,0.0047,
+1 stop rules,synthetic,repairs stopped by the no-progress rule,165,640,0.2578,then the drop step
+1 stop rules,synthetic,repairs stopped after 2 repair rounds,87,640,0.1359,then the drop step
+1 stop rules,synthetic,runs ended by the 16-call budget,1,640,0.0016,'call budget used' 0; 'no calls left for the round trip' 1; runs at 16 calls 2
+1 stop rules,synthetic,runs in which the call budget prevented an extraction retry,1,640,0.0016,then too few readings: 1 (syn-none-n5000-s3_XGB2_H2_d4_claude-haiku-5-5_opaque)
+1 stop rules,synthetic,runs with a round trip that could not run (fewer than 2 readings),5,640,0.0078,
+1 stop rules,synthetic,format-only retries,94,640,0.1469,denominator: runs; by cause: DSL lines do not parse: 75; the answer is not a draft: 19
+1 stop rules,synthetic,runs with a format-only retry,88,640,0.1375,
+1 stop rules,synthetic,extraction retries (round trips with an answer retried),267,910,0.2934,denominator: the gate's round trips
+1 stop rules,synthetic,extraction answers retried,317,3047,0.104,denominator: the gate's extraction calls; 2 retries the call budget prevented
+1 stop rules,synthetic,template exits (a template text is never round-tripped),188,640,0.2938,
+1 stop rules,synthetic,template exits of runs that round-tripped no text at all,29,188,0.1543,denominator: template exits
+1 stop rules,plasmode,runs,360,360,1.0,
+1 stop rules,plasmode,exit RELEASED,129,360,0.3583,
+1 stop rules,plasmode,exit RELEASED_REDUCED,35,360,0.0972,
+1 stop rules,plasmode,exit TEMPLATE,196,360,0.5444,
+1 stop rules,plasmode,exit ESCALATE,0,360,0.0,
+1 stop rules,plasmode,path: released after 0 repair round(s),71,360,0.1972,
+1 stop rules,plasmode,path: released after 1 repair round(s),44,360,0.1222,
+1 stop rules,plasmode,path: released after 2 repair round(s),14,360,0.0389,
+1 stop rules,plasmode,path: sentences dropped after: no progress,23,360,0.0639,
+1 stop rules,plasmode,path: sentences dropped after: repair rounds exhausted,12,360,0.0333,
+1 stop rules,plasmode,path: template after: no progress; no sentence left,1,360,0.0028,
+1 stop rules,plasmode,path: template after: no progress; the reduced text failed its round trip,41,360,0.1139,
+1 stop rules,plasmode,path: template after: no progress; the reduced text no longer covers a required term,97,360,0.2694,
+1 stop rules,plasmode,path: template after: no progress; too few readings of the reduced text,1,360,0.0028,
+1 stop rules,plasmode,path: template after: repair rounds exhausted; nothing to drop,2,360,0.0056,
+1 stop rules,plasmode,path: template after: repair rounds exhausted; the reduced text failed its round trip,15,360,0.0417,
+1 stop rules,plasmode,path: template after: repair rounds exhausted; the reduced text no longer covers a required term,37,360,0.1028,
+1 stop rules,plasmode,path: template: no draft after the format-only retry,1,360,0.0028,
+1 stop rules,plasmode,path: template: too few readings of a draft,1,360,0.0028,
+1 stop rules,plasmode,repairs stopped by the no-progress rule,163,360,0.4528,then the drop step
+1 stop rules,plasmode,repairs stopped after 2 repair rounds,66,360,0.1833,then the drop step
+1 stop rules,plasmode,runs ended by the 16-call budget,0,360,0.0,'call budget used' 0; 'no calls left for the round trip' 0; runs at 16 calls 7
+1 stop rules,plasmode,runs in which the call budget prevented an extraction retry,3,360,0.0083,then too few readings: 1 (pls-none-n5000-s2_EBM_H2_d4_claude-haiku-5-5_codes)
+1 stop rules,plasmode,runs with a round trip that could not run (fewer than 2 readings),2,360,0.0056,
+1 stop rules,plasmode,format-only retries,77,360,0.2139,denominator: runs; by cause: DSL lines do not parse: 59; the answer is not a draft: 18
+1 stop rules,plasmode,runs with a format-only retry,67,360,0.1861,
+1 stop rules,plasmode,extraction retries (round trips with an answer retried),138,493,0.2799,denominator: the gate's round trips
+1 stop rules,plasmode,extraction answers retried,167,1646,0.1015,denominator: the gate's extraction calls; 4 retries the call budget prevented
+1 stop rules,plasmode,template exits (a template text is never round-tripped),196,360,0.5444,
+1 stop rules,plasmode,template exits of runs that round-tripped no text at all,48,196,0.2449,denominator: template exits
+2 rank ties,synthetic,fitted models with an exact importance tie between two features in M,0,32,0.0,
+2 rank ties,synthetic,fitted models with an exact tie in at least one refit,8,32,0.25,XGB2: 8
+2 rank ties,synthetic,features whose refit rank band differs under competition ranks,1,288,0.0035,syn-weak-n5000-s1 XGB2 noise_2: 4 to 9 -> 4 to 8
+2 rank ties,synthetic,rank claims about a feature tied in M,0,5523,0.0,texts and handovers affected: 0 of 704
+2 rank ties,synthetic,rank claims whose verdict changes under competition ranks,0,5523,0.0,texts and handovers affected: 0 of 704
+2 rank ties,synthetic,handovers (H1 and H2) that print a rank range competition ranks would change,4,128,0.0312,runs whose writer saw one: 20 of 640; syn-weak-n5000-s1 XGB2 noise_2: rank 4 to 9 -> 4 to 8
+2 rank ties,synthetic,H2 handovers whose certified rank statement competition ranks would change,2,64,0.0312,"syn-weak-n5000-s1 XGB2 (opaque): rank(""noise_2"") in (4, 5, 6, 7, 8, 9) -> rank(""noise_2"") in (4, 5, 6, 7, 8); syn-weak-n5000-s1 XGB2 (plausible): rank(""noise_2"") in (4, 5, 6, 7, 8, 9) -> rank(""noise_2"") in (4, 5, 6, 7, 8)"
+2 rank ties,synthetic,rank claims in: H2 statements,576,2490,0.2313,denominator: all claims there; texts 64; verdict changes 0
+2 rank ties,synthetic,"rank claims in: gate's final readings, released LLM-written",1634,8509,0.192,denominator: all claims there; texts 452; verdict changes 0
+2 rank ties,synthetic,"rank claims in: plan, released LLM-written",1721,8561,0.201,denominator: all claims there; texts 452; verdict changes 0
+2 rank ties,synthetic,"rank claims in: scoring readings, released LLM-written",1592,8130,0.1958,denominator: all claims there; texts 451; verdict changes 0
+2 rank ties,synthetic,rank claims in: template,0,2919,0.0,denominator: all claims there; texts 188; verdict changes 0
+2 rank ties,plasmode,fitted models with an exact importance tie between two features in M,0,36,0.0,
+2 rank ties,plasmode,fitted models with an exact tie in at least one refit,14,36,0.3889,XGB2: 14
+2 rank ties,plasmode,features whose refit rank band differs under competition ranks,2,324,0.0062,pls-none-n5000-s1 XGB2 AGE: 4 to 9 -> 4 to 8; pls-weak-n5000-s1 XGB2 PAY_AMT3: 3 to 9 -> 3 to 8
+2 rank ties,plasmode,rank claims about a feature tied in M,0,2331,0.0,texts and handovers affected: 0 of 396
+2 rank ties,plasmode,rank claims whose verdict changes under competition ranks,0,2331,0.0,texts and handovers affected: 0 of 396
+2 rank ties,plasmode,handovers (H1 and H2) that print a rank range competition ranks would change,4,72,0.0556,runs whose writer saw one: 20 of 360; pls-none-n5000-s1 XGB2 AGE: rank 4 to 9 -> 4 to 8; pls-weak-n5000-s1 XGB2 PAY_AMT3: rank 3 to 9 -> 3 to 8
+2 rank ties,plasmode,H2 handovers whose certified rank statement competition ranks would change,2,36,0.0556,"pls-none-n5000-s1 XGB2 (codes): rank(""AGE"") in (4, 5, 6, 7, 8, 9) -> rank(""AGE"") in (4, 5, 6, 7, 8); pls-weak-n5000-s1 XGB2 (codes): rank(""PAY_AMT3"") in (3, 4, 5, 6, 7, 8, 9) -> rank(""PAY_AMT3"") in (3, 4, 5, 6, 7, 8)"
+2 rank ties,plasmode,rank claims in: H2 statements,324,1287,0.2517,denominator: all claims there; texts 36; verdict changes 0
+2 rank ties,plasmode,"rank claims in: gate's final readings, released LLM-written",658,3243,0.2029,denominator: all claims there; texts 164; verdict changes 0
+2 rank ties,plasmode,"rank claims in: plan, released LLM-written",702,3259,0.2154,denominator: all claims there; texts 164; verdict changes 0
+2 rank ties,plasmode,"rank claims in: scoring readings, released LLM-written",647,3134,0.2064,denominator: all claims there; texts 164; verdict changes 0
+2 rank ties,plasmode,rank claims in: template,0,2987,0.0,denominator: all claims there; texts 196; verdict changes 0
+3 DSL robustness,synthetic,DSL lines (each LLM answer once),132860,132860,1.0,writer: 25101 lines in 1467 answers; gate reader: 49275 lines in 3017 answers; scoring reader: 58484 lines in 3642 answers
+3 DSL robustness,synthetic,lines with a repeated keyword argument,0,132860,0.0,accepted by the parser: 0
+3 DSL robustness,synthetic,"lines with a non-finite number literal (inf, nan)",0,132860,0.0,accepted by the parser: 0
+3 DSL robustness,synthetic,lines with nan or inf written as a word,0,132860,0.0,accepted by the parser: 0
+3 DSL robustness,synthetic,rank sets that cover every rank (vacuous: always true),1,8122,0.0001,denominator: rank sets (hedged ones included); accepted by the parser: 1; by gate reader: 1; hedged: 0; counted as a claim (2 or more readings) in 0 run(s)
+3 DSL robustness,synthetic,lines whose parse raises an error other than DSLError,0,132860,0.0,
+3 DSL robustness,synthetic,runs that ended without an exit state (a parser error escaping DSLError aborts the run),0,640,0.0,
+3 DSL robustness,plasmode,DSL lines (each LLM answer once),74733,74733,1.0,writer: 15245 lines in 896 answers; gate reader: 27937 lines in 1634 answers; scoring reader: 31551 lines in 1966 answers
+3 DSL robustness,plasmode,lines with a repeated keyword argument,0,74733,0.0,accepted by the parser: 0
+3 DSL robustness,plasmode,"lines with a non-finite number literal (inf, nan)",0,74733,0.0,accepted by the parser: 0
+3 DSL robustness,plasmode,lines with nan or inf written as a word,0,74733,0.0,accepted by the parser: 0
+3 DSL robustness,plasmode,rank sets that cover every rank (vacuous: always true),4,6903,0.0006,denominator: rank sets (hedged ones included); accepted by the parser: 4; by gate reader: 3; scoring reader: 1; hedged: 2; counted as a claim (2 or more readings) in 0 run(s)
+3 DSL robustness,plasmode,lines whose parse raises an error other than DSLError,0,74733,0.0,
+3 DSL robustness,plasmode,runs that ended without an exit state (a parser error escaping DSLError aborts the run),0,360,0.0,
+4 count steps,synthetic,released template texts with a step on a count feature written '= <value>',118,188,0.6277,by feature: n_delinquencies: 118; by value: = 1: 67; = 0.5: 44; = 0.999: 7
+4 count steps,synthetic,released template texts that write a step '= 0.5',44,188,0.234,not an observed value; the gap: from 0 to 1: 44
+4 count steps,synthetic,released template texts that write a step '= 0.999',7,188,0.0372,not an observed value; the gap: from 0 to 1: 7
+4 count steps,synthetic,released template texts that write a step '= 1',67,188,0.3564,an observed value; the gap: from 0 to 1: 67
+4 count steps,synthetic,H2 handovers (distinct) with a step on a count feature written '= <value>',44,64,0.6875,by feature: n_delinquencies: 44; by value: = 0.5: 20; = 1: 20; = 0.999: 4
+4 count steps,synthetic,H2 handovers (distinct) that write a step '= 0.5',20,64,0.3125,not an observed value; the gap: from 0 to 1: 20
+4 count steps,synthetic,H2 handovers (distinct) that write a step '= 0.999',4,64,0.0625,not an observed value; the gap: from 0 to 1: 4
+4 count steps,synthetic,H2 handovers (distinct) that write a step '= 1',20,64,0.3125,an observed value; the gap: from 0 to 1: 20
+4 count steps,synthetic,H2 runs whose writer saw such a statement,220,320,0.6875,
+4 count steps,plasmode,released template texts with a step on a count feature written '= <value>',81,196,0.4133,by feature: PAY_0: 75; EDUCATION: 6; by value: = 2: 45; = 1.5: 36
+4 count steps,plasmode,released template texts that write a step '= 1.5',36,196,0.1837,not an observed value; the gap: from 1 to 2: 36
+4 count steps,plasmode,released template texts that write a step '= 2',45,196,0.2296,an observed value; the gap: from 1 to 2: 45
+4 count steps,plasmode,H2 handovers (distinct) with a step on a count feature written '= <value>',17,36,0.4722,by feature: PAY_0: 16; EDUCATION: 1; by value: = 2: 9; = 1.5: 8
+4 count steps,plasmode,H2 handovers (distinct) that write a step '= 1.5',8,36,0.2222,not an observed value; the gap: from 1 to 2: 8
+4 count steps,plasmode,H2 handovers (distinct) that write a step '= 2',9,36,0.25,an observed value; the gap: from 1 to 2: 9
+4 count steps,plasmode,H2 runs whose writer saw such a statement,85,180,0.4722,
+5 emphasis rule,synthetic,gate round trips that checked the emphasis rule (drafts) where it fired,0,800,0.0,"checks on a model with a strong term (the rule can fire): 800; reduced texts, not checked: 105"
+5 emphasis rule,synthetic,"scoring, off, draft: scored texts where it fired",0,636,0.0,
+5 emphasis rule,synthetic,"scoring, on, LLM-written: scored texts where it fired",0,451,0.0,
+5 emphasis rule,synthetic,"scoring, on, template: scored texts where it fired",0,188,0.0,
+5 emphasis rule,plasmode,gate round trips that checked the emphasis rule (drafts) where it fired,0,400,0.0,"checks on a model with a strong term (the rule can fire): 400; reduced texts, not checked: 91"
+5 emphasis rule,plasmode,"scoring, off, draft: scored texts where it fired",0,359,0.0,
+5 emphasis rule,plasmode,"scoring, on, LLM-written: scored texts where it fired",0,164,0.0,
+5 emphasis rule,plasmode,"scoring, on, template: scored texts where it fired",0,195,0.0,
+6 numbers in words,synthetic,released LLM-written texts that state a count or value in words,168,452,0.3717,sentences: 177 of 3516; 171 of them with no digit outside feature codes; sentences by pattern: number word and unit: 121; range of values: 61; bound: 47; fraction: 13; value reached: 9
+6 numbers in words,synthetic,"released LLM-written texts with a count in words in the narrow sense (a number word and a unit, or a range of values)",148,452,0.3274,sentences: 152
+6 numbers in words,synthetic,"sentences with a count in words that the gate's final readings put beyond the DSL, in words (released unchecked)",50,177,0.2825,"denominator: sentences with a count in words; the readers' statements no DSL form expresses (2 or more readings) state the count in words, so the digit test passed them; texts: 50"
+6 numbers in words,synthetic,released LLM-written texts whose only digits sit inside feature codes,0,452,0.0,texts with a digit: 94; with a digit inside a feature code: 0
+6 numbers in words,synthetic,gate round trips (all versions) with a sentence failing the digit test only through a feature code,0,56,0.0,denominator: those with a sentence failing the digit test (of 905); sentences: 0 of 61; runs: 0
+6 numbers in words,synthetic,scored released LLM-written texts with a sentence failing the digit test only through a feature code,0,1,0.0,denominator: those with a sentence failing the digit test (of 451); sentences: 0 of 1; runs: 0
+6 numbers in words,plasmode,released LLM-written texts that state a count or value in words,30,164,0.1829,sentences: 31 of 1298; 4 of them with no digit outside feature codes; sentences by pattern: number word and unit: 30; value reached: 3; bound: 1
+6 numbers in words,plasmode,"released LLM-written texts with a count in words in the narrow sense (a number word and a unit, or a range of values)",30,164,0.1829,sentences: 30
+6 numbers in words,plasmode,"sentences with a count in words that the gate's final readings put beyond the DSL, in words (released unchecked)",17,31,0.5484,"denominator: sentences with a count in words; the readers' statements no DSL form expresses (2 or more readings) state the count in words, so the digit test passed them; texts: 17"
+6 numbers in words,plasmode,released LLM-written texts whose only digits sit inside feature codes,21,164,0.128,texts with a digit: 164; with a digit inside a feature code: 113
+6 numbers in words,plasmode,gate round trips (all versions) with a sentence failing the digit test only through a feature code,44,134,0.3284,denominator: those with a sentence failing the digit test (of 491); sentences: 50 of 177; runs: 38
+6 numbers in words,plasmode,scored released LLM-written texts with a sentence failing the digit test only through a feature code,2,5,0.4,denominator: those with a sentence failing the digit test (of 164); sentences: 2 of 5; runs: 2
+7 unparsed DSL lines,synthetic,"gate's final readings, released LLM-written texts: DSL lines that do not parse (dropped)",561,24786,0.0226,"452 texts, 1330 readings; texts with a dropped line: 127; format errors as the readings count them: 616 (one per unparsed line, and one per sentence entry under an id the text does not have, with or without lines)"
+7 unparsed DSL lines,synthetic,"gate's final readings: of these, hedges (unsettled(...))",461,561,0.8217,denominator: the dropped lines
+7 unparsed DSL lines,synthetic,gate's final readings: lines under a sentence id the text does not have (dropped unparsed),9,24786,0.0004,hedges among them: 0
+7 unparsed DSL lines,synthetic,"scoring readings, released LLM-written texts: DSL lines that do not parse (dropped)",612,24804,0.0247,"452 texts, 1328 readings; texts with a dropped line: 130; format errors as the readings count them: 653 (one per unparsed line, and one per sentence entry under an id the text does not have, with or without lines)"
+7 unparsed DSL lines,synthetic,"scoring readings: of these, hedges (unsettled(...))",516,612,0.8431,denominator: the dropped lines
+7 unparsed DSL lines,synthetic,scoring readings: lines under a sentence id the text does not have (dropped unparsed),3,24804,0.0001,hedges among them: 0
+7 unparsed DSL lines,plasmode,"gate's final readings, released LLM-written texts: DSL lines that do not parse (dropped)",183,9387,0.0195,"164 texts, 479 readings; texts with a dropped line: 47; format errors as the readings count them: 227 (one per unparsed line, and one per sentence entry under an id the text does not have, with or without lines)"
+7 unparsed DSL lines,plasmode,"gate's final readings: of these, hedges (unsettled(...))",127,183,0.694,denominator: the dropped lines
+7 unparsed DSL lines,plasmode,gate's final readings: lines under a sentence id the text does not have (dropped unparsed),3,9387,0.0003,hedges among them: 2
+7 unparsed DSL lines,plasmode,"scoring readings, released LLM-written texts: DSL lines that do not parse (dropped)",177,9518,0.0186,"164 texts, 486 readings; texts with a dropped line: 43; format errors as the readings count them: 219 (one per unparsed line, and one per sentence entry under an id the text does not have, with or without lines)"
+7 unparsed DSL lines,plasmode,"scoring readings: of these, hedges (unsettled(...))",123,177,0.6949,denominator: the dropped lines
+7 unparsed DSL lines,plasmode,scoring readings: lines under a sentence id the text does not have (dropped unparsed),0,9518,0.0,hedges among them: 0
+8 reading counts,synthetic,claims found by 1 of 3 readings,330,8006,0.0412,"texts with 3 readings: 426; hedges found by 1 of 3: 214 of 973; found once: logged, not blocking"
+8 reading counts,synthetic,claims found by 2 of 3 readings,175,8006,0.0219,texts with 3 readings: 426; hedges found by 2 of 3: 117 of 973
+8 reading counts,synthetic,claims found by 3 of 3 readings,7501,8006,0.9369,texts with 3 readings: 426; hedges found by 3 of 3: 642 of 973
+8 reading counts,synthetic,claims found by 1 of 2 readings,28,503,0.0557,"texts with 2 readings: 26; hedges found by 1 of 2: 9 of 47; found once: logged, not blocking"
+8 reading counts,synthetic,claims found by 2 of 2 readings,475,503,0.9443,texts with 2 readings: 26; hedges found by 2 of 2: 38 of 47
+8 reading counts,synthetic,planned claims no reading found,914,9423,0.097,denominator: all claims listed (found or planned)
+8 reading counts,plasmode,claims found by 1 of 3 readings,112,3015,0.0371,"texts with 3 readings: 151; hedges found by 1 of 3: 58 of 290; found once: logged, not blocking"
+8 reading counts,plasmode,claims found by 2 of 3 readings,77,3015,0.0255,texts with 3 readings: 151; hedges found by 2 of 3: 30 of 290
+8 reading counts,plasmode,claims found by 3 of 3 readings,2826,3015,0.9373,texts with 3 readings: 151; hedges found by 3 of 3: 202 of 290
+8 reading counts,plasmode,claims found by 1 of 2 readings,15,228,0.0658,"texts with 2 readings: 13; hedges found by 1 of 2: 4 of 18; found once: logged, not blocking"
+8 reading counts,plasmode,claims found by 2 of 2 readings,213,228,0.9342,texts with 2 readings: 13; hedges found by 2 of 2: 14 of 18
+8 reading counts,plasmode,planned claims no reading found,276,3519,0.0784,denominator: all claims listed (found or planned)
+9 spurious share,synthetic,"EBM: share on terms not planted, mean",16,,0.0756,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on terms not planted, min",16,,0.0384,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on terms not planted, max",16,,0.1319,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on spurious pairs, mean",16,,0.047,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on spurious pairs, min",16,,0.0205,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on spurious pairs, max",16,,0.0951,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on spurious mains, mean",16,,0.0286,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on spurious mains, min",16,,0.0077,over 16 fitted models
+9 spurious share,synthetic,"EBM: share on spurious mains, max",16,,0.0456,over 16 fitted models
+9 spurious share,synthetic,EBM: pair terms per model (mean),80,16,5.0,"min 5, max 5"
+9 spurious share,synthetic,"EBM: share on terms not planted, interaction none, mean",5,,0.0723,"min 0.0489, max 0.1075"
+9 spurious share,synthetic,"EBM: share on terms not planted, interaction weak, mean",6,,0.0658,"min 0.0508, max 0.0927"
+9 spurious share,synthetic,"EBM: share on terms not planted, interaction dominant, mean",5,,0.0907,"min 0.0384, max 0.1319"
+9 spurious share,synthetic,"XGB2: share on terms not planted, mean",16,,0.1503,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on terms not planted, min",16,,0.0947,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on terms not planted, max",16,,0.2578,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on spurious pairs, mean",16,,0.1266,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on spurious pairs, min",16,,0.0776,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on spurious pairs, max",16,,0.2195,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on spurious mains, mean",16,,0.0237,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on spurious mains, min",16,,0.0081,over 16 fitted models
+9 spurious share,synthetic,"XGB2: share on spurious mains, max",16,,0.0482,over 16 fitted models
+9 spurious share,synthetic,XGB2: pair terms per model (mean),455,16,28.4375,"min 20, max 35"
+9 spurious share,synthetic,"XGB2: share on terms not planted, interaction none, mean",5,,0.1785,"min 0.1383, max 0.2578"
+9 spurious share,synthetic,"XGB2: share on terms not planted, interaction weak, mean",6,,0.1423,"min 0.1026, max 0.1947"
+9 spurious share,synthetic,"XGB2: share on terms not planted, interaction dominant, mean",5,,0.1317,"min 0.0947, max 0.2379"
+9 spurious share,plasmode,"EBM: share on terms not planted, mean",18,,0.0977,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on terms not planted, min",18,,0.0367,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on terms not planted, max",18,,0.178,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on spurious pairs, mean",18,,0.0459,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on spurious pairs, min",18,,0.0169,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on spurious pairs, max",18,,0.0896,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on spurious mains, mean",18,,0.0518,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on spurious mains, min",18,,0.0148,over 18 fitted models
+9 spurious share,plasmode,"EBM: share on spurious mains, max",18,,0.1361,over 18 fitted models
+9 spurious share,plasmode,EBM: pair terms per model (mean),90,18,5.0,"min 5, max 5"
+9 spurious share,plasmode,"EBM: share on terms not planted, interaction none, mean",6,,0.0921,"min 0.0367, max 0.1598"
+9 spurious share,plasmode,"EBM: share on terms not planted, interaction weak, mean",6,,0.0878,"min 0.0523, max 0.1490"
+9 spurious share,plasmode,"EBM: share on terms not planted, interaction dominant, mean",6,,0.113,"min 0.0774, max 0.1780"
+9 spurious share,plasmode,"XGB2: share on terms not planted, mean",18,,0.1882,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on terms not planted, min",18,,0.1183,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on terms not planted, max",18,,0.2549,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on spurious pairs, mean",18,,0.1478,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on spurious pairs, min",18,,0.0886,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on spurious pairs, max",18,,0.198,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on spurious mains, mean",18,,0.0405,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on spurious mains, min",18,,0.0046,over 18 fitted models
+9 spurious share,plasmode,"XGB2: share on spurious mains, max",18,,0.0833,over 18 fitted models
+9 spurious share,plasmode,XGB2: pair terms per model (mean),505,18,28.0556,"min 17, max 36"
+9 spurious share,plasmode,"XGB2: share on terms not planted, interaction none, mean",6,,0.1837,"min 0.1183, max 0.2411"
+9 spurious share,plasmode,"XGB2: share on terms not planted, interaction weak, mean",6,,0.1747,"min 0.1487, max 0.2164"
+9 spurious share,plasmode,"XGB2: share on terms not planted, interaction dominant, mean",6,,0.2063,"min 0.1214, max 0.2549"
+10 model multiplicity,synthetic,n = 5000: claims certified for one model class and refuted for the other,0,438,0.0,denominator: claims decided by both; of all 1360 claims 0.0000; datasets 8; by kind: ; e.g. 
+10 model multiplicity,synthetic,n = 50000: claims certified for one model class and refuted for the other,0,818,0.0,denominator: claims decided by both; of all 1360 claims 0.0000; datasets 8; by kind: ; e.g. 
+10 model multiplicity,synthetic,all n: claims certified for one model class and refuted for the other,0,1256,0.0,denominator: claims decided by both; of all 2720 claims 0.0000; EBM true and XGB2 false: 0; XGB2 true and EBM false: 0; by kind: ; false against T (label): 0; the pilot datasets add 0 of 163
+10 model multiplicity,plasmode,n = 5000: claims certified for one model class and refuted for the other,0,435,0.0,denominator: claims decided by both; of all 1521 claims 0.0000; datasets 9; by kind: ; e.g. 
+10 model multiplicity,plasmode,n = 30000: claims certified for one model class and refuted for the other,4,697,0.0057,"denominator: claims decided by both; of all 1521 claims 0.0026; datasets 9; by kind: direction: 4; e.g. pls-weak-n30000-s1: direction(""PAY_0"") in (""increasing"", ""mostly_increasing"") EBM false, XGB2 true (T: false); pls-weak-n30000-s3: direction(""PAY_0"") in (""increasing"", ""mostly_increasing"") EBM false, XGB2 true (T: false); pls-dominant-n30000-s1: direction(""PAY_0"") in (""increasing"", ""mostly_increasing"") EBM false, XGB2 true (T: false)"
+10 model multiplicity,plasmode,all n: claims certified for one model class and refuted for the other,4,1132,0.0035,denominator: claims decided by both; of all 3042 claims 0.0013; EBM true and XGB2 false: 0; XGB2 true and EBM false: 4; by kind: direction: 4; false against T (label): 4; the pilot datasets add 0 of 0

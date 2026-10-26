@@ -1,8 +1,0 @@
-"Writer, setting",runs,released / reduced / template / escalate,repair rounds (mean),P_U before,P_U after,E_U,cost per run
-"Claude Haiku 5.5, global (E3)",640,49% / 12% / 39% / 0%,1.27,58.5%,4.5%,0.92,$0.0023
-"Claude Haiku 5.5, global, with author-reviewed labels","40 drafts, all released texts with a false claim",,,20.5% (95% interval 13.0%–29.5%),0.16%,0.99 (worst case 0.94),
-"Claude Haiku 5.5, global, facts only (H1)",320,27% / 9% / 64% / 0%,1.46,81.9%,4.7%,0.94,$0.0021
-"Claude Haiku 5.5, global, with certified statements (H2)",320,72% / 14% / 14% / 0%,1.08,35.1%,4.4%,0.88,$0.0026
-"Claude Sonnet 5.5, global (E3 subset)",64,88% / 8% / 5% / 0%,0.78,25.0%,0.0%,1.00,$0.0184
-"qwen3.8:27b (NVFP4), self-hosted, global (E3 subset)",64,89% / 6% / 5% / 0%,0.86,28.1%,1.6%,0.94,$0.0006
-"Claude Haiku 5.5, adverse-action notices (local spot check)",52,88% / 4% / 8% / 0%,0.38,17.6%,7.8%,0.56,$0.0005

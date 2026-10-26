@@ -1,0 +1,414 @@
+item,field,rater,proposed by,proposed,proposed at,changes,changed by,changes made,final,final at,source
+B01,s1,APS,APS,supported,2026-10-21T14:54:10.222Z,0,,,supported,2026-10-21T14:54:10.222Z,page
+B01,s10,APS,APS,supported,2026-10-21T14:58:06.274Z,0,,,supported,2026-10-21T14:58:06.274Z,page
+B01,s11,APS,APS,supported,2026-10-21T14:58:48.416Z,0,,,supported,2026-10-21T14:58:48.416Z,page
+B01,s2,APS,APS,supported,2026-10-21T14:54:52.051Z,0,,,supported,2026-10-21T14:54:52.051Z,page
+B01,s3,APS,APS,supported,2026-10-21T14:56:03.126Z,0,,,supported,2026-10-21T14:56:03.126Z,page
+B01,s4,APS,APS,unsettled,2026-10-21T14:56:23.925Z,0,,,unsettled,2026-10-21T14:56:23.925Z,page
+B01,s4.note,APS,APS,shape in between is not resolved,2026-10-21T14:56:37.538Z,0,,,shape in between is not resolved,2026-10-21T14:56:37.538Z,page
+B01,s5,APS,APS,unsettled,2026-10-21T14:57:01.787Z,0,,,unsettled,2026-10-21T14:57:01.787Z,page
+B01,s5.note,APS,APS,also not,2026-10-21T14:57:05.747Z,2,APS,2026-10-21T14:57:08.140Z: also not -> ; 2026-10-21T14:57:11.470Z:  -> shape in between is not resolved,shape in between is not resolved,2026-10-21T14:57:11.470Z,page
+B01,s6,APS,APS,unsettled,2026-10-21T14:57:26.437Z,0,,,unsettled,2026-10-21T14:57:26.437Z,page
+B01,s6.note,APS,APS,shape in between is not resolved,2026-10-21T14:57:29.733Z,0,,,shape in between is not resolved,2026-10-21T14:57:29.733Z,page
+B01,s7,APS,APS,misleading,2026-10-21T14:57:39.350Z,0,,,misleading,2026-10-21T14:57:39.350Z,page
+B01,s8,APS,APS,supported,2026-10-21T14:57:55.966Z,0,,,supported,2026-10-21T14:57:55.966Z,page
+B01,s9,APS,APS,supported,2026-10-21T14:58:00.696Z,0,,,supported,2026-10-21T14:58:00.696Z,page
+B01,whole,APS,APS,yes,2026-10-21T14:59:04.078Z,0,,,yes,2026-10-21T14:59:04.078Z,page
+B02,s1,APS,APS,supported,2026-10-21T15:03:24.402Z,0,,,supported,2026-10-21T15:03:24.402Z,page
+B02,s2,APS,APS,supported,2026-10-21T15:03:38.139Z,0,,,supported,2026-10-21T15:03:38.139Z,page
+B02,s3,APS,APS,supported,2026-10-21T15:03:56.685Z,0,,,supported,2026-10-21T15:03:56.685Z,page
+B02,s4,APS,APS,supported,2026-10-21T15:04:46.381Z,0,,,supported,2026-10-21T15:04:46.381Z,page
+B02,s5,APS,APS,supported,2026-10-21T15:05:36.589Z,0,,,supported,2026-10-21T15:05:36.589Z,page
+B02,s6,APS,APS,supported,2026-10-21T15:06:12.842Z,0,,,supported,2026-10-21T15:06:12.842Z,page
+B02,s7,APS,APS,supported,2026-10-21T15:06:32.584Z,0,,,supported,2026-10-21T15:06:32.584Z,page
+B02,s8,APS,APS,supported,2026-10-21T15:07:05.451Z,0,,,supported,2026-10-21T15:07:05.451Z,page
+B02,whole,APS,APS,yes,2026-10-21T15:07:07.063Z,0,,,yes,2026-10-21T15:07:07.063Z,page
+B03,s1,APS,APS,supported,2026-10-21T15:08:22.163Z,0,,,supported,2026-10-21T15:08:22.163Z,page
+B03,s2,APS,APS,supported,2026-10-21T15:09:00.921Z,0,,,supported,2026-10-21T15:09:00.921Z,page
+B03,s3,APS,APS,supported,2026-10-21T15:09:15.859Z,0,,,supported,2026-10-21T15:09:15.859Z,page
+B03,s4,APS,APS,unsettled,2026-10-21T15:10:51.780Z,0,,,unsettled,2026-10-21T15:10:51.780Z,page
+B03,s4.note,APS,APS,Planen Sie bitte ca. 15-20 min für die Präsentation und 10-15min für eine anschließende Diskussion ein,2026-10-21T15:10:35.042Z,2,APS,2026-10-21T15:10:39.213Z: Planen Sie bitte ca. 15-20 min für die Präsentation und 10-15min für eine anschließende Diskussion ein -> ; 2026-10-21T15:10:47.545Z:  -> shape in between not resolved,shape in between not resolved,2026-10-21T15:10:47.545Z,page
+B03,s5,APS,APS,unsettled,2026-10-21T15:11:21.762Z,0,,,unsettled,2026-10-21T15:11:21.762Z,page
+B03,s5.note,APS,APS,shape in between not resolved,2026-10-21T15:11:24.907Z,0,,,shape in between not resolved,2026-10-21T15:11:24.907Z,page
+B03,s6,APS,APS,unsettled,2026-10-21T15:11:45.141Z,0,,,unsettled,2026-10-21T15:11:45.141Z,page
+B03,s6.note,APS,APS,shape in between not resolved,2026-10-21T15:11:47.788Z,0,,,shape in between not resolved,2026-10-21T15:11:47.788Z,page
+B03,s7,APS,APS,supported,2026-10-21T15:12:06.745Z,0,,,supported,2026-10-21T15:12:06.745Z,page
+B03,s8,APS,APS,supported,2026-10-21T15:12:33.015Z,0,,,supported,2026-10-21T15:12:33.015Z,page
+B03,whole,APS,APS,yes,2026-10-21T15:12:34.141Z,0,,,yes,2026-10-21T15:12:34.141Z,page
+B04,s1,APS,APS,supported,2026-10-21T15:14:06.312Z,0,,,supported,2026-10-21T15:14:06.312Z,page
+B04,s1.note,APS,APS,i m3qn,2026-10-21T15:13:34.119Z,3,APS,2026-10-21T15:13:39.815Z: i m3qn -> i mean technically; 2026-10-21T15:13:50.815Z: i mean technically -> i mean technically yeah but wtf. how can you have a; 2026-10-21T15:13:58.766Z: i mean technically yeah but wtf. how can you have a -> ,,2026-10-21T15:13:58.766Z,page
+B04,s2,APS,APS,supported,2026-10-21T15:17:18.934Z,0,,,supported,2026-10-21T15:17:18.934Z,page
+B04,s3,APS,APS,supported,2026-10-21T15:18:20.647Z,0,,,supported,2026-10-21T15:18:20.647Z,page
+B04,s4,APS,APS,supported,2026-10-21T15:18:45.330Z,0,,,supported,2026-10-21T15:18:45.330Z,page
+B04,s5,APS,APS,supported,2026-10-21T15:19:08.726Z,0,,,supported,2026-10-21T15:19:08.726Z,page
+B04,s6,APS,APS,supported,2026-10-21T15:19:27.438Z,0,,,supported,2026-10-21T15:19:27.438Z,page
+B04,whole,APS,APS,yes,2026-10-21T15:19:28.580Z,0,,,yes,2026-10-21T15:19:28.580Z,page
+B05,s1,APS,APS,supported,2026-10-21T15:21:34.055Z,0,,,supported,2026-10-21T15:21:34.055Z,page
+B05,s2,APS,APS,supported,2026-10-21T15:21:51.321Z,0,,,supported,2026-10-21T15:21:51.321Z,page
+B05,s3,APS,APS,supported,2026-10-21T15:22:19.491Z,0,,,supported,2026-10-21T15:22:19.491Z,page
+B05,s4,APS,APS,false,2026-10-21T15:23:00.537Z,0,,,false,2026-10-21T15:23:00.537Z,page
+B05,s5,APS,APS,misleading,2026-10-21T15:24:34.957Z,0,,,misleading,2026-10-21T15:24:34.957Z,page
+B05,s5.note,APS,APS,Misleading interaction of utilization and income is alsi,2026-10-21T15:24:58.097Z,2,APS,2026-10-21T15:25:03.735Z: Misleading interaction of utilization and income is alsi -> Misleading interaction of utilization and income is also; 2026-10-21T15:25:07.408Z: Misleading interaction of utilization and income is also -> Misleading interaction of utilization and income is also not settled,Misleading interaction of utilization and income is also not settled,2026-10-21T15:25:07.408Z,page
+B05,s6,APS,APS,misleading,2026-10-21T15:25:29.499Z,0,,,misleading,2026-10-21T15:25:29.499Z,page
+B05,whole,APS,APS,unsure,2026-10-21T15:25:37.307Z,0,,,unsure,2026-10-21T15:25:37.307Z,page
+B06,s1,APS,APS,supported,2026-10-23T11:13:17.119Z,0,,,supported,2026-10-23T11:13:17.119Z,page
+B06,s2,APS,APS,supported,2026-10-23T11:15:32.535Z,0,,,supported,2026-10-23T11:15:32.535Z,page
+B06,s3,APS,APS,supported,2026-10-23T11:16:03.219Z,0,,,supported,2026-10-23T11:16:03.219Z,page
+B06,s4,APS,APS,false,2026-10-23T11:17:26.800Z,0,,,false,2026-10-23T11:17:26.800Z,page
+B06,s5,APS,APS,unsettled,2026-10-23T11:17:39.523Z,0,,,unsettled,2026-10-23T11:17:39.523Z,page
+B06,s6,APS,APS,false,2026-10-23T11:17:52.648Z,0,,,false,2026-10-23T11:17:52.648Z,page
+B06,s7,APS,APS,supported,2026-10-23T11:18:02.723Z,0,,,supported,2026-10-23T11:18:02.723Z,page
+B06,s8,APS,APS,unsure,2026-10-23T11:23:02.480Z,1,APS,2026-10-23T11:23:19.493Z: unsure -> false,false,2026-10-23T11:23:19.493Z,page
+B06,whole,APS,APS,yes,2026-10-23T11:23:21.076Z,0,,,yes,2026-10-23T11:23:21.076Z,page
+B07,s1,APS,APS,supported,2026-10-23T11:23:42.782Z,0,,,supported,2026-10-23T11:23:42.782Z,page
+B07,s2,APS,APS,supported,2026-10-23T11:24:42.072Z,0,,,supported,2026-10-23T11:24:42.072Z,page
+B07,s3,APS,APS,supported,2026-10-23T11:24:53.164Z,0,,,supported,2026-10-23T11:24:53.164Z,page
+B07,s4,APS,APS,supported,2026-10-23T11:26:02.733Z,0,,,supported,2026-10-23T11:26:02.733Z,page
+B07,s5,APS,APS,supported,2026-10-23T11:29:05.621Z,0,,,supported,2026-10-23T11:29:05.621Z,page
+B07,s6,APS,APS,supported,2026-10-23T11:29:30.909Z,0,,,supported,2026-10-23T11:29:30.909Z,page
+B07,s7,APS,APS,supported,2026-10-23T11:29:41.690Z,0,,,supported,2026-10-23T11:29:41.690Z,page
+B07,s8,APS,APS,supported,2026-10-23T11:30:02.663Z,0,,,supported,2026-10-23T11:30:02.663Z,page
+B07,whole,APS,APS,yes,2026-10-23T11:32:23.596Z,0,,,yes,2026-10-23T11:32:23.596Z,page
+B07,whole.note,APS,APS,"Generally good, but how does the",2026-10-23T11:30:12.300Z,15,APS,"2026-10-23T11:30:25.543Z: Generally good, but how does the -> Generally good, but how and why are some interactions covered; 2026-10-23T11:30:31.809Z: Generally good, but how and why are some interactions covered -> Generally good, but how and why are some interactions covered and some not even though; 2026-10-23T11:30:39.801Z: Generally good, but how and why are some interactions covered and some not even though -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now; 2026-10-23T11:30:44.534Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not imteresting; 2026-10-23T11:30:50.287Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not imteresting -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting; 2026-10-23T11:31:18.932Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinq; 2026-10-23T11:31:22.358Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinq -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are; 2026-10-23T11:31:40.192Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are if you; 2026-10-23T11:31:47.918Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are if you -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give; 2026-10-23T11:31:53.184Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost 20; 2026-10-23T11:31:56.014Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost 20 -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost; 2026-10-23T11:32:04.125Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20; 2026-10-23T11:32:09.635Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20 -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the prediction; 2026-10-23T11:32:15.851Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the prediction -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power; 2026-10-23T11:32:22.161Z: Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power -> Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power (I think","Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power (I think",2026-10-23T11:32:22.161Z,page
+B08,s1,APS,APS,supported,2026-10-23T11:32:52.779Z,0,,,supported,2026-10-23T11:32:52.779Z,page
+B08,s2,APS,APS,misleading,2026-10-23T11:35:47.050Z,0,,,misleading,2026-10-23T11:35:47.050Z,page
+B08,s2.note,APS,APS,hmm,2026-10-23T11:33:48.782Z,5,APS,2026-10-23T11:33:51.080Z: hmm -> ; 2026-10-23T11:34:03.219Z:  -> you cant have a; 2026-10-23T11:34:07.339Z: you cant have a -> you cant have a half delinquenc; 2026-10-23T11:35:43.029Z: you cant have a half delinquenc -> you cant have a half delinquency either one or zero; 2026-10-23T11:35:44.074Z: you cant have a half delinquency either one or zero -> you cant have a half delinquency either one or zero.,you cant have a half delinquency either one or zero.,2026-10-23T11:35:44.074Z,page
+B08,s3,APS,APS,supported,2026-10-23T11:36:12.137Z,0,,,supported,2026-10-23T11:36:12.137Z,page
+B08,s4,APS,APS,unsettled,2026-10-23T11:36:45.162Z,0,,,unsettled,2026-10-23T11:36:45.162Z,page
+B08,s4.note,APS,APS,shape in between is not resolved.,2026-10-23T11:36:42.799Z,0,,,shape in between is not resolved.,2026-10-23T11:36:42.799Z,page
+B08,s5,APS,APS,supported,2026-10-23T11:38:50.675Z,0,,,supported,2026-10-23T11:38:50.675Z,page
+B08,s6,APS,APS,supported,2026-10-23T11:41:26.495Z,0,,,supported,2026-10-23T11:41:26.495Z,page
+B08,s7,APS,APS,supported,2026-10-23T11:41:44.603Z,0,,,supported,2026-10-23T11:41:44.603Z,page
+B08,s8,APS,APS,supported,2026-10-23T11:55:32.081Z,0,,,supported,2026-10-23T11:55:32.081Z,page
+B08,whole,APS,APS,yes,2026-10-23T11:46:27.520Z,0,,,yes,2026-10-23T11:46:27.520Z,page
+B08,whole.note,APS,APS,"interesting, that the EBM with 50.000 gives the utilization",2026-10-23T11:42:28.582Z,9,APS,"2026-10-23T11:42:30.693Z: interesting, that the EBM with 50.000 gives the utilization -> interesting, that the EBM with 50.000 gives the utilization &; 2026-10-23T11:42:37.295Z: interesting, that the EBM with 50.000 gives the utilization & -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies a; 2026-10-23T11:42:39.895Z: interesting, that the EBM with 50.000 gives the utilization & n_delinquencies a -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20; 2026-10-23T11:42:47.171Z: interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20 -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and th; 2026-10-23T11:43:02.027Z: interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and th -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the; 2026-10-23T11:43:22.162Z: interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM; 2026-10-23T11:43:25.620Z: interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only; 2026-10-23T11:43:40.771Z: interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2.; 2026-10-23T11:43:42.470Z: interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2. -> interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2.6%","interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2.6%",2026-10-23T11:43:42.470Z,page
+B09,s1,APS,APS,supported,2026-10-23T11:51:36.186Z,0,,,supported,2026-10-23T11:51:36.186Z,page
+B09,s2,APS,APS,supported,2026-10-23T11:51:58.301Z,0,,,supported,2026-10-23T11:51:58.301Z,page
+B09,s3,APS,APS,supported,2026-10-23T11:52:12.011Z,0,,,supported,2026-10-23T11:52:12.011Z,page
+B09,s4,APS,APS,supported,2026-10-23T11:53:28.872Z,0,,,supported,2026-10-23T11:53:28.872Z,page
+B09,s5,APS,APS,supported,2026-10-23T11:53:40.148Z,0,,,supported,2026-10-23T11:53:40.148Z,page
+B09,s6,APS,APS,supported,2026-10-23T11:54:00.177Z,0,,,supported,2026-10-23T11:54:00.177Z,page
+B09,s7,APS,APS,supported,2026-10-23T11:55:06.546Z,0,,,supported,2026-10-23T11:55:06.546Z,page
+B09,s7.note,APS,APS,Why not note,2026-10-23T11:54:50.515Z,1,APS,"2026-10-23T11:55:02.664Z: Why not note -> Why not note the relevant ones, who cares what doesnt matter","Why not note the relevant ones, who cares what doesnt matter",2026-10-23T11:55:02.664Z,page
+B09,whole,APS,APS,yes,2026-10-23T11:55:09.569Z,0,,,yes,2026-10-23T11:55:09.569Z,page
+B10,s1,APS,APS,supported,2026-10-23T11:56:10.248Z,0,,,supported,2026-10-23T11:56:10.248Z,page
+B10,s10,APS,APS,supported,2026-10-23T12:16:52.587Z,0,,,supported,2026-10-23T12:16:52.587Z,page
+B10,s2,APS,APS,supported,2026-10-23T12:14:45.630Z,0,,,supported,2026-10-23T12:14:45.630Z,page
+B10,s3,APS,APS,supported,2026-10-23T12:14:53.113Z,0,,,supported,2026-10-23T12:14:53.113Z,page
+B10,s4,APS,APS,supported,2026-10-23T12:15:11.446Z,0,,,supported,2026-10-23T12:15:11.446Z,page
+B10,s5,APS,APS,supported,2026-10-23T12:15:33.704Z,0,,,supported,2026-10-23T12:15:33.704Z,page
+B10,s6,APS,APS,supported,2026-10-23T12:15:48.784Z,0,,,supported,2026-10-23T12:15:48.784Z,page
+B10,s7,APS,APS,supported,2026-10-23T12:16:00.034Z,1,APS,2026-10-23T12:16:03.158Z: supported -> unsettled,unsettled,2026-10-23T12:16:03.158Z,page
+B10,s8,APS,APS,misleading,2026-10-23T12:16:18.159Z,0,,,misleading,2026-10-23T12:16:18.159Z,page
+B10,s9,APS,APS,supported,2026-10-23T12:16:29.950Z,0,,,supported,2026-10-23T12:16:29.950Z,page
+B10,whole,APS,APS,yes,2026-10-23T12:16:54.478Z,0,,,yes,2026-10-23T12:16:54.478Z,page
+B11,s1,APS,APS,supported,2026-10-23T12:17:29.675Z,0,,,supported,2026-10-23T12:17:29.675Z,page
+B11,s2,APS,APS,supported,2026-10-23T12:17:56.233Z,0,,,supported,2026-10-23T12:17:56.233Z,page
+B11,s3,APS,APS,supported,2026-10-23T12:19:00.707Z,0,,,supported,2026-10-23T12:19:00.707Z,page
+B11,s3.note,APS,APS,kind of,2026-10-23T12:18:23.076Z,1,APS,2026-10-23T12:18:59.414Z: kind of -> kind of superfluous with the first two sentences,kind of superfluous with the first two sentences,2026-10-23T12:18:59.414Z,page
+B11,s4,APS,APS,unsure,2026-10-23T12:19:42.945Z,0,,,unsure,2026-10-23T12:19:42.945Z,page
+B11,s5,APS,APS,supported,2026-10-23T12:20:13.241Z,0,,,supported,2026-10-23T12:20:13.241Z,page
+B11,s6,APS,APS,unsettled,2026-10-23T12:20:52.616Z,0,,,unsettled,2026-10-23T12:20:52.616Z,page
+B11,s6.note,APS,APS,incomes shape in between is not resolved,2026-10-23T12:20:52.280Z,0,,,incomes shape in between is not resolved,2026-10-23T12:20:52.280Z,page
+B11,s7,APS,APS,supported,2026-10-23T12:21:10.012Z,0,,,supported,2026-10-23T12:21:10.012Z,page
+B11,s8,APS,APS,supported,2026-10-23T12:21:52.748Z,0,,,supported,2026-10-23T12:21:52.748Z,page
+B11,s8.note,APS,APS,utilization & n_delinquencies would be way more interesting,2026-10-23T12:21:41.756Z,0,,,utilization & n_delinquencies would be way more interesting,2026-10-23T12:21:41.756Z,page
+B11,whole,APS,APS,no,2026-10-23T12:21:45.753Z,0,,,no,2026-10-23T12:21:45.753Z,page
+B12,s1,APS,APS,supported,2026-10-23T12:22:39.316Z,0,,,supported,2026-10-23T12:22:39.316Z,page
+B12,s2,APS,APS,supported,2026-10-23T12:27:24.819Z,0,,,supported,2026-10-23T12:27:24.819Z,page
+B12,s3,APS,APS,supported,2026-10-23T12:27:32.387Z,0,,,supported,2026-10-23T12:27:32.387Z,page
+B12,s4,APS,APS,supported,2026-10-23T12:27:54.157Z,0,,,supported,2026-10-23T12:27:54.157Z,page
+B12,s5,APS,APS,false,2026-10-23T12:28:04.215Z,0,,,false,2026-10-23T12:28:04.215Z,page
+B12,s6,APS,APS,supported,2026-10-23T12:28:11.787Z,0,,,supported,2026-10-23T12:28:11.787Z,page
+B12,s7,APS,APS,supported,2026-10-23T12:28:26.449Z,1,APS,2026-10-23T12:28:31.824Z: supported -> unsettled,unsettled,2026-10-23T12:28:31.824Z,page
+B12,s8,APS,APS,supported,2026-10-23T12:29:20.678Z,0,,,supported,2026-10-23T12:29:20.678Z,page
+B12,whole,APS,APS,yes,2026-10-23T12:29:25.420Z,0,,,yes,2026-10-23T12:29:25.420Z,page
+B13,s1,APS,APS,supported,2026-10-23T12:29:35.599Z,0,,,supported,2026-10-23T12:29:35.599Z,page
+B13,s2,APS,APS,supported,2026-10-23T12:33:16.898Z,0,,,supported,2026-10-23T12:33:16.898Z,page
+B13,s3,APS,APS,supported,2026-10-23T12:33:34.836Z,0,,,supported,2026-10-23T12:33:34.836Z,page
+B13,s4,APS,APS,supported,2026-10-23T12:34:22.886Z,0,,,supported,2026-10-23T12:34:22.886Z,page
+B13,s5,APS,APS,supported,2026-10-23T12:34:34.444Z,0,,,supported,2026-10-23T12:34:34.444Z,page
+B13,s6,APS,APS,supported,2026-10-23T12:35:17.784Z,0,,,supported,2026-10-23T12:35:17.784Z,page
+B13,s7,APS,APS,supported,2026-10-23T12:35:30.744Z,0,,,supported,2026-10-23T12:35:30.744Z,page
+B13,s8,APS,APS,supported,2026-10-23T12:35:43.361Z,0,,,supported,2026-10-23T12:35:43.361Z,page
+B13,s9,APS,APS,misleading,2026-10-23T12:35:58.715Z,0,,,misleading,2026-10-23T12:35:58.715Z,page
+B13,whole,APS,APS,yes,2026-10-23T12:36:00.506Z,0,,,yes,2026-10-23T12:36:00.506Z,page
+B14,s1,APS,APS,supported,2026-10-23T12:37:04.131Z,0,,,supported,2026-10-23T12:37:04.131Z,page
+B14,s2,APS,APS,supported,2026-10-23T12:37:14.886Z,0,,,supported,2026-10-23T12:37:14.886Z,page
+B14,s3,APS,APS,supported,2026-10-23T12:37:20.336Z,0,,,supported,2026-10-23T12:37:20.336Z,page
+B14,s4,APS,APS,supported,2026-10-23T12:38:00.823Z,0,,,supported,2026-10-23T12:38:00.823Z,page
+B14,s5,APS,APS,supported,2026-10-23T12:38:16.160Z,0,,,supported,2026-10-23T12:38:16.160Z,page
+B14,s6,APS,APS,supported,2026-10-23T12:44:33.389Z,0,,,supported,2026-10-23T12:44:33.389Z,page
+B14,s7,APS,APS,supported,2026-10-23T12:44:37.939Z,0,,,supported,2026-10-23T12:44:37.939Z,page
+B14,s8,APS,APS,misleading,2026-10-23T12:44:50.843Z,1,APS,2026-10-23T12:45:02.388Z: misleading -> supported,supported,2026-10-23T12:45:02.388Z,page
+B14,s8.note,APS,APS,Other interactions hold way more importance,2026-10-23T12:45:14.964Z,0,,,Other interactions hold way more importance,2026-10-23T12:45:14.964Z,page
+B14,whole,APS,APS,yes,2026-10-23T12:45:16.260Z,1,APS,2026-10-23T12:45:22.493Z: yes -> no,no,2026-10-23T12:45:22.493Z,page
+B15,s1,APS,APS,supported,2026-10-23T12:45:40.169Z,0,,,supported,2026-10-23T12:45:40.169Z,page
+B15,s10,APS,APS,misleading,2026-10-23T12:47:25.980Z,0,,,misleading,2026-10-23T12:47:25.980Z,page
+B15,s10.note,APS,APS,In what direction though?,2026-10-23T12:47:33.071Z,0,,,In what direction though?,2026-10-23T12:47:33.071Z,page
+B15,s2,APS,APS,supported,2026-10-23T12:46:15.023Z,0,,,supported,2026-10-23T12:46:15.023Z,page
+B15,s3,APS,APS,supported,2026-10-23T12:46:22.231Z,0,,,supported,2026-10-23T12:46:22.231Z,page
+B15,s4,APS,APS,supported,2026-10-23T12:46:26.403Z,0,,,supported,2026-10-23T12:46:26.403Z,page
+B15,s5,APS,APS,supported,2026-10-23T12:46:32.208Z,0,,,supported,2026-10-23T12:46:32.208Z,page
+B15,s6,APS,APS,supported,2026-10-23T12:46:43.444Z,0,,,supported,2026-10-23T12:46:43.444Z,page
+B15,s7,APS,APS,supported,2026-10-23T12:46:46.535Z,0,,,supported,2026-10-23T12:46:46.535Z,page
+B15,s8,APS,APS,supported,2026-10-23T12:46:49.469Z,0,,,supported,2026-10-23T12:46:49.469Z,page
+B15,s9,APS,APS,supported,2026-10-23T12:46:52.940Z,0,,,supported,2026-10-23T12:46:52.940Z,page
+B15,whole,APS,APS,no,2026-10-23T12:47:34.718Z,0,,,no,2026-10-23T12:47:34.718Z,page
+B16,s1,APS,APS,supported,2026-10-23T12:49:08.781Z,0,,,supported,2026-10-23T12:49:08.781Z,page
+B16,s2,APS,APS,supported,2026-10-23T12:49:13.758Z,0,,,supported,2026-10-23T12:49:13.758Z,page
+B16,s3,APS,APS,supported,2026-10-23T12:49:18.343Z,1,APS,2026-10-23T12:49:22.297Z: supported -> unsettled,unsettled,2026-10-23T12:49:22.297Z,page
+B16,s3.note,APS,APS,Shape in between,2026-10-23T12:49:29.104Z,1,APS,2026-10-23T12:49:32.293Z: Shape in between -> Shape in between not settled,Shape in between not settled,2026-10-23T12:49:32.293Z,page
+B16,s4,APS,APS,unsettled,2026-10-23T12:49:36.838Z,0,,,unsettled,2026-10-23T12:49:36.838Z,page
+B16,s4.note,APS,APS,Shape in between not settled,2026-10-23T12:49:36.929Z,0,,,Shape in between not settled,2026-10-23T12:49:36.929Z,page
+B16,s5,APS,APS,unsettled,2026-10-23T12:49:51.068Z,0,,,unsettled,2026-10-23T12:49:51.068Z,page
+B16,s5.note,APS,APS,Shape in between not settled,2026-10-23T12:49:53.964Z,0,,,Shape in between not settled,2026-10-23T12:49:53.964Z,page
+B16,s6,APS,APS,supported,2026-10-23T12:50:05.830Z,0,,,supported,2026-10-23T12:50:05.830Z,page
+B16,s7,APS,APS,supported,2026-10-23T12:50:31.797Z,0,,,supported,2026-10-23T12:50:31.797Z,page
+B16,s8,APS,APS,misleading,2026-10-23T12:50:37.522Z,0,,,misleading,2026-10-23T12:50:37.522Z,page
+B16,s9,APS,APS,supported,2026-10-23T12:50:44.788Z,0,,,supported,2026-10-23T12:50:44.788Z,page
+B16,whole,APS,APS,yes,2026-10-23T12:50:47.297Z,0,,,yes,2026-10-23T12:50:47.297Z,page
+B17,s1,APS,APS,supported,2026-10-23T12:51:05.472Z,0,,,supported,2026-10-23T12:51:05.472Z,page
+B17,s2,APS,APS,supported,2026-10-23T12:51:20.051Z,0,,,supported,2026-10-23T12:51:20.051Z,page
+B17,s3,APS,APS,supported,2026-10-23T12:52:01.513Z,0,,,supported,2026-10-23T12:52:01.513Z,page
+B17,s4,APS,APS,unsettled,2026-10-23T12:52:15.692Z,0,,,unsettled,2026-10-23T12:52:15.692Z,page
+B17,s4.note,APS,APS,not even settled if it has an effect at al right?,2026-10-23T12:52:34.373Z,0,,,not even settled if it has an effect at al right?,2026-10-23T12:52:34.373Z,page
+B17,s5,APS,APS,unsettled,2026-10-23T12:53:26.742Z,1,APS,2026-10-23T12:53:30.854Z: unsettled -> misleading,misleading,2026-10-23T12:53:30.854Z,page
+B17,s5.note,APS,APS,Yes though it seems to tend,2026-10-23T12:53:39.522Z,1,APS,2026-10-23T12:53:45.106Z: Yes though it seems to tend -> Yes though it seems to tend to matter,Yes though it seems to tend to matter,2026-10-23T12:53:45.106Z,page
+B17,s6,APS,APS,false,2026-10-23T12:53:58.076Z,0,,,false,2026-10-23T12:53:58.076Z,page
+B17,s7,APS,APS,supported,2026-10-23T12:54:27.384Z,0,,,supported,2026-10-23T12:54:27.384Z,page
+B17,whole,APS,APS,unsure,2026-10-23T12:54:29.630Z,0,,,unsure,2026-10-23T12:54:29.630Z,page
+B18,s1,APS,APS,supported,2026-10-23T12:54:56.784Z,0,,,supported,2026-10-23T12:54:56.784Z,page
+B18,s10,APS,APS,supported,2026-10-23T13:00:43.079Z,0,,,supported,2026-10-23T13:00:43.079Z,page
+B18,s2,APS,APS,supported,2026-10-23T12:55:03.925Z,0,,,supported,2026-10-23T12:55:03.925Z,page
+B18,s3,APS,APS,supported,2026-10-23T12:55:08.408Z,0,,,supported,2026-10-23T12:55:08.408Z,page
+B18,s4,APS,APS,supported,2026-10-23T12:55:31.955Z,1,APS,2026-10-23T12:55:36.608Z: supported -> unsettled,unsettled,2026-10-23T12:55:36.608Z,page
+B18,s4.note,APS,APS,Shape in between not settled,2026-10-23T12:55:40.665Z,0,,,Shape in between not settled,2026-10-23T12:55:40.665Z,page
+B18,s5,APS,APS,unsettled,2026-10-23T12:56:15.717Z,0,,,unsettled,2026-10-23T12:56:15.717Z,page
+B18,s5.note,APS,APS,Shape in between not settled,2026-10-23T12:56:14.795Z,0,,,Shape in between not settled,2026-10-23T12:56:14.795Z,page
+B18,s5.reads,APS,APS,True,2026-10-23T12:56:17.051Z,1,APS,2026-10-23T12:56:17.768Z: True -> False,False,2026-10-23T12:56:17.768Z,page
+B18,s6,APS,APS,unsettled,2026-10-23T12:56:38.129Z,0,,,unsettled,2026-10-23T12:56:38.129Z,page
+B18,s6.note,APS,APS,Shape in between not settled,2026-10-23T12:56:36.929Z,0,,,Shape in between not settled,2026-10-23T12:56:36.929Z,page
+B18,s7,APS,APS,supported,2026-10-23T13:00:23.546Z,0,,,supported,2026-10-23T13:00:23.546Z,page
+B18,s8,APS,APS,supported,2026-10-23T13:00:28.204Z,0,,,supported,2026-10-23T13:00:28.204Z,page
+B18,s9,APS,APS,supported,2026-10-23T13:00:34.133Z,1,APS,2026-10-23T13:00:37.950Z: supported -> misleading,misleading,2026-10-23T13:00:37.950Z,page
+B18,whole,APS,APS,unsure,2026-10-23T13:01:01.567Z,0,,,unsure,2026-10-23T13:01:01.567Z,page
+B19,s1,APS,APS,supported,2026-10-23T13:05:00.608Z,0,,,supported,2026-10-23T13:05:00.608Z,page
+B19,s2,APS,APS,misleading,2026-10-23T13:05:13.091Z,0,,,misleading,2026-10-23T13:05:13.091Z,page
+B19,s2.note,APS,APS,half a delinquency? 1,2026-10-23T13:05:23.904Z,1,APS,2026-10-23T13:05:27.945Z: half a delinquency? 1 -> half a delinquency? 1 or 0,half a delinquency? 1 or 0,2026-10-23T13:05:27.945Z,page
+B19,s3,APS,APS,unsure,2026-10-23T13:06:33.253Z,1,APS,2026-10-23T13:06:33.945Z: unsure -> supported,supported,2026-10-23T13:06:33.945Z,page
+B19,s4,APS,APS,supported,2026-10-23T13:08:00.380Z,0,,,supported,2026-10-23T13:08:00.380Z,page
+B19,s4.note,APS,APS,i think so,2026-10-23T13:08:05.798Z,0,,,i think so,2026-10-23T13:08:05.798Z,page
+B19,s5,APS,APS,supported,2026-10-23T13:08:25.532Z,0,,,supported,2026-10-23T13:08:25.532Z,page
+B19,s6,APS,APS,unsettled,2026-10-23T13:08:42.908Z,0,,,unsettled,2026-10-23T13:08:42.908Z,page
+B19,s6.note,APS,APS,Shape in between not settled,2026-10-23T13:08:42.261Z,0,,,Shape in between not settled,2026-10-23T13:08:42.261Z,page
+B19,s7,APS,APS,supported,2026-10-23T13:09:43.049Z,0,,,supported,2026-10-23T13:09:43.049Z,page
+B19,s8,APS,APS,misleading,2026-10-23T13:09:59.957Z,0,,,misleading,2026-10-23T13:09:59.957Z,page
+B19,whole,APS,APS,no,2026-10-23T13:10:15.103Z,0,,,no,2026-10-23T13:10:15.103Z,page
+B20,s1,APS,APS,supported,2026-10-23T13:11:12.770Z,0,,,supported,2026-10-23T13:11:12.770Z,page
+B20,s2,APS,APS,false,2026-10-23T13:11:34.761Z,0,,,false,2026-10-23T13:11:34.761Z,page
+B20,s3,APS,APS,false,2026-10-23T13:11:44.126Z,0,,,false,2026-10-23T13:11:44.126Z,page
+B20,s4,APS,APS,misleading,2026-10-23T13:12:35.499Z,0,,,misleading,2026-10-23T13:12:35.499Z,page
+B20,s4.note,APS,APS,difficult Shape in between not settled,2026-10-23T13:12:41.340Z,2,APS,2026-10-23T13:12:46.115Z: difficult Shape in between not settled -> difficult Shape in between not settled. but; 2026-10-23T13:12:49.251Z: difficult Shape in between not settled. but -> difficult Shape in between not settled.,difficult Shape in between not settled.,2026-10-23T13:12:49.251Z,page
+B20,s5,APS,APS,supported,2026-10-23T13:13:02.586Z,0,,,supported,2026-10-23T13:13:02.586Z,page
+B20,s6,APS,APS,supported,2026-10-23T13:13:43.082Z,0,,,supported,2026-10-23T13:13:43.082Z,page
+B20,whole,APS,APS,yes,2026-10-23T13:13:44.065Z,0,,,yes,2026-10-23T13:13:44.065Z,page
+B21,s1,APS,APS,supported,2026-10-23T13:13:52.329Z,0,,,supported,2026-10-23T13:13:52.329Z,page
+B21,s10,APS,APS,supported,2026-10-23T13:17:29.027Z,0,,,supported,2026-10-23T13:17:29.027Z,page
+B21,s11,APS,APS,supported,2026-10-23T13:17:51.644Z,0,,,supported,2026-10-23T13:17:51.644Z,page
+B21,s12,APS,APS,supported,2026-10-23T13:17:56.204Z,0,,,supported,2026-10-23T13:17:56.204Z,page
+B21,s2,APS,APS,supported,2026-10-23T13:13:56.111Z,0,,,supported,2026-10-23T13:13:56.111Z,page
+B21,s3,APS,APS,supported,2026-10-23T13:14:14.131Z,1,APS,2026-10-23T13:14:16.073Z: supported -> unsure,unsure,2026-10-23T13:14:16.073Z,page
+B21,s4,APS,APS,supported,2026-10-23T13:15:12.584Z,0,,,supported,2026-10-23T13:15:12.584Z,page
+B21,s5,APS,APS,supported,2026-10-23T13:15:40.253Z,0,,,supported,2026-10-23T13:15:40.253Z,page
+B21,s6,APS,APS,supported,2026-10-23T13:15:49.011Z,0,,,supported,2026-10-23T13:15:49.011Z,page
+B21,s7,APS,APS,supported,2026-10-23T13:16:10.931Z,0,,,supported,2026-10-23T13:16:10.931Z,page
+B21,s8,APS,APS,supported,2026-10-23T13:16:21.194Z,0,,,supported,2026-10-23T13:16:21.194Z,page
+B21,s9,APS,APS,supported,2026-10-23T13:16:38.223Z,0,,,supported,2026-10-23T13:16:38.223Z,page
+B21,whole,APS,APS,no,2026-10-23T13:17:58.606Z,0,,,no,2026-10-23T13:17:58.606Z,page
+B22,s1,APS,APS,supported,2026-10-23T13:26:08.564Z,0,,,supported,2026-10-23T13:26:08.564Z,page
+B22,s2,APS,APS,supported,2026-10-23T13:28:43.030Z,0,,,supported,2026-10-23T13:28:43.030Z,page
+B22,s3,APS,APS,supported,2026-10-23T13:29:04.276Z,0,,,supported,2026-10-23T13:29:04.276Z,page
+B22,s4,APS,APS,supported,2026-10-23T13:29:14.551Z,0,,,supported,2026-10-23T13:29:14.551Z,page
+B22,s5,APS,APS,supported,2026-10-23T13:29:48.922Z,0,,,supported,2026-10-23T13:29:48.922Z,page
+B22,s6,APS,APS,false,2026-10-23T13:30:14.970Z,1,APS,2026-10-23T13:30:19.663Z: false -> unsettled,unsettled,2026-10-23T13:30:19.663Z,page
+B22,s6.note,APS,APS,i mean either at most moderate or,2026-10-23T13:30:09.314Z,1,APS,2026-10-23T13:30:12.575Z: i mean either at most moderate or -> i mean either at most moderate or not settled,i mean either at most moderate or not settled,2026-10-23T13:30:12.575Z,page
+B22,s7,APS,APS,supported,2026-10-23T13:30:34.183Z,0,,,supported,2026-10-23T13:30:34.183Z,page
+B22,s8,APS,APS,supported,2026-10-23T13:30:39.184Z,0,,,supported,2026-10-23T13:30:39.184Z,page
+B22,whole,APS,APS,yes,2026-10-23T13:30:40.139Z,0,,,yes,2026-10-23T13:30:40.139Z,page
+B23,s1,APS,APS,supported,2026-10-23T13:31:13.473Z,0,,,supported,2026-10-23T13:31:13.473Z,page
+B23,s2,APS,APS,supported,2026-10-23T13:31:19.747Z,0,,,supported,2026-10-23T13:31:19.747Z,page
+B23,s3,APS,APS,supported,2026-10-23T13:31:24.997Z,0,,,supported,2026-10-23T13:31:24.997Z,page
+B23,s4,APS,APS,supported,2026-10-23T13:31:55.940Z,0,,,supported,2026-10-23T13:31:55.940Z,page
+B23,s5,APS,APS,supported,2026-10-23T13:32:06.428Z,0,,,supported,2026-10-23T13:32:06.428Z,page
+B23,s6,APS,APS,unsettled,2026-10-23T13:32:21.584Z,0,,,unsettled,2026-10-23T13:32:21.584Z,page
+B23,s6.note,APS,APS,"Ja, du kannst jetzt anfangen. Die Stichprobe ist final: Die synthetische Hälfte von D74 ist geprüft, die Satz-IDs sind korrigiert (D77), und die Seite ist veröffentlicht. Die laufenden Läufe ändern daran nichts. Luna und c3 lesen nur dieselben Texte und schreiben ihre Urteile in andere Ordner.
+
+So geht's:
+
+Öffne https://claude.ai/artifact/U217chxBzrTcVcf8fpkxDk und lies den Leitfaden oben auf der Seite.
+Gib dein Rater-Kürzel ein, hake die Bestätigung an und starte. Als Owner labelst du alle 78 Items.
+Jedes Label wird sofort gespeichert, mit Zeitstempel und Verlauf. Du kannst also jederzeit aufhören und später weitermachen. Rechne mit insgesamt etwa 5 Stunden für 625 Sätze.",2026-10-23T13:32:25.791Z,3,APS,"2026-10-23T13:32:28.541Z: Ja, du kannst jetzt anfangen. Die Stichprobe ist final: Die synthetische Hälfte von D74 ist geprüft, die Satz-IDs sind korrigiert (D77), und die Seite ist veröffentlicht. Die laufenden Läufe ändern daran nichts. Luna und c3 lesen nur dieselben Texte und schreiben ihre Urteile in andere Ordner.
+
+So geht's:
+
+Öffne https://claude.ai/artifact/U217chxBzrTcVcf8fpkxDk und lies den Leitfaden oben auf der Seite.
+Gib dein Rater-Kürzel ein, hake die Bestätigung an und starte. Als Owner labelst du alle 78 Items.
+Jedes Label wird sofort gespeichert, mit Zeitstempel und Verlauf. Du kannst also jederzeit aufhören und später weitermachen. Rechne mit insgesamt etwa 5 Stunden für 625 Sätze. -> ; 2026-10-23T13:32:35.335Z:  -> shape in between not resolved; 2026-10-23T13:32:41.686Z: shape in between not resolved -> shape in between not settled",shape in between not settled,2026-10-23T13:32:41.686Z,page
+B23,s7,APS,APS,unsettled,2026-10-23T13:33:03.967Z,0,,,unsettled,2026-10-23T13:33:03.967Z,page
+B23,s8,APS,APS,supported,2026-10-23T13:33:13.217Z,0,,,supported,2026-10-23T13:33:13.217Z,page
+B23,s9,APS,APS,supported,2026-10-23T13:33:24.709Z,0,,,supported,2026-10-23T13:33:24.709Z,page
+B23,whole,APS,APS,yes,2026-10-23T13:33:26.092Z,0,,,yes,2026-10-23T13:33:26.092Z,page
+B24,s1,APS,APS,supported,2026-10-23T13:34:00.538Z,0,,,supported,2026-10-23T13:34:00.538Z,page
+B24,s2,APS,APS,supported,2026-10-23T13:34:09.882Z,0,,,supported,2026-10-23T13:34:09.882Z,page
+B24,s3,APS,APS,supported,2026-10-23T13:34:24.067Z,0,,,supported,2026-10-23T13:34:24.067Z,page
+B24,s4,APS,APS,false,2026-10-23T13:34:46.475Z,0,,,false,2026-10-23T13:34:46.475Z,page
+B24,s5,APS,APS,unsure,2026-10-23T13:35:05.563Z,0,,,unsure,2026-10-23T13:35:05.563Z,page
+B24,s6,APS,APS,supported,2026-10-23T13:35:45.325Z,0,,,supported,2026-10-23T13:35:45.325Z,page
+B24,s7,APS,APS,unsettled,2026-10-23T13:35:56.617Z,0,,,unsettled,2026-10-23T13:35:56.617Z,page
+B24,whole,APS,APS,yes,2026-10-23T13:35:58.396Z,0,,,yes,2026-10-23T13:35:58.396Z,page
+B25,s1,APS,APS,supported,2026-10-23T13:39:16.563Z,0,,,supported,2026-10-23T13:39:16.563Z,page
+B25,s2,APS,APS,supported,2026-10-23T13:39:34.925Z,0,,,supported,2026-10-23T13:39:34.925Z,page
+B25,s3,APS,APS,supported,2026-10-23T13:40:01.670Z,0,,,supported,2026-10-23T13:40:01.670Z,page
+B25,s4,APS,APS,supported,2026-10-23T13:40:06.604Z,0,,,supported,2026-10-23T13:40:06.604Z,page
+B25,s5,APS,APS,supported,2026-10-23T13:40:09.446Z,0,,,supported,2026-10-23T13:40:09.446Z,page
+B25,s6,APS,APS,supported,2026-10-23T13:40:24.104Z,1,APS,2026-10-23T13:40:25.342Z: supported -> unsure,unsure,2026-10-23T13:40:25.342Z,page
+B25,whole,APS,APS,yes,2026-10-23T13:40:26.150Z,0,,,yes,2026-10-23T13:40:26.150Z,page
+B26,s1,APS,APS,supported,2026-10-23T13:40:44.354Z,0,,,supported,2026-10-23T13:40:44.354Z,page
+B26,s2,APS,APS,supported,2026-10-23T13:41:05.829Z,0,,,supported,2026-10-23T13:41:05.829Z,page
+B26,s3,APS,APS,false,2026-10-23T13:41:26.645Z,2,APS,2026-10-23T13:41:28.104Z: false -> unsettled; 2026-10-23T13:41:31.507Z: unsettled -> misleading,misleading,2026-10-23T13:41:31.507Z,page
+B26,s3.note,APS,APS,half a delinquency?,2026-10-23T13:41:25.398Z,0,,,half a delinquency?,2026-10-23T13:41:25.398Z,page
+B26,s4,APS,APS,supported,2026-10-23T13:41:56.466Z,0,,,supported,2026-10-23T13:41:56.466Z,page
+B26,s5,APS,APS,supported,2026-10-23T13:42:11.733Z,1,APS,2026-10-23T13:42:17.856Z: supported -> unsure,unsure,2026-10-23T13:42:17.856Z,page
+B26,s6,APS,APS,supported,2026-10-23T13:43:04.250Z,0,,,supported,2026-10-23T13:43:04.250Z,page
+B26,s7,APS,APS,supported,2026-10-23T13:43:34.779Z,0,,,supported,2026-10-23T13:43:34.779Z,page
+B26,s8,APS,APS,supported,2026-10-23T13:44:04.453Z,0,,,supported,2026-10-23T13:44:04.453Z,page
+B26,whole,APS,APS,no,2026-10-23T13:44:16.879Z,0,,,no,2026-10-23T13:44:16.879Z,page
+B27,s1,APS,APS,supported,2026-10-23T13:44:28.925Z,0,,,supported,2026-10-23T13:44:28.925Z,page
+B27,s2,APS,APS,supported,2026-10-23T13:45:25.666Z,0,,,supported,2026-10-23T13:45:25.666Z,page
+B27,s3,APS,APS,supported,2026-10-23T13:45:42.449Z,0,,,supported,2026-10-23T13:45:42.449Z,page
+B27,s4,APS,APS,unsettled,2026-10-23T13:46:08.178Z,0,,,unsettled,2026-10-23T13:46:08.178Z,page
+B27,s5,APS,APS,unsettled,2026-10-23T13:46:13.112Z,1,APS,2026-10-23T13:46:15.178Z: unsettled -> supported,supported,2026-10-23T13:46:15.178Z,page
+B27,s6,APS,APS,supported,2026-10-23T13:46:23.982Z,0,,,supported,2026-10-23T13:46:23.982Z,page
+B27,s7,APS,APS,supported,2026-10-23T13:46:55.324Z,0,,,supported,2026-10-23T13:46:55.324Z,page
+B27,s8,APS,APS,supported,2026-10-23T13:47:02.745Z,0,,,supported,2026-10-23T13:47:02.745Z,page
+B27,whole,APS,APS,yes,2026-10-23T13:47:04.145Z,0,,,yes,2026-10-23T13:47:04.145Z,page
+B28,s1,APS,APS,supported,2026-10-23T13:47:27.299Z,0,,,supported,2026-10-23T13:47:27.299Z,page
+B28,s2,APS,APS,supported,2026-10-23T13:47:42.149Z,0,,,supported,2026-10-23T13:47:42.149Z,page
+B28,s3,APS,APS,supported,2026-10-23T13:48:14.995Z,0,,,supported,2026-10-23T13:48:14.995Z,page
+B28,s4,APS,APS,supported,2026-10-23T13:48:27.053Z,0,,,supported,2026-10-23T13:48:27.053Z,page
+B28,s5,APS,APS,supported,2026-10-23T13:48:35.620Z,0,,,supported,2026-10-23T13:48:35.620Z,page
+B28,s6,APS,APS,supported,2026-10-23T13:48:47.045Z,0,,,supported,2026-10-23T13:48:47.045Z,page
+B28,s7,APS,APS,misleading,2026-10-23T13:49:09.291Z,0,,,misleading,2026-10-23T13:49:09.291Z,page
+B28,whole,APS,APS,yes,2026-10-23T13:49:17.107Z,0,,,yes,2026-10-23T13:49:17.107Z,page
+B29,s1,APS,APS,supported,2026-10-23T13:49:29.491Z,0,,,supported,2026-10-23T13:49:29.491Z,page
+B29,s2,APS,APS,supported,2026-10-23T13:49:37.549Z,0,,,supported,2026-10-23T13:49:37.549Z,page
+B29,s3,APS,APS,supported,2026-10-23T13:49:47.328Z,0,,,supported,2026-10-23T13:49:47.328Z,page
+B29,s4,APS,APS,supported,2026-10-23T13:50:13.303Z,1,APS,2026-10-23T13:50:29.161Z: supported -> misleading,misleading,2026-10-23T13:50:29.161Z,page
+B29,s5,APS,APS,unsure,2026-10-23T13:51:13.952Z,0,,,unsure,2026-10-23T13:51:13.952Z,page
+B29,s6,APS,APS,unsure,2026-10-23T13:51:58.944Z,0,,,unsure,2026-10-23T13:51:58.944Z,page
+B29,s7,APS,APS,supported,2026-10-23T13:52:13.898Z,0,,,supported,2026-10-23T13:52:13.898Z,page
+B29,whole,APS,APS,yes,2026-10-23T13:52:16.065Z,1,APS,2026-10-23T13:52:20.628Z: yes -> no,no,2026-10-23T13:52:20.628Z,page
+B30,s1,APS,APS,supported,2026-10-23T13:52:30.894Z,0,,,supported,2026-10-23T13:52:30.894Z,page
+B30,s2,APS,APS,supported,2026-10-23T13:52:58.103Z,0,,,supported,2026-10-23T13:52:58.103Z,page
+B30,s3,APS,APS,supported,2026-10-23T13:53:31.356Z,0,,,supported,2026-10-23T13:53:31.356Z,page
+B30,s4,APS,APS,supported,2026-10-23T13:54:07.819Z,0,,,supported,2026-10-23T13:54:07.819Z,page
+B30,s5,APS,APS,false,2026-10-23T13:54:28.201Z,0,,,false,2026-10-23T13:54:28.201Z,page
+B30,s6,APS,APS,supported,2026-10-23T13:54:38.478Z,0,,,supported,2026-10-23T13:54:38.478Z,page
+B30,s7,APS,APS,supported,2026-10-23T13:54:57.552Z,0,,,supported,2026-10-23T13:54:57.552Z,page
+B30,s8,APS,APS,unsure,2026-10-23T13:55:31.598Z,0,,,unsure,2026-10-23T13:55:31.598Z,page
+B30,whole,APS,APS,no,2026-10-23T13:55:33.382Z,0,,,no,2026-10-23T13:55:33.382Z,page
+B31,s1,APS,APS,supported,2026-10-23T13:56:35.121Z,0,,,supported,2026-10-23T13:56:35.121Z,page
+B31,s10,APS,APS,supported,2026-10-23T14:05:07.432Z,0,,,supported,2026-10-23T14:05:07.432Z,page
+B31,s2,APS,APS,supported,2026-10-23T13:56:39.561Z,0,,,supported,2026-10-23T13:56:39.561Z,page
+B31,s3,APS,APS,supported,2026-10-23T13:56:43.475Z,0,,,supported,2026-10-23T13:56:43.475Z,page
+B31,s4,APS,APS,supported,2026-10-23T13:57:00.608Z,0,,,supported,2026-10-23T13:57:00.608Z,page
+B31,s5,APS,APS,supported,2026-10-23T13:57:25.902Z,0,,,supported,2026-10-23T13:57:25.902Z,page
+B31,s6,APS,APS,supported,2026-10-23T13:57:43.211Z,0,,,supported,2026-10-23T13:57:43.211Z,page
+B31,s7,APS,APS,supported,2026-10-23T14:01:25.870Z,0,,,supported,2026-10-23T14:01:25.870Z,page
+B31,s8,APS,APS,supported,2026-10-23T14:04:42.114Z,0,,,supported,2026-10-23T14:04:42.114Z,page
+B31,s9,APS,APS,supported,2026-10-23T14:04:56.869Z,0,,,supported,2026-10-23T14:04:56.869Z,page
+B31,whole,APS,APS,no,2026-10-23T14:05:13.586Z,0,,,no,2026-10-23T14:05:13.586Z,page
+B32,s1,APS,APS,supported,2026-10-23T14:05:32.978Z,0,,,supported,2026-10-23T14:05:32.978Z,page
+B32,s2,APS,APS,supported,2026-10-23T14:05:45.549Z,0,,,supported,2026-10-23T14:05:45.549Z,page
+B32,s3,APS,APS,supported,2026-10-23T14:09:21.927Z,0,,,supported,2026-10-23T14:09:21.927Z,page
+B32,s4,APS,APS,misleading,2026-10-23T14:09:30.040Z,0,,,misleading,2026-10-23T14:09:30.040Z,page
+B32,s5,APS,APS,supported,2026-10-23T14:09:45.015Z,0,,,supported,2026-10-23T14:09:45.015Z,page
+B32,s6,APS,APS,supported,2026-10-23T14:10:00.106Z,0,,,supported,2026-10-23T14:10:00.106Z,page
+B32,s7,APS,APS,supported,2026-10-23T14:10:04.344Z,0,,,supported,2026-10-23T14:10:04.344Z,page
+B32,s8,APS,APS,supported,2026-10-23T14:10:23.707Z,0,,,supported,2026-10-23T14:10:23.707Z,page
+B32,whole,APS,APS,no,2026-10-23T14:10:24.727Z,0,,,no,2026-10-23T14:10:24.727Z,page
+B33,s1,APS,APS,supported,2026-10-23T14:10:38.410Z,0,,,supported,2026-10-23T14:10:38.410Z,page
+B33,s2,APS,APS,supported,2026-10-23T14:19:08.314Z,0,,,supported,2026-10-23T14:19:08.314Z,page
+B33,s3,APS,APS,supported,2026-10-23T14:19:15.130Z,0,,,supported,2026-10-23T14:19:15.130Z,page
+B33,s4,APS,APS,supported,2026-10-23T14:20:08.326Z,0,,,supported,2026-10-23T14:20:08.326Z,page
+B33,s5,APS,APS,supported,2026-10-23T14:20:19.697Z,0,,,supported,2026-10-23T14:20:19.697Z,page
+B33,s6,APS,APS,supported,2026-10-23T14:20:30.345Z,0,,,supported,2026-10-23T14:20:30.345Z,page
+B33,s7,APS,APS,supported,2026-10-23T14:20:32.676Z,0,,,supported,2026-10-23T14:20:32.676Z,page
+B33,s8,APS,APS,supported,2026-10-23T14:20:40.642Z,0,,,supported,2026-10-23T14:20:40.642Z,page
+B33,whole,APS,APS,no,2026-10-23T14:20:42.047Z,0,,,no,2026-10-23T14:20:42.047Z,page
+B34,s1,APS,APS,supported,2026-10-23T14:20:51.168Z,0,,,supported,2026-10-23T14:20:51.168Z,page
+B34,s2,APS,APS,supported,2026-10-23T14:21:11.226Z,0,,,supported,2026-10-23T14:21:11.226Z,page
+B34,s3,APS,APS,supported,2026-10-23T14:21:18.685Z,0,,,supported,2026-10-23T14:21:18.685Z,page
+B34,s4,APS,APS,supported,2026-10-23T14:21:26.085Z,0,,,supported,2026-10-23T14:21:26.085Z,page
+B34,s5,APS,APS,supported,2026-10-23T14:21:33.187Z,0,,,supported,2026-10-23T14:21:33.187Z,page
+B34,s6,APS,APS,misleading,2026-10-23T14:21:44.018Z,0,,,misleading,2026-10-23T14:21:44.018Z,page
+B34,s7,APS,APS,supported,2026-10-23T14:22:03.318Z,0,,,supported,2026-10-23T14:22:03.318Z,page
+B34,s8,APS,APS,supported,2026-10-23T14:22:22.360Z,0,,,supported,2026-10-23T14:22:22.360Z,page
+B34,whole,APS,APS,no,2026-10-23T14:22:25.847Z,0,,,no,2026-10-23T14:22:25.847Z,page
+B35,s1,APS,APS,false,2026-10-23T14:22:35.847Z,0,,,false,2026-10-23T14:22:35.847Z,page
+B35,s2,APS,APS,misleading,2026-10-23T14:22:59.914Z,0,,,misleading,2026-10-23T14:22:59.914Z,page
+B35,s3,APS,APS,supported,2026-10-23T14:23:11.307Z,0,,,supported,2026-10-23T14:23:11.307Z,page
+B35,s4,APS,APS,supported,2026-10-23T14:23:25.476Z,0,,,supported,2026-10-23T14:23:25.476Z,page
+B35,s5,APS,APS,supported,2026-10-23T14:23:40.588Z,0,,,supported,2026-10-23T14:23:40.588Z,page
+B35,s6,APS,APS,supported,2026-10-23T14:24:09.634Z,0,,,supported,2026-10-23T14:24:09.634Z,page
+B35,s7,APS,APS,supported,2026-10-23T14:24:16.468Z,0,,,supported,2026-10-23T14:24:16.468Z,page
+B35,whole,APS,APS,no,2026-10-23T14:24:17.301Z,0,,,no,2026-10-23T14:24:17.301Z,page
+B36,s1,APS,APS,supported,2026-10-23T14:24:21.576Z,0,,,supported,2026-10-23T14:24:21.576Z,page
+B36,s2,APS,APS,supported,2026-10-23T14:24:30.126Z,0,,,supported,2026-10-23T14:24:30.126Z,page
+B36,s3,APS,APS,supported,2026-10-23T14:24:36.843Z,0,,,supported,2026-10-23T14:24:36.843Z,page
+B36,s4,APS,APS,supported,2026-10-23T14:24:44.984Z,0,,,supported,2026-10-23T14:24:44.984Z,page
+B36,s5,APS,APS,supported,2026-10-23T14:24:53.072Z,0,,,supported,2026-10-23T14:24:53.072Z,page
+B36,s6,APS,APS,supported,2026-10-23T14:25:10.451Z,0,,,supported,2026-10-23T14:25:10.451Z,page
+B36,s7,APS,APS,supported,2026-10-23T14:28:59.530Z,0,,,supported,2026-10-23T14:28:59.530Z,page
+B36,s8,APS,APS,supported,2026-10-23T14:29:09.980Z,2,APS,2026-10-23T14:29:14.154Z: supported -> misleading; 2026-10-23T14:29:16.892Z: misleading -> supported,supported,2026-10-23T14:29:16.892Z,page
+B36,s9,APS,APS,misleading,2026-10-23T14:29:38.446Z,0,,,misleading,2026-10-23T14:29:38.446Z,page
+B36,whole,APS,APS,no,2026-10-23T14:29:39.746Z,0,,,no,2026-10-23T14:29:39.746Z,page
+B37,s1,APS,APS,supported,2026-10-23T14:29:47.530Z,0,,,supported,2026-10-23T14:29:47.530Z,page
+B37,s2,APS,APS,supported,2026-10-23T14:29:55.825Z,0,,,supported,2026-10-23T14:29:55.825Z,page
+B37,s3,APS,APS,supported,2026-10-23T14:30:17.379Z,0,,,supported,2026-10-23T14:30:17.379Z,page
+B37,s4,APS,APS,supported,2026-10-23T14:30:27.638Z,0,,,supported,2026-10-23T14:30:27.638Z,page
+B37,s5,APS,APS,supported,2026-10-23T14:30:51.700Z,0,,,supported,2026-10-23T14:30:51.700Z,page
+B37,s6,APS,APS,supported,2026-10-23T14:31:08.163Z,0,,,supported,2026-10-23T14:31:08.163Z,page
+B37,s7,APS,APS,supported,2026-10-23T14:31:10.767Z,0,,,supported,2026-10-23T14:31:10.767Z,page
+B37,s8,APS,APS,supported,2026-10-23T14:31:26.233Z,1,APS,2026-10-23T14:31:40.066Z: supported -> unsure,unsure,2026-10-23T14:31:40.066Z,page
+B37,whole,APS,APS,no,2026-10-23T14:31:42.287Z,0,,,no,2026-10-23T14:31:42.287Z,page
+B38,s1,APS,APS,supported,2026-10-23T14:31:47.620Z,0,,,supported,2026-10-23T14:31:47.620Z,page
+B38,s2,APS,APS,supported,2026-10-23T14:32:06.025Z,0,,,supported,2026-10-23T14:32:06.025Z,page
+B38,s3,APS,APS,false,2026-10-23T14:34:32.145Z,0,,,false,2026-10-23T14:34:32.145Z,page
+B38,s4,APS,APS,supported,2026-10-23T14:34:50.441Z,0,,,supported,2026-10-23T14:34:50.441Z,page
+B38,s5,APS,APS,supported,2026-10-23T14:35:03.975Z,0,,,supported,2026-10-23T14:35:03.975Z,page
+B38,s6,APS,APS,unsure,2026-10-23T14:35:27.333Z,0,,,unsure,2026-10-23T14:35:27.333Z,page
+B38,s7,APS,APS,false,2026-10-23T14:42:37.367Z,0,,,false,2026-10-23T14:42:37.367Z,page
+B38,s7.note,APS,APS,yes,2026-10-23T14:42:44.039Z,4,APS,2026-10-23T14:42:47.541Z: yes -> yes everything; 2026-10-23T14:42:50.426Z: yes everything -> yes everything but age is; 2026-10-23T14:42:58.185Z: yes everything but age is -> yes everything but age is very; 2026-10-23T14:43:12.133Z: yes everything but age is very -> yes everything but ages spectrum reaches far in the moderate,yes everything but ages spectrum reaches far in the moderate,2026-10-23T14:43:12.133Z,page
+B38,s8,APS,APS,unsure,2026-10-23T14:43:22.711Z,0,,,unsure,2026-10-23T14:43:22.711Z,page
+B38,s9,APS,APS,unsettled,2026-10-23T14:43:32.549Z,0,,,unsettled,2026-10-23T14:43:32.549Z,page
+B38,whole,APS,APS,no,2026-10-23T14:43:34.369Z,0,,,no,2026-10-23T14:43:34.369Z,page
+B39,s1,APS,APS,supported,2026-10-23T14:43:46.499Z,2,APS,2026-10-23T14:43:52.261Z: supported -> misleading; 2026-10-23T14:43:53.874Z: misleading -> supported,supported,2026-10-23T14:43:53.874Z,page
+B39,s2,APS,APS,supported,2026-10-23T14:44:18.484Z,0,,,supported,2026-10-23T14:44:18.484Z,page
+B39,s3,APS,APS,supported,2026-10-23T14:44:29.844Z,0,,,supported,2026-10-23T14:44:29.844Z,page
+B39,s4,APS,APS,supported,2026-10-23T14:44:37.678Z,0,,,supported,2026-10-23T14:44:37.678Z,page
+B39,s5,APS,APS,supported,2026-10-23T14:44:54.748Z,0,,,supported,2026-10-23T14:44:54.748Z,page
+B39,s6,APS,APS,supported,2026-10-23T14:45:05.248Z,0,,,supported,2026-10-23T14:45:05.248Z,page
+B39,s7,APS,APS,supported,2026-10-23T14:45:15.063Z,0,,,supported,2026-10-23T14:45:15.063Z,page
+B39,s8,APS,APS,supported,2026-10-23T14:45:23.365Z,0,,,supported,2026-10-23T14:45:23.365Z,page
+B39,whole,APS,APS,no,2026-10-23T14:45:30.078Z,0,,,no,2026-10-23T14:45:30.078Z,page
+B40,s1,APS,APS,supported,2026-10-23T14:45:36.532Z,0,,,supported,2026-10-23T14:45:36.532Z,page
+B40,s2,APS,APS,supported,2026-10-23T14:45:47.473Z,0,,,supported,2026-10-23T14:45:47.473Z,page
+B40,s3,APS,APS,supported,2026-10-23T14:45:52.257Z,0,,,supported,2026-10-23T14:45:52.257Z,page
+B40,s4,APS,APS,supported,2026-10-23T14:46:23.399Z,0,,,supported,2026-10-23T14:46:23.399Z,page
+B40,s5,APS,APS,supported,2026-10-23T14:46:38.294Z,0,,,supported,2026-10-23T14:46:38.294Z,page
+B40,s6,APS,APS,supported,2026-10-23T14:46:44.190Z,0,,,supported,2026-10-23T14:46:44.190Z,page
+B40,s7,APS,APS,supported,2026-10-23T14:47:00.344Z,0,,,supported,2026-10-23T14:47:00.344Z,page
+B40,s8,APS,APS,supported,2026-10-23T14:47:09.790Z,0,,,supported,2026-10-23T14:47:09.790Z,page
+B40,whole,APS,APS,no,2026-10-23T14:47:11.040Z,0,,,no,2026-10-23T14:47:11.040Z,page

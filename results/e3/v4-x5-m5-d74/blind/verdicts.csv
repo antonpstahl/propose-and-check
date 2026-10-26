@@ -1,0 +1,81 @@
+item,run,arm,kind,tier,scenario,exit,second rater,sentence ids,refuted,release rule,broad
+B01,syn-dominant-n5000-s3_XGB2_H1_d4_claude-haiku-5-5_plausible,on,template,synthetic,syn-dominant-n5000-s3,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]",ok,error,error
+B01,syn-dominant-n5000-s3_XGB2_H2_d2_claude-haiku-5-5_plausible,on,template,synthetic,syn-dominant-n5000-s3,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]",ok,error,error
+B02,syn-none-n50000-s2_XGB2_H2_d0_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s2,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,error
+B03,syn-weak-n5000-s3_EBM_H2_d4_claude-haiku-5-5_plausible,off,draft,synthetic,syn-weak-n5000-s3,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,error,error
+B04,syn-weak-n5000-s1_EBM_H2_d4_claude-haiku-5-5_plausible,off,draft,synthetic,syn-weak-n5000-s1,RELEASED_REDUCED,True,"[1, 2, 3, 4, 5, 6]",ok,ok,error
+B05,syn-weak-n5000-s2_XGB2_H1_d2_claude-haiku-5-5_plausible,off,draft,synthetic,syn-weak-n5000-s2,TEMPLATE,True,"[1, 2, 3, 4, 5, 6]",error,error,error
+B06,syn-dominant-n5000-s2_EBM_H1_d2_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n5000-s2,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",error,error,error
+B07,syn-dominant-n50000-s3_EBM_H2_d0_claude-haiku-5-5_plausible,off,draft,synthetic,syn-dominant-n50000-s3,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,error
+B08,syn-weak-n5000-s3_EBM_H2_d2_claude-haiku-5-5_plausible,off,draft,synthetic,syn-weak-n5000-s3,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,error,error
+B09,syn-none-n50000-s1_XGB2_H2_d4_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s1,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7]",ok,ok,error
+B10,syn-weak-n5000-s2_XGB2_H1_d3_claude-haiku-5-5_opaque,on,template,synthetic,syn-weak-n5000-s2,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",ok,error,error
+B11,syn-weak-n5000-s3_XGB2_H2_d1_claude-haiku-5-5_opaque,off,draft,synthetic,syn-weak-n5000-s3,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",open,error,error
+B12,syn-none-n50000-s1_EBM_H1_d3_claude-haiku-5-5_opaque,off,draft,synthetic,syn-none-n50000-s1,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",error,error,error
+B13,syn-dominant-n50000-s2_XGB2_H2_d1_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n50000-s2,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",ok,ok,error
+B14,syn-weak-n50000-s3_XGB2_H2_d4_claude-haiku-5-5_opaque,off,draft,synthetic,syn-weak-n50000-s3,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,ok
+B15,syn-weak-n50000-s2_EBM_H1_d1_claude-haiku-5-5_opaque,on,template,synthetic,syn-weak-n50000-s2,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",ok,ok,error
+B16,syn-none-n5000-s3_EBM_H1_d1_claude-haiku-5-5_plausible,on,template,synthetic,syn-none-n5000-s3,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",ok,error,error
+B17,syn-dominant-n5000-s3_EBM_H1_d1_claude-haiku-5-5_plausible,off,draft,synthetic,syn-dominant-n5000-s3,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7]",error,error,error
+B18,syn-none-n5000-s2_XGB2_H1_d4_claude-haiku-5-5_opaque,on,template,synthetic,syn-none-n5000-s2,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",open,error,error
+B19,syn-dominant-n5000-s2_EBM_H2_d0_claude-haiku-5-5_opaque,off,draft,synthetic,syn-dominant-n5000-s2,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,error,error
+B20,syn-dominant-n5000-s2_EBM_H1_d4_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n5000-s2,RELEASED_REDUCED,True,"[1, 2, 3, 4, 5, 7]",error,error,error
+B21,syn-dominant-n5000-s2_XGB2_H2_d0_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n5000-s2,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]",open,open,open
+B22,syn-dominant-n5000-s3_XGB2_H1_d0_claude-haiku-5-5_opaque,off,draft,synthetic,syn-dominant-n5000-s3,TEMPLATE,True,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,error,error
+B23,syn-dominant-n5000-s3_EBM_H2_d4_claude-haiku-5-5_opaque,off,draft,synthetic,syn-dominant-n5000-s3,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",ok,error,error
+B23,syn-dominant-n5000-s3_EBM_H2_d4_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n5000-s3,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",ok,error,error
+B24,syn-weak-n5000-s1_XGB2_H1_d3_claude-haiku-5-5_opaque,off,draft,synthetic,syn-weak-n5000-s1,RELEASED,True,"[1, 2, 3, 4, 5, 6, 7]",error,error,error
+B25,syn-weak-n50000-s1_XGB2_H1_d3_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-weak-n50000-s1,RELEASED_REDUCED,False,"[1, 2, 3, 6, 7, 8]",open,open,error
+B26,syn-dominant-n5000-s1_EBM_H2_d3_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n5000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",open,open,error
+B27,syn-dominant-n5000-s3_EBM_H1_d4_claude-haiku-5-5_opaque,off,draft,synthetic,syn-dominant-n5000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,error,error
+B28,syn-none-n50000-s1_XGB2_H2_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7]",ok,ok,error
+B29,syn-weak-n50000-s3_EBM_H1_d3_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-weak-n50000-s3,RELEASED_REDUCED,False,"[1, 2, 3, 4, 5, 6, 8]",open,open,error
+B30,syn-dominant-n50000-s2_EBM_H1_d4_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n50000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",error,error,error
+B31,syn-weak-n50000-s3_XGB2_H2_d1_claude-haiku-5-5_plausible,off,draft,synthetic,syn-weak-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",ok,ok,ok
+B32,syn-dominant-n5000-s3_EBM_H1_d3_claude-haiku-5-5_plausible,off,draft,synthetic,syn-dominant-n5000-s3,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,error
+B33,syn-none-n50000-s3_XGB2_H2_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,ok
+B34,syn-none-n50000-s1_XGB2_H1_d1_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-none-n50000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,error
+B35,syn-dominant-n5000-s2_XGB2_H1_d0_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n5000-s2,RELEASED_REDUCED,False,"[1, 2, 3, 4, 6, 7, 8]",error,error,error
+B36,syn-weak-n5000-s2_EBM_H1_d0_claude-haiku-5-5_plausible,on,template,synthetic,syn-weak-n5000-s2,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",ok,ok,error
+B37,syn-none-n50000-s2_EBM_H2_d4_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",open,open,open
+B38,syn-none-n5000-s2_EBM_H1_d0_claude-haiku-5-5_plausible,off,draft,synthetic,syn-none-n5000-s2,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",error,error,error
+B39,syn-dominant-n50000-s3_XGB2_H2_d1_claude-haiku-5-5_opaque,off,draft,synthetic,syn-dominant-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,ok
+B40,syn-none-n5000-s2_EBM_H2_d0_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",ok,ok,ok
+B41,syn-none-n5000-s2_XGB2_H2_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7]",missing,missing,missing
+B42,syn-dominant-n50000-s2_XGB2_H1_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n50000-s2,RELEASED_REDUCED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B43,syn-weak-n50000-s3_EBM_H1_d4_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-weak-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B44,syn-dominant-n5000-s1_XGB2_H2_d0_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n5000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B45,syn-none-n50000-s3_EBM_H2_d4_claude-haiku-5-5_opaque,off,draft,synthetic,syn-none-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B46,syn-none-n5000-s2_EBM_H2_d4_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B47,syn-dominant-n5000-s3_XGB2_H1_d0_claude-haiku-5-5_opaque,on,template,synthetic,syn-dominant-n5000-s3,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]",missing,missing,missing
+B48,syn-dominant-n50000-s2_EBM_H2_d2_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n50000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B49,syn-weak-n5000-s2_EBM_H1_d4_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-weak-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B50,syn-weak-n50000-s2_XGB2_H1_d0_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-weak-n50000-s2,RELEASED_REDUCED,False,"[1, 3, 4, 5, 6, 7]",missing,missing,missing
+B51,syn-weak-n5000-s2_XGB2_H2_d3_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-weak-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B52,syn-dominant-n5000-s1_EBM_H1_d1_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n5000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B53,syn-dominant-n5000-s2_EBM_H1_d1_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B54,syn-none-n50000-s1_EBM_H2_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B55,syn-none-n5000-s2_EBM_H2_d4_claude-haiku-5-5_plausible,off,draft,synthetic,syn-none-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B56,syn-dominant-n5000-s1_XGB2_H2_d3_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n5000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B57,syn-weak-n50000-s1_XGB2_H2_d3_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-weak-n50000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B58,syn-dominant-n50000-s2_EBM_H2_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n50000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B59,syn-dominant-n50000-s3_EBM_H1_d0_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B60,syn-dominant-n5000-s2_XGB2_H2_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-dominant-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B61,syn-none-n5000-s3_EBM_H2_d4_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-none-n5000-s3,RELEASED_REDUCED,False,"[2, 3, 4, 5, 6, 7]",missing,missing,missing
+B62,syn-none-n5000-s3_XGB2_H1_d0_claude-haiku-5-5_opaque,off,draft,synthetic,syn-none-n5000-s3,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7]",missing,missing,missing
+B63,syn-none-n50000-s1_EBM_H1_d3_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",missing,missing,missing
+B64,syn-dominant-n5000-s1_EBM_H1_d1_claude-haiku-5-5_plausible,off,draft,synthetic,syn-dominant-n5000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B65,syn-none-n50000-s1_EBM_H1_d1_claude-haiku-5-5_opaque,off,draft,synthetic,syn-none-n50000-s1,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B66,syn-none-n50000-s3_XGB2_H2_d2_claude-haiku-5-5_opaque,on,template,synthetic,syn-none-n50000-s3,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",missing,missing,missing
+B67,syn-dominant-n50000-s3_EBM_H2_d1_claude-haiku-5-5_plausible,off,draft,synthetic,syn-dominant-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",missing,missing,missing
+B68,syn-none-n50000-s2_XGB2_H1_d3_claude-haiku-5-5_plausible,on,template,synthetic,syn-none-n50000-s2,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",missing,missing,missing
+B69,syn-weak-n50000-s3_XGB2_H1_d3_claude-haiku-5-5_opaque,off,draft,synthetic,syn-weak-n50000-s3,TEMPLATE,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B70,syn-dominant-n5000-s2_EBM_H1_d0_claude-haiku-5-5_plausible,off,draft,synthetic,syn-dominant-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B71,syn-none-n5000-s2_EBM_H1_d2_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n5000-s2,RELEASED_REDUCED,False,"[1, 2, 3, 4, 7, 8]",missing,missing,missing
+B72,syn-weak-n5000-s2_XGB2_H2_d2_claude-haiku-5-5_opaque,off,draft,synthetic,syn-weak-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B73,syn-dominant-n50000-s3_EBM_H2_d4_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-dominant-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8, 9]",missing,missing,missing
+B74,syn-none-n5000-s2_EBM_H2_d0_claude-haiku-5-5_opaque,on,LLM-written,synthetic,syn-none-n5000-s2,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B75,syn-weak-n5000-s2_XGB2_H1_d1_claude-haiku-5-5_plausible,off,draft,synthetic,syn-weak-n5000-s2,RELEASED_REDUCED,False,"[1, 2, 3, 4, 5, 6, 7]",missing,missing,missing
+B76,syn-dominant-n50000-s3_EBM_H1_d0_claude-haiku-5-5_opaque,off,draft,synthetic,syn-dominant-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7, 8]",missing,missing,missing
+B77,syn-none-n50000-s3_XGB2_H2_d3_claude-haiku-5-5_plausible,on,LLM-written,synthetic,syn-none-n50000-s3,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7]",missing,missing,missing
+B78,syn-dominant-n5000-s1_EBM_H1_d0_claude-haiku-5-5_plausible,off,draft,synthetic,syn-dominant-n5000-s1,RELEASED,False,"[1, 2, 3, 4, 5, 6, 7]",missing,missing,missing

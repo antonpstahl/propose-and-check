@@ -3,16 +3,17 @@
 Faithfulness against M is the share of the claims a text states that are true of the fitted model; false and
 undecidable claims are not (D30: never released as stated). Before the gate: the writer's first drafts; after: the
 released texts (RELEASED, RELEASED_REDUCED, TEMPLATE). Claude Haiku 5.5 as writer, both namings and both models,
-outside the two pilot datasets. What a text states is E3's own scoring readings (x3, replicas 3 to 5, a claim found by
-two of three), rebuilt by experiments/e3_truth.py into results/e3/v3-x3/claims.csv. A claim counts for the role of
+outside the two pilot datasets, on the synthetic tier of E3's rerun with D74's fixes (D84; the first run's figure stays
+in git). What a text states is E3's own scoring readings (x5, replicas 3 to 5, a claim found by two of three), rebuilt
+by experiments/e3_truth.py into results/e3/v4-x5-m5-d74/claims.csv. A claim counts for the role of
 every feature it names (a comparison for both), a claim about a pair for "pairs", and a claim about a feature the
 model does not have for that row. Roles as planted (data/dgp.FEATURE_ROLES). 95% intervals: percentile bootstrap
 over the datasets of each interaction level (2,000 draws), the models pooled; an interval reaching below 70% ends in
 an arrowhead at the axis.
 
-The released texts are read by the same LLM readings as the drafts, so their misreadings count as false claims:
-with author-reviewed labels, 32 of the 43 false claims in released texts are misreadings and 2 are real errors (§14.21), so the
-values after the gate are a lower bound.
+The released texts are read by the same LLM readings as the drafts, so their misreadings count as false claims; and
+the values are faithfulness under the lexicon, which the blind labels (D82, D83) show a careful reader does not always
+share ("generally").
 
 Run: `uv run python -m verifier_gate.experiments.fig4`. Writes paper/figures/fig4_faithfulness.png and .pdf and
 paper/tables/fig4_faithfulness.csv.
@@ -33,7 +34,7 @@ from verifier_gate.dsl.parse import parse  # noqa: E402
 from verifier_gate.experiments.fig2 import GRID, INK, MUTED, SURFACE  # noqa: E402
 
 ROOT = Path(__file__).parents[3]
-CLAIMS = ROOT / "results" / "e3" / "v3-x3" / "claims.csv"
+CLAIMS = ROOT / "results" / "e3" / "v4-x5-m5-d74" / "claims.csv"
 OUT = ROOT / "paper"
 ROLES = {  # role: row label
     "strong": "strong (utilization, delinquencies)",
@@ -63,7 +64,7 @@ def roles(line: str) -> list[str]:
 
 def claims() -> pd.DataFrame:
     c = pd.read_csv(CLAIMS)
-    c = c[(c.writer == "haiku") & (~c["pilot dataset"])].copy()
+    c = c[(c.writer == "haiku") & (~c["pilot dataset"]) & (c.naming != "codes")].copy()  # the synthetic tier
     c["role"] = c.dsl.map(roles)
     c = c.explode("role")
     c["interaction"] = c.scenario.str.split("-").str[1]

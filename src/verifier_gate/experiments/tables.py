@@ -9,20 +9,24 @@
   shares by interaction level (data/dgp.py, data/plasmode.py). The synthetic distributions and shapes are written as
   coded in dgp.sample_features and dgp.MAIN_SHAPES (frozen with the DGP, D11).
 - Tab. 3, E1 by tier (D31): decided rate, accuracy among decided and confident-error rate per layer, model and
-  sample size; the synthetic tier pooled over its three seeds (discovery and confirmation, recomputed from the
-  counts, not averaged), the plasmode tier over its three seeds.
-- Tab. 4, survival, control effectiveness and cost (D36): per writer, outside the pilot datasets: exit states,
-  repair rounds, P_U before and after the gate and E_U, as run and with author-reviewed labels where they exist
-  (§14.21), Haiku also split by handover (H1: the facts only; H2: with the certified statements; WP3's handover
-  question), and the cost per run; the local spot check (§14.22) as its own row.
-- Tab. 5, the gate and an LLM critic on the same texts (D56, §14.29; D72): recall and blocked correct texts per set
-  of texts and label source, balanced accuracy, E3's released texts blocked by handover, the critic's confident
-  errors, and the cost per text, from e2_critic's cases.csv per critic and prompt version (c1; c2 with the inputs
-  matched to the writer's), which carries the gate's x4 outcome per case, and, for E3's released texts, the labels
-  of the critic's flags.
-- Tab. 6, E3's baselines (D71): the template-only and plain-prompt arms beside gate off and gate on, on E3's
-  facts-only cells: P_U with its interval, E_U against gate off and against the plain prompt, claims and words per
-  text, claims by kind, hedges, coverage, numbers no claim checks and cost, from e3_baselines' compare.csv.
+  sample size, with its 95% interval clustered by dataset (review M8, point 5); the synthetic tier pooled over its
+  three seeds (discovery and confirmation, recomputed from the counts, not averaged), the plasmode tier over its
+  three seeds. Under lexicon v3 with D74's fixes (D84: the configuration D75 froze); E1 under v2 stays in git.
+- Tab. 4, survival, control effectiveness and cost (D36; D84): (1) E3's rerun with D74's fixes per tier, also split
+  by handover (H1: the facts only; H2: with the certified statements), and the adverse-action spot check per tier
+  (synthetic: l2; plasmode: l2-d74): exit states, repair rounds, P_U before and after the gate as read by E3's
+  scoring readings, E_U, cost per run; (2) the residual of D74 by reference and standard: the gate's extractor,
+  GPT-6 Luna, either reader (e3_independent) and, on the synthetic tier, the blind labels (e3_blind, D82, D83); (3)
+  E3's first run (lexicon v2, prompts v3, extractor x3) for the three writers.
+- Tab. 5, the gate and an LLM critic on the same texts (D79; D84): the critic c3 (GPT-6 Luna with the writer's
+  inputs, D75's configuration) beside the gate with extractor x5 (D78): recall and blocked correct texts per set of
+  texts and label source, balanced accuracy, and on the blind sample how many labelled texts the gate's extractor
+  (as a scoring reader) and the critic flag (e3_blind readers.csv); the critic's confident errors and the cost per
+  text. c1 and c2 (D56, D72) stay in git and in results/e2/v2/text/critic/.
+- Tab. 6, E3's baselines beside D74 (D71, D76): the template-only and plain-prompt arms beside gate off and gate on,
+  on the facts-only cells of each tier: P_U with its interval, E_U against gate off and against the plain prompt,
+  claims and words per text, claims by kind, hedges, coverage, numbers no claim checks and cost, from e3_baselines'
+  compare.csv.
 
 Each table is also written as a LaTeX tabular (booktabs) for the working paper's source, which inputs it: no number of the paper is
 typed by hand.
@@ -39,6 +43,7 @@ import pandas as pd
 import yaml
 
 from verifier_gate.data import dgp, plasmode
+from verifier_gate.experiments import e1_lexicon, metrics
 from verifier_gate.lexicon import predicates as p
 from verifier_gate.lexicon import words
 from verifier_gate.llm import prompts
@@ -46,6 +51,10 @@ from verifier_gate.llm import prompts
 ROOT = Path(__file__).parents[3]
 OUT = ROOT / "paper" / "tables"
 RESULTS = ROOT / "results"
+E1_RUN = "v3-d74"  # D84: the paper's tables report the configuration D75 froze
+E3_RUN = "v4-x5-m5-d74"
+FIRST_RUN = "v3-x3"  # E3 as first run: lexicon v2, writer prompts v3, extractor x3
+LOCAL_RUNS = {"synthetic": RESULTS / "local" / "run" / "l2", "plasmode": RESULTS / "local" / "plasmode" / "run" / "l2-d74"}
 SYNTHETIC_DISTRIBUTIONS = {  # dgp.sample_features
     "utilization": "Beta(2, 3)", "n_delinquencies": "min(Poisson(0.8), 6)", "income": "lognormal, median 50,000, σ 0.5",
     "history_months": "uniform 6 to 360", "dti": "uniform 0 to 0.6", "n_inquiries": "Poisson(1.5)",
@@ -182,9 +191,14 @@ def tab2() -> None:
 def tab3() -> None:
     frames = []
     for tier, folders in (("synthetic", ("discovery", "confirmation")), ("plasmode", ("plasmode",))):
-        h = pd.concat([pd.read_csv(RESULTS / "e1" / "v2" / f / "headline.csv") for f in folders])
+        base = RESULTS / "e1" / E1_RUN
+        h = pd.concat([pd.read_csv(base / f / "headline.csv") for f in folders])
         h["size"] = h.groupby(["layer", "model"]).n.rank(method="dense").map({1.0: "small", 2.0: "large"})
         counts = h.groupby(["layer", "model", "size", "n"])[["claims", "certified", "refuted", "released_wrong", "blocked_correct"]].sum().reset_index()
+        verdicts = pd.concat([pd.read_csv(base / f / "verdicts.csv", dtype=str, keep_default_na=False) for f in folders]).astype({"n": int, "seed": int})
+        long = e1_lexicon.layers(verdicts)
+        bounds = {key: metrics.clustered_interval(group, e1_lexicon.confident_error_rate) for key, group in long.groupby(["layer", "model", "n"])}
+        counts["interval"] = [bounds[(r.layer, r.model, r.n)] for r in counts.itertuples()]
         counts.insert(0, "tier", tier)
         frames.append(counts)
     t = pd.concat(frames)
@@ -192,17 +206,19 @@ def tab3() -> None:
     errors = t.released_wrong + t.blocked_correct
     t["decided"] = (decided / t.claims).map("{:.0%}".format)
     t["accuracy among decided"] = ((t.certified + t.refuted) / decided).map("{:.1%}".format)
-    t["confident errors"] = (errors / t.claims).map("{:.1%}".format)
+    t["confident errors"] = (errors / t.claims).map("{:.2%}".format)
+    t["95% interval"] = t.interval.map(lambda b: f"{b[0]:.2%}–{b[1]:.2%}")
     order = {"data": 0, "model": 1, "end to end": 2}
     t = t.sort_values(["tier", "layer", "model", "size"], key=lambda s: s.map(order) if s.name == "layer" else s, ascending=[False, True, True, False])
     t["n"] = t.n.map("{:,}".format)
-    t = t.rename(columns={"layer": "layer (reference)"})[["tier", "layer (reference)", "model", "n", "claims", "decided", "accuracy among decided", "confident errors"]]
-    write("tab3_e1", "Tab. 3: E1, the lexicon's verdicts against the planted truth, by tier",
+    t = t.rename(columns={"layer": "layer (reference)"})[["tier", "layer (reference)", "model", "n", "claims", "decided", "accuracy among decided", "confident errors", "95% interval"]]
+    write("tab3_e1", "Tab. 3: E1, the lexicon's verdicts against the planted truth, by tier (lexicon v3 with D74's fixes)",
           [("", t)],
           "Data layer: the lexicon on the oracle (what the sample supports); model layer: on the fitted model, against the oracle's labels; "
           "end to end: on the fitted model, against the planted labels (D12). Each tier pools its three seeds (synthetic: the discovery "
-          "seed and the two confirmation seeds); the model layer counts only the claims the oracle decides. Confident errors: a false claim certified or a true claim refuted, over all claims (D31).",
-          ["lllrrrrr"])  # fmt: skip
+          "seed and the two confirmation seeds); the model layer counts only the claims the oracle decides. Confident errors: a false claim "
+          "certified or a true claim refuted, over all claims (D31), with a 95% percentile interval from a bootstrap over the datasets (9 per cell).",
+          ["lllrr" + r">{\raggedleft\arraybackslash}p{1.2cm}" * 3 + r">{\raggedleft\arraybackslash}p{2.1cm}"])  # fmt: skip
 
 
 def _e3_row(name: str, rows: pd.DataFrame) -> dict:
@@ -215,38 +231,63 @@ def _e3_row(name: str, rows: pd.DataFrame) -> dict:
             "E_U": f"{1 - p_on / p_off:.2f}" if p_off else "–", "cost per run": f"${rows.cost.mean():.4f}"}  # fmt: skip
 
 
+def _pct(value: float, lo: float, hi: float) -> str:
+    return f"{value:.1%} ({lo:.1%}–{hi:.1%})"
+
+
 def tab4() -> None:
-    haiku = pd.read_csv(RESULTS / "e3" / "v3-x3" / "haiku" / "rows.csv")
-    sonnet = pd.read_csv(RESULTS / "e3" / "v3-x3" / "sonnet" / "rows.csv")
-    qwen = pd.read_csv(RESULTS / "e3" / "v3-x3" / "qwen3.8-27b" / "rows.csv")
-    local = pd.read_csv(RESULTS / "local" / "run" / prompts.LOCAL_VERSION / "rows.csv")
-    haiku = haiku[~haiku["pilot dataset"]]
-    rows = [_e3_row("Claude Haiku 5.5, global (E3)", haiku),
-            _e3_row("Claude Haiku 5.5, global, facts only (H1)", haiku[haiku.handover == "H1"]),
-            _e3_row("Claude Haiku 5.5, global, with certified statements (H2)", haiku[haiku.handover == "H2"]),
-            _e3_row("Claude Sonnet 5.5, global (E3 subset)", sonnet[~sonnet["pilot dataset"]]),
-            _e3_row("qwen3.8:27b (NVFP4), self-hosted, global (E3 subset)", qwen[~qwen["pilot dataset"]]),
-            _e3_row("Claude Haiku 5.5, adverse-action notices (local spot check)", local[~local["pilot notice"]])]  # fmt: skip
-    effect = pd.read_csv(RESULTS / "e2" / "v2" / "text" / "false_alarms" / "e3_effect.csv").set_index("quantity").value
-    labelled = {"Writer, setting": "Claude Haiku 5.5, global, with author-reviewed labels", "runs": "40 drafts, all released texts with a false claim",
-                "released / reduced / template / escalate": "", "repair rounds (mean)": "",
-                "P_U before": f"{float(effect['P_U off, labelled']):.1%} (95% interval " + "–".join(f"{float(x):.1%}" for x in effect['P_U off, labelled, 95% interval'].split(' to ')) + ")",
-                "P_U after": f"{float(effect['P_U on, labelled (open: as errors)'].split()[0]):.2%}",
-                "E_U": f"{float(effect['E_U, labelled']):.2f} (worst case {float(effect['E_U, worst case (P_U on with open texts, P_U off at its interval' + chr(39) + 's low end)']):.2f})",
-                "cost per run": ""}  # fmt: skip
-    rows.insert(1, labelled)
-    write("tab4_e3", "Tab. 4: survival, control effectiveness and cost (E3, D36)", [("", pd.DataFrame(rows))],
-          "Outside the pilot datasets and the pilot notices. P_U: share of texts with a claim false against the fitted model, as read by three "
-          "scoring readings apart from the gate's (a claim counts if two find it); before = the writer's first draft, after = the released "
-          "text; E_U = 1 − P_U after / P_U before. With author-reviewed labels, most false claims in released texts are misreadings by the "
-          "scoring readings. H1: the facts only; H2: the facts and the statements the verifier certifies. Cost per run: every call of the "
-          "trace at its price when made (batch prices for E3).",
-          ["p{3.7cm}p{1.7cm}p{2.1cm}p{1.1cm}p{1.9cm}p{1.1cm}p{1.6cm}p{1.1cm}"])  # fmt: skip
+    d74 = pd.read_csv(RESULTS / "e3" / E3_RUN / "haiku" / "rows.csv")
+    d74 = d74[~d74["pilot dataset"]]
+    tiers = d74.naming.eq("codes").map({True: "plasmode", False: "synthetic"})
+    rerun = []
+    for tier in ("synthetic", "plasmode"):
+        part = d74[tiers == tier]
+        rerun += [_e3_row(f"{tier}, global", part), _e3_row(f"{tier}, facts only (H1)", part[part.handover == "H1"]),
+                  _e3_row(f"{tier}, with certified statements (H2)", part[part.handover == "H2"])]  # fmt: skip
+    for tier, folder in LOCAL_RUNS.items():
+        local = pd.read_csv(folder / "rows.csv")
+        rerun.append(_e3_row(f"{tier}, adverse-action notices", local[~local["pilot notice"]]))
+    rerun = pd.DataFrame(rerun).rename(columns={"Writer, setting": "Tier, texts"})
+    residual = pd.read_csv(RESULTS / "e3" / E3_RUN / "independent" / "residual_by_standard.csv")
+    score = pd.read_csv(RESULTS / "e3" / E3_RUN / "blind" / "score.csv").set_index(["standard", "stratum"])
+    readers = {"haiku": "Claude Haiku 5.5 (the gate's extractor, x5)", "luna": "GPT-6 Luna (another vendor)", "either": "either reader"}
+    rows = []
+    for tier in ("synthetic", "plasmode"):
+        for standard in ("refuted", "release rule"):
+            for reader, name in readers.items():
+                r = residual[(residual.tier == tier) & (residual.standard == standard) & (residual.reader == reader)].iloc[0]
+                rows.append({"Tier, standard": f"{tier}, {standard}", "Read by": name, "P_U before": _pct(r["P_U off"], r["off lo"], r["off hi"]),
+                             "P_U after": _pct(r["P_U on"], r["on lo"], r["on hi"]),
+                             "of LLM-written texts": _pct(r["P_U on, LLM-written"], r["on, LLM-written lo"], r["on, LLM-written hi"]),
+                             "of templates": _pct(r["P_U on, template"], r["on, template lo"], r["on, template hi"]),
+                             "E_U": f"{r['E_U']:.2f} ({r['E_U lo']:.2f} to {r['E_U hi']:.2f})"})  # fmt: skip
+            if tier == "synthetic":
+                b = lambda stratum: score.loc[(standard, stratum)]  # noqa: E731
+                rows.append({"Tier, standard": f"{tier}, {standard}", "Read by": "blind labels, one rater (40 texts)",
+                             "P_U before": f"{_pct(b('draft').P_U, b('draft').lo, b('draft').hi)}, {int(b('draft').errors)} of {int(b('draft').labelled)}",
+                             "P_U after": _pct(b("on (weighted)").P_U, b("on (weighted)").lo, b("on (weighted)").hi),
+                             "of LLM-written texts": f"{int(b('LLM-written').errors)} of {int(b('LLM-written').labelled)}",
+                             "of templates": f"{int(b('template').errors)} of {int(b('template').labelled)}",
+                             "E_U": f"{b('E_U').P_U:.2f} ({b('E_U').lo:.2f} to {b('E_U').hi:.2f})"})  # fmt: skip
+    first = {name: pd.read_csv(RESULTS / "e3" / FIRST_RUN / folder / "rows.csv") for name, folder in
+             (("Claude Haiku 5.5", "haiku"), ("Claude Sonnet 5.5 (subset)", "sonnet"), ("qwen3.8:27b, self-hosted (subset)", "qwen3.8-27b"))}  # fmt: skip
+    first = pd.DataFrame([_e3_row(name, rows_[~rows_["pilot dataset"]]) for name, rows_ in first.items()])
+    write("tab4_e3", "Tab. 4: survival, control effectiveness and cost (E3, D36)",
+          [("E3 with D74's fixes: Claude Haiku 5.5, lexicon v3, writer prompts v4, extractor x5", rerun),
+           ("The residual of D74 by reference and standard", pd.DataFrame(rows)),
+           ("E3's first run: lexicon v2, writer prompts v3, extractor x3 (synthetic tier)", first)],
+          "Outside the pilot datasets and the pilot notices. P_U: share of texts with a claim false against the fitted model (refuted), or false "
+          "or stated as settled where the facts leave it open (release rule); before = the writer's first draft, after = the released text; "
+          "E_U = 1 − P_U after / P_U before. In the first and third parts, P_U is as read by E3's three scoring readings (the gate's extractor "
+          "request, replicas 3 to 5; a claim counts if two find it). In the second, intervals for the readers come from a bootstrap over the "
+          "datasets; for the blind labels, Wilson intervals per stratum, P_U after weighted by the strata's population sizes, and E_U from a "
+          "stratified bootstrap. Cost per run: every call of the trace at its price when made (batch prices).",
+          ["p{4cm}p{1cm}p{2.3cm}p{1.1cm}p{1.2cm}p{1.2cm}p{1cm}p{1.2cm}", "p{2.2cm}p{3cm}p{2cm}p{2cm}p{1.7cm}p{1.7cm}p{1.9cm}",
+           "p{4cm}p{1cm}p{2.3cm}p{1.1cm}p{1.2cm}p{1.2cm}p{1cm}p{1.2cm}"])  # fmt: skip
 
 
-CRITICS = {"GPT-6 Luna (c1)": ("gpt-6-luna", "c1"), "GPT-6 Luna, matched inputs (c2)": ("gpt-6-luna", "c2"),
-           "GPT-6.1 Sol (c1)": ("gpt-6.1-sol", "c1")}  # results/e2/v2/text/critic/<folder>/<prompt version>
 CORRECT = ("correct", "control", "control text")
+CRITIC = RESULTS / "e2" / "v3-d74" / "text" / "critic" / "gpt-6-luna" / "c3"  # the critic in D75's configuration (D79)
 
 
 def _share(hits: int, n: int) -> str:
@@ -254,10 +295,8 @@ def _share(hits: int, n: int) -> str:
 
 
 def tab5() -> None:
-    base = RESULTS / "e2" / "v2" / "text" / "critic"
-    tables = {name: pd.read_csv(base / folder / version / "cases.csv") for name, (folder, version) in CRITICS.items()
-              if (base / folder / version / "cases.csv").exists()}  # fmt: skip
-    luna = next(iter(tables.values()))
+    t = pd.read_csv(CRITIC / "cases.csv")
+    t = t[(t.critiqued == True) & (t.source != "blind")]  # noqa: E712
     sets = [  # name, rows, label column, what is counted
         ("LLM-written errors caught (final labels)", "llm", "role", "error"),
         ("LLM-written errors caught (author's first pass)", "llm", "first pass", "error"),
@@ -268,90 +307,52 @@ def tab5() -> None:
         ("Template texts, every claim certified, blocked", "control", "role", "correct"),
         ("Control mutants (a step moved inside the tolerance), blocked", "script", "role", "control"),
     ]  # fmt: skip
-    checkers = [("Gate (x4)", luna)] + [(f"Critic: {n}", t) for n, t in tables.items()]
+    columns = {"Gate (x5)": "gate caught", "Critic c3 (GPT-6 Luna)": "blocked"}
     rows = []
     for name, source, column, kind in sets:
-        row = {"Texts": name}
-        for who, table in checkers:
-            part = table[(table.source == source.split()[0]) & (table.critiqued == True)]  # noqa: E712
-            if source.endswith("M9"):
-                part = part[part.operator == "M9"]
-            part = part[part[column].isin(CORRECT if kind == "correct" else (kind,))]
-            caught = part["gate caught" if who.startswith("Gate") else "blocked"].astype(bool)
-            row[who] = _share(int(caught.sum()), len(part)) if len(part) else "–"
-        rows.append(row)
-    row = {"Texts": "Balanced accuracy: errors (LLM-written, final labels, and scripted); known-correct texts (templates, control mutants, LLM-written sentences judged correct)"}
-    for who, table in checkers:
-        t = table[(table.source.isin(("llm", "script", "control"))) & (table.critiqued == True)]  # noqa: E712
-        blocked = t["gate caught" if who.startswith("Gate") else "blocked"].astype(bool)
-        errors, correct = t.role == "error", t.role.isin(CORRECT)
-        complete = {"llm", "script", "control"} <= set(t.source)  # only on all three sets (Sol did not run the scripted ones)
-        row[who] = f"{(blocked[errors].mean() + (~blocked[correct]).mean()) / 2:.2f}" if complete else "–"
-    rows.append(row)
-    fa = pd.read_csv(RESULTS / "e2" / "v2" / "text" / "false_alarms" / "score.csv").set_index("extractor").loc["x4"]
-    gate_texts = pd.read_csv(RESULTS / "e2" / "v2" / "text" / "false_alarms" / "texts_x4.csv")
-    gate_texts = gate_texts[gate_texts.scored == True].assign(handover=lambda d: d.run.str.split("_").str[2])  # noqa: E712
-    for variant, label in (("", "E3's released texts (LLM-written), blocked"), ("H1", "  of them written from the facts only (H1)"),
-                           ("H2", "  of them written with the certified statements (H2)")):  # fmt: skip
-        g = gate_texts[gate_texts.handover == variant] if variant else gate_texts
-        row = {"Texts": label, "Gate (x4)": _share(int(g.blocked.sum()), len(g))}
-        for n, t in tables.items():
-            e3 = t[(t.source == "e3") & (t.critiqued == True)]  # noqa: E712
-            e3 = e3[e3.case.str.split("_").str[2] == variant] if variant else e3
-            row[f"Critic: {n}"] = _share(int(e3.blocked.astype(bool).sum()), len(e3)) if len(e3) else "–"
-        rows.append(row)
-    labelled = {n: base / folder / version / "labels" / "score.csv" for n, (folder, version) in CRITICS.items()}
-    row = {"Texts": "E3's released texts: correct texts blocked (false-alarm rate, labelled)", "Gate (x4)": f"{float(fa['false-alarm rate (per correct text)']):.1%}"}
-    for n, t in tables.items():
-        has_e3 = (t.source == "e3").any()
-        rate = pd.read_csv(labelled[n]).set_index("checker").loc["critic", "false-alarm rate (per correct text)"] if labelled[n].exists() else None
-        row[f"Critic: {n}"] = f"{rate:.1%}" if rate is not None else "labels pending" if has_e3 else "–"
-    rows.append(row)
-    first = labelled["GPT-6 Luna (c1)"]
-    if first.exists():  # the author's labels of a sample of c1's blocks, and each flag's type (flag_types.csv, assigned by hand)
-        score = pd.read_csv(first).set_index("checker").loc["critic"]
-        types = pd.read_csv(first.parent / "flag_types.csv")
-        misses = types[(types.label == "error") & types["gate miss"]].text.nunique()
-        sample = int(score["labelled blocked texts"])
-        others = {f"Critic: {n}": "–" for n in tables if n != "GPT-6 Luna (c1)"}
-        rows.append({"Texts": "E3's released texts: blocked texts with an error by the author's labels", "Gate (x4)": _share(int(fa["real errors"]), int(fa["blocked"])),
-                     "Critic: GPT-6 Luna (c1)": f"{_share(int(score['real error (labelled)']), sample)}, sample"} | others)  # fmt: skip
-        rows.append({"Texts": "E3's released texts: blocked texts with an error the round trip does not check", "Gate (x4)": "–",
-                     "Critic: GPT-6 Luna (c1)": f"{_share(misses, sample)}, sample"} | others)  # fmt: skip
-        compared = base / "gpt-6-luna" / "c2" / "compare.csv"
-        if compared.exists() and "Critic: GPT-6 Luna, matched inputs (c2)" in [f"Critic: {n}" for n in tables]:
-            kept = pd.read_csv(compared).set_index("set").loc["E3 texts c1 blocked, labelled real error by the author"]
-            rows.append({"Texts": "  of these texts with an error (c1's sample), blocked by c2", "Gate (x4)": "–", "Critic: GPT-6 Luna (c1)": "–",
-                         "Critic: GPT-6 Luna, matched inputs (c2)": _share(int(kept.k), int(kept.n)), "Critic: GPT-6.1 Sol (c1)": "–"})  # fmt: skip
-    confident, cost = {"Texts": "Critic's confident errors: correct text blocked at p ≥ 0.9 / error passed at p ≤ 0.1"}, {"Texts": "Cost per text (USD)"}
-    for n, t in tables.items():
-        lab = t[(t.source != "e3") & (t.critiqued == True)]  # noqa: E712
-        wrong_block = lab[lab.role.isin(CORRECT) & lab.blocked.astype(bool)]
-        wrong_pass = lab[(lab.role == "error") & ~lab.blocked.astype(bool)]
-        confident[f"Critic: {n}"] = f"{int((wrong_block.p_error >= 0.9).sum())} of {len(wrong_block)} / {int((wrong_pass.p_error <= 0.1).sum())} of {len(wrong_pass)}"
-        cost[f"Critic: {n}"] = f"{t.cost.mean():.4f}"
-    confident["Gate (x4)"] = "no probability"
-    cost["Gate (x4)"] = f"{3 * 1.628 / 9084:.4f}"  # three extractor readings at x4's measured batch price (e2_false_alarms.PER_CALL)
-    rows += [confident, cost]
-    columns = ["Texts", "Gate (x4)"] + [f"Critic: {n}" for n in tables]
-    write("tab5_critic", "Tab. 5: the gate and an LLM critic on the same texts (D56, D72)", [("", pd.DataFrame(rows)[columns])],
+        part = t[t.source == source.split()[0]]
+        if source.endswith("M9"):
+            part = part[part.operator == "M9"]
+        part = part[part[column].isin(CORRECT if kind == "correct" else (kind,))]
+        rows.append({"Texts": name} | {who: _share(int(part[flag].astype(bool).sum()), len(part)) for who, flag in columns.items()})
+    errors, correct = t.role == "error", t.role.isin(CORRECT)
+    rows.append({"Texts": "Balanced accuracy: errors (LLM-written, final labels, and scripted); known-correct texts (templates, control mutants, LLM-written sentences judged correct)"}
+                | {who: f"{(t[flag].astype(bool)[errors].mean() + (~t[flag].astype(bool))[correct].mean()) / 2:.2f}" for who, flag in columns.items()})  # fmt: skip
+    readers = pd.read_csv(RESULTS / "e3" / E3_RUN / "blind" / "readers.csv").set_index(["reader", "standard", "stratum"])
+    for standard, labelled_as in (("refuted", "false"), ("release rule", "false or not settled")):
+        for kind, label in (("all", "all 42 entries"), ("LLM-written", "LLM-written releases")):
+            gate, critic = readers.loc[("haiku", standard, kind)], readers.loc[("critic c3", standard, kind)]
+            rows.append({"Texts": f"Blind sample ({label}): texts with a sentence labelled {labelled_as}, flagged",
+                         "Gate (x5)": _share(int(gate["flagged by the reader"]), int(gate["labelled errors"])) + ", as a scoring reader",
+                         "Critic c3 (GPT-6 Luna)": _share(int(critic["flagged by the reader"]), int(critic["labelled errors"]))})  # fmt: skip
+            rows.append({"Texts": "  texts labelled without such a sentence, flagged",
+                         "Gate (x5)": _share(int(gate["flagged anyway"]), int(gate["labelled no error"])) + ", as a scoring reader",
+                         "Critic c3 (GPT-6 Luna)": _share(int(critic["flagged anyway"]), int(critic["labelled no error"]))})  # fmt: skip
+    wrong_block = t[t.role.isin(CORRECT) & t.blocked.astype(bool)]
+    wrong_pass = t[(t.role == "error") & ~t.blocked.astype(bool)]
+    rows.append({"Texts": "Critic's confident errors: correct text blocked at p ≥ 0.9 / error passed at p ≤ 0.1", "Gate (x5)": "no probability",
+                 "Critic c3 (GPT-6 Luna)": f"{int((wrong_block.p_error >= 0.9).sum())} of {len(wrong_block)} / {int((wrong_pass.p_error <= 0.1).sum())} of {len(wrong_pass)}"})  # fmt: skip
+    rows.append({"Texts": "Cost per text (USD)", "Gate (x5)": f"{3 * 1.628 / 9084:.4f} (x4's batch price)", "Critic c3 (GPT-6 Luna)": f"{pd.read_csv(CRITIC / 'cases.csv').cost.mean():.4f}"})
+    write("tab5_critic", "Tab. 5: the gate and an LLM critic on the same texts (D78, D79, D83)", [("", pd.DataFrame(rows))],
           "Outside the pilot datasets. Blocked: the critic names a problem; the gate does not release the text (a text the extractor could not "
-          "read falls back to the template). Final labels: the author's labels after a review against the lexicon; first pass: the author's "
-          "labels alone, made without any checker's verdict (unsure left out). Template texts and control mutants are correct by construction "
-          "(every claim certified on the fitted model). Matched inputs (prompts c2): the critic gets the facts each writer saw (H2, with the "
-          "certified statements, for an H2 text) and the writer's whole set of rules with the DSL table; c1 gets the facts only (H1) and the "
-          "rules for choosing words. E3's released texts blocked by c2 are not labelled yet. The gate's cost is its three readings at batch prices; the critic's one call at "
-          "synchronous prices, reasoning included.",
-          [r">{\raggedright\arraybackslash}p{4.9cm}" + r">{\raggedright\arraybackslash}p{2.45cm}" * (len(columns) - 1)])  # fmt: skip
+          "read counts as caught, D32). Final labels: the author's labels after a review against the lexicon; first pass: the author's labels "
+          "alone, made without any checker's verdict (unsure left out). Template texts and control mutants are correct by construction "
+          "(every claim certified on the fitted model). The critic c3 gets the facts each writer saw (H2 with the certified statements for an "
+          "H2 text) and the writer's whole set of rules, from writer prompt v4 as D74's writer got it. Blind sample: B01 to B40 of D76's sample, "
+          "labelled by the author (D82, D83); the gate's column there is its extractor as one of E3's scoring readings, since the gate itself "
+          "released every text of the on arm. The gate's cost is its three readings at batch prices; the critic's one call at synchronous "
+          "prices, reasoning included.",
+          [r">{\raggedright\arraybackslash}p{7.4cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{3.4cm}"])  # fmt: skip
 
 
 def _interval(row: pd.Series) -> str:
-    return f"{row['P_U']:.1%} ({row['P_U 95% low']:.1%}–{row['P_U 95% high']:.1%})"
+    return f"{row['P_U']:.1%} ({max(row['P_U 95% low'], 0.0) + 0.0:.1%}–{row['P_U 95% high']:.1%})"  # a Wilson bound of -0.0 prints as 0.0%
 
 
 def tab6() -> None:
-    """What the gate adds over its template and a plain prompt (D71), on E3's facts-only cells outside the pilot datasets."""
-    path = RESULTS / "e3" / "v3-x3" / "baselines" / prompts.PLAIN_VERSION / "compare.csv"
+    """What the gate adds over its template and a plain prompt (D71), beside D74 (D76), on the facts-only cells of each
+    tier outside the pilot datasets."""
+    path = RESULTS / "e3" / E3_RUN / "baselines" / prompts.PLAIN_VERSION / "compare.csv"
     if not path.exists():
         return
     t = pd.read_csv(path)
@@ -361,32 +362,34 @@ def tab6() -> None:
              "gate on, exit RELEASED_REDUCED": "  gate on: released reduced", "gate on, exit TEMPLATE": "  gate on: template"}  # fmt: skip
     t = t[t.arm.isin(names)].assign(arm=lambda d: d.arm.map(names))
     control = pd.DataFrame({
-        "Arm": t.arm, "texts": t["texts scored"], "P_U (95% interval)": t.apply(_interval, axis=1),
+        "Tier": t.tier, "Arm": t.arm, "texts": t["texts scored"], "P_U (95% interval)": t.apply(_interval, axis=1),
         "E_U vs gate off": t["E_U vs gate off"].map(lambda v: f"{v:.2f}"), "E_U vs plain prompt": t["E_U vs plain prompt"].map(lambda v: f"{v:.2f}"),
         "claims per text": t["claims per text"].map(lambda v: f"{v:.1f}"), "words per text": t["words per text"].map(lambda v: f"{v:.0f}"),
         "claims false vs planted truth": t["claims false vs T, no hedges"].map(lambda v: f"{v:.1%}"),
         "cost per text": t["cost per text"].map(lambda v: "–" if pd.isna(v) else f"${v:.4f}"),
     })  # fmt: skip
     kinds = pd.DataFrame({
-        "Arm": t.arm,
+        "Tier": t.tier, "Arm": t.arm,
         **{name: t[f"{name} claims per text"].map(lambda v: f"{v:.1f}") for name in ("strength", "direction", "rank", "share", "comparison", "interaction", "jump or peak")},
         "hedges (share of claims)": t["hedge share of claims"].map(lambda v: f"{v:.1%}"),
         "every required term covered": t["texts covering every required term"].map(lambda v: f"{v:.0%}"),
         "numbers no claim checks": t["unchecked numbers per text"].map(lambda v: f"{v:.1f}"),
     })  # fmt: skip
-    write("tab6_baselines", "Tab. 6: what the gate adds over its template and over a plain prompt (E3 cells, facts only; D71)",
+    cells = t.drop_duplicates("tier").set_index("tier").cells
+    write("tab6_baselines", "Tab. 6: what the gate adds over its template and over a plain prompt (facts-only cells; D71, D76)",
           [("Control effectiveness and volume", control), ("Claims per text by kind, hedges, coverage and numbers", kinds)],
-          f"Claude Haiku 5.5 on E3's {int(t.cells.iloc[0])} facts-only (H1) cells outside the pilot datasets (16 datasets × 2 models × 2 namings × 5 draws), every "
-          "arm scored by E3's three scoring readings (extractor x3; a claim counts if two find it) and verified on the fitted model under "
-          "lexicon v2. Template only: the gate's fallback text from the certified statements, without an LLM. Plain prompt: the same writer "
-          "and facts with the writer's role and rules for the text, but no lexicon words, DSL, plan, verifier or repair (prompts p1). Gate off: "
-          "the first draft under the gate's prompt; gate on: the released text, and by exit state. P_U: share of texts with a claim false "
-          "against the fitted model, as read; 95% Wilson interval. E_U = 1 − P_U / P_U of the reference arm. Claims false vs planted "
-          "truth: the share of claims other than hedges that are false against T (a hedge is about the sample, not T). Required terms: the three most "
-          "important features and every pair with a share of at least 10%. Numbers no claim checks: statements with a number that no DSL "
-          "form expresses (the gate's round trip fails them). Cost per text: the writer's and the gate's calls at batch prices, scoring "
-          "readings not included.",
-          ["p{3.6cm}rp{2.4cm}rrrrrr", "p{3.6cm}rrrrrrrp{1.6cm}p{1.6cm}p{1.6cm}"])  # fmt: skip
+          f"Claude Haiku 5.5 on the facts-only (H1) cells of D74 outside the pilot datasets ({int(cells['synthetic'])} synthetic: 16 datasets × 2 models × "
+          f"2 namings × 5 draws; {int(cells['plasmode'])} plasmode: 18 datasets × 2 models × 5 draws), every arm scored by E3's three scoring "
+          "readings (extractor x5; a claim counts if two find it) and verified on the fitted model under lexicon v3 with D74's fixes. Template "
+          "only: the gate's fallback text from the certified statements, without an LLM. Plain prompt: the same writer and facts with the "
+          "writer's role and rules for the text, but no lexicon words, DSL, plan, verifier or repair (prompts p1). Gate off: the first draft "
+          "under the gate's prompt; gate on: the released text, and by exit state. P_U: share of texts with a claim false against the fitted "
+          "model, as read; 95% Wilson interval. E_U = 1 − P_U / P_U of the reference arm. Claims false vs planted truth: the share of claims "
+          "other than hedges that are false against T (a hedge is about the sample, not T). Required terms: the three most important features "
+          "and every pair with a share of at least 10%. Numbers no claim checks: statements with a number that no DSL form expresses (the "
+          "gate's round trip fails them). Cost per text: the writer's and the gate's calls at batch prices, scoring readings not included.",
+          ["lp{3cm}r" + r">{\raggedleft\arraybackslash}p{2.1cm}" + r">{\raggedleft\arraybackslash}p{1.05cm}" * 6,
+           "lp{3cm}" + r">{\raggedleft\arraybackslash}p{0.95cm}" * 7 + r">{\raggedleft\arraybackslash}p{1.25cm}" * 3])  # fmt: skip
 
 
 def main() -> None:

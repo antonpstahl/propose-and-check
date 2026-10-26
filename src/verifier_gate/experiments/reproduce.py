@@ -2,7 +2,8 @@
 
 Inputs, as committed: the code, the frozen prompts and lexicon, the LLM cache (cache/llm: every answer as received),
 E3's run traces (results/e3/v3-x3/*/runs: the record of what was paid; E3 ran with extractor x3, which the current
-code reads from git where it needs it), and the labels (results/e2/v2/text/labels, .../false_alarms). Not committed:
+code reads from git where it needs it), and the labels (results/e2/v2/text/labels, .../false_alarms, and the blind
+labels in results/e3/v4-x5-m5-d74/blind/labels). Not committed:
 the Facts and refits in cache/facts and the TaiwanCredit file in data/raw. Unpacked from the Facts archive
 (experiments/facts_archive.py), they make the run offline; otherwise the first steps refit every model from the fixed
 seeds (about six hours) and download TaiwanCredit from UCI.
@@ -41,11 +42,13 @@ REPO = Path(__file__).parents[3]
 LABELS = "results/e2/v2/text/false_alarms/labels.json"
 DRAFT_LABELS = "results/e2/v2/text/false_alarms/drafts/labels.json"
 CRITIC_LABELS = "results/e2/v2/text/critic/gpt-6-luna/c1/labels/labels.json"
+BLIND_LABELS = "results/e3/v4-x5-m5-d74/blind/labels"  # one file per rater, read back from the page's store (D82)
 V3_STEPS = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "table1-v3", "e3-rerun", "e3-rerun-truth", "e3-text-error",
              "local-refits-plasmode", "local-facts-plasmode", "local-run-plasmode",
              "e1-d74-discovery", "e1-d74-confirmation", "e1-d74-plasmode", "snap-check", "e2-plan-d74-discovery",
              "e2-plan-d74-confirmation", "e2-plan-d74-plasmode", "e3-rerun-d74", "e3-rerun-d74-truth",
-             "local-run-plasmode-d74", "e2-text-x5", "e2-text-x5-plasmode", "e2-text-x5-labelled", "e3-baselines-d74", "e3-independent-d74", "e2-critic-c3"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
+             "local-run-plasmode-d74", "e2-text-x5", "e2-text-x5-plasmode", "e2-text-x5-labelled", "e3-baselines-d74", "e3-independent-d74", "e2-critic-c3",
+             "e3-blind-score", "deferred"}  # under lexicon v3 (D63-D67, D74); every other step replays a result run under v2 (PIN=v2)
 BEFORE_D74 = {"e1-v3-discovery", "e1-v3-confirmation", "e1-v3-plasmode", "e3-rerun", "e3-rerun-truth", "local-run-plasmode"}  # v3, as run before D74's fixes
 STEPS = [  # name, module, arguments
     ("facts", "build_facts", []),
@@ -96,6 +99,8 @@ STEPS = [  # name, module, arguments
     ("e2-critic-c2", "e2_critic", ["--critic", "c2"]),  # the critic with the writer's inputs (D72), every call from the cache
     ("e2-critic-compare", "e2_critic", ["--compare"]),
     ("e2-critic-c3", "e2_critic", ["--critic", "c3"]),  # c3 in D75's configuration (D79), every call from the cache  # c2 beside c1 and the gate
+    ("e3-blind-score", "e3_blind", ["--source", "v4-x5-m5-d74", "--score", BLIND_LABELS]),  # the blind labels of B01-B40 (D82, D83), $0
+    ("deferred", "deferred", []),  # the sizes of the defects D75 deferred, on D74's traces and the LLM cache (D85), $0
     ("local-refits", "local_refits", []),
     ("local-facts", "local_facts", []),
     ("local-pilot", "local_run", ["--pilot"]),

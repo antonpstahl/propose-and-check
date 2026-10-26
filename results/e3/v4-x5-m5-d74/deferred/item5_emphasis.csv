@@ -1,0 +1,11 @@
+tier,where,texts,checked,fired
+plasmode,"gate round trip, draft",400,400,0
+plasmode,"gate round trip, reduced text (not checked)",91,0,0
+plasmode,"scoring, off, draft",359,359,0
+plasmode,"scoring, on, LLM-written",164,164,0
+plasmode,"scoring, on, template",195,195,0
+synthetic,"gate round trip, draft",800,800,0
+synthetic,"gate round trip, reduced text (not checked)",105,0,0
+synthetic,"scoring, off, draft",636,636,0
+synthetic,"scoring, on, LLM-written",451,451,0
+synthetic,"scoring, on, template",188,188,0

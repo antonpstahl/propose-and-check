@@ -1,0 +1,5 @@
+tier,set,scenario,pilot dataset,seed,n,interaction,claim id,claim,kind,role,label,EBM,XGB2,oracle
+plasmode,plasmode,pls-dominant-n30000-s1,False,1,30000,dominant,151,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",direction,strong,False,false,true,false
+plasmode,plasmode,pls-dominant-n30000-s2,False,2,30000,dominant,151,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",direction,strong,False,false,true,false
+plasmode,plasmode,pls-weak-n30000-s1,False,1,30000,weak,151,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",direction,strong,False,false,true,false
+plasmode,plasmode,pls-weak-n30000-s3,False,3,30000,weak,151,"direction(""PAY_0"") in (""increasing"", ""mostly_increasing"")",direction,strong,False,false,true,false

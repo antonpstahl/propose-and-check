@@ -1,0 +1,16 @@
+standard,stratum,labelled,errors,open,P_U,lo,hi,"P_U, open as errors"
+refuted,draft,18.0,5.0,1.0,0.2778,0.125,0.5087,0.3333
+refuted,LLM-written,17.0,4.0,5.0,0.2353,0.0955,0.4726,0.5294
+refuted,template,7.0,0.0,1.0,0.0,0.0,0.3543,0.1429
+refuted,on (weighted),,,,0.1662,0.0415,0.3324,
+refuted,E_U,,,,0.4018,-1.2434,0.8754,
+release rule,draft,18.0,12.0,0.0,0.6667,0.4375,0.8372,0.6667
+release rule,LLM-written,17.0,5.0,5.0,0.2941,0.1328,0.5313,0.5882
+release rule,template,7.0,5.0,0.0,0.7143,0.3589,0.9178,0.7143
+release rule,on (weighted),,,,0.4175,0.2505,0.5846,
+release rule,E_U,,,,0.3737,-0.0852,0.658,
+broad,draft,18.0,15.0,0.0,0.8333,0.6078,0.9416,0.8333
+broad,LLM-written,17.0,13.0,2.0,0.7647,0.5274,0.9045,0.8824
+broad,template,7.0,7.0,0.0,1.0,0.6457,1.0,1.0
+broad,on (weighted),,,,0.8338,0.6676,0.9585,
+broad,E_U,,,,-0.0006,-0.3271,0.2487,

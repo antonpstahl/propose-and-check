@@ -1,8 +1,15 @@
-Arm,texts,P_U (95% interval),E_U vs gate off,E_U vs plain prompt,claims per text,words per text,claims false vs planted truth,cost per text
-Template only (no LLM),319,0.0% (0.0%–1.2%),1.00,1.00,15.9,151,8.5%,$0.0000
-Plain prompt (no gate),319,95.9% (93.2%–97.6%),-0.17,0.00,21.9,248,27.1%,$0.0003
-Gate off (first draft),320,81.9% (77.3%–85.7%),0.00,0.15,16.3,165,16.6%,–
-Gate on (released text),320,4.7% (2.9%–7.6%),0.94,0.95,15.2,149,8.5%,$0.0021
-  gate on: released as written,86,16.3% (10.0%–25.5%),0.80,0.83,15.4,158,7.3%,$0.0021
-  gate on: released reduced,29,3.5% (0.6%–17.2%),0.96,0.96,12.3,131,7.2%,$0.0028
-  gate on: template,205,0.0% (0.0%–1.8%),1.00,1.00,15.5,147,9.1%,$0.0019
+Tier,Arm,texts,P_U (95% interval),E_U vs gate off,E_U vs plain prompt,claims per text,words per text,claims false vs planted truth,cost per text
+synthetic,Template only (no LLM),320,0.0% (0.0%–1.2%),1.00,1.00,15.9,196,0.6%,$0.0000
+synthetic,Plain prompt (no gate),319,93.1% (89.8%–95.4%),-0.37,0.00,21.1,248,26.8%,$0.0003
+synthetic,Gate off (first draft),320,67.8% (62.5%–72.7%),0.00,0.27,15.9,176,11.6%,–
+synthetic,Gate on (released text),320,3.4% (1.9%–6.0%),0.95,0.96,14.6,183,0.9%,$0.0023
+synthetic,  gate on: released as written,107,8.4% (4.5%–15.2%),0.88,0.91,14.3,187,0.8%,$0.0023
+synthetic,  gate on: released reduced,46,4.3% (1.2%–14.5%),0.94,0.95,11.9,153,1.3%,$0.0028
+synthetic,  gate on: template,167,0.0% (0.0%–2.2%),1.00,1.00,15.5,190,0.8%,$0.0023
+plasmode,Template only (no LLM),179,8.4% (5.1%–13.4%),0.86,0.88,15.2,196,13.3%,$0.0000
+plasmode,Plain prompt (no gate),179,71.0% (63.9%–77.1%),-0.18,0.00,18.7,275,36.1%,$0.0003
+plasmode,Gate off (first draft),179,60.3% (53.0%–67.2%),0.00,0.15,15.2,197,23.6%,–
+plasmode,Gate on (released text),179,8.9% (5.6%–14.0%),0.85,0.87,14.7,194,13.2%,$0.0025
+plasmode,  gate on: released as written,13,0.0% (0.0%–22.8%),1.00,1.00,14.6,216,11.7%,$0.0026
+plasmode,  gate on: released reduced,18,5.6% (1.0%–25.8%),0.91,0.92,10.9,158,14.6%,$0.0032
+plasmode,  gate on: template,148,10.1% (6.2%–16.1%),0.83,0.86,15.1,196,13.2%,$0.0024

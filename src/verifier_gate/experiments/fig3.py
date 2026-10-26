@@ -1,15 +1,16 @@
 """Fig. 3: the gate's recall per mutation operator, plan level against text level (plan §8; E2, §14.11, §14.17,
-§14.19, §14.23).
+§14.19, §14.23; D84: in D75's configuration).
 
-One row per operator (e2_mutation.py, M1 to M11 without M10, which is not labelled), and a last row for the
-LLM-written errors with author-reviewed labels. Recall is the share of errors not released (D32). Plan level: the mutated
-claim goes straight to the verifier, pooled over the synthetic tier (all three seeds) and the plasmode tier; it is
-100% for every operator, drawn as a gray reference mark. Text level: the template text with one clause changed and
-its plan unchanged, so only the round trip can catch it, read by extractor x3 and x4 on the synthetic tier and by
-x4 on the plasmode tier (seed 1, D54). M2 and M5 (ranks, shares) have no text-level row: the template texts do not
-state them. Values below 99% are labelled; the numbers behind every mark are written to
-paper/tables/fig3_recall.csv. Colours: categorical slots 1 to 3 of the dataviz palette (validated all-pairs,
-light); marker shapes repeat the encoding.
+One row per operator (e2_mutation.py, M1 to M11 without M10, which has almost no mutants under lexicon v3 and is not
+labelled), and a last row for the LLM-written errors with author-reviewed labels. Recall is the share of errors not
+released (D32). Plan level: the mutated claim goes straight to the verifier, under lexicon v3 with D74's fixes, pooled
+over the synthetic tier (all three seeds) and the plasmode tier; it is 100% for every operator, drawn as a gray
+reference mark. Text level: the template text with one clause changed and its plan unchanged, so only the round trip
+can catch it, read by extractor x5 on the synthetic tier and on the plasmode tier (seed 1, D54; D78). M2 and M5
+(ranks, shares) have no text-level row: the template texts do not state them. The LLM-written errors are the 100
+labelled LLM mutants read by x5 (D78). Values below 99% are labelled; the numbers behind every mark are written to
+paper/tables/fig3_recall.csv. E2 as run with x3 and x4 under v2 stays in results/e2/v2/ and in git. Colours:
+categorical slots 2 and 3 of the dataviz palette (validated all-pairs, light); marker shapes repeat the encoding.
 
 Run: `uv run python -m verifier_gate.experiments.fig3`. Writes paper/figures/fig3_recall.png and .pdf.
 """
@@ -27,7 +28,7 @@ from matplotlib.lines import Line2D  # noqa: E402
 from verifier_gate.experiments.fig2 import GRID, INK, MUTED, SURFACE  # noqa: E402
 
 ROOT = Path(__file__).parents[3]
-E2 = ROOT / "results" / "e2" / "v2"
+E2 = ROOT / "results" / "e2" / "v3-d74"
 OUT = ROOT / "paper"
 OPERATORS = {
     "M1": "direction flipped",
@@ -43,12 +44,11 @@ OPERATORS = {
 }
 LLM_ROW = "LLM-written errors (author-reviewed labels)"
 TEXT = {  # condition: (script.csv, colour, marker)
-    "text, synthetic, x3": (E2 / "text" / "x3" / "script.csv", "#eb6834", "s"),
-    "text, synthetic, x4": (E2 / "text" / "x4" / "script.csv", "#2a78d6", "o"),
-    "text, plasmode, x4": (E2 / "text_plasmode" / "x4" / "script.csv", "#1baf7a", "^"),
+    "text, synthetic, x5": (E2 / "text" / "x5" / "script.csv", "#2a78d6", "o"),
+    "text, plasmode, x5": (E2 / "text_plasmode" / "x5" / "script.csv", "#1baf7a", "^"),
 }
 PLAN = (E2 / "plan_discovery", E2 / "plan_seeds-2-3", E2 / "plan_plasmode")
-OFFSET = {"plan level": 0.3, "text, synthetic, x3": 0.1, "text, synthetic, x4": -0.1, "text, plasmode, x4": -0.3}  # sub-rows
+OFFSET = {"plan level": 0.25, "text, synthetic, x5": 0, "text, plasmode, x5": -0.25}  # sub-rows
 
 
 def data() -> pd.DataFrame:
@@ -63,11 +63,9 @@ def data() -> pd.DataFrame:
         t = t[(t.role == "error") & (t.read == True)]  # noqa: E712
         for op, part in t.groupby("operator"):
             rows.append({"row": op, "condition": condition, "errors": len(part), "caught": int(part.caught.sum())})
-    labelled = pd.read_csv(E2 / "text" / "labels" / "score_final.csv").set_index("extractor")
-    for version in ("x3", "x4"):
-        errors = int(labelled.at[version, "errors"])
-        rows.append({"row": LLM_ROW, "condition": f"text, synthetic, {version}", "errors": errors,
-                     "caught": round(float(labelled.at[version, "recall"]) * errors)})  # fmt: skip
+    labelled = pd.read_csv(E2 / "text" / "x5" / "labelled_score.csv").set_index("labels").loc["final"]
+    errors = int(labelled["errors"])
+    rows.append({"row": LLM_ROW, "condition": "text, synthetic, x5", "errors": errors, "caught": round(float(labelled["recall"]) * errors)})
     out = pd.DataFrame(rows)
     out["recall"] = out.caught / out.errors
     return out

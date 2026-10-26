@@ -33,8 +33,13 @@ and adjudication.json if the raters settled their disagreements (who decided eac
 - score.csv: P_U per stratum and standard with 95% Wilson intervals; P_U(on) weighted by the strata's population
   sizes; E_U with a stratified bootstrap interval; open texts counted both ways;
 - readers.csv: the readers' verdicts (e3_independent) against the labels: how many labelled errors each reader
-  finds;
-- raters.csv: the two raters on the overlap, per sentence and per text, with Cohen's kappa;
+  finds; and the critic's (D79: c3 read the blind texts as a rater sees them), whose one verdict per text counts
+  under both standards;
+- released.csv (D83): every sentence of a released text labelled false, unsettled or misleading, with what the gate
+  did with it: the claims of the released version (the plan, and claims read beyond it) with their verdicts, how many
+  of the gate's three readings found each (a template is not read back), and whether the sentence uses "generally";
+- raters.csv: the two raters on the overlap, per sentence and per text, with Cohen's kappa (empty with one rater:
+  D83 dropped the second);
 - provenance.csv: per label, who set it first and when, how often and by whom it was changed, and its final value.
 
 Run:
@@ -58,6 +63,7 @@ from verifier_gate.experiments import e2_labels, e2_text
 from verifier_gate.experiments import e3_independent as ind
 from verifier_gate.experiments.build_facts import load
 from verifier_gate.experiments.e2_false_alarms import wilson
+from verifier_gate.llm import settings
 from verifier_gate.llm.handover import handover
 from verifier_gate.verifier.certified import certified_plan
 
@@ -71,6 +77,7 @@ LABELS = ("supported", "false", "unsettled", "misleading", "nothing", "unsure")
 WHOLE = ("yes", "no", "unsure")
 ERRORS = {"refuted": ("false",), "release rule": ("false", "unsettled"), "broad": ("false", "unsettled", "misleading")}
 BOOT = 4000
+CRITICS = {"v4-x5-m5-d74": "c3"}  # the critic version that read a source's blind texts (D79), scored against the labels
 
 
 def folder(source: str = ind.SOURCE) -> Path:
@@ -361,22 +368,69 @@ def provenance(raters: dict[str, dict], adjudication: dict | None) -> pd.DataFra
     return pd.DataFrame(rows)
 
 
+def critic_flags(source: str) -> dict[str, bool]:
+    """Per blind item, whether the critic blocked it (D79: c3 read the texts as a rater sees them, by item id); empty
+    if no critic version read this source's sample."""
+    from verifier_gate.experiments import e2_critic  # noqa: PLC0415  (only when scoring a sample a critic read)
+
+    version = CRITICS.get(source)
+    path = e2_critic.folder(settings.CRITIC, version) / "cases.csv" if version else None
+    if path is None or not path.exists():
+        return {}
+    cases = pd.read_csv(path)
+    blind = cases[cases.source == "blind"]
+    return dict(zip(blind.case, blind.blocked.astype(bool)))
+
+
 def readers_table(verdicts: pd.DataFrame, source: str) -> pd.DataFrame:
-    """Each reader's verdict (e3_independent, release rule and refuted) against the labels, on the sampled entries."""
+    """Each reader's verdict (e3_independent, release rule and refuted) against the labels, on the sampled entries;
+    then the critic's (D79), one verdict per text under both standards."""
     rows = []
     texts = {r: pd.read_csv(ind.out_folder(source) / r / "texts.csv").set_index(["run", "arm"]) for r in ind.READERS if (ind.out_folder(source) / r / "texts.csv").exists()}
+    flags = {}
     for reader, table in texts.items():
-        for standard, human in (("refuted", "refuted"), ("release rule", "release rule")):
+        for standard in ("refuted", "release rule"):
             rule = ind.STANDARDS[standard]
-            flagged = [bool(rule(table.loc[(run, arm)])) if (run, arm) in table.index and table.loc[(run, arm)]["scored"] else None
-                       for run, arm in zip(verdicts.run, verdicts.arm)]  # fmt: skip
-            v = verdicts.assign(flagged=flagged)
-            v = v[v.flagged.notna() & v[human].isin(["error", "ok"])]
-            err, ok = v[v[human] == "error"], v[v[human] == "ok"]
-            for kind, part_err, part_ok in [("all", err, ok), *((k, err[err.kind == k], ok[ok.kind == k]) for k in SIZES)]:
-                rows.append({"reader": reader, "standard": standard, "stratum": kind, "labelled errors": len(part_err),
-                             "flagged by the reader": int(part_err.flagged.astype(bool).sum()), "missed": int((~part_err.flagged.astype(bool)).sum()),
-                             "labelled no error": len(part_ok), "flagged anyway": int(part_ok.flagged.astype(bool).sum())})  # fmt: skip
+            flags[(reader, standard)] = [bool(rule(table.loc[(run, arm)])) if (run, arm) in table.index and table.loc[(run, arm)]["scored"] else None
+                                         for run, arm in zip(verdicts.run, verdicts.arm)]  # fmt: skip
+    critic = critic_flags(source)
+    if critic:
+        for standard in ("refuted", "release rule"):
+            flags[(f"critic {CRITICS[source]}", standard)] = [critic.get(item) for item in verdicts.item]
+    for (reader, standard), flagged in flags.items():
+        v = verdicts.assign(flagged=flagged)
+        v = v[v.flagged.notna() & v[standard].isin(["error", "ok"])]
+        err, ok = v[v[standard] == "error"], v[v[standard] == "ok"]
+        for kind, part_err, part_ok in [("all", err, ok), *((k, err[err.kind == k], ok[ok.kind == k]) for k in SIZES)]:
+            rows.append({"reader": reader, "standard": standard, "stratum": kind, "labelled errors": len(part_err),
+                         "flagged by the reader": int(part_err.flagged.astype(bool).sum()), "missed": int((~part_err.flagged.astype(bool)).sum()),
+                         "labelled no error": len(part_ok), "flagged anyway": int(part_ok.flagged.astype(bool).sum())})  # fmt: skip
+    return pd.DataFrame(rows)
+
+
+def released(verdicts: pd.DataFrame, docs: dict, source: str) -> pd.DataFrame:
+    """Every sentence of a released text (arm on) that the rater labelled false, unsettled or misleading, beside what
+    the gate did with it (D83): the claims of the released version on that sentence, the plan's and those read beyond
+    it, with their verdicts; how many of the gate's three readings found each claim (a template is not read back); and
+    whether the sentence uses "generally". One row per entry and sentence."""
+    runs, rows = ind.out_folder(source).parent / ind.WRITER_ARM / "runs", []
+    for entry in verdicts[verdicts.arm == "on"].to_dict("records"):
+        doc = docs.get(entry["item"]) or {}
+        labelled = {int(n): label for n, label in doc.get("labels", {}).items() if label in ERRORS["broad"]}
+        if not labelled:
+            continue
+        final = json.loads((runs / f"{entry['run']}.json").read_text())["versions"][-1]
+        trip, ids = final.get("roundtrip") or {}, json.loads(entry["sentence ids"])
+        text = dict((sid, s) for sid, s in final["sentences"])
+        found = {(sid, dsl): count for sid, dsl, count in trip.get("extracted", [])}
+        for shown_id, label in sorted(labelled.items()):
+            sid = ids[shown_id - 1]
+            claims = [c for c in final["claims"] + trip.get("unplanned", []) if c[0] == sid]
+            rows.append({"item": entry["item"], "kind": entry["kind"], "exit": entry["exit"], "sentence": shown_id, "label": label,
+                         "note": doc.get("notes", {}).get(str(shown_id), ""), "generally": bool(re.search(r"\bgenerally\b", text[sid])),
+                         "claims": "; ".join(f"{c[1]} = {c[2]}" for c in claims), "all certified": all(c[2] == "true" for c in claims),
+                         "readings": "not read back" if entry["kind"] == "template" else "; ".join(str(found.get((sid, c[1]), 0)) for c in claims),
+                         "text": text[sid]})  # fmt: skip
     return pd.DataFrame(rows)
 
 
@@ -400,6 +454,7 @@ def score(out: Path, labels_dir: Path) -> pd.DataFrame:
     table.to_csv(out / "score.csv", index=False)
     key.to_csv(out / "verdicts.csv", index=False)
     readers_table(key, protocol["source"]).to_csv(out / "readers.csv", index=False)
+    released(key, docs, protocol["source"]).to_csv(out / "released.csv", index=False)
     raters_table(raters, items, data["overlap"]).to_csv(out / "raters.csv", index=False)
     provenance(raters, adjudication).to_csv(out / "provenance.csv", index=False)
     return table

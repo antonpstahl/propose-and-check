@@ -95,6 +95,26 @@ def test_two_raters_are_compared_on_the_overlap():
     assert table.loc[("sentence", "release rule"), "agreement"] == 1.0 and table.loc[("text", "refuted"), "agreement"] == 0.5
 
 
+def test_a_labelled_released_sentence_is_shown_beside_the_gates_claims_and_readings(tmp_path, monkeypatch):
+    """released.csv (D83): a labelled sentence of a released text, found by its run id through the shown number, with
+    the claims of the released version on it, their verdicts and how many readings found each."""
+    runs = tmp_path / "haiku" / "runs"
+    runs.mkdir(parents=True)
+    plan = [[3, 'direction("income") in ("decreasing", "mostly_decreasing")', "true", "", "", ""]]
+    version = {"sentences": [[1, "Utilization matters most."], [3, "Risk generally decreases with income."]], "claims": plan,
+               "roundtrip": {"extracted": [[3, plan[0][1], 3]], "unplanned": []}}  # fmt: skip
+    (runs / "r1.json").write_text(json.dumps({"versions": [version]}))
+    monkeypatch.setattr(b.ind, "out_folder", lambda source: tmp_path / "independent")
+    verdicts = pd.DataFrame([{"item": "B01", "run": "r1", "arm": "on", "kind": "LLM-written", "exit": "RELEASED_REDUCED", "sentence ids": "[1, 3]"},
+                             {"item": "B01", "run": "r1", "arm": "off", "kind": "draft", "exit": "RELEASED_REDUCED", "sentence ids": "[1, 3]"}])  # fmt: skip
+    docs = {"B01": {"labels": {"1": "supported", "2": "unsettled"}, "notes": {"2": "shape in between not resolved"}}}
+    table = b.released(verdicts, docs, "any")
+    assert len(table) == 1
+    row = table.iloc[0]
+    assert (row["sentence"], row["label"], row["generally"], row["all certified"], row["readings"]) == (2, "unsettled", True, True, "3")
+    assert row["note"] == "shape in between not resolved" and row["text"] == "Risk generally decreases with income."
+
+
 def test_a_reduced_text_shows_no_gap_in_its_sentence_numbers():
     """A text the gate reduced keeps the ids of the sentences it kept; shown as they are, the gaps would tell the
     exit state and which sentences failed (D77)."""

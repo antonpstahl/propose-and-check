@@ -1,9 +1,9 @@
-"""Fig. 1: the propose-and-prove loop as built (plan §5, §8; adapted from panel C of the thesis overview).
+"""Fig. 1: the propose-and-check loop as built (plan §5, §8; adapted from panel C of the thesis overview).
 
 Seven steps left to right; gray fill: an LLM step; thick frame: the contribution (verifier, round trip, lexicon,
 gate; plan §0). The lexicon feeds the verifier and the round trip; the gate sends failing claims back to the writer
 with their evidence (at most two rounds, then the failing sentences are dropped or the template is released); the
-released text's every claim is certified on M. The strip below names the three references the evaluation keeps
+released text's every claim that the round trip reads from it is certified on M (review M11). The strip below names the three references the evaluation keeps
 apart: the fitted model M (is the text faithful?), the planted truth T (is it true?) and, in E1, an oracle fitted to
 T's shapes (what can the sample support?).
 
@@ -74,7 +74,7 @@ def draw() -> plt.Figure:
     # release
     rx = xs[6] + W / 2
     arrow(ax, (rx, Y - 0.004), (rx, 0.3))
-    ax.text(rx, 0.28, "released text:\nevery claim\ncertified on M", fontsize=6.5, color=INK, ha="center", va="top", linespacing=1.3,
+    ax.text(rx, 0.28, "released text:\nevery claim read\nfrom it certified on M", fontsize=6.5, color=INK, ha="center", va="top", linespacing=1.3,
             transform=ax.transAxes)  # fmt: skip
     # the three references of the evaluation
     ax.plot([xs[0], xs[3] + W], [0.12, 0.12], color=GRID, lw=0.8, transform=ax.transAxes)

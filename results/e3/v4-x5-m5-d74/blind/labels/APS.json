@@ -1,0 +1,4221 @@
+{
+ "rater": {
+  "id": "u_jzIIaL8BGrbWdRbvpTFftg",
+  "code": "APS",
+  "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+  "owner": true,
+  "set": "all",
+  "started": "2026-10-21T14:53:11.835Z",
+  "version": "b1",
+  "read back": "2026-10-23, ArtifactData list of raters/u_jzIIaL8BGrbWdRbvpTFftg/labels on artifact U217chxBzrTcVcf8fpkxDk; items B01-B40 (D82)"
+ },
+ "labels": {
+  "B01": {
+   "at": "2026-10-21T14:59:04.078Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-21T14:54:10.222Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T14:54:52.051Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T14:56:03.126Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T14:56:23.925Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-21T14:56:37.538Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "shape in between is not resolved"
+    },
+    {
+     "at": "2026-10-21T14:57:01.787Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-21T14:57:05.747Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "",
+     "to": "also not"
+    },
+    {
+     "at": "2026-10-21T14:57:08.140Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "also not",
+     "to": ""
+    },
+    {
+     "at": "2026-10-21T14:57:11.470Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "",
+     "to": "shape in between is not resolved"
+    },
+    {
+     "at": "2026-10-21T14:57:26.437Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-21T14:57:29.733Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "shape in between is not resolved"
+    },
+    {
+     "at": "2026-10-21T14:57:39.350Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-21T14:57:55.966Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T14:58:00.696Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T14:58:06.274Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s10",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T14:58:48.416Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s11",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T14:59:04.078Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "unsettled",
+    "5": "unsettled",
+    "6": "unsettled",
+    "7": "misleading",
+    "8": "supported",
+    "9": "supported",
+    "10": "supported",
+    "11": "supported"
+   },
+   "notes": {
+    "4": "shape in between is not resolved",
+    "5": "shape in between is not resolved",
+    "6": "shape in between is not resolved"
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B02": {
+   "at": "2026-10-21T15:07:07.063Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-21T15:03:24.402Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:03:38.139Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:03:56.685Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:04:46.381Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:05:36.589Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:06:12.842Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:06:32.584Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:07:05.451Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:07:07.063Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B03": {
+   "at": "2026-10-21T15:12:34.141Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-21T15:08:22.163Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:09:00.921Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:09:15.859Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:10:35.042Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "Planen Sie bitte ca. 15-20 min für die Präsentation und 10-15min für eine anschließende Diskussion ein"
+    },
+    {
+     "at": "2026-10-21T15:10:39.213Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "Planen Sie bitte ca. 15-20 min für die Präsentation und 10-15min für eine anschließende Diskussion ein",
+     "to": ""
+    },
+    {
+     "at": "2026-10-21T15:10:47.545Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "shape in between not resolved"
+    },
+    {
+     "at": "2026-10-21T15:10:51.780Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-21T15:11:21.762Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-21T15:11:24.907Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "",
+     "to": "shape in between not resolved"
+    },
+    {
+     "at": "2026-10-21T15:11:45.141Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-21T15:11:47.788Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "shape in between not resolved"
+    },
+    {
+     "at": "2026-10-21T15:12:06.745Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:12:33.015Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:12:34.141Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "unsettled",
+    "5": "unsettled",
+    "6": "unsettled",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {
+    "4": "shape in between not resolved",
+    "5": "shape in between not resolved",
+    "6": "shape in between not resolved"
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B04": {
+   "at": "2026-10-21T15:19:28.580Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-21T15:13:34.119Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1.note",
+     "from": "",
+     "to": "i m3qn"
+    },
+    {
+     "at": "2026-10-21T15:13:39.815Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1.note",
+     "from": "i m3qn",
+     "to": "i mean technically"
+    },
+    {
+     "at": "2026-10-21T15:13:50.815Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1.note",
+     "from": "i mean technically",
+     "to": "i mean technically yeah but wtf. how can you have a"
+    },
+    {
+     "at": "2026-10-21T15:13:58.766Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1.note",
+     "from": "i mean technically yeah but wtf. how can you have a",
+     "to": ""
+    },
+    {
+     "at": "2026-10-21T15:14:06.312Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:17:18.934Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:18:20.647Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:18:45.330Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:19:08.726Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:19:27.438Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:19:28.580Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B05": {
+   "at": "2026-10-21T15:25:37.307Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-21T15:21:34.055Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:21:51.321Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:22:19.491Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-21T15:23:00.537Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-21T15:24:34.957Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-21T15:24:58.097Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "",
+     "to": "Misleading interaction of utilization and income is alsi"
+    },
+    {
+     "at": "2026-10-21T15:25:03.735Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "Misleading interaction of utilization and income is alsi",
+     "to": "Misleading interaction of utilization and income is also"
+    },
+    {
+     "at": "2026-10-21T15:25:07.408Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "Misleading interaction of utilization and income is also",
+     "to": "Misleading interaction of utilization and income is also not settled"
+    },
+    {
+     "at": "2026-10-21T15:25:29.499Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-21T15:25:37.307Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "unsure"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "false",
+    "5": "misleading",
+    "6": "misleading"
+   },
+   "notes": {
+    "5": "Misleading interaction of utilization and income is also not settled"
+   },
+   "reads": {},
+   "whole": "unsure",
+   "whole_note": ""
+  },
+  "B06": {
+   "at": "2026-10-23T11:23:21.076Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T11:13:17.119Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:15:32.535Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:16:03.219Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:17:26.800Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T11:17:39.523Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T11:17:52.648Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T11:18:02.723Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:23:02.480Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T11:23:19.493Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": "unsure",
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T11:23:21.076Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "false",
+    "5": "unsettled",
+    "6": "false",
+    "7": "supported",
+    "8": "false"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B07": {
+   "at": "2026-10-23T11:32:23.596Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T11:23:42.782Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:24:42.072Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:24:53.164Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:26:02.733Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:29:05.621Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:29:30.909Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:29:41.690Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:30:02.663Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:30:12.300Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "",
+     "to": "Generally good, but how does the"
+    },
+    {
+     "at": "2026-10-23T11:30:25.543Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how does the",
+     "to": "Generally good, but how and why are some interactions covered"
+    },
+    {
+     "at": "2026-10-23T11:30:31.809Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered",
+     "to": "Generally good, but how and why are some interactions covered and some not even though"
+    },
+    {
+     "at": "2026-10-23T11:30:39.801Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now"
+    },
+    {
+     "at": "2026-10-23T11:30:44.534Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not imteresting"
+    },
+    {
+     "at": "2026-10-23T11:30:50.287Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not imteresting",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting"
+    },
+    {
+     "at": "2026-10-23T11:31:18.932Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinq"
+    },
+    {
+     "at": "2026-10-23T11:31:22.358Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinq",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are"
+    },
+    {
+     "at": "2026-10-23T11:31:40.192Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are if you"
+    },
+    {
+     "at": "2026-10-23T11:31:47.918Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies are if you",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give"
+    },
+    {
+     "at": "2026-10-23T11:31:53.184Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost 20"
+    },
+    {
+     "at": "2026-10-23T11:31:56.014Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost 20",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost"
+    },
+    {
+     "at": "2026-10-23T11:32:04.125Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give almost",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20"
+    },
+    {
+     "at": "2026-10-23T11:32:09.635Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the prediction"
+    },
+    {
+     "at": "2026-10-23T11:32:15.851Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the prediction",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power"
+    },
+    {
+     "at": "2026-10-23T11:32:22.161Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power",
+     "to": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power (I think"
+    },
+    {
+     "at": "2026-10-23T11:32:23.596Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": "Generally good, but how and why are some interactions covered and some not even though most of the time up until now not interesting interactions are covered, and not the important ones (utilization & n_delinquencies give about 20% of the predicting power (I think"
+  },
+  "B08": {
+   "at": "2026-10-23T11:55:32.081Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T11:32:52.779Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:33:48.782Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "",
+     "to": "hmm"
+    },
+    {
+     "at": "2026-10-23T11:33:51.080Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "hmm",
+     "to": ""
+    },
+    {
+     "at": "2026-10-23T11:34:03.219Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "",
+     "to": "you cant have a"
+    },
+    {
+     "at": "2026-10-23T11:34:07.339Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "you cant have a",
+     "to": "you cant have a half delinquenc"
+    },
+    {
+     "at": "2026-10-23T11:35:43.029Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "you cant have a half delinquenc",
+     "to": "you cant have a half delinquency either one or zero"
+    },
+    {
+     "at": "2026-10-23T11:35:44.074Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "you cant have a half delinquency either one or zero",
+     "to": "you cant have a half delinquency either one or zero."
+    },
+    {
+     "at": "2026-10-23T11:35:47.050Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T11:36:12.137Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:36:42.799Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "shape in between is not resolved."
+    },
+    {
+     "at": "2026-10-23T11:36:45.162Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T11:38:50.675Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:41:26.495Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:41:44.603Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:42:28.582Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "",
+     "to": "interesting, that the EBM with 50.000 gives the utilization"
+    },
+    {
+     "at": "2026-10-23T11:42:30.693Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization",
+     "to": "interesting, that the EBM with 50.000 gives the utilization &"
+    },
+    {
+     "at": "2026-10-23T11:42:37.295Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization &",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies a"
+    },
+    {
+     "at": "2026-10-23T11:42:39.895Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies a",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20"
+    },
+    {
+     "at": "2026-10-23T11:42:47.171Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and th"
+    },
+    {
+     "at": "2026-10-23T11:43:02.027Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and th",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the"
+    },
+    {
+     "at": "2026-10-23T11:43:22.162Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM"
+    },
+    {
+     "at": "2026-10-23T11:43:25.620Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only"
+    },
+    {
+     "at": "2026-10-23T11:43:40.771Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2."
+    },
+    {
+     "at": "2026-10-23T11:43:42.470Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole.note",
+     "from": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2.",
+     "to": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2.6%"
+    },
+    {
+     "at": "2026-10-23T11:46:27.520Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    },
+    {
+     "at": "2026-10-23T11:55:32.081Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "misleading",
+    "3": "supported",
+    "4": "unsettled",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {
+    "2": "you cant have a half delinquency either one or zero.",
+    "4": "shape in between is not resolved."
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": "interesting, that the EBM with 50.000 gives the utilization & n_delinquencies about 20% importance and the 5.000 applicants EBM gives only 2.6%"
+  },
+  "B09": {
+   "at": "2026-10-23T11:55:09.569Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T11:51:36.186Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:51:58.301Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:52:12.011Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:53:28.872Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:53:40.148Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:54:00.177Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:54:50.515Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7.note",
+     "from": "",
+     "to": "Why not note"
+    },
+    {
+     "at": "2026-10-23T11:55:02.664Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7.note",
+     "from": "Why not note",
+     "to": "Why not note the relevant ones, who cares what doesnt matter"
+    },
+    {
+     "at": "2026-10-23T11:55:06.546Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T11:55:09.569Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported"
+   },
+   "notes": {
+    "7": "Why not note the relevant ones, who cares what doesnt matter"
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B10": {
+   "at": "2026-10-23T12:16:54.478Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T11:56:10.248Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:14:45.630Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:14:53.113Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:15:11.446Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:15:33.704Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:15:48.784Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:16:00.034Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:16:03.158Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": "supported",
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:16:18.159Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T12:16:29.950Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:16:52.587Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s10",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:16:54.478Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "unsettled",
+    "8": "misleading",
+    "9": "supported",
+    "10": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B11": {
+   "at": "2026-10-23T12:21:52.748Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:17:29.675Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:17:56.233Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:18:23.076Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3.note",
+     "from": "",
+     "to": "kind of"
+    },
+    {
+     "at": "2026-10-23T12:18:59.414Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3.note",
+     "from": "kind of",
+     "to": "kind of superfluous with the first two sentences"
+    },
+    {
+     "at": "2026-10-23T12:19:00.707Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:19:42.945Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T12:20:13.241Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:20:52.280Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "incomes shape in between is not resolved"
+    },
+    {
+     "at": "2026-10-23T12:20:52.616Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:21:10.012Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:21:41.756Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8.note",
+     "from": "",
+     "to": "utilization & n_delinquencies would be way more interesting"
+    },
+    {
+     "at": "2026-10-23T12:21:45.753Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    },
+    {
+     "at": "2026-10-23T12:21:52.748Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "unsure",
+    "5": "supported",
+    "6": "unsettled",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {
+    "3": "kind of superfluous with the first two sentences",
+    "6": "incomes shape in between is not resolved",
+    "8": "utilization & n_delinquencies would be way more interesting"
+   },
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B12": {
+   "at": "2026-10-23T12:29:25.420Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:22:39.316Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:27:24.819Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:27:32.387Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:27:54.157Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:28:04.215Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T12:28:11.787Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:28:26.449Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:28:31.824Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": "supported",
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:29:20.678Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:29:25.420Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "false",
+    "6": "supported",
+    "7": "unsettled",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B13": {
+   "at": "2026-10-23T12:36:00.506Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:29:35.599Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:33:16.898Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:33:34.836Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:34:22.886Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:34:34.444Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:35:17.784Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:35:30.744Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:35:43.361Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:35:58.715Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T12:36:00.506Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported",
+    "9": "misleading"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B14": {
+   "at": "2026-10-23T12:45:22.493Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:37:04.131Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:37:14.886Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:37:20.336Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:38:00.823Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:38:16.160Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:44:33.389Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:44:37.939Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:44:50.843Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T12:45:02.388Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": "misleading",
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:45:14.964Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8.note",
+     "from": "",
+     "to": "Other interactions hold way more importance"
+    },
+    {
+     "at": "2026-10-23T12:45:16.260Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    },
+    {
+     "at": "2026-10-23T12:45:22.493Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": "yes",
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {
+    "8": "Other interactions hold way more importance"
+   },
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B15": {
+   "at": "2026-10-23T12:47:34.718Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:45:40.169Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:15.023Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:22.231Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:26.403Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:32.208Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:43.444Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:46.535Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:49.469Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:46:52.940Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:47:25.980Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s10",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T12:47:33.071Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s10.note",
+     "from": "",
+     "to": "In what direction though?"
+    },
+    {
+     "at": "2026-10-23T12:47:34.718Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported",
+    "9": "supported",
+    "10": "misleading"
+   },
+   "notes": {
+    "10": "In what direction though?"
+   },
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B16": {
+   "at": "2026-10-23T12:50:47.297Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:49:08.781Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:49:13.758Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:49:18.343Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:49:22.297Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": "supported",
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:49:29.104Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3.note",
+     "from": "",
+     "to": "Shape in between"
+    },
+    {
+     "at": "2026-10-23T12:49:32.293Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3.note",
+     "from": "Shape in between",
+     "to": "Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T12:49:36.838Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:49:36.929Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T12:49:51.068Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:49:53.964Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "",
+     "to": "Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T12:50:05.830Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:50:31.797Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:50:37.522Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T12:50:44.788Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:50:47.297Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "unsettled",
+    "4": "unsettled",
+    "5": "unsettled",
+    "6": "supported",
+    "7": "supported",
+    "8": "misleading",
+    "9": "supported"
+   },
+   "notes": {
+    "3": "Shape in between not settled",
+    "4": "Shape in between not settled",
+    "5": "Shape in between not settled"
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B17": {
+   "at": "2026-10-23T12:54:29.630Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:51:05.472Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:51:20.051Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:52:01.513Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:52:15.692Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:52:34.373Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "not even settled if it has an effect at al right?"
+    },
+    {
+     "at": "2026-10-23T12:53:26.742Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:53:30.854Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": "unsettled",
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T12:53:39.522Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "",
+     "to": "Yes though it seems to tend"
+    },
+    {
+     "at": "2026-10-23T12:53:45.106Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "Yes though it seems to tend",
+     "to": "Yes though it seems to tend to matter"
+    },
+    {
+     "at": "2026-10-23T12:53:58.076Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T12:54:27.384Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:54:29.630Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "unsure"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "unsettled",
+    "5": "misleading",
+    "6": "false",
+    "7": "supported"
+   },
+   "notes": {
+    "4": "not even settled if it has an effect at al right?",
+    "5": "Yes though it seems to tend to matter"
+   },
+   "reads": {},
+   "whole": "unsure",
+   "whole_note": ""
+  },
+  "B18": {
+   "at": "2026-10-23T13:01:01.567Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T12:54:56.784Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:55:03.925Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:55:08.408Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:55:31.955Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T12:55:36.608Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": "supported",
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:55:40.665Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T12:56:14.795Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.note",
+     "from": "",
+     "to": "Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T12:56:15.717Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T12:56:17.051Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.reads",
+     "from": false,
+     "to": true
+    },
+    {
+     "at": "2026-10-23T12:56:17.768Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5.reads",
+     "from": true,
+     "to": false
+    },
+    {
+     "at": "2026-10-23T12:56:36.929Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T12:56:38.129Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:00:23.546Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:00:28.204Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:00:34.133Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:00:37.950Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": "supported",
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T13:00:43.079Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s10",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:01:01.567Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "unsure"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "unsettled",
+    "5": "unsettled",
+    "6": "unsettled",
+    "7": "supported",
+    "8": "supported",
+    "9": "misleading",
+    "10": "supported"
+   },
+   "notes": {
+    "4": "Shape in between not settled",
+    "5": "Shape in between not settled",
+    "6": "Shape in between not settled"
+   },
+   "reads": {},
+   "whole": "unsure",
+   "whole_note": ""
+  },
+  "B19": {
+   "at": "2026-10-23T13:10:15.103Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:05:00.608Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:05:13.091Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T13:05:23.904Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "",
+     "to": "half a delinquency? 1"
+    },
+    {
+     "at": "2026-10-23T13:05:27.945Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2.note",
+     "from": "half a delinquency? 1",
+     "to": "half a delinquency? 1 or 0"
+    },
+    {
+     "at": "2026-10-23T13:06:33.253Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:06:33.945Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": "unsure",
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:08:00.380Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:08:05.798Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "i think so"
+    },
+    {
+     "at": "2026-10-23T13:08:25.532Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:08:42.261Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T13:08:42.908Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:09:43.049Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:09:59.957Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T13:10:15.103Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "misleading",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "unsettled",
+    "7": "supported",
+    "8": "misleading"
+   },
+   "notes": {
+    "2": "half a delinquency? 1 or 0",
+    "4": "i think so",
+    "6": "Shape in between not settled"
+   },
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B20": {
+   "at": "2026-10-23T13:13:44.065Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:11:12.770Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:11:34.761Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T13:11:44.126Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T13:12:35.499Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T13:12:41.340Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "",
+     "to": "difficult Shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T13:12:46.115Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "difficult Shape in between not settled",
+     "to": "difficult Shape in between not settled. but"
+    },
+    {
+     "at": "2026-10-23T13:12:49.251Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4.note",
+     "from": "difficult Shape in between not settled. but",
+     "to": "difficult Shape in between not settled."
+    },
+    {
+     "at": "2026-10-23T13:13:02.586Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:13:43.082Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:13:44.065Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "false",
+    "3": "false",
+    "4": "misleading",
+    "5": "supported",
+    "6": "supported"
+   },
+   "notes": {
+    "4": "difficult Shape in between not settled."
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B21": {
+   "at": "2026-10-23T13:17:58.606Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:13:52.329Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:13:56.111Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:14:14.131Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:14:16.073Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": "supported",
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:15:12.584Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:15:40.253Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:15:49.011Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:16:10.931Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:16:21.194Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:16:38.223Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:17:29.027Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s10",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:17:51.644Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s11",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:17:56.204Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s12",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:17:58.606Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "unsure",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported",
+    "9": "supported",
+    "10": "supported",
+    "11": "supported",
+    "12": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B22": {
+   "at": "2026-10-23T13:30:40.139Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:26:08.564Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:28:43.030Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:29:04.276Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:29:14.551Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:29:48.922Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:30:09.314Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "i mean either at most moderate or"
+    },
+    {
+     "at": "2026-10-23T13:30:12.575Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "i mean either at most moderate or",
+     "to": "i mean either at most moderate or not settled"
+    },
+    {
+     "at": "2026-10-23T13:30:14.970Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T13:30:19.663Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": "false",
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:30:34.183Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:30:39.184Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:30:40.139Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "unsettled",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {
+    "6": "i mean either at most moderate or not settled"
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B23": {
+   "at": "2026-10-23T13:33:26.092Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:31:13.473Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:31:19.747Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:31:24.997Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:31:55.940Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:32:06.428Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:32:21.584Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:32:25.791Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "Ja, du kannst jetzt anfangen. Die Stichprobe ist final: Die synthetische Hälfte von D74 ist geprüft, die Satz-IDs sind korrigiert (D77), und die Seite ist veröffentlicht. Die laufenden Läufe ändern daran nichts. Luna und c3 lesen nur dieselben Texte und schreiben ihre Urteile in andere Ordner.\n\nSo geht's:\n\nÖffne https://claude.ai/artifact/U217chxBzrTcVcf8fpkxDk und lies den Leitfaden oben auf der Seite.\nGib dein Rater-Kürzel ein, hake die Bestätigung an und starte. Als Owner labelst du alle 78 Items.\nJedes Label wird sofort gespeichert, mit Zeitstempel und Verlauf. Du kannst also jederzeit aufhören und später weitermachen. Rechne mit insgesamt etwa 5 Stunden für 625 Sätze."
+    },
+    {
+     "at": "2026-10-23T13:32:28.541Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "Ja, du kannst jetzt anfangen. Die Stichprobe ist final: Die synthetische Hälfte von D74 ist geprüft, die Satz-IDs sind korrigiert (D77), und die Seite ist veröffentlicht. Die laufenden Läufe ändern daran nichts. Luna und c3 lesen nur dieselben Texte und schreiben ihre Urteile in andere Ordner.\n\nSo geht's:\n\nÖffne https://claude.ai/artifact/U217chxBzrTcVcf8fpkxDk und lies den Leitfaden oben auf der Seite.\nGib dein Rater-Kürzel ein, hake die Bestätigung an und starte. Als Owner labelst du alle 78 Items.\nJedes Label wird sofort gespeichert, mit Zeitstempel und Verlauf. Du kannst also jederzeit aufhören und später weitermachen. Rechne mit insgesamt etwa 5 Stunden für 625 Sätze.",
+     "to": ""
+    },
+    {
+     "at": "2026-10-23T13:32:35.335Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "",
+     "to": "shape in between not resolved"
+    },
+    {
+     "at": "2026-10-23T13:32:41.686Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6.note",
+     "from": "shape in between not resolved",
+     "to": "shape in between not settled"
+    },
+    {
+     "at": "2026-10-23T13:33:03.967Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:33:13.217Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:33:24.709Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:33:26.092Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "unsettled",
+    "7": "unsettled",
+    "8": "supported",
+    "9": "supported"
+   },
+   "notes": {
+    "6": "shape in between not settled"
+   },
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B24": {
+   "at": "2026-10-23T13:35:58.396Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:34:00.538Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:34:09.882Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:34:24.067Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:34:46.475Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T13:35:05.563Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:35:45.325Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:35:56.617Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:35:58.396Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "false",
+    "5": "unsure",
+    "6": "supported",
+    "7": "unsettled"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B25": {
+   "at": "2026-10-23T13:40:26.150Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:39:16.563Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:39:34.925Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:40:01.670Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:40:06.604Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:40:09.446Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:40:24.104Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:40:25.342Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": "supported",
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:40:26.150Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "unsure"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B26": {
+   "at": "2026-10-23T13:44:16.879Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:40:44.354Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:41:05.829Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:41:25.398Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3.note",
+     "from": "",
+     "to": "half a delinquency?"
+    },
+    {
+     "at": "2026-10-23T13:41:26.645Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T13:41:28.104Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": "false",
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:41:31.507Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": "unsettled",
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T13:41:56.466Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:42:11.733Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:42:17.856Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": "supported",
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:43:04.250Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:43:34.779Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:44:04.453Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:44:16.879Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "misleading",
+    "4": "supported",
+    "5": "unsure",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {
+    "3": "half a delinquency?"
+   },
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B27": {
+   "at": "2026-10-23T13:47:04.145Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:44:28.925Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:45:25.666Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:45:42.449Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:46:08.178Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:46:13.112Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T13:46:15.178Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": "unsettled",
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:46:23.982Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:46:55.324Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:47:02.745Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:47:04.145Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "unsettled",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B28": {
+   "at": "2026-10-23T13:49:17.108Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:47:27.299Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:47:42.149Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:48:14.995Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:48:27.053Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:48:35.620Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:48:47.045Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:49:09.291Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T13:49:17.107Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "misleading"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "yes",
+   "whole_note": ""
+  },
+  "B29": {
+   "at": "2026-10-23T13:52:20.628Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:49:29.491Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:49:37.549Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:49:47.328Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:50:13.303Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:50:29.161Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": "supported",
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T13:51:13.952Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:51:58.944Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:52:13.898Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:52:16.065Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "yes"
+    },
+    {
+     "at": "2026-10-23T13:52:20.628Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": "yes",
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "misleading",
+    "5": "unsure",
+    "6": "unsure",
+    "7": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B30": {
+   "at": "2026-10-23T13:55:33.382Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:52:30.894Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:52:58.103Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:53:31.356Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:54:07.819Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:54:28.201Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T13:54:38.478Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:54:57.552Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:55:31.598Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T13:55:33.382Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "false",
+    "6": "supported",
+    "7": "supported",
+    "8": "unsure"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B31": {
+   "at": "2026-10-23T14:05:13.586Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T13:56:35.121Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:56:39.561Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:56:43.475Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:57:00.608Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:57:25.902Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T13:57:43.211Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:01:25.870Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:04:42.114Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:04:56.869Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:05:07.432Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s10",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:05:13.586Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported",
+    "9": "supported",
+    "10": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B32": {
+   "at": "2026-10-23T14:10:24.727Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:05:32.978Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:05:45.549Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:09:21.927Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:09:30.040Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T14:09:45.015Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:10:00.106Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:10:04.344Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:10:23.707Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:10:24.727Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "misleading",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B33": {
+   "at": "2026-10-23T14:20:42.047Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:10:38.410Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:19:08.314Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:19:15.130Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:20:08.326Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:20:19.697Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:20:30.345Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:20:32.676Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:20:40.642Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:20:42.047Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B34": {
+   "at": "2026-10-23T14:22:25.847Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:20:51.168Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:21:11.226Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:21:18.685Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:21:26.085Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:21:33.187Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:21:44.018Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T14:22:03.318Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:22:22.360Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:22:25.847Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "misleading",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B35": {
+   "at": "2026-10-23T14:24:17.301Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:22:35.847Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T14:22:59.914Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T14:23:11.307Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:23:25.476Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:23:40.588Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:24:09.634Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:24:16.468Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:24:17.301Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "false",
+    "2": "misleading",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B36": {
+   "at": "2026-10-23T14:29:39.746Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:24:21.576Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:24:30.126Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:24:36.843Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:24:44.984Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:24:53.072Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:25:10.451Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:28:59.530Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:29:09.980Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:29:14.154Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": "supported",
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T14:29:16.892Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": "misleading",
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:29:38.446Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T14:29:39.746Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported",
+    "9": "misleading"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B37": {
+   "at": "2026-10-23T14:31:42.288Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:29:47.530Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:29:55.825Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:30:17.379Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:30:27.638Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:30:51.700Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:31:08.163Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:31:10.767Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:31:26.233Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:31:40.066Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": "supported",
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T14:31:42.287Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "unsure"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B38": {
+   "at": "2026-10-23T14:43:34.369Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:31:47.620Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:32:06.025Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:34:32.145Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T14:34:50.441Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:35:03.975Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:35:27.333Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T14:42:37.367Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "false"
+    },
+    {
+     "at": "2026-10-23T14:42:44.039Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7.note",
+     "from": "",
+     "to": "yes"
+    },
+    {
+     "at": "2026-10-23T14:42:47.541Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7.note",
+     "from": "yes",
+     "to": "yes everything"
+    },
+    {
+     "at": "2026-10-23T14:42:50.426Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7.note",
+     "from": "yes everything",
+     "to": "yes everything but age is"
+    },
+    {
+     "at": "2026-10-23T14:42:58.185Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7.note",
+     "from": "yes everything but age is",
+     "to": "yes everything but age is very"
+    },
+    {
+     "at": "2026-10-23T14:43:12.133Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7.note",
+     "from": "yes everything but age is very",
+     "to": "yes everything but ages spectrum reaches far in the moderate"
+    },
+    {
+     "at": "2026-10-23T14:43:22.711Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "unsure"
+    },
+    {
+     "at": "2026-10-23T14:43:32.549Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s9",
+     "from": null,
+     "to": "unsettled"
+    },
+    {
+     "at": "2026-10-23T14:43:34.369Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "false",
+    "4": "supported",
+    "5": "supported",
+    "6": "unsure",
+    "7": "false",
+    "8": "unsure",
+    "9": "unsettled"
+   },
+   "notes": {
+    "7": "yes everything but ages spectrum reaches far in the moderate"
+   },
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B39": {
+   "at": "2026-10-23T14:45:30.078Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:43:46.499Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:43:52.261Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": "supported",
+     "to": "misleading"
+    },
+    {
+     "at": "2026-10-23T14:43:53.874Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": "misleading",
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:44:18.484Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:44:29.844Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:44:37.678Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:44:54.748Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:45:05.248Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:45:15.063Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:45:23.365Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:45:30.078Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  },
+  "B40": {
+   "at": "2026-10-23T14:47:11.040Z",
+   "guide": "bcbc2e152fed68419335ef462e5ad63403f38a2264cd898a5aaf6240e15a5c09",
+   "history": [
+    {
+     "at": "2026-10-23T14:45:36.532Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s1",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:45:47.473Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s2",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:45:52.257Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s3",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:46:23.399Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s4",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:46:38.294Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s5",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:46:44.190Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s6",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:47:00.344Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s7",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:47:09.790Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "s8",
+     "from": null,
+     "to": "supported"
+    },
+    {
+     "at": "2026-10-23T14:47:11.040Z",
+     "by": "u_jzIIaL8BGrbWdRbvpTFftg",
+     "field": "whole",
+     "from": null,
+     "to": "no"
+    }
+   ],
+   "labels": {
+    "1": "supported",
+    "2": "supported",
+    "3": "supported",
+    "4": "supported",
+    "5": "supported",
+    "6": "supported",
+    "7": "supported",
+    "8": "supported"
+   },
+   "notes": {},
+   "reads": {},
+   "whole": "no",
+   "whole_note": ""
+  }
+ }
+}

@@ -1,0 +1,25 @@
+reader,standard,stratum,labelled errors,flagged by the reader,missed,labelled no error,flagged anyway
+haiku,refuted,all,9,3,6,26,4
+haiku,refuted,draft,5,3,2,12,4
+haiku,refuted,LLM-written,4,0,4,8,0
+haiku,refuted,template,0,0,0,6,0
+haiku,release rule,all,22,7,15,15,4
+haiku,release rule,draft,12,7,5,6,4
+haiku,release rule,LLM-written,5,0,5,7,0
+haiku,release rule,template,5,0,5,2,0
+luna,refuted,all,9,2,7,26,2
+luna,refuted,draft,5,2,3,12,2
+luna,refuted,LLM-written,4,0,4,8,0
+luna,refuted,template,0,0,0,6,0
+luna,release rule,all,22,7,15,15,2
+luna,release rule,draft,12,7,5,6,2
+luna,release rule,LLM-written,5,0,5,7,0
+luna,release rule,template,5,0,5,2,0
+critic c3,refuted,all,9,8,1,26,9
+critic c3,refuted,draft,5,5,0,12,6
+critic c3,refuted,LLM-written,4,3,1,8,1
+critic c3,refuted,template,0,0,0,6,2
+critic c3,release rule,all,22,12,10,15,6
+critic c3,release rule,draft,12,8,4,6,4
+critic c3,release rule,LLM-written,5,3,2,7,1
+critic c3,release rule,template,5,1,4,2,1

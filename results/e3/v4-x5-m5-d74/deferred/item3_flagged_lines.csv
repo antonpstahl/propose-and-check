@@ -1,0 +1,6 @@
+tier,reader or writer,run,answer,sentence id,line,repeated keyword,non-finite number,nan or inf as a word,vacuous rank set,rank set,parse
+plasmode,gate reader,pls-dominant-n5000-s3_EBM_H1_d4_claude-haiku-5-5_codes,4512b5b79e23dda08ccfbdd5598a3582620947722f2d471c89b71189231a8414,4,"rank(""PAY_AMT1"") in (1, 2, 3, 4, 5, 6, 7, 8, 9)",False,False,False,True,True,accepted
+synthetic,gate reader,syn-none-n50000-s3_EBM_H1_d1_claude-haiku-5-5_plausible,5240d8c5c0a6940e341238b6d402a5a6dda056e3044c9992e5ebf541c0bda6b7,4,"rank(""history_months"") in (1, 2, 3, 4, 5, 6, 7, 8, 9)",False,False,False,True,True,accepted
+plasmode,scoring reader,pls-dominant-n5000-s3_EBM_H1_d4_claude-haiku-5-5_codes,59100334a43685e3c0a97d19dc12b7e2595e7ce8007dcf6af4a99e1417c457ac,4,"rank(""PAY_AMT1"") in (1, 2, 3, 4, 5, 6, 7, 8, 9)",False,False,False,True,True,accepted
+plasmode,gate reader,pls-dominant-n5000-s2_XGB2_H2_d0_claude-haiku-5-5_codes,6f556cc706291805e4be2062b64b376e7cf742a6b7f5da0ee90761c78e10b136,8,"unsettled(rank(""AGE"") in (1, 2, 3, 4, 5, 6, 7, 8, 9))",False,False,False,True,True,accepted
+plasmode,gate reader,pls-dominant-n5000-s2_XGB2_H2_d0_claude-haiku-5-5_codes,6f556cc706291805e4be2062b64b376e7cf742a6b7f5da0ee90761c78e10b136,8,"unsettled(rank(""EDUCATION"") in (1, 2, 3, 4, 5, 6, 7, 8, 9))",False,False,False,True,True,accepted

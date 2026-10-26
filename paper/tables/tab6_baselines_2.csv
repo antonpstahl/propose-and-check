@@ -1,8 +1,15 @@
-Arm,strength,direction,rank,share,comparison,interaction,jump or peak,hedges (share of claims),every required term covered,numbers no claim checks
-Template only (no LLM),9.0,5.4,0.0,0.0,0.0,0.8,0.7,0.0%,100%,0.0
-Plain prompt (no gate),6.0,4.0,2.4,2.5,0.8,2.1,2.1,9.0%,92%,2.1
-Gate off (first draft),4.9,4.4,2.8,0.5,0.1,1.3,1.0,8.4%,99%,0.1
-Gate on (released text),7.4,5.0,1.1,0.1,0.0,0.8,0.5,2.0%,100%,0.0
-  gate on: released as written,5.0,4.8,3.0,0.2,0.1,1.1,0.4,5.5%,100%,0.0
-  gate on: released reduced,3.5,3.6,2.7,0.1,0.1,1.0,0.5,6.5%,100%,0.0
-  gate on: template,9.0,5.3,0.0,0.0,0.0,0.6,0.6,0.0%,100%,0.0
+Tier,Arm,strength,direction,rank,share,comparison,interaction,jump or peak,hedges (share of claims),every required term covered,numbers no claim checks
+synthetic,Template only (no LLM),9.0,5.4,0.0,0.0,0.0,0.8,0.7,0.0%,100%,0.0
+synthetic,Plain prompt (no gate),5.6,4.1,2.4,2.5,0.5,2.0,1.8,10.3%,67%,2.1
+synthetic,Gate off (first draft),5.0,4.5,2.8,0.3,0.0,1.3,0.6,8.4%,99%,0.1
+synthetic,Gate on (released text),6.2,4.4,1.4,0.1,0.0,0.7,0.4,9.2%,100%,0.0
+synthetic,  gate on: released as written,3.4,3.4,3.0,0.2,0.0,0.9,0.2,21.9%,100%,0.0
+synthetic,  gate on: released reduced,2.6,3.5,2.9,0.1,0.1,0.5,0.2,16.8%,100%,0.0
+synthetic,  gate on: template,9.0,5.3,0.0,0.0,0.0,0.6,0.6,0.0%,100%,0.0
+plasmode,Template only (no LLM),9.0,5.0,0.0,0.0,0.0,0.7,0.5,0.0%,100%,0.0
+plasmode,Plain prompt (no gate),4.7,3.7,2.3,2.2,0.1,1.8,1.3,13.4%,32%,2.9
+plasmode,Gate off (first draft),4.9,4.0,2.4,0.3,0.0,1.1,0.5,12.9%,93%,0.4
+plasmode,Gate on (released text),8.1,4.7,0.4,0.0,0.0,0.7,0.4,2.5%,100%,0.0
+plasmode,  gate on: released as written,4.7,4.1,2.4,0.0,0.0,1.1,0.2,14.2%,100%,0.1
+plasmode,  gate on: released reduced,2.7,2.8,2.3,0.0,0.1,0.6,0.2,19.9%,100%,0.1
+plasmode,  gate on: template,9.0,5.0,0.0,0.0,0.0,0.7,0.5,0.0%,100%,0.0

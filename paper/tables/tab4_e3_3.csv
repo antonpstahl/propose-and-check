@@ -1,0 +1,4 @@
+"Writer, setting",runs,released / reduced / template / escalate,repair rounds (mean),P_U before,P_U after,E_U,cost per run
+Claude Haiku 5.5,640,49% / 12% / 39% / 0%,1.27,58.5%,4.5%,0.92,$0.0023
+Claude Sonnet 5.5 (subset),64,88% / 8% / 5% / 0%,0.78,25.0%,0.0%,1.00,$0.0184
+"qwen3.8:27b, self-hosted (subset)",64,89% / 6% / 5% / 0%,0.86,28.1%,1.6%,0.94,$0.0006
