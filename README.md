@@ -1,11 +1,22 @@
-# feasibility-symb-verific-gate-llm-explanation
+# Propose and Check: A Symbolic Gate for LLM Explanations of Glass-Box Credit Models
 
-Code, data and results of the working paper *Propose and Check: A Symbolic Gate for LLM Explanations of Glass-Box
-Credit Models* (draft of 26 October 2026; the manuscript itself is not in this repository). An LLM writes an explanation of a fitted EBM or depth-2
-XGBoost (XGB2) together with a plan of claims in a small DSL. A deterministic verifier checks every claim against the
-fitted model and its bootstrap bands through a lexicon of truth conditions; a round trip reads the finished text back
-into claims; and a gate repairs, reduces or replaces text that fails. The benchmark has a planted truth: a synthetic
-tier and a plasmode tier on real credit features.
+**Paper:** [paper/propose-and-check.pdf](paper/propose-and-check.pdf) (working paper, not peer-reviewed; draft of
+26 October 2026; 26 pages). This repository holds its code, data, every LLM answer and every result.
+
+An LLM writes an explanation of a fitted EBM or depth-2 XGBoost (XGB2) together with a plan of claims in a small DSL. A
+deterministic verifier checks every claim against the fitted model and its bootstrap bands through a lexicon of truth
+conditions; a round trip reads the finished text back into claims; and a gate repairs, reduces or replaces text that
+fails. The benchmark has a planted truth: a synthetic tier and a plasmode tier on real credit features.
+
+**Main results** (Claude Haiku 5.5 as the writer):
+
+- In finished texts, the round trip catches 94 to 95% of scripted errors.
+- The share of texts that state a claim false of the model falls from 27% to 0.6% as read by another vendor's model
+  (from 45% to 2.5% as read by the gate's own extractor).
+- Blind labels of 40 random released texts by one rater find more: 17% still state something false of the model. In
+  every such text the gate had read the sentence correctly and the lexicon had certified it. What limits the gate is
+  what its words mean to a reader, above all "generally".
+- All LLM calls of the study cost $27.66; a reproduction from the committed cache costs $0.
 
 ## Quick start: every number of the paper, offline, in about 35 minutes
 
@@ -13,15 +24,15 @@ Developed and run on macOS (Apple silicon) with Python 3.13; needs Python 3.11 o
 [uv](https://docs.astral.sh/uv/).
 
 ```
-git clone https://github.com/antonpstahl/feasibility-symb-verific-gate-llm-explanation.git
-cd feasibility-symb-verific-gate-llm-explanation
+git clone https://github.com/antonpstahl/propose-and-check.git
+cd propose-and-check
 uv sync
-gh release download facts-v1          # the Facts archive, 320 MB (or download facts-v1.tar.gz from the release page)
+gh release download facts-v1          # the Facts archive, 357 MB (or download facts-v1.tar.gz from the release page)
 uv run python -m verifier_gate.experiments.facts_archive --unpack facts-v1.tar.gz
 uv run python -m verifier_gate.experiments.reproduce
 ```
 
-- **The Facts archive** holds what git does not: the fitted models' Facts and bootstrap draws (`cache/facts/`, 484 MB
+- **The Facts archive** holds what git does not: the fitted models' Facts and bootstrap draws (`cache/facts/`, 531 MB
   unpacked) and the TaiwanCredit file (`data/raw/`). `--unpack` checks every file against `cache/facts_manifest.csv`
   (size and SHA-256) before it writes anything.
 - **`reproduce`** runs 66 steps, from E1 to the figures, tables and worked example, with every LLM answer read from
@@ -38,7 +49,7 @@ uv run python -m verifier_gate.experiments.reproduce
   refits are bit-identical on another platform has not been tested; `facts_archive --check` compares the Facts on
   disk with the archived ones.
 - **The paper's figures and tables** are generated into `paper/figures/` and `paper/tables/` (and the worked example
-  into `paper/worked_example.md`); the manuscript that includes them is kept outside the repository.
+  into `paper/worked_example.md`); the manuscript that includes them is `paper/propose-and-check.pdf`.
 - **Tests:** `uv run pytest` (596 tests, about a minute). The tests that read the Facts are skipped without them,
   and the plasmode tests without TaiwanCredit in `data/raw/`; no test calls an API or downloads anything.
 
@@ -133,7 +144,7 @@ data/            raw/ (TaiwanCredit), synthetic/, plasmode/: not tracked
 cache/           llm/ (every LLM answer and the call log, tracked), facts/ (not tracked: the archive),
                  facts_manifest.csv (the archive's files and hashes)
 results/         every result as run, by experiment and version (results/README.md)
-paper/           worked_example.md, figures/, tables/ (all generated; the manuscript is not in the repository)
+paper/           propose-and-check.pdf (the paper), worked_example.md, figures/, tables/ (generated)
 ```
 
 ## License
